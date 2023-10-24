@@ -31,7 +31,7 @@ function Header(props) {
             className="me-2"
             aria-label="Search neighborhood"
           />
-          <Button variant="outline-success">Search</Button>
+          <Button variant="outline-warning">Search</Button>
         </Form>
       </Container>
     </Navbar>

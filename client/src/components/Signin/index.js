@@ -22,12 +22,13 @@ const Signin = () => {
       display: 'flex',
       justifyContent: "center",
       alignItems: "center",
+      height:"70vh"
     }}
       className="signinFormContainer"
     >
       {/* <img style={{position:'relative', width:'50%'}}src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-08-12%2021.40.56%20-%20linear%20image%20of%20historic%20nyc%20townhouse____.png"></img> */}
 
-      <form style={{ padding: "50px", boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px" }}>
+      <form >
 
         <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3" >
           <Form.Control
@@ -46,7 +47,7 @@ const Signin = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </FloatingLabel>
-        <Button onClick={onSubmit} style={{ marginTop: "10px" }} variant="primary">Sign In </Button>
+        <Button onClick={onSubmit} style={{ marginTop: "10px" , width: "100%"}} variant="dark">Sign In </Button>
       </form>
     </div>
   );
