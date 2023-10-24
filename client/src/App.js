@@ -1,13 +1,26 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+
 import Home from "./views/Home";
-import Header from "./components/Header"
+import Header from "./components/Header";
+import Signin from './components/Signin';
+
 function App() {
   return (
-    <div className="App">
-      <Header />
-       <Home />
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signin />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/questionnaire" element={<Signin />} />
+        </Routes>
+      </div>
+     
+    </Router>
   );
 }
 
