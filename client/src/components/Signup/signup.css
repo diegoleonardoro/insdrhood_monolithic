@@ -1,0 +1,16 @@
+.signupFormContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+.signupForm{
+  padding:50px;
+  border: 1px solid #f2eeee;
+  border-radius: 15px;
+}
+
+.signupSubmitButton{
+  margin-top: 10px;
+}

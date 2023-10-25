@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+import "./signup.css";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -29,7 +29,6 @@ const SignUp = () => {
     }
   }
 
-
   const onSubmit = async (event) => {
     event.preventDefault();
     // make request to sign user in:
@@ -38,18 +37,9 @@ const SignUp = () => {
 
   return (
 
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: "center",
-        alignItems: "center",
-        height: "70vh"
-      }}
+    <div className="signupFormContainer">
 
-      className="signupFormContainer"
-    >
-
-      <form style={{ padding: "50px", border:"1px solid #f2eeee", borderRadius:"15px" }}>
+      <form className="signupForm">
 
         <FloatingLabel controlId="floatingInput" label="Your name" className="mb-3" >
           <Form.Control
@@ -92,8 +82,7 @@ const SignUp = () => {
             type="file" />
         </Form.Group>
 
-        <Button onClick={onSubmit} style={{ marginTop: "10px" }} variant="primary">Sign Up </Button>
-
+        <Button  className="signupSubmitButton" onClick={onSubmit} variant="primary">Sign Up </Button>
       </form>
     </div>
 
