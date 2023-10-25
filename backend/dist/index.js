@@ -10,13 +10,20 @@ const cookie_session_1 = __importDefault(require("cookie-session"));
 const body_parser_1 = require("body-parser");
 const cors_1 = __importDefault(require("cors"));
 const error_handler_1 = require("./mddlewares/error-handler");
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 // import routes:
 const auth_1 = require("./routes/auth");
+const envPath = path_1.default.join(__dirname);
+(0, dotenv_1.config)({ path: envPath });
 const app = (0, express_1.default)();
 const PORT = 4000;
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use((0, body_parser_1.json)());
-app.set("trust proxy", true);
+// app.set("trust proxy", true);
 mongoose_1.default.connect('mongodb://127.0.0.1:27017/insider_hood');
 app.use(express_1.default.static(path_1.default.join(__dirname, '../../client/public')));
 app.use((0, cookie_session_1.default)({

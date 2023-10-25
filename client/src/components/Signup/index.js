@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
 const SignUp = () => {
+  axios.defaults.withCredentials = true;
 
   const [errors, setErrors] = useState(null);
   const [imageFile, setImageFile] = useState("");

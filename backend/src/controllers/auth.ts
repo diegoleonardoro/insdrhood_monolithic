@@ -12,9 +12,8 @@ import crypto from 'crypto';
 */
 
 export const signup = async (req: Request, res: Response) => {
-  const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
 
-  console.log("hola from signup route")
+  const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -45,23 +44,25 @@ export const signup = async (req: Request, res: Response) => {
   
   console.log("userrrerer", user);
 
-  // Generate JWT
-  // const userJwt = jwt.sign(
-  //   {
-  //     id: user.id,
-  //     email: user.email,
-  //     name: user.name,
-  //     image: user.image,
-  //     isVerified: user.isVerified,
-  //     residentId: user.residentId
-  //   },
-  //   process.env.JWT_KEY!
-  // );
+  console.log("process.env.JWT_KEY-->>", process.env.JWT_KEY)
 
-  // // Store JWT on the session object created by cookieSession
-  // req.session = {
-  //   jwt: userJwt,
-  // };
+  // Generate JWT
+  const userJwt = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      image: user.image,
+      isVerified: user.isVerified,
+      residentId: user.residentId
+    },
+    process.env.JWT_KEY!
+  );
+
+  // Store JWT on the session object created by cookieSession
+  req.session = {
+    jwt: userJwt,
+  };
 
   // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);
   res.status(201).send(user);

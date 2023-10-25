@@ -7,6 +7,7 @@ exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
 /**
  * @description registers a new user
@@ -15,7 +16,6 @@ const crypto_1 = __importDefault(require("crypto"));
 */
 const signup = async (req, res) => {
     const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
-    console.log("hola from signup route");
     const existingUser = await user_1.User.findOne({ email });
     if (existingUser) {
         throw new bad_request_error_1.BadRequestError("Email in use");
@@ -41,22 +41,20 @@ const signup = async (req, res) => {
     });
     await user.save();
     console.log("userrrerer", user);
+    console.log("process.env.JWT_KEY-->>", process.env.JWT_KEY);
     // Generate JWT
-    // const userJwt = jwt.sign(
-    //   {
-    //     id: user.id,
-    //     email: user.email,
-    //     name: user.name,
-    //     image: user.image,
-    //     isVerified: user.isVerified,
-    //     residentId: user.residentId
-    //   },
-    //   process.env.JWT_KEY!
-    // );
-    // // Store JWT on the session object created by cookieSession
-    // req.session = {
-    //   jwt: userJwt,
-    // };
+    const userJwt = jsonwebtoken_1.default.sign({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        image: user.image,
+        isVerified: user.isVerified,
+        residentId: user.residentId
+    }, process.env.JWT_KEY);
+    // Store JWT on the session object created by cookieSession
+    req.session = {
+        jwt: userJwt,
+    };
     // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);
     res.status(201).send(user);
 };

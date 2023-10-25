@@ -5,16 +5,23 @@ import cookieSession from "cookie-session";
 import { json } from "body-parser";
 import cors from "cors";
 import { errorHandler } from './mddlewares/error-handler';
-
+import { config } from 'dotenv';
+config();
 // import routes:
 import { auth } from "./routes/auth";
 
+const envPath = path.join(__dirname);
+config({ path: envPath });
 
 const app = express();
 const PORT = 4000;
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // React client's URL
+  credentials: true
+}));
+
 app.use(json());
-app.set("trust proxy", true);
+// app.set("trust proxy", true);
 mongoose.connect('mongodb://127.0.0.1:27017/insider_hood');
 app.use(express.static(path.join(__dirname, '../../client/public')));
 
@@ -29,6 +36,7 @@ app.use(
 
 app.use("/api", auth);
 app.use(errorHandler);
+
 
 // Fallback route
 app.get('*', (req, res) => {
