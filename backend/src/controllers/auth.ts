@@ -3,21 +3,81 @@ import { User } from "../models/user";
 import { BadRequestError } from "../errors/bad-request-error";
 import { Password } from "../services/password";
 import jwt from "jsonwebtoken";
+import crypto from 'crypto';
 
 /**
- * @description logs in user
+ * @description registers a new user
+ * @route POST /api/signup
+ * @access public
+*/
+
+export const signup = async (req: Request, res: Response) => {
+  const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
+
+  console.log("hola from signup route")
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new BadRequestError("Email in use");
+  };
+
+  // capiralize name and create email token:
+  const nameFirstLetterCapitalized = name.charAt(0).toUpperCase();
+  const remainingName = name.slice(1);
+  const nameCapitalized = nameFirstLetterCapitalized + remainingName;
+  const emailToken = crypto.randomBytes(64).toString("hex");
+
+  // save user in database:
+  const user = await User.build({
+    name: nameCapitalized,
+    email,
+    password: password ? password : '',
+    image: image ? image : null,
+    isVerified: false,
+    emailToken,
+    formsResponded: formsResponded,
+    residentId: residentId ? residentId : null,
+    passwordSet: password ? true : false,
+    userImagesId
+  });
+
+  await user.save();
+  
+  console.log("userrrerer", user);
+
+  // Generate JWT
+  // const userJwt = jwt.sign(
+  //   {
+  //     id: user.id,
+  //     email: user.email,
+  //     name: user.name,
+  //     image: user.image,
+  //     isVerified: user.isVerified,
+  //     residentId: user.residentId
+  //   },
+  //   process.env.JWT_KEY!
+  // );
+
+  // // Store JWT on the session object created by cookieSession
+  // req.session = {
+  //   jwt: userJwt,
+  // };
+
+  // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);
+  res.status(201).send(user);
+
+}
+
+
+/**
+ * @description logs users in
  * @route POST /api/signin
  * @access public 
  */
 export const login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
-
-  console.log("reqqq body", req.body)
-
   const existingUser = await User.findOne({ email });
-
-  console.log('existingUser', existingUser);
 
   if (!existingUser) {
     throw new BadRequestError("Invalid credentials");
@@ -31,7 +91,6 @@ export const login = async (req: Request, res: Response) => {
   if (!passwordMatch) {
     throw new BadRequestError("Incorrect password");
   }
-
 
   // // // Generate JWT
   // const userJwt = jwt.sign(
@@ -48,7 +107,7 @@ export const login = async (req: Request, res: Response) => {
   // req.session = {
   //   jwt: userJwt,
   // };
-
   res.status(200).send({ existingUser });//existingUser
-
 }
+
+

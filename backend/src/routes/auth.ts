@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { body } from "express-validator";
 import { validateRequest } from "../mddlewares/validate-request";
-import { login } from "../controllers/auth";
+import { login, signup } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -23,7 +23,8 @@ router.post("/signin",
   asyncHandler(login)
 );
 
-router.post("/signup");//signup controller
+router.post("/signup", asyncHandler(signup));//signup controller
+
 router.post("/signout"); //signout controller
 router.get("/currentuser");//currentuser controller
 router.put("/updateuser");// updateuser controller

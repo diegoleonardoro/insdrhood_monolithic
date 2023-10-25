@@ -25,11 +25,13 @@ const SignUp = () => {
 
   async function saveUserData() {
     try {
-      const response = await axios.post('http://localhost:4000/api/signin',
-        { formData });
+      const response = await axios.post('http://localhost:4000/api/signup',
+         formData );
       return response
     } catch (error) {
-      setErrors(error.response.data.errors[0].message);
+
+      console.log('errororororor',error)
+      // setErrors(error.response.data.errors[0].message);
       // return error
     }
   }
@@ -111,8 +113,6 @@ const SignUp = () => {
             }}
             type="file" />
         </Form.Group>
-
-
 
         <Button className="signupSubmitButton" onClick={onSubmit} variant="primary">Sign Up </Button>
       </form>
