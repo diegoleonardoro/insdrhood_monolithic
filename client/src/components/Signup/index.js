@@ -4,11 +4,16 @@ import "./signup.css";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
 const SignUp = () => {
 
   const [errors, setErrors] = useState(null);
   const [imageFile, setImageFile] = useState("");
+
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [unmatchingPasswords, setUnmatchingPasswords] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,14 +34,22 @@ const SignUp = () => {
     }
   }
 
+  async function checkPasswordsMatch(password1, password2) {
+    if (password1 !== password2) {
+      //Show a banner telling that the passwords do not match 
+      setUnmatchingPasswords(true);
+    } else {
+      // make request to sign user in:
+      await saveUserData();
+    }
+  }
+
   const onSubmit = async (event) => {
     event.preventDefault();
-    // make request to sign user in:
-    await saveUserData();
+    checkPasswordsMatch(password1, password2);
   };
 
   return (
-
     <div className="signupFormContainer">
 
       <form className="signupForm">
@@ -50,7 +63,6 @@ const SignUp = () => {
           />
         </FloatingLabel>
 
-
         <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3" >
           <Form.Control
             type="email"
@@ -61,18 +73,36 @@ const SignUp = () => {
           />
         </FloatingLabel>
 
-
         <FloatingLabel controlId="floatingInput" label="Create a password" className="mb-3" >
           <Form.Control
             type="password"
-            value={formData.password}
+            value={password1}
             onChange={(e) => {
               setFormData({ ...formData, password: e.target.value });
+              setPassword1(e.target.value);
+              setUnmatchingPasswords(false);
             }}
           />
         </FloatingLabel>
 
-
+        <FloatingLabel controlId="floatingInput" label="Confirm password" className="mb-3" >
+          <Form.Control
+            type="password"
+            value={password2}
+            onChange={(e) => {
+              setFormData({ ...formData, password: e.target.value });
+              setPassword2(e.target.value);
+              setUnmatchingPasswords(false);
+            }}
+          />
+        </FloatingLabel>
+        {
+          unmatchingPasswords ? (
+            <Alert style={{ textAlign: "center", marginTop: "15px" }} variant="danger">
+              Passwords do not match
+            </Alert>
+          ) : null
+        }
         <Form.Group controlId="formFile" className="mb-3">
           <Form.Label>Choose profile picture</Form.Label>
           <Form.Control
@@ -82,13 +112,12 @@ const SignUp = () => {
             type="file" />
         </Form.Group>
 
-        <Button  className="signupSubmitButton" onClick={onSubmit} variant="primary">Sign Up </Button>
+
+
+        <Button className="signupSubmitButton" onClick={onSubmit} variant="primary">Sign Up </Button>
       </form>
     </div>
-
   )
-
-
 }
 
 export default SignUp;
