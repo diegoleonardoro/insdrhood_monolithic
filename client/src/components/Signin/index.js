@@ -1,9 +1,9 @@
 import { useState } from "react";
-// import styles from "./Signin.module.css";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import "./signin.css"
+import "./signin.css";
+import axios from "axios";
 
 
 const Signin = () => {
@@ -11,11 +11,29 @@ const Signin = () => {
   const [password, setPassword] = useState("");
 
 
+  async function saveUserData() {
+
+    try {
+      const response = await axios.post('http://localhost:4000/api/signin',
+        { email, password });
+
+      console.log("resss", response);
+
+      return response
+    } catch (error) {
+      console.log('errrroorrrr',error)
+      return error
+    }
+
+  }
+
+
   const onSubmit = async (event) => {
     event.preventDefault();
     // make request to sign user in:
-    
+    await saveUserData();
   };
+
 
   return (
     <div className="signinFormContainer">
@@ -40,7 +58,7 @@ const Signin = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </FloatingLabel>
-        <Button className="signinbutton" onClick={onSubmit} variant="dark">Sign In </Button>
+        <Button className="signinbutton" onClick={onSubmit} variant="secondary">Sign In </Button>
       </form>
     </div>
   );

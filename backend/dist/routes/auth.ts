@@ -1,27 +1,17 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { validateRequest } from "../mddlewares/validate-request";
-import { login } from "../controllers/auth";
-
-function asyncHandler(fn: Function) {
-  return function (req: Request, res: Response, next: NextFunction) {
-    return Promise
-      .resolve(fn(req, res, next))
-      .catch(next);
-  }
-}
-
+import { validateRequest } from "../middlewares/validate-request";
 
 const router = express.Router();
 
-router.post("/signin",
+router.post("/login",
   [
     body("email").isEmail().withMessage("Email must be valid"),
     body("password").trim().notEmpty().withMessage("You must supply a password"),
   ],
-  validateRequest,
-  asyncHandler(login)
-);
+  validateRequest
+); //login controller
+
 
 router.post("/signup");//signup controller
 router.post("/signout"); //signout controller

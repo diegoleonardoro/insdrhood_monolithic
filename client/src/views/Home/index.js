@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 import './home.css';
 import Table from 'react-bootstrap/Table';
 
 function Home() {
 
-  const [residentsData, setResidentsData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [residentsData, setResidentsData] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
 
-  useEffect(() => {
+  // useEffect(() => {
     // Define an async function
-    const fetchData = async () => {
-      try {
-        // Replace the URL with your backend endpoint
-        const response = await axios.get('http://localhost:3001/api/data-endpoint');
-        setResidentsData(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
+    // const fetchData = async () => {
+    //   try {
+    //     // Replace the URL with your backend endpoint
+    //     const response = await axios.get('http://localhost:3001/api/data-endpoint');
+    //     setResidentsData(response.data);
+    //     setLoading(false);
+    //   } catch (err) {
+    //     setError(err.message);
+    //     setLoading(false);
+    //   }
+    // };
     
     // fetchData();
     
-  }, []);  // The empty array means this useEffect will run once when the component mounts
+  // }, []);  // The empty array means this useEffect will run once when the component mounts
 
   // const residentsList = residentsData.map((resident) => {
   //   return (
@@ -45,7 +45,7 @@ function Home() {
   // });
 
   // if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // if (error) return <div>Error: {error}</div>;
 
 
   return (

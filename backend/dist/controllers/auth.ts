@@ -6,18 +6,14 @@ import jwt from "jsonwebtoken";
 
 /**
  * @description logs in user
- * @route POST /api/signin
+ * @route POST /api/login
  * @access public 
  */
 export const login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
 
-  console.log("reqqq body", req.body)
-
-  const existingUser = await User.findOne({ email });
-
-  console.log('existingUser', existingUser);
+  const existingUser = await User.findOne({ email })
 
   if (!existingUser) {
     throw new BadRequestError("Invalid credentials");
@@ -33,22 +29,22 @@ export const login = async (req: Request, res: Response) => {
   }
 
 
-  // // // Generate JWT
-  // const userJwt = jwt.sign(
-  //   {
-  //     id: existingUser.id,
-  //     email: existingUser.email,
-  //     name: existingUser.name,
-  //     isVerified: existingUser.isVerified
-  //   },
-  //   'process.env.JWT_KEY!'
-  // );
+  // // Generate JWT
+  const userJwt = jwt.sign(
+    {
+      id: existingUser.id,
+      email: existingUser.email,
+      name: existingUser.name,
+      isVerified: existingUser.isVerified
+    },
+    'process.env.JWT_KEY!'
+  );
 
-  // // Store JWT on the session object created by cookieSession
+  // Store JWT on the session object created by cookieSession
   // req.session = {
   //   jwt: userJwt,
   // };
 
-  res.status(200).send({ existingUser });//existingUser
+  res.status(200).send(existingUser);
 
 }
