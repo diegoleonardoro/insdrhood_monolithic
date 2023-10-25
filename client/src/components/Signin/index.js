@@ -4,11 +4,14 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import "./signin.css";
 import axios from "axios";
+import Alert from 'react-bootstrap/Alert';
+
 
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState(null);
 
 
   async function saveUserData() {
@@ -16,15 +19,14 @@ const Signin = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/signin',
         { email, password });
-
-      console.log("resss", response);
-
       return response
     } catch (error) {
-      console.log('errrroorrrr',error)
-      return error
-    }
 
+      console.log("safasdf", error.response.data.errors[0].message);
+      setErrors(error.response.data.errors[0].message);
+
+      // return error
+    }
   }
 
 
@@ -46,7 +48,7 @@ const Signin = () => {
             type="email"
             placeholder="name@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setErrors (null)}}
           />
         </FloatingLabel>
 
@@ -55,11 +57,17 @@ const Signin = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); setErrors(null) }}
           />
         </FloatingLabel>
         <Button className="signinbutton" onClick={onSubmit} variant="secondary">Sign In </Button>
+        {errors && (
+          <Alert style ={{marginTop:"10px"}}variant='danger'>
+            {errors}
+          </Alert>
+        )}
       </form>
+
     </div>
   );
 };
