@@ -9,6 +9,7 @@ import Alert from 'react-bootstrap/Alert';
 
 
 const Signin = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
@@ -25,13 +26,11 @@ const Signin = () => {
     }
   }
 
-
   const onSubmit = async (event) => {
     event.preventDefault();
     // make request to sign user in:
     await sendUserCredentials();
   };
-
 
   return (
     <div className="signinFormContainer">

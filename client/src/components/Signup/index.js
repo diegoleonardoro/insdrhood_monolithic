@@ -26,13 +26,11 @@ const SignUp = () => {
   async function saveUserData() {
     try {
       const response = await axios.post('http://localhost:4000/api/signup',
-         formData );
+        formData);
       return response
     } catch (error) {
+      setErrors(error.response.data.errors[0].message);
 
-      console.log('errororororor',error)
-      // setErrors(error.response.data.errors[0].message);
-      // return error
     }
   }
 
@@ -71,9 +69,16 @@ const SignUp = () => {
             value={formData.email}
             onChange={(e) => {
               setFormData({ ...formData, email: e.target.value });
+              setErrors(null);
             }}
           />
         </FloatingLabel>
+
+        {errors && (
+          <Alert style={{ marginTop: "10px" }} variant='danger'>
+            {errors}
+          </Alert>
+        )}
 
         <FloatingLabel controlId="floatingInput" label="Create a password" className="mb-3" >
           <Form.Control
@@ -114,8 +119,10 @@ const SignUp = () => {
             type="file" />
         </Form.Group>
 
-        <Button className="signupSubmitButton" onClick={onSubmit} variant="primary">Sign Up </Button>
+        <Button className="signupSubmitButton" onClick={onSubmit} variant="secondary">Sign Up </Button>
+
       </form>
+
     </div>
   )
 }
