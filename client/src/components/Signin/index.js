@@ -14,17 +14,13 @@ const Signin = () => {
   const [errors, setErrors] = useState(null);
 
 
-  async function saveUserData() {
-
+  async function sendUserCredentials() {
     try {
       const response = await axios.post('http://localhost:4000/api/signin',
         { email, password });
       return response
     } catch (error) {
-
-      console.log("safasdf", error.response.data.errors[0].message);
       setErrors(error.response.data.errors[0].message);
-
       // return error
     }
   }
@@ -33,7 +29,7 @@ const Signin = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     // make request to sign user in:
-    await saveUserData();
+    await sendUserCredentials();
   };
 
 
