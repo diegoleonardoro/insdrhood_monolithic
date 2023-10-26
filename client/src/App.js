@@ -16,7 +16,7 @@ function App() {
     try {
       const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
 
-      console.log(response);
+      console.log('afdsafs', response.data);
 
       setCurrentUser(response.data);
 
@@ -30,9 +30,9 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
+        <Header currentuser={currentuser} />
         <Routes>
-          <Route path="/" element={<Home  />} />
+          <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/questionnaire" element={<Signin />} />
