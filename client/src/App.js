@@ -15,11 +15,7 @@ function App() {
   async function checkCurrentUser() {
     try {
       const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
-
-      console.log('afdsafs', response.data);
-
       setCurrentUser(response.data);
-
     } catch (error) {
     }
   }
