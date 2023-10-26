@@ -97,6 +97,7 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
+    console.log('fdsasdfasdf', req.currentUser);
     res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
