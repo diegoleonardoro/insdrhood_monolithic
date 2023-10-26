@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import cookieSession from "cookie-session";
 import { json } from "body-parser";
 import cors from "cors";
-import { errorHandler } from './mddlewares/error-handler';
+import { errorHandler } from './middlewares/error-handler';
 import { config } from 'dotenv';
 config();
 // import routes:

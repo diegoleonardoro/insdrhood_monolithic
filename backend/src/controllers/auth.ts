@@ -10,7 +10,6 @@ import crypto from 'crypto';
  * @route POST /api/signup
  * @access public
 */
-
 export const signup = async (req: Request, res: Response) => {
 
   const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
@@ -43,7 +42,6 @@ export const signup = async (req: Request, res: Response) => {
   await user.save();
   
   console.log("userrrerer", user);
-
   console.log("process.env.JWT_KEY-->>", process.env.JWT_KEY)
 
   // Generate JWT
@@ -68,7 +66,6 @@ export const signup = async (req: Request, res: Response) => {
   res.status(201).send(user);
 
 }
-
 
 /**
  * @description logs users in
@@ -110,5 +107,16 @@ export const login = async (req: Request, res: Response) => {
   // };
   res.status(200).send({ existingUser });//existingUser
 }
+
+/**
+ * @description checks if there is a logged in user and if so sends it back to the client
+ * @route GET /api/currentuser
+ * @access public 
+ */
+export const currentuser = async(req:Request, res:Response)=>{
+  res.send(req.currentUser || null);
+}
+
+
 
 

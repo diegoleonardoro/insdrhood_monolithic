@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import { body } from "express-validator";
-import { validateRequest } from "../mddlewares/validate-request";
-import { login, signup } from "../controllers/auth";
+import { validateRequest } from "../middlewares/validate-request";
+import { authenticationValidator } from "../middlewares/authentication-validator";
+import { login, signup, currentuser } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -24,9 +25,8 @@ router.post("/signin",
 );
 
 router.post("/signup", asyncHandler(signup));//signup controller
-
 router.post("/signout"); //signout controller
-router.get("/currentuser");//currentuser controller
+router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));//currentuser controller
 router.put("/updateuser");// updateuser controller
 router.put("/confirmemail");// confirmemail controller
 

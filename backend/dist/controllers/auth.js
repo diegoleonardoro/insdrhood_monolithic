@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.signup = void 0;
+exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
@@ -91,3 +91,12 @@ const login = async (req, res) => {
     res.status(200).send({ existingUser }); //existingUser
 };
 exports.login = login;
+/**
+ * @description checks if there is a logged in user and if so sends it back to the client
+ * @route GET /api/currentuser
+ * @access public
+ */
+const currentuser = async (req, res) => {
+    res.send(req.currentUser || null);
+};
+exports.currentuser = currentuser;

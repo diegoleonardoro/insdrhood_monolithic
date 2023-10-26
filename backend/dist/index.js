@@ -9,7 +9,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_session_1 = __importDefault(require("cookie-session"));
 const body_parser_1 = require("body-parser");
 const cors_1 = __importDefault(require("cors"));
-const error_handler_1 = require("./mddlewares/error-handler");
+const error_handler_1 = require("./middlewares/error-handler");
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 // import routes:
