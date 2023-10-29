@@ -5,9 +5,12 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+const SignUp = ({ updateCurrentUser }) => {
   axios.defaults.withCredentials = true;
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState(null);
   const [imageFile, setImageFile] = useState("");
@@ -28,10 +31,12 @@ const SignUp = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/signup',
         formData);
-      return response
-    } catch (error) {
-      setErrors(error.response.data.errors[0].message);
+      await updateCurrentUser(response.data);
+      navigate('/');
+      return
 
+    } catch (error) {
+      setErrors(error?.response?.data?.errors?.[0]?.message);
     }
   }
 

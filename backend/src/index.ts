@@ -21,9 +21,9 @@ app.use(cors({
 }));
 
 app.use(json());
-// app.set("trust proxy", true);
+app.set("trust proxy", true);
 mongoose.connect('mongodb://127.0.0.1:27017/insider_hood');
-app.use(express.static(path.join(__dirname, '../../client/public')));
+
 
 app.use(
   cookieSession({
@@ -34,13 +34,13 @@ app.use(
 );
 
 
+app.use(express.static(path.join(__dirname, '../../client/public')));
 app.use("/api", auth);
 app.use(errorHandler);
 
-
 // Fallback route
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/index.html'));
+  res.sendFile(path.join(__dirname, '../../client/public/index.html'));
 });
 
 // app.get('/api', (req, res) => {

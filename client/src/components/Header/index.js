@@ -1,8 +1,9 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import {Link} from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
+import axios from "axios"
 import "./header.css";
+import { useNavigate } from "react-router-dom";
 
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -13,16 +14,35 @@ import Navbar from 'react-bootstrap/Navbar';
 // import Col from 'react-bootstrap/Col';
 // import Image from 'react-bootstrap/Image';
 
-function Header({ currentuser }) {
+function Header({ updateCurrentUser, currentuser }) {
+
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+
+      await axios.post("http://localhost:4000/api/signout", { withCredentials: true });
+      await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
+      console.log('jajajaja')
+      await updateCurrentUser(null);
+      navigate('/');
+
+
+    } catch (err) { console.log('error: ', err) }
+  }
 
   const links = [
-    !currentuser && { label: "Sign Up", to: "/auth/signup" },
-    !currentuser && { label: "Sign In", to: "/auth/signin" },
-    currentuser && { label: "Questionnaire", to: "/auth/questionnainre" },
-    currentuser && { label: "Sign Out", to: "/auth/signin" },
+    !currentuser && { label: "Sign Up", to: "/signup" },
+    !currentuser && { label: "Sign In", to: "/signin" },
+    currentuser && { label: "Questionnaire", to: "/questionnainre" },
+    currentuser && { label: "Sign Out", onClick: handleSignOut },
   ]
     .filter((linkConfig) => linkConfig)
-    .map(({ label, to }, index) => {
+    .map(({ label, to, onClick }, index) => {
+
+      if (onClick) {
+        return <Nav.Link key={index} onClick={onClick}>{label}</Nav.Link>
+      }
       return (
         <Nav.Link key={index} as={Link} to={to}>{label}</Nav.Link>
       );
@@ -34,10 +54,6 @@ function Header({ currentuser }) {
         <Navbar.Brand as={Link} to="/">Insdr Hood</Navbar.Brand>
         <Nav className="me-auto">
           {links}
-          {/* <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/signup">Sign up</Nav.Link>
-          <Nav.Link as={Link} to="/signin">Sign in</Nav.Link>
-          <Nav.Link as={Link} to="/questionnaire">Show your hood</Nav.Link> */}
         </Nav>
         <Form className="d-flex">
           <Form.Control

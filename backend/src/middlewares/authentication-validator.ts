@@ -26,8 +26,11 @@ export const authenticationValidator = async (
   res: Response,
   next: NextFunction
 ) => {
-
+  console.log('reqqq 1', req.session);
+  console.log('reqqq 2', req.currentUser);
+  
   if (!req.session?.jwt) {
+    
     return next();
   }
 
@@ -38,7 +41,9 @@ export const authenticationValidator = async (
       process.env.JWT_KEY!
     ) as UserPayload;
 
-  
+    console.log('polik', payload)
+
+
     //---------------------------------------
     // if (payload.isVerified === false) {
     //   const loggedUser = await User.findOne({ email: payload.email });

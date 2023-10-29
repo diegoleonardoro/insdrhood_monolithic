@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.currentuser = exports.login = exports.signup = void 0;
+exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
@@ -40,8 +40,6 @@ const signup = async (req, res) => {
         userImagesId
     });
     await user.save();
-    console.log("userrrerer", user);
-    console.log("process.env.JWT_KEY-->>", process.env.JWT_KEY);
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign({
         id: user.id,
@@ -74,20 +72,17 @@ const login = async (req, res) => {
     if (!passwordMatch) {
         throw new bad_request_error_1.BadRequestError("Incorrect password");
     }
-    // // // Generate JWT
-    // const userJwt = jwt.sign(
-    //   {
-    //     id: existingUser.id,
-    //     email: existingUser.email,
-    //     name: existingUser.name,
-    //     isVerified: existingUser.isVerified
-    //   },
-    //   'process.env.JWT_KEY!'
-    // );
-    // // Store JWT on the session object created by cookieSession
-    // req.session = {
-    //   jwt: userJwt,
-    // };
+    // Generate JWT
+    const userJwt = jsonwebtoken_1.default.sign({
+        id: existingUser.id,
+        email: existingUser.email,
+        name: existingUser.name,
+        isVerified: existingUser.isVerified
+    }, 'process.env.JWT_KEY!');
+    // Store JWT on the session object created by cookieSession
+    req.session = {
+        jwt: userJwt,
+    };
     res.status(200).send({ existingUser }); //existingUser
 };
 exports.login = login;
@@ -97,7 +92,20 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
-    console.log('fdsasdfasdf', req.currentUser);
     res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
+/**
+ * @description logs user out
+ * @route POST /api/signout
+ * @access only shown when user is authenticated
+ */
+const signout = async (req, res) => {
+    console.log('req.session from sign out', req.session);
+    delete req.session?.jwt;
+    // delete req.session;
+    // req.currentUser= null
+    // delete req.currentUser;
+    res.send({});
+};
+exports.signout = signout;

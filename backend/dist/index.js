@@ -23,19 +23,19 @@ app.use((0, cors_1.default)({
     credentials: true
 }));
 app.use((0, body_parser_1.json)());
-// app.set("trust proxy", true);
+app.set("trust proxy", true);
 mongoose_1.default.connect('mongodb://127.0.0.1:27017/insider_hood');
-app.use(express_1.default.static(path_1.default.join(__dirname, '../../client/public')));
 app.use((0, cookie_session_1.default)({
     signed: false,
     // secure: process.env.NODE_ENV !== "test",
     secure: false,
 }));
+app.use(express_1.default.static(path_1.default.join(__dirname, '../../client/public')));
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
 // Fallback route
 app.get('*', (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, '../../client/index.html'));
+    res.sendFile(path_1.default.join(__dirname, '../../client/public/index.html'));
 });
 // app.get('/api', (req, res) => {
 //   res.send('Hello from the TypeScript backend!');

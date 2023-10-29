@@ -40,9 +40,6 @@ export const signup = async (req: Request, res: Response) => {
   });
 
   await user.save();
-  
-  console.log("userrrerer", user);
-  console.log("process.env.JWT_KEY-->>", process.env.JWT_KEY)
 
   // Generate JWT
   const userJwt = jwt.sign(
@@ -73,7 +70,6 @@ export const signup = async (req: Request, res: Response) => {
  * @access public 
  */
 export const login = async (req: Request, res: Response) => {
-
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
 
@@ -90,21 +86,21 @@ export const login = async (req: Request, res: Response) => {
     throw new BadRequestError("Incorrect password");
   }
 
-  // // // Generate JWT
-  // const userJwt = jwt.sign(
-  //   {
-  //     id: existingUser.id,
-  //     email: existingUser.email,
-  //     name: existingUser.name,
-  //     isVerified: existingUser.isVerified
-  //   },
-  //   'process.env.JWT_KEY!'
-  // );
+  // Generate JWT
+  const userJwt = jwt.sign(
+    {
+      id: existingUser.id,
+      email: existingUser.email,
+      name: existingUser.name,
+      isVerified: existingUser.isVerified
+    },
+    'process.env.JWT_KEY!'
+  );
 
-  // // Store JWT on the session object created by cookieSession
-  // req.session = {
-  //   jwt: userJwt,
-  // };
+  // Store JWT on the session object created by cookieSession
+  req.session = {
+    jwt: userJwt,
+  };
   res.status(200).send({ existingUser });//existingUser
 }
 
@@ -113,10 +109,25 @@ export const login = async (req: Request, res: Response) => {
  * @route GET /api/currentuser
  * @access public 
  */
-export const currentuser = async(req:Request, res:Response)=>{
-
-  console.log('fdsasdfasdf', req.currentUser)
+export const currentuser = async (req: Request, res: Response) => {
   res.send(req.currentUser || null);
+}
+
+
+/**
+ * @description logs user out 
+ * @route POST /api/signout
+ * @access only shown when user is authenticated
+ */
+export const signout = async (req: Request, res: Response) => {
+  console.log('req.session from sign out', req.session);
+
+  delete req.session?.jwt
+  // delete req.session;
+  // req.currentUser= null
+  // delete req.currentUser;
+  res.send({});
+
 }
 
 

@@ -22,8 +22,8 @@ router.post("/signin", [
     (0, express_validator_1.body)("email").isEmail().withMessage("Email must be valid"),
     (0, express_validator_1.body)("password").trim().notEmpty().withMessage("You must supply a password"),
 ], validate_request_1.validateRequest, asyncHandler(auth_1.login));
-router.post("/signup", asyncHandler(auth_1.signup)); //signup controller
-router.post("/signout"); //signout controller
+router.post("/signup", asyncHandler(auth_1.signup));
+router.post("/signout", asyncHandler(auth_1.signout)); // authenticationValidator,
 router.get("/currentuser", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.currentuser)); //currentuser controller
 router.put("/updateuser"); // updateuser controller
 router.put("/confirmemail"); // confirmemail controller
