@@ -16,14 +16,16 @@ import Navbar from 'react-bootstrap/Navbar';
 
 function Header({ updateCurrentUser, currentuser }) {
 
+  axios.defaults.withCredentials = true;
+
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
 
-      await axios.post("http://localhost:4000/api/signout", { withCredentials: true });
-      await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
-      console.log('jajajaja')
+      await axios.post("http://localhost:4000/api/signout");
+      
+      await axios.get('http://localhost:4000/api/currentuser');
       await updateCurrentUser(null);
       navigate('/');
 

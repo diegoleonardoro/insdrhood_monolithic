@@ -5,21 +5,25 @@ import Button from 'react-bootstrap/Button';
 import "./signin.css";
 import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
+import { useNavigate } from "react-router-dom";
 
 
+const Signin = ({ updateCurrentUser }) => {
 
-const Signin = () => {
+  axios.defaults.withCredentials = true;
 
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
-
 
   async function sendUserCredentials() {
     try {
       const response = await axios.post('http://localhost:4000/api/signin',
         { email, password });
-      return response
+      await updateCurrentUser(response.data);
+      navigate('/');
+      return
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
       // return error
@@ -43,7 +47,7 @@ const Signin = () => {
             type="email"
             placeholder="name@example.com"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setErrors (null)}}
+            onChange={(e) => { setEmail(e.target.value); setErrors(null) }}
           />
         </FloatingLabel>
 
@@ -57,7 +61,7 @@ const Signin = () => {
         </FloatingLabel>
         <Button className="signinbutton" onClick={onSubmit} variant="secondary">Sign In </Button>
         {errors && (
-          <Alert style ={{marginTop:"10px"}}variant='danger'>
+          <Alert style={{ marginTop: "10px" }} variant='danger'>
             {errors}
           </Alert>
         )}

@@ -70,8 +70,12 @@ export const signup = async (req: Request, res: Response) => {
  * @access public 
  */
 export const login = async (req: Request, res: Response) => {
+
   const { email, password } = req.body;
+  
   const existingUser = await User.findOne({ email });
+
+  console.log('existing user', existingUser);
 
   if (!existingUser) {
     throw new BadRequestError("Invalid credentials");
@@ -92,16 +96,20 @@ export const login = async (req: Request, res: Response) => {
       id: existingUser.id,
       email: existingUser.email,
       name: existingUser.name,
-      isVerified: existingUser.isVerified
+      image: existingUser.image,
+      isVerified: existingUser.isVerified,
+      residentId: existingUser.residentId
     },
-    'process.env.JWT_KEY!'
+    process.env.JWT_KEY!
   );
 
   // Store JWT on the session object created by cookieSession
   req.session = {
     jwt: userJwt,
   };
-  res.status(200).send({ existingUser });//existingUser
+
+  res.status(200).send( existingUser);//existingUser
+
 }
 
 /**
@@ -120,14 +128,8 @@ export const currentuser = async (req: Request, res: Response) => {
  * @access only shown when user is authenticated
  */
 export const signout = async (req: Request, res: Response) => {
-  console.log('req.session from sign out', req.session);
-
   delete req.session?.jwt
-  // delete req.session;
-  // req.currentUser= null
-  // delete req.currentUser;
   res.send({});
-
 }
 
 

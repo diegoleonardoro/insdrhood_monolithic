@@ -22,13 +22,11 @@ function App() {
         reject(new Error('No user data provided.'))
       }
     })
-
   }
 
   async function checkCurrentUser() {
     try {
       const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
-      console.log('okuju', response.data)
       // setCurrentUser(response.data);
       updateCurrentUser(response.data)
     } catch (error) {
@@ -36,10 +34,7 @@ function App() {
   }
 
   useEffect(() => {
-
     checkCurrentUser()
-
-
   }, []);
 
   return (
@@ -49,7 +44,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
-          <Route path="/signin" element={<Signin pdateCurrentUser={updateCurrentUser} />} />
+          <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<Signin />} />
         </Routes>
       </div>

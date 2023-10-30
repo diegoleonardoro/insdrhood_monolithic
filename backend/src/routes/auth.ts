@@ -12,9 +12,7 @@ function asyncHandler(fn: Function) {
   }
 }
 
-
 const router = express.Router();
-
 router.post("/signin",
   [
     body("email").isEmail().withMessage("Email must be valid"),

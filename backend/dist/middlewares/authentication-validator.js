@@ -7,14 +7,11 @@ exports.authenticationValidator = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // Add the "currentUser" property to the request body if there is a currently logged in user:
 const authenticationValidator = async (req, res, next) => {
-    console.log('reqqq 1', req.session);
-    console.log('reqqq 2', req.currentUser);
     if (!req.session?.jwt) {
         return next();
     }
     try {
         const payload = jsonwebtoken_1.default.verify(req.session.jwt, process.env.JWT_KEY);
-        console.log('polik', payload);
         //---------------------------------------
         // if (payload.isVerified === false) {
         //   const loggedUser = await User.findOne({ email: payload.email });
