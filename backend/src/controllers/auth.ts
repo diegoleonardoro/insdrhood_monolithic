@@ -5,6 +5,8 @@ import { Password } from "../services/password";
 import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 
+import { sendVerificationMail } from "../services/emailVerification";
+
 /**
  * @description registers a new user
  * @route POST /api/signup
@@ -59,9 +61,15 @@ export const signup = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);
-  res.status(201).send(user);
+  sendVerificationMail({
+    name: user.name,
+    email: user.email,
+    emailToken: user.emailToken,
+    baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
+  })
 
+  // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);  
+  res.status(201).send(user);
 }
 
 /**

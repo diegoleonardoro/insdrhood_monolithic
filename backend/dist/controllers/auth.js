@@ -9,6 +9,7 @@ const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
+const emailVerification_1 = require("../services/emailVerification");
 /**
  * @description registers a new user
  * @route POST /api/signup
@@ -53,7 +54,13 @@ const signup = async (req, res) => {
     req.session = {
         jwt: userJwt,
     };
-    // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);
+    (0, emailVerification_1.sendVerificationMail)({
+        name: user.name,
+        email: user.email,
+        emailToken: user.emailToken,
+        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
+    });
+    // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);  
     res.status(201).send(user);
 };
 exports.signup = signup;
