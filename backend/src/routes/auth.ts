@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { body } from "express-validator";
 import { validateRequest } from "../middlewares/validate-request";
 import { authenticationValidator } from "../middlewares/authentication-validator";
-import { login, signup, signout, currentuser } from "../controllers/auth";
+import { login, signup, signout, currentuser , verifyemail} from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -23,8 +23,12 @@ router.post("/signin",
 );
 
 router.post("/signup", asyncHandler(signup));
-router.post("/signout", asyncHandler(signout));// authenticationValidator,
-router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));//currentuser controller
+router.post("/signout", asyncHandler(signout));
+router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));
+
+
+router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
+
 
 router.put("/updateuser");// updateuser controller
 router.put("/confirmemail");// confirmemail controller

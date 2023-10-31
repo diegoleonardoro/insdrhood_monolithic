@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.verifyemail = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
@@ -72,7 +72,6 @@ exports.signup = signup;
 const login = async (req, res) => {
     const { email, password } = req.body;
     const existingUser = await user_1.User.findOne({ email });
-    console.log('existing user', existingUser);
     if (!existingUser) {
         throw new bad_request_error_1.BadRequestError("Invalid credentials");
     }
@@ -108,10 +107,41 @@ exports.currentuser = currentuser;
 /**
  * @description logs user out
  * @route POST /api/signout
- * @access only shown when user is authenticated
+ * @access only accesible when user is authenticated
  */
 const signout = async (req, res) => {
     delete req.session?.jwt;
     res.send({});
 };
 exports.signout = signout;
+/**
+ * @description confirms user's email
+ * @route GET /api/emailVerification/:emailtoken
+ * @access only accessible with the email verification link
+ */
+const verifyemail = async (req, res) => {
+    const emailtoken = req.params.emailtoken;
+    // find the user with the email token:
+    const user = await user_1.User.findOne({ emailToken: emailtoken });
+    if (!user) {
+        throw new bad_request_error_1.BadRequestError("Invalid email token");
+    }
+    user.isVerified = true;
+    user.emailToken = '';
+    await user.save();
+    // Generate JWT
+    const userJwt = jsonwebtoken_1.default.sign({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        image: user.image,
+        isVerified: user.isVerified,
+        residentId: user.residentId
+    }, process.env.JWT_KEY);
+    // Store JWT on the session object created by cookieSession
+    req.session = {
+        jwt: userJwt,
+    };
+    res.status(200).send(user);
+};
+exports.verifyemail = verifyemail;

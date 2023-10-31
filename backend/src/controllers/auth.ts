@@ -80,10 +80,8 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
-  
-  const existingUser = await User.findOne({ email });
 
-  console.log('existing user', existingUser);
+  const existingUser = await User.findOne({ email });
 
   if (!existingUser) {
     throw new BadRequestError("Invalid credentials");
@@ -116,7 +114,7 @@ export const login = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  res.status(200).send( existingUser);//existingUser
+  res.status(200).send(existingUser);//existingUser
 
 }
 
@@ -129,17 +127,58 @@ export const currentuser = async (req: Request, res: Response) => {
   res.send(req.currentUser || null);
 }
 
-
 /**
  * @description logs user out 
  * @route POST /api/signout
- * @access only shown when user is authenticated
+ * @access only accesible when user is authenticated
  */
 export const signout = async (req: Request, res: Response) => {
   delete req.session?.jwt
   res.send({});
 }
 
+/**
+ * @description confirms user's email
+ * @route GET /api/emailVerification/:emailtoken
+ * @access only accessible with the email verification link
+ */
+export const verifyemail = async (req: Request, res: Response) => {
+
+  const emailtoken = req.params.emailtoken;
+
+  // find the user with the email token:
+  const user = await User.findOne({ emailToken: emailtoken });
+
+  if (!user) {
+    throw new BadRequestError("Invalid email token")
+  }
+
+  user.isVerified = true;
+
+  user.emailToken = '';
+  await user.save();
+
+  // Generate JWT
+  const userJwt = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      image: user.image,
+      isVerified: user.isVerified,
+      residentId: user.residentId
+    },
+    process.env.JWT_KEY!
+  );
+
+  // Store JWT on the session object created by cookieSession
+  req.session = {
+    jwt: userJwt,
+  };
+
+  res.status(200).send(user);
+
+}
 
 
 

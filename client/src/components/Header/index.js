@@ -15,7 +15,7 @@ import Navbar from 'react-bootstrap/Navbar';
 // import Image from 'react-bootstrap/Image';
 
 function Header({ updateCurrentUser, currentuser }) {
-
+  
   axios.defaults.withCredentials = true;
 
   const navigate = useNavigate();
@@ -24,11 +24,9 @@ function Header({ updateCurrentUser, currentuser }) {
     try {
 
       await axios.post("http://localhost:4000/api/signout");
-      
       await axios.get('http://localhost:4000/api/currentuser');
       await updateCurrentUser(null);
       navigate('/');
-
 
     } catch (err) { console.log('error: ', err) }
   }
