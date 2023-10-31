@@ -26,7 +26,6 @@ const Signin = ({ updateCurrentUser }) => {
       return
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
-      // return error
     }
   }
 

@@ -1,23 +1,45 @@
 import { useState, useEffect } from "react";
-// import Alert from 'react-bootstrap/Alert';
-// import Spinner from 'react-bootstrap/Spinner';
-// import Form from 'react-bootstrap/Form';
-// import Button from 'react-bootstrap/Button';
+
 import { useParams } from 'react-router-dom';
-import Alert from 'react-bootstrap/Alert';
+
 import axios from "axios";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
+import { useNavigate } from "react-router-dom";
 
 
 const VerifyEmail = () => {
 
   const { emailtoken } = useParams();
   const [errors, setErrors] = useState(null);
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null);
+
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [unmatchingPasswords, setUnmatchingPasswords] = useState(false);
+
+  // when set to true, this state will will show a windown telling the user thaty they have successfully verified their email.
+  const [showRedirecting, setShowRedirecting] = useState(false);
+
+
+  // state used when the use has not set their passwords and we need to update their data:
+  const [userDataToUpdate, setUserDataToUpdate] = useState({
+    id: 'user.id',
+    password: "",
+    passwordSet: true
+  });
+
 
   // make request to get the user with the emailtoken
   const makeRequest = async () => {
     try {
+
       const response = await axios.get(`http://localhost:4000/api/emailVerification/${emailtoken}`);
+      setUser(response.data);
+
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }
@@ -25,22 +47,47 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     makeRequest()
-
   }, [])
+
+  useEffect(() => {
+    if (user !== null) {
+
+      // if the user has not set their password, show a form for them to set their passwords:
+      if(user.passwordSet===false){
+        setShowPasswordForm(true);
+      }else if (user.formsResponded ===0){
+        // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
+        setShowRedirecting(true);
+
+        // DIRECT THE USER TO RESPOND THE FORM 
+
+      }else{
+        // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
+        setShowRedirecting(true);
+
+        // DIRECT THE USER TO THE MAIN PAGE (EVENTUALLY DIRECT THEM TO THEIR PROFILE)
+
+      }
+    
+    }
+  }, [user])
+
+
+  async function checkPasswordsMatch(password1, password2) {
+    if (password1 !== password2) {
+      //Show a banner telling that the passwords do not match 
+      setUnmatchingPasswords(true);
+    } else {
+      // make the request to update the user's information (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
+
+
+    }
+  }
 
 
   // the following three states are meant to be used when the user has not set their password.
-  // const [password1, setPassword1] = useState("");
-  // const [password2, setPassword2] = useState("");
-  // const [unmatchingPasswords, setUnmatchingPasswords] = useState(false);
-  // const [showPasswordForm, setShowPasswordForm] = useState(false);
   // const [showRedirecting, setShowRedirecting] = useState(false);
-  // const [userDataToUpdate, setUserDataToUpdate] = useState({
-  //   id: user.id,
-  //   password: "",
-  //   passwordSet: true
-  // })
-
+ 
   return (
     <div>
 
@@ -49,6 +96,67 @@ const VerifyEmail = () => {
           {errors}
         </Alert>
       )}
+
+      {user ? (<Alert variant="success">
+        <Alert.Heading>Hey! you have successfully verfified your email</Alert.Heading>
+        {showRedirecting ? (
+          <>
+            <p>
+              You can now edit your profile and add more information
+            </p>
+            <hr />
+            <div style={{ marginTop: "35px", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+              <h3 style={{ marginBottom: "10px" }}>Redirecting</h3>
+              <Spinner animation="grow" size="sm" variant="success" />
+              <Spinner animation="grow" variant="success" />
+            </div>
+          </>
+        ) : null}
+
+      </Alert>):null}
+
+      {showPasswordForm ? (<div style={{ width: "40%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+        <h3 style={{ display: "block" }} id="passwordHelpBlock" muted>
+          Set a password for future logins
+        </h3>
+        <Form.Label style={{ marginTop: "5%" }} htmlFor="inputPassword5">Password: </Form.Label>
+
+        <Form.Control
+          type="password"
+          id="inputPassword5"
+          aria-describedby="passwordHelpBlock"
+          onChange={(e) => {
+            setPassword1(e.target.value);
+            setUnmatchingPasswords(false);
+            setUserDataToUpdate((prevData) => ({
+              ...prevData,
+              password: e.target.value
+            }))
+
+          }}
+        />
+        <Form.Label style={{ marginTop: "5%" }} htmlFor="inputPassword5">Confirm password: </Form.Label>
+        <Form.Control
+          type="password"
+          id="inputPassword5"
+          aria-describedby="passwordHelpBlock"
+          onChange={(e) => {
+            setPassword2(e.target.value);
+            setUnmatchingPasswords(false);
+          }}
+        />
+        <Button style={{ width: "100%", marginTop: "15px" }} variant="primary" size="lg" onClick={() => { checkPasswordsMatch(password1, password2) }}>
+          Submit
+        </Button>
+        {
+          unmatchingPasswords ? (
+            <Alert style={{ textAlign: "center", marginTop: "15px" }} variant="warning">
+              Passwords do not match
+            </Alert>
+          ) : null
+        }
+      </div>) : null
+      }
     </div>
   )
 
