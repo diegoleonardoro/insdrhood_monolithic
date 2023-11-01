@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import Signin from './components/Signin';
 import SignUp from './components/Signup';
 import VerifyEmail from './components/EmailConfirmation';
+import FormComponent from './components/Forms/1';
 
 
 // custom hook to fetch dataa:
@@ -52,7 +53,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
-          <Route path="/questionnaire" element={<Signin />} />
+          <Route path="/questionnaire" element={<FormComponent />} />
           <Route path="/emailconfimation/:emailtoken" element={<VerifyEmail />} />
         </Routes>
       </div>

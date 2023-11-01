@@ -34,7 +34,7 @@ function Header({ updateCurrentUser, currentuser }) {
   const links = [
     !currentuser && { label: "Sign Up", to: "/signup" },
     !currentuser && { label: "Sign In", to: "/signin" },
-    currentuser && { label: "Questionnaire", to: "/questionnainre" },
+    currentuser && { label: "questionnaire", to: "/questionnaire" },
     currentuser && { label: "Sign Out", onClick: handleSignOut },
   ]
     .filter((linkConfig) => linkConfig)
