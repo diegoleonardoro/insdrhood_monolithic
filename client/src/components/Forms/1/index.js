@@ -5,8 +5,9 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { v4 as uuidv4 } from 'uuid';
 import Alert from 'react-bootstrap/Alert';
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 const FormComponent = () => {
@@ -431,12 +432,13 @@ const FormComponent = () => {
         style={{ display: onlyNYCResidentsSign }}
         className="onlyNYCResident"
       >
-        <h3>This form is only for New York City Residents </h3>
+        <Alert style={{ textAlign: "center", marginTop: "15px" }} variant="danger">
+          This form is only for New York City Residents
+        </Alert>
       </div>
 
 
       <form ref={formUseRef} className="form" >
-
 
         {/** Do you live in NYC? */}
         <div
@@ -475,6 +477,52 @@ const FormComponent = () => {
             <label className="liveNYCLabel" htmlFor="radio2">
               No
             </label>
+          </div>
+        </div>
+
+
+        {/** What neighborhood do you live in? */}
+        <div
+          className={
+            "liveInNY yearsInNeighborhood neighborhoodInput " +
+            displayQuestion("neighborhood") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[1] = ref}
+        >
+          <label htmlFor="neighborhood">
+            What <span className="questionHighlight">neighborhood</span> do you live in?
+          </label>
+
+          <input
+            value={formData.neighborhood}
+            onChange={(e) => {
+              setFormData({ ...formData, neighborhood: e.target.value });
+              selectNeighborhoods(e);
+            }}
+            onKeyDown={(e) => {
+              highlightNhoods(e);
+            }}
+            name="neighborhood"
+            id="neighborhood"
+            placeholder=" "
+            className={"textInput inputCheck"}
+            ref={neighborhoodInput}
+          ></input>
+
+          <div
+            ref={neighborhoodsDiv}
+            className="neighborhoodsContainer"
+            style={{ display: displayNhoodsContainer }}
+          >
+            {neighborhoods.map((nhood, index) => {
+              return (
+                <div onClick={(e) => selectNeighborhood(e)} key={index}>
+                  {nhood}
+                </div>
+              );
+            })}
           </div>
         </div>
 
