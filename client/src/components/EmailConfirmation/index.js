@@ -33,6 +33,8 @@ const VerifyEmail = () => {
   });
 
 
+  const navigate = useNavigate();
+
   // make request to get the user with the emailtoken
   const makeRequest = async () => {
     try {
@@ -53,22 +55,31 @@ const VerifyEmail = () => {
     if (user !== null) {
 
       // if the user has not set their password, show a form for them to set their passwords:
-      if(user.passwordSet===false){
+      if (user.passwordSet === false) {
         setShowPasswordForm(true);
-      }else if (user.formsResponded ===0){
+      } else if (user.formsResponded === 0) {
+
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
 
         // DIRECT THE USER TO RESPOND THE FORM 
 
-      }else{
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+
+
+      } else {
+
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
 
         // DIRECT THE USER TO THE MAIN PAGE (EVENTUALLY DIRECT THEM TO THEIR PROFILE)
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
 
       }
-    
     }
   }, [user])
 
@@ -87,7 +98,7 @@ const VerifyEmail = () => {
 
   // the following three states are meant to be used when the user has not set their password.
   // const [showRedirecting, setShowRedirecting] = useState(false);
- 
+
   return (
     <div>
 
@@ -113,7 +124,7 @@ const VerifyEmail = () => {
           </>
         ) : null}
 
-      </Alert>):null}
+      </Alert>) : null}
 
       {showPasswordForm ? (<div style={{ width: "40%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
         <h3 style={{ display: "block" }} id="passwordHelpBlock" muted>
