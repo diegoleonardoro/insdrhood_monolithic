@@ -9,6 +9,9 @@ import Alert from 'react-bootstrap/Alert';
 import { v4 as uuidv4 } from 'uuid';
 
 
+let addLastPlace = false;
+let addPlaceFromForm = true;
+let addPlaceFromFormNightLife = true;
 
 const FormComponent = () => {
 
@@ -24,7 +27,7 @@ const FormComponent = () => {
   const typesOfFoodRecommendationsRef = useRef(null);
   const favTypesOfFoodRef = useRef(null);
   const nightLifeRecommendationsRef = useRef([]);
-
+  const foodRecommendationsRef = useRef([]);
 
   const divRefs = useRef([]);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -92,6 +95,7 @@ const FormComponent = () => {
   const foodPriceExplanationRef = useRef(null);
   const foodDiversityExplanationRef = useRef(null);
   const neighborhoodInput = useRef();
+  const favoritePlacesContainerRef = useRef();
 
   const showFormToResident = liveinNYC === "yes" ? "visible" : "hidden";
   const onlyNYCResidentsSign = liveinNYCSign === "no" ? "block" : "none";
@@ -427,10 +431,226 @@ const FormComponent = () => {
   // ------- -------- --------- ---------- --------- ---------- ----------
 
 
+    // THIS FUNCTION WILL BE ACTIVATED EVERY TIME ANY OF THE OPTION BUTTONS IN THE FORM ARE CLICKED.
+  // IT WILL UPATE THE FORM WITH THE RESPECTIVE VALUE.
+  const handleOptionSelect = (option, description, event) => { // --->> ?????
+
+    if (description === "nhood") {
+      if (selectedOptions.length < 5) {
+
+        let updatedOptions
+        event.target.style.backgroundColor = "#EBEBE4";
+        if (!selectedOptions.includes(option)) {
+          setSelectedOptions(prevOptions => {
+            updatedOptions = [...prevOptions, option];
+            setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+            return updatedOptions;
+          });
+        }
+        setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+      }
+    } else if (description === "resident") {
+      if (residentsAdjsSelectedOpts.length < 5) {
+        let updatedOptions;
+        event.target.style.backgroundColor = "#EBEBE4";
+        if (!residentsAdjsSelectedOpts.includes(option)) {
+          setResidentsAdjsSelectedOpts(prevOptions => {
+            updatedOptions = [...prevOptions, option];
+            setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+            return updatedOptions;
+          })
+        }
+
+        setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+      }
+    } else if (description === "foodType") {
+
+      if (foodTypesSelectedOpts.length < 5) {
+        let updatedOptions;
+
+        if (event) {
+          event.target.style.backgroundColor = "#EBEBE4";
+        }
+
+        const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.foodType.includes(option));
+        if (!containsSpecificWord) {
+          setFoodTypesSelectedOpts(prevOptions => {
+            updatedOptions = [...prevOptions, { "foodType": option }];
+            setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
+            return updatedOptions;
+          })
+        }
+      }
+
+      const favTypesOfFoodDiv = favTypesOfFoodRef.current;
+      if (favTypesOfFoodDiv) {
+
+        setTimeout(() => {
+          favTypesOfFoodDiv.scrollTop = favTypesOfFoodDiv.scrollHeight;
+        }, 0);
+      }
+
+    }
+  };
+  const handleOptionRemove = (option, description) => {
+    if (description === "neighborhood") {
+      const advjectivesListDivs = [...nehoodAdjectivesDivRef.current.children];
+      for (var i = 0; i < advjectivesListDivs.length; i++) {
+
+        if (advjectivesListDivs[i].dataset.option === option) {
+          advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
+        }
+      }
+      const updatedOptions = selectedOptions.filter((item) => item !== option);
+      setSelectedOptions(prevOptions => {
+        setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+        return updatedOptions;
+      });
+      setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+    } else if (description === "resident") {
+      const advjectivesListDivs = [...residentAdjectivesDivRef.current.children];
+      for (var i = 0; i < advjectivesListDivs.length; i++) {
+        if (advjectivesListDivs[i].dataset.option === option) {
+          advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
+        }
+      }
+      const updatedOptions = residentsAdjsSelectedOpts.filter((item) => item !== option);
+      setResidentsAdjsSelectedOpts(prevOptions => {
+        setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+        return updatedOptions
+      })
+      setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+    } else if (description === "foodTypes") {
+
+      const advjectivesListDivs = [...typesOfFoodRecommendationsRef.current.children];
+      for (var i = 0; i < advjectivesListDivs.length; i++) {
+        if (advjectivesListDivs[i].dataset.option === option) {
+          advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
+        }
+      }
+
+      const updatedOptions = foodTypesSelectedOpts.filter((item) => item.foodType !== option);
+      setFoodTypesSelectedOpts(prevOptions => {
+        setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
+        return updatedOptions
+      });
+      return updatedOptions;
+
+    }
+  };
+
+  const handleRecommendedRestaurant = (value, index) => {
+    const updatedRecommendedFoodTypes = formData.recommendedFoodTypes.map((foodType, i) => {
+      if (i === index) {
+        return {
+          ...foodType, // Spread the existing key-value pairs from the original object
+          "recommendedRestaurant": value, // Add the new key-value pair
+        };
+      }
+      return foodType; // Keep other objects unchanged
+    });
+
+    // Update the copied formData object with the new array
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      recommendedFoodTypes: updatedRecommendedFoodTypes,
+    }));
+
+  };
+
+  const handleInputChange = (value) => { 
+    setFoodTypesInput(value);
+  };
+
+  const handleAddButton = (e) => {
+    e.preventDefault();
+    if (foodTypesInput.trim() !== "") {
+      handleOptionSelect(foodTypesInput, "foodType", null)
+    }
+    setFoodTypesInput("");
+  };
+
+  // this function will add new rows when the user wants to recommend more places
+  //  NOT SURE THIS FUNCTION IS DOING ANYTHING OTHER THAN ADDING NEW ROWS 
+  const addNewPlace = (list) => {
+    const items = {
+      name: "",
+      description: "",
+    };
+
+    addLastPlace = true;
+
+    if (list === "food") {
+
+      const placeName = foodRecommendationsRef.current.placeName.value;
+      const placeAddress = foodRecommendationsRef.current.placeAddress.value;
+      const placeDescription = foodRecommendationsRef.current.placeDescription.value;
+      const placeImage = foodRecommendationsRef.current.placeImage.files[0];
+
+
+      // If none of the input elements has a value:
+
+      if (placeName === "" && placeAddress === "" && placeDescription === "" && placeImage === undefined) {
+        return;
+      }
+
+      // IS THIS EVEN DOING ANYTHING?
+      if (addPlaceFromForm) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          foodRecommendations: [
+            ...prevFormData.foodRecommendations,
+            {
+              place: foodRecommendationsRef.current.placeName.value,
+              directions: foodRecommendationsRef.current.placeAddress.value,
+              description:
+                foodRecommendationsRef.current.placeDescription.value,
+              image: foodRecommendationsRef.current.placeImage.files[0],
+            },
+          ],
+        }));
+      }
+
+      // ADD ANOTHER CHECK HERE TO MAKE SURE THAT THE STATE IS ONLY UPDATED WHEN THERE ARE VALUES TYPED
+
+      setRows([...rows, items]);
+
+      // IS THIS EVEN DOING ANYTHING?
+      addPlaceFromForm = true; // needs to be set to true because it was set to false when the next question was clicked.
+
+    } else if (list === "nightLife") {
+
+      const placeName = nightLifeRecommendationsRef.current.placeName.value;
+      const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
+
+      // If none of the input elements has a value:
+      if (placeName === "" && placeDescription === "") {
+        return;
+      }
+
+
+      // THIS WILL BE TRIGERED EVERY TIME THE USER CLICKS TO ADD A NEW NIGHTLIFE RECOMMENDATION 
+      if (addPlaceFromFormNightLife) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          nightLifeRecommendations: [
+            ...prevFormData.nightLifeRecommendations,
+            {
+              place: nightLifeRecommendationsRef.current.placeName.value,
+              description: nightLifeRecommendationsRef.current.placeDescription.value,
+            },
+          ],
+        }));
+      }
+      setNighLifeRows([...nighLifeRows, items]);
+      // IS THIS EVEN DOING ANYTHING?
+      addPlaceFromFormNightLife = true;
+
+    }
+  };
 
   return (
     <div className="mainContainer">
-
 
 
       <div
@@ -544,7 +764,7 @@ const FormComponent = () => {
         >
           <label>
             How long have you been living in{" "}
-            <span className= "questionHighlight nhoodName">{neighborhood}</span>
+            <span className="questionHighlight nhoodName">{neighborhood}</span>
           </label>
           <select
             name="time_linving_in_nhood"
@@ -578,6 +798,2302 @@ const FormComponent = () => {
               I do not live in this neighborhood
             </option>
           </select>
+        </div>
+
+        {/**  THE NEIGHBORHOOD */}
+        {/** Adjectives to describe the neighborhood */}
+        <div
+          className={
+            "yearsInNeighborhood completeSentence1 nhoodAdjectivesFlag " +
+            displayQuestion("nhoodAdjectives") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[3] = ref}
+        >
+          <label>
+            Choose no more than <span className="questionHighlight">5 adjectives to describe
+              <span className="nhoodName"> {neighborhood}: </span> </span>
+          </label>
+
+
+          {selectedOptions.length > 0 && (
+            <div className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+              {selectedOptions.map((option, index) => (
+                <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
+                  {option}
+                  <div
+                    onClick={(e) => {
+                      handleOptionRemove(option, "neighborhood");
+                    }}
+                    style={{
+                      marginLeft: '5px',
+                      cursor: 'pointer',
+                      width: '16px', // Adjust the width to make the SVG smaller
+                      height: '16px', // Adjust the height to make the SVG smaller
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+
+          <div className="scrollbarContainer" style={{ width: "100%", height: "130px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
+            <div ref={nehoodAdjectivesDivRef}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }} >
+
+              <div onClick={(e) => {
+                handleOptionSelect('Vibrant', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Vibrant"
+              >
+                Vibrant
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Tranquil', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Tranquil"
+              >
+                Tranquil
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Safe', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Safe"
+              >
+                Safe
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Cosmopolitan', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Cosmopolitan"
+              >
+                Cosmopolitan
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Picturesque', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Picturesque"
+              >
+                Picturesque
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Historic', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Historic"
+              >
+                Historic
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Lively', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Lively"
+              >
+                Lively
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Charming', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Charming"
+              >
+                Charming
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Diverse', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Diverse"
+              >
+                Diverse
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Peaceful', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Peaceful"
+              >
+                Peaceful
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Bustling', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Bustling"
+              >
+                Bustling
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Eclectic', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Eclectic"
+              >
+                Eclectic
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Welcoming', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Welcoming"
+              >
+                Welcoming
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Serene', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Serene"
+              >
+                Serene
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Quaint', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Quaint"
+              >
+                Quaint
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Thriving', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Thriving"
+              >
+                Thriving
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Family-oriented', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Family-oriented"
+              >
+                Family-oriented
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Trendy', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Trendy"
+              >
+                Trendy
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Gritty', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Gritty"
+              >
+                Gritty
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Up-and-coming', 'nhood', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Up-and-coming"
+              >
+                Up-and-coming
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/**  “Complete the sentence:  ‘The most unique thing about {neighborhood} is ________”*/}
+        <div className={"nhoodAdjectives completeSentence2 " +
+          displayQuestion("completeSentence1")}
+          ref={ref => divRefs.current[4] = ref}
+        >
+          <h5 style={{ marginBottom: "15px", width: '100%' }}>Complete the sentence:</h5>
+          <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+            <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
+            <input style={{
+              width: "auto",
+              border: "none",
+              borderBottom: "1px solid black",
+              backgroundColor: "transparent",
+              outline: "none",
+              paddingLeft: "10px",
+              top: "0px"
+            }}
+              onChange={
+                (e) => {
+                  setFormData({
+                    ...formData,
+                    mostUniqueThingAboutNeighborhood: e.target.value
+                  })
+                }
+              }
+            ></input>
+          </div>
+        </div>
+
+
+        {/**  “Complete the sentence:  ‘People should visit {neighborhood} if they want ________”*/}
+        <div className={"completeSentence1 describeNeighborhood " +
+          displayQuestion("completeSentence2")}
+          ref={ref => divRefs.current[5] = ref}
+        >
+          <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+          <div>
+            People should visit {neighborhood} <span className="questionHighlight">if they want:</span>
+            <input style={{
+              width: "auto",
+              border: "none",
+              borderBottom: "1px solid black",
+              backgroundColor: "transparent",
+              outline: "none",
+              paddingLeft: "10px",
+              top: "0px"
+            }}
+              onChange={
+                (e) => {
+                  setFormData({
+                    ...formData, peopleShouldVisitNeighborhoodIfTheyWant: e.target.value
+                  })
+                }
+              }
+            ></input>
+          </div>
+
+        </div>
+
+
+        {/** In general, how would you describe {neighborhood}? */}
+        <div
+          className={
+            "completeSentence2 residentAdjectives nhoodDescript " +
+            displayQuestion("describeNeighborhood")
+          }
+          ref={ref => divRefs.current[6] = ref}
+        >
+          <label>
+            In general, how would you describe
+            <span className= "questionHighlight nhoodName">{neighborhood}</span>?
+          </label>
+          <textarea
+            className= "textarea_text inputCheck"
+            name="neighborhood_description"
+            id="nhoodDescription"
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                neighborhoodDescription: e.target.value,
+              });
+            }}
+          ></textarea>
+        </div>
+
+
+        {/**  THE RESIDENTS */}
+        {/** Adjectives to describe the typical resident of the neighborhood */}
+        <div
+          className={
+            "describeNeighborhood completeTheSentenceStereoResident nhoodAdjectivesFlag " +
+            displayQuestion("residentAdjectives") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[7] = ref}
+        >
+
+          <label>
+            Choose no more than <span className="questionHighlight">5 adjectices to depict the typical resident</span> of
+            <span className="nhoodName"> {neighborhood}: </span>
+          </label>
+
+          {residentsAdjsSelectedOpts.length > 0 && (
+            <div className= "scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+              {residentsAdjsSelectedOpts.map((option, index) => (
+                <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
+                  {option}
+                  <div
+                    onClick={(e) => {
+                      handleOptionRemove(option, "resident");
+                    }}
+                    style={{
+                      marginLeft: '5px',
+                      cursor: 'pointer',
+                      width: '16px', // Adjust the width to make the SVG smaller
+                      height: '16px', // Adjust the height to make the SVG smaller
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="scrollbarContainer" style={{ width: "100%", height: "130px", overflow: "scroll", marginTop: "20px", border: "1px solid #c9c9c9" }}>
+
+            <div ref={residentAdjectivesDivRef}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }} >
+
+              <div onClick={(e) => {
+                handleOptionSelect('Friendly', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Friendly"
+              >
+                Friendly
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Welcoming', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Welcoming"
+              >
+                Welcoming
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Harmonious', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Harmonious"
+              >
+                Harmonious
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Inclusive', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Inclusive"
+              >
+                Inclusive
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Active', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Active"
+              >
+                Active
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Caring', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Caring"
+              >
+                Caring
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Hospitable', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Hospitable"
+              >
+                Hospitable
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Collaborative', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Collaborative"
+              >
+                Collaborative
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Supportive', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Supportive"
+              >
+                Supportive
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Community-oriented', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Community-oriented"
+              >
+                Community-oriented
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Lively', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Lively"
+              >
+                Lively
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Neighborly', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Neighborly"
+              >
+                Neighborly
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Respectful', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Respectful"
+              >
+                Respectful
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Progressive', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Progressive"
+              >
+                Progressive
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Traditional', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Traditional"
+              >
+                Traditional
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('United', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="United"
+              >
+                United
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Empowered', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Empowered"
+              >
+                Empowered
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Empathetic', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Empathetic"
+              >
+                Empathetic
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Cohesive', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Cohesive"
+              >
+                Cohesive
+              </div>
+              <div onClick={(e) => {
+                handleOptionSelect('Involved', 'resident', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Involved"
+              >
+                Involved
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+        {/** Complete the sentence: The typical reisdent of __ can be described as: "____" */}
+        <div
+          className={"residentAdjectives describeFoodScene stereotypicalResident " + displayQuestion("completeTheSentenceStereoResident") +
+            " " +
+            shakie} ref={ref => divRefs.current[8] = ref}>
+
+          <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+          <div>
+            <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
+            <input style={{
+              width: "auto",
+              border: "none",
+              borderBottom: "1px solid black",
+              backgroundColor: "transparent",
+              outline: "none",
+              paddingLeft: "10px",
+              top: "0px"
+            }}
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  typicalResidentDescription: e.target.value
+                })
+              }}
+            ></input>
+          </div>
+
+        </div>
+
+
+        {/** THE FOOD */}
+        {/** What makes food in {neighborhood} special? */}
+        <div
+          className={
+            "completeTheSentenceStereoResident mustTryFood foodRecommendations foodQuestion " +
+            displayQuestion("describeFoodScene") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[9] = ref}
+        >
+
+          <div ref={letsTalkAboutFoodRef} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
+            <h4> Let's talk about food </h4>
+            <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px"></img>
+          </div>
+
+          <label>
+            What makes <span className="questionHighlight"> food in  <span className="nhoodName">{neighborhood}</span></span> special?
+          </label>
+          <textarea
+            className="textarea_text inputCheck"
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                foodCulture: e.target.value,
+              });
+            }}
+          ></textarea>
+        </div>
+
+
+        {/** What are the must-try foods in your neighborhood?*/}
+        <div
+          className={
+            "describeFoodScene oncePlaceToEat nhoodAdjectivesFlag mustTryFoods " +
+            displayQuestion("mustTryFood") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[10] = ref}
+        >
+          <label>
+            What are the <span className="questionHighlight">must-try foods</span> in
+            <span className="nhoodName"> {neighborhood}? </span>
+          </label>
+
+          {foodTypesSelectedOpts.length > 0 && (
+            <div ref={favTypesOfFoodRef} className= "scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
+              {foodTypesSelectedOpts.map((option, index) => (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.foodType}>
+
+
+                  <div ref={(e) => { foodRecommendationsRef.current['placeName'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
+                    {option.foodType}
+                    <div
+                      onClick={(e) => {
+                        handleOptionRemove(option.foodType, "foodTypes");
+                      }}
+                      style={{
+                        marginLeft: '5px',
+                        cursor: 'pointer',
+                        width: '16px', // Adjust the width to make the SVG smaller
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </div>
+
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", width: "50%" }}>
+                    <label className="labelFavFoods" style={{ fontSize: "12px", textAlign: "center" }} htmlFor={"foodTypePlaceRecommendation " + index}>
+                      <span className="questionHighlight">Best {option.foodType} restaurant</span> in {neighborhood}:
+                      <input
+                        id={"foodTypePlaceRecommendation " + index}
+                        className="foodTypeInput"
+                        type="text"
+                        onChange={(e) => handleRecommendedRestaurant(e.target.value, index)}
+                        style={{ border: "none", borderBottom: "1px solid #b5afaf", outline: "none", width: "100%" }}
+                      />
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="scrollbarContainer" style={{ width: "100%", height: "130px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
+
+            <div ref={typesOfFoodRecommendationsRef}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }} >
+
+              <div onClick={(e) => {
+                handleOptionSelect('Italian', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Italian"
+              >
+                Italian
+              </div>
+
+              <div onClick={(e) => {
+                handleOptionSelect('Mexican', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Mexican"
+              >
+                Mexican
+              </div>
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('Chinese', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Chinese"
+              >
+                Chinese
+              </div>
+
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('Indian', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Indian"
+              >
+                Indian
+              </div>
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('Japanese', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Japanese"
+              >
+                Japanese
+              </div>
+
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('Mediterranean', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Mediterranean"
+              >
+                Mediterranean
+              </div>
+
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('Thai', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Thai"
+              >
+                Thai
+              </div>
+
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('French', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="French"
+              >
+                French
+              </div>
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('American', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="American"
+              >
+                American
+              </div>
+
+
+              <div onClick={(e) => {
+                handleOptionSelect('Middle Eastern', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Middle Eastern"
+              >
+                Middle Eastern
+              </div>
+
+              <div onClick={(e) => {
+                handleOptionSelect('Greek', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Greek"
+              >
+                Greek
+              </div>
+
+              <div onClick={(e) => {
+                handleOptionSelect('Vietnamese', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Vietnamese"
+              >
+                Vietnamese
+              </div>
+
+              <div onClick={(e) => {
+                handleOptionSelect('Korean', 'foodType', e);
+              }}
+                style={{
+                  margin: "4px",
+                  cursor: "pointer",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "5px",
+                  backgroundColor: "rgb(137, 207, 240)",
+                  display: "flex"
+                }}
+                data-option="Korean"
+              >
+                Korean
+              </div>
+
+
+              <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }}>
+                {/* Input field for user to type an option */}
+                <input
+                  className="foodTypeInput"
+                  type="text"
+                  placeholder="Type another option..."
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  value={foodTypesInput}
+                  style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
+                />
+
+                {/* Button to add the typed option */}
+                <button onClick={handleAddButton} style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black", backgroundColor: "rgb(190, 190, 190)", cursor: "pointer" }}>
+                  Add
+                </button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/** Complete the sentence: "If I were to suggest one place to eat in {neighborhood} it would be____
+           because _____________" 
+           */}
+        <div
+          className={"mustTryFood foodPrice " +
+            displayQuestion("oncePlaceToEat")}
+          ref={ref => divRefs.current[11] = ref}
+        >
+          <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+          <div style={{ display: "fex", alignItems: "center", width: "120%", position: "relative" }}>
+            <div style={{ display: "fex", alignItems: "center" }}>
+              <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
+              <input style={{
+                display: 'inline-block',
+                border: 'none',
+                borderBottom: '1px solid black',
+                backgroundColor: 'transparent',
+                outline: 'none',
+                width: '25%',
+                top: '0px'
+              }}
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData,
+                      onePlaceToEat: {
+                        ...formData.onePlaceToEat,
+                        place: e.target.value
+                      }
+                    })
+                  }
+                }
+              >
+              </input>
+              <p style={{ display: "inline" }}> because</p>
+              <input style={{
+                display: 'inline-block',
+                border: 'none',
+                borderBottom: '1px solid black',
+                backgroundColor: 'transparent',
+                marginLeft: '5px',
+                outline: 'none',
+                width: '25%',
+                top: '0px'
+              }}
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData,
+                      onePlaceToEat: {
+                        ...formData.onePlaceToEat,
+                        explanation: e.target.value
+                      }
+                    })
+                  }}
+              ></input>
+            </div>
+          </div>
+        </div>
+
+        {/** Which of the following best describes the cost of food in {neighborhood}? */}
+        <div className={"oncePlaceToEat agreeOrDisagreeFood foodPricesQuestion " +
+          displayQuestion("foodPrice")}
+          ref={ref => divRefs.current[12] = ref}
+        >
+
+          <label>Which of the following best describes the cost of food in {neighborhood}?</label>
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="foodPrices"
+                value="Expensive"
+                id="foodPricesExpensive"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    foodPrices: {
+                      ...formData.foodPrices,
+                      price: e.target.value
+                    }
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => foodPricesExplanationHandler()}
+                htmlFor="foodPricesExpensive"
+                className="nhoodEvalLabelTrue"
+                style={{ fontWeight: "normal", width: "100%", height: "auto" }}
+              >
+                Expensive
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="foodPrices"
+                value="Affordable"
+                id="foodPricesAffordable"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    foodPrices: {
+                      ...formData.foodPrices,
+                      price: e.target.value
+                    }
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => foodPricesExplanationHandler()}
+                htmlFor="foodPricesAffordable"
+                className="nhoodEvalLabelTrue"
+                style={{ fontWeight: "normal", width: "100%", height: "auto" }}
+              >
+                Affordable
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="foodPrices"
+                value="Both expensive and affordable"
+                id="bothExpensiveAndAffordable"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    foodPrices: {
+                      ...formData.foodPrices,
+                      price: e.target.value
+                    }
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => foodPricesExplanationHandler()}
+                htmlFor="bothExpensiveAndAffordable"
+                className="nhoodEvalLabelUnsure"
+                style={{ fontWeight: "normal", width: "100%", height: "auto" }}
+              >
+                Both expensive and affordable
+              </label>
+            </div>
+          </div>
+
+          <div
+            ref={foodPriceExplanationRef}
+            className="elaborateNhoodEval"
+          >
+            <div>Could you further elaborate?</div>
+            <input
+              name="public_transport_explanation"
+              className="inputElaborateNhoodEval"
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  foodPrices: {
+                    ...formData.foodPrices,
+                    explanation: e.target.value
+                  }
+                });
+              }}
+            ></input>
+          </div>
+        </div>
+
+
+        {/** Do you agree or disagree withe the following statements: 
+           * "food in {neighborhood} is authentic"
+          */}  
+        <div className={"foodPrice describeNighLife agreeOrDisagreeFoodQuestions " +
+          displayQuestion("agreeOrDisagreeFood")}
+          ref={ref => divRefs.current[13] = ref}
+        >
+          <h4 style={{ textAlign: "center" }}>Agree or disagree: </h4>
+          <div>
+            <label style={{ fontWeight: "normal", width: "150%", left: "50%", transform: "translate(-50%, 0)", marginBottom: "7px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
+            <div style={{ height: "30px", width: "100%", borderBottom: "1px dotted black" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div className="statementResponseContainer">
+                  <input
+                    type="radio"
+                    className="statementResponseContainerInput"
+                    name="diverseAndAuthenticFood"
+                    value="Expensive"
+                    id="AgreeDestinationForNewFood"
+                    onChange={
+                      (e) => {
+                        setFormData({
+                          ...formData,
+                          foodIsAuthentic: {
+                            ...formData.foodIsAuthentic,
+                            assesment: e.target.value
+                          }
+                        })
+                      }
+                    }
+                  ></input>
+                  <label
+                    onClick={() => foodAuthenticityandDiversityHandler()}
+                    htmlFor="AgreeDestinationForNewFood"
+                    className="nhoodEvalLabelTrue"
+                    style={{ fontWeight: "normal", height: "auto", left: "-2px" }}
+                  // className="nhoodEvalLabelTrue"
+                  // style={{fontWeight:"normal", width:"100%", height:"auto"}}
+                  >
+                    Agree
+                  </label>
+                </div>
+
+                <div className="statementResponseContainer">
+                  <input
+                    type="radio"
+                    className="statementResponseContainerInput"
+                    name="diverseAndAuthenticFood"
+                    value="Expensive"
+                    id="DisagreeDestinationForNewFood"
+                    onChange={
+                      (e) => {
+                        setFormData({
+                          ...formData,
+                          foodIsAuthentic: {
+                            ...formData.foodIsAuthentic,
+                            assesment: e.target.value
+                          }
+                        })
+                      }
+                    }
+                  ></input>
+                  <label
+                    onClick={() => foodAuthenticityandDiversityHandler()}
+                    htmlFor="DisagreeDestinationForNewFood"
+                    className="nhoodEvalLabelFalse"
+                    style={{ fontWeight: "normal", height: "auto", right: "-2px", position: "relative" }}
+                  >
+                    Disagree
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div
+              ref={foodDiversityExplanationRef}
+              className="elaborateNhoodEval"
+              style={{ marginTop: "30px" }}
+            >
+              <div>Can you explain why?</div>
+              <input
+                name="public_transport_explanation"
+                className="inputElaborateNhoodEval"
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData,
+                      foodIsAuthentic: {
+                        ...formData.foodIsAuthentic,
+                        explanation: e.target.value
+                      }
+                    })
+                  }}
+              ></input>
+            </div>
+          </div>
+        </div>
+
+
+        {/** NIGHTLIFE */}
+        {/** What differentiates the night life of {neighborhood}*/}
+        <div
+          className={
+            "agreeOrDisagreeFood nightLifePlacesRecommendations nightLifeRecommendations nightlifeQuestions " +
+            displayQuestion("describeNighLife") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[14] = ref}
+        >
+          <div ref={letsTalkAboutNightLifeRef} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
+            <h4> Let's talk about the night life </h4>
+            <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/5067137.png" height="100px"></img>
+          </div>
+          <label>
+            How do you describe the <span className="questionHighlight">night life</span> of {" "}
+            <span className="nhoodName">{neighborhood}</span>?
+          </label>
+          <textarea
+            className="textarea_text inputCheck"
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                nightLife: e.target.value,
+              });
+            }}
+          ></textarea>
+
+        </div>
+
+
+        {/** Are there any nightlife venues (bars, restaurants, nighclubs) that youd like to  */}
+        <div
+          className={
+            "describeNighLife completeTheSentenceNightLifeVenue nightLifeRecommendedPlaces " +
+            displayQuestion("nightLifePlacesRecommendations")
+          }
+          ref={ref => divRefs.current[15] = ref}
+        >
+
+          <label>
+            Are there any <span className="questionHighlight">night life venues</span> in  <span className="nhoodName"> {neighborhood}</span> you'd like to recommend?
+          </label>
+
+          <div
+            className="favPlacesCloseIconListContainer"
+          >
+            <div
+              className="favoritePlacesContainer"
+              ref={favoritePlacesContainerRef}
+            >
+              <div className="favoritePlacesHeader">
+                <div>Name of venue:</div>
+
+                <div>Description: </div>
+
+              </div>
+
+              {nighLifeRows.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className= "favoritePlacesBody favPlacesDiv"
+                  >
+                    <div style={{width:"50%"}}>
+                      <textarea
+                        className=
+                          "favoritePlacesTextArea nameOfFavPlaceTextArea"
+                        ref={(e) =>
+                        (nightLifeRecommendationsRef.current["placeName"] =
+                          e)
+                        }
+                      ></textarea>
+                    </div>
+                    <div style={{ width: "50%" }}>
+                      <textarea
+                        className="favoritePlacesTextArea"
+                        ref={(e) =>
+                        (nightLifeRecommendationsRef.current[
+                          "placeDescription"
+                        ] = e)
+                        }
+                      ></textarea>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div
+                onClick={() => addNewPlace("nightLife")}
+                className="addNewPlace"
+                id="addNewPlaceButton"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-plus"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+                <b>Add another place</b>
+              </div>
+
+
+            </div>
+          </div>
+
+
+        </div>
+
+        {/** Complete the sentence: "If I had to pick one place to enjoy the nightlife of {neighborhood}, it would be _______, because ________" */}
+        <div
+          className={"nightLifePlacesRecommendations neighborhoodEvaluationFirstQuestion pickOneNightLifePlace " +
+            displayQuestion("completeTheSentenceNightLifeVenue")}
+          ref={ref => divRefs.current[16] = ref}
+        >
+          <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+
+          <div style={{ display: "fex", alignItems: "center", position: "relative" }}>
+            <div style={{ display: "fex", alignItems: "center" }}>
+              <p style={{ display: "inline" }}>If I had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
+              <input style={{
+                display: 'inline-block',
+                border: 'none',
+                borderBottom: '1px solid black',
+                backgroundColor: 'transparent',
+                outline: 'none',
+                width: '25%',
+                top: '0px'
+              }}
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData,
+                      onePlaceForNightLife: {
+                        ...formData.onePlaceforNightLife,
+                        place: e.target.value
+                      }
+                    })
+                  }
+                }
+              >
+              </input>
+              <p style={{ display: "inline" }}> because</p>
+              <input style={{
+                display: 'inline-block',
+                border: 'none',
+                marginLeft: '5px',
+                borderBottom: '1px solid black',
+                backgroundColor: 'transparent',
+                outline: 'none',
+                width: '25%',
+                top: '0px'
+              }}
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData,
+                      onePlaceForNightLife: {
+                        ...formData.onePlaceforNightLife,
+                        explanation: e.target.value
+                      }
+                    })
+                  }
+                }
+              ></input>
+            </div>
+          </div>
+        </div>
+
+
+
+        {/** GENERAL QUESTIONS */}
+        {/** True or false statements, public transportation  */}
+        <div
+          className={
+            "completeTheSentenceNightLifeVenue neighborhoodEvaluationSecondQuestion neighborhoodEvaluationFlag " +
+            displayQuestion("neighborhoodEvaluationFirstQuestion") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[17] = ref}
+        >
+
+          <div ref={letsTalkAboutGeneralInfo} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
+            <h4> Let's talk about some general information </h4>
+            <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/download.png" height="50%"></img>
+          </div>
+
+          <div> True or False: </div>
+
+          <div>
+            <div className="nhoodEvalHeader">
+              <span className="questionHighlight"> "Public transportation in{" "}
+                <span className="nhoodName">{neighborhood}</span> is easily
+                accessible."
+              </span>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="publicTransport"
+                value="true"
+                id="yesPublicTransport"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "publicTransportation": {
+                        ...formData.statements.publicTransportation,
+                        accesible: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("transportation")}
+                htmlFor="yesPublicTransport"
+                className="nhoodEvalLabelTrue"
+              >
+                True
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="publicTransport"
+                value="unsure"
+                id="unsurePublicTransport"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "publicTransportation": {
+                        ...formData.statements.publicTransportation,
+                        accesible: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("transportation")}
+                htmlFor="unsurePublicTransport"
+                className="nhoodEvalLabelUnsure"
+              >
+                Unsure
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="publicTransport"
+                value="false"
+                id="noPublicTransport"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "publicTransportation": {
+                        ...formData.statements.publicTransportation,
+                        accesible: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("transportation")}
+                htmlFor="noPublicTransport"
+                className="nhoodEvalLabelFalse"
+              >
+                False
+              </label>
+            </div>
+
+            <div
+              ref={(el) =>
+                (nhoodExplanationRef.current["transportation"] = el)
+              }
+              className="elaborateNhoodEval"
+            >
+              <div>What is the best way to get to {neighborhood}?</div>
+              <input
+                name="public_transport_explanation"
+                className="inputElaborateNhoodEval"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      publicTransportation: {
+                        ...formData.statements.publicTransportation,
+                        "explanation": e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+            </div>
+          </div>
+        </div>
+
+
+
+        {/** True or false statements, having pets in your neighborhood is convenient */}
+        <div
+          className={
+            "neighborhoodEvaluationFirstQuestion neighborhoodEvaluationThirdQuestion neighborhoodEvaluation neighborhoodEvaluationFlag " +
+            displayQuestion("neighborhoodEvaluationSecondQuestion") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[18] = ref}
+        >
+          <div>True or False:</div>
+          <div>
+            <div className="nhoodEvalHeader">
+              <span className="questionHighlight">
+                "Having pets is convenient in{" "}
+                <span className="nhoodName">{neighborhood}</span>."
+              </span>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="havingPets"
+                value="true"
+                id="trueHavingPets"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                        "owningPets": {
+                        ...formData.statements.owningPets,
+                        convenient: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("pets")}
+                htmlFor="trueHavingPets"
+                className="nhoodEvalLabelTrue"
+              >
+                True
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                value="unsure"
+                id="unsureHavingPets"
+                name="havingPets"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "owningPets": {
+                        ...formData.statements.owningPets,
+                        convenient: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("pets")}
+                htmlFor="unsureHavingPets"
+                className="nhoodEvalLabelUnsure"
+              >
+                Unsure
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="havingPets"
+                value="false"
+                id="falseHavingPets"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "owningPets": {
+                        ...formData.statements.owningPets,
+                        convenient: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("pets")}
+                htmlFor="falseHavingPets"
+                className="nhoodEvalLabelFalse"
+              >
+                False
+              </label>
+            </div>
+
+            <div
+              ref={(el) => (nhoodExplanationRef.current["pets"] = el)}
+              className="elaborateNhoodEval"
+            >
+              <div>Do you want to explain why?</div>
+              <input
+                name="having_pets_explanation"
+                className="inputElaborateNhoodEval"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      owningPets: {
+                        ...formData.statements.owningPets,
+                        "explanation": e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+            </div>
+
+          </div>
+        </div>
+
+        {/** True or false statements, your neighborhood is safe */}
+        <div
+          className={
+            "neighborhoodEvaluationSecondQuestion neighborhoodEvaluationFourthQuestion neighborhoodEvaluation neighborhoodEvaluationFlag " +
+            displayQuestion("neighborhoodEvaluationThirdQuestion") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[19] = ref}
+        >
+          <div>True or False:</div>
+          <div>
+            <div className="nhoodEvalHeader">
+              <span className="questionHighlight">
+                <span className="nhoodName">"{neighborhood}</span> is generally
+                a safe neighborhood."
+              </span>
+            </div>
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="safe"
+                value="true"
+                id="trueSafe"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "safety": {
+                        ...formData.statements.safety,
+                        safe: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("safety")}
+                htmlFor="trueSafe"
+                className="nhoodEvalLabelTrue"
+              >
+                True
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="safe"
+                value="unsure"
+                id="unsureSafe"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "safety": {
+                        ...formData.statements.safety,
+                        safe: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("safety")}
+                htmlFor="unsureSafe"
+                className="nhoodEvalLabelUnsure"
+              >
+                Unsure
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="safe"
+                value="false"
+                id="falseSafe"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "safety": {
+                        ...formData.statements.safety,
+                        safe: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("safety")}
+                htmlFor="falseSafe"
+                className="nhoodEvalLabelFalse"
+              >
+                False
+              </label>
+            </div>
+
+            <div
+              ref={(el) => (nhoodExplanationRef.current["safety"] = el)}
+              className="elaborateNhoodEval"
+            >
+              <div>Do you want to explain why?</div>
+              <input
+                name="safety_explanation"
+                className="inputElaborateNhoodEval"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      safety: {
+                        ...formData.statements.safety,
+                        explanation: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+            </div>
+          </div>
+        </div>
+
+        {/** True or false statements, your neighborhood offer opportunities for meeting new people */}
+        <div
+          className={
+            "neighborhoodEvaluationThirdQuestion neighborhoodPictures neighborhoodEvaluation neighborhoodEvaluationFlag " +
+            displayQuestion("neighborhoodEvaluationFourthQuestion") +
+            " " +
+            shakie
+          }
+          ref={ref => divRefs.current[20] = ref}
+        >
+          <div>True or False:</div>
+          <div>
+            <div className="nhoodEvalHeader">
+              <span className="questionHighlight">
+                <span className="nhoodName">"{neighborhood}</span> offers good
+                opportunities for meeting new people.
+              </span>
+            </div>
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="meetingNewPeople"
+                value="true"
+                id="trueMeetingNewPeople"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "socializing": {
+                        ...formData.statements.owningPets,
+                        convenient: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("meetingPeople")}
+                htmlFor="trueMeetingNewPeople"
+                className="nhoodEvalLabelTrue"
+              >
+                True
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="meetingNewPeople"
+                value="unsure"
+                id="unsureMeetingNewPeople"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "socializing": {
+                        ...formData.statements.owningPets,
+                        convenient: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("meetingPeople")}
+                htmlFor="unsureMeetingNewPeople"
+                className="nhoodEvalLabelUnsure"
+              >
+                Unsure
+              </label>
+            </div>
+
+            <div className="statementResponseContainer">
+              <input
+                type="radio"
+                className="statementResponseContainerInput"
+                name="meetingNewPeople"
+                value="false"
+                id="falseMeetingNewPeople"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      "socializing": {
+                        ...formData.statements.owningPets,
+                        convenient: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+              <label
+                onClick={() => nhoodEvalHandler("meetingPeople")}
+                htmlFor="falseMeetingNewPeople"
+                className="nhoodEvalLabelFalse"
+              >
+                False
+              </label>
+            </div>
+
+            <div
+              ref={(el) =>
+                (nhoodExplanationRef.current["meetingPeople"] = el)
+              }
+              className="elaborateNhoodEval"
+            >
+              <div>Do you want to explain why?</div>
+              <input
+                name="meeting_new_people_explanation"
+                className="inputElaborateNhoodEval"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    statements: {
+                      ...formData.statements,
+                      socializing: {
+                        ...formData.statements.owningPets,
+                        explanation: e.target.value,
+                      },
+                    },
+                  });
+                }}
+              ></input>
+            </div>
+          </div>
+        </div>
+
+
+
+        {/** Do you have any neighborhood pictures to share? */}
+        <div className={
+          "neighborhoodEvaluationFourthQuestion submit " 
+          // +  (loggedUser ? "submit " : "personalInfo ")
+          + displayQuestion("neighborhoodPictures")
+        }
+          ref={ref => divRefs.current[21] = ref}
+        >
+
+          <label htmlFor="nhoodImagesInput">
+            Do you have any <span className="questionHighlight">pictures of <span className="nhoodName"> {neighborhood}</span></span> to share?
+          </label>
+          <input className="nhoodImagesInput" onChange={(e) => { setFormData({ ...formData, neighborhoodImages: Array.from(e.target.files) }) }} id="nhoodImagesInput" type="file" name="nhoodImages" multiple></input>
+
+        </div>
+
+
+
+        {/* if the user is not logged in here, render a question that asks for his email, name and a password  */}
+        <div
+          className={
+            "neighborhoodPictures submit " +
+            displayQuestion("personalInfo") +
+            " contactInfo " +
+            shakie
+          }
+          ref={ref => divRefs.current[22] = ref}
+        >
+
+          {showUserDataAlert && sendInfoWithoutDataAlert}
+
+          <Form.Group as={Row} className="mb-3" controlId="formHorizontalFirstName">
+            <Form.Label column sm={2}>
+              First Name:
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control onChange={updateNewUserData} name="name" />
+            </Col>
+          </Form.Group>
+
+          <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+            <Form.Label column sm={2}>
+              Email:
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control onChange={updateNewUserData} name="email" />
+            </Col>
+          </Form.Group>
+
+          <Form.Group as={Row} className="mb-3">
+            <Col sm={{ span: 10, offset: 2 }}>
+              <Button size="lg" onClick={submitNewUserData} type="submit">Submit</Button>
+            </Col>
+          </Form.Group>
+          {/* {errors2} */}
+        </div>
+
+        {/** Submit */}
+        <div
+          className={
+            // (currentUser
+            //   ? "neighborhoodEvaluationFourthQuestion "
+            //   : "personalInfo ") +
+            // " end " +
+
+            "neighborhoodEvaluationFourthQuestion end " +
+            displayQuestion("submit")
+          }
+          ref={ref => divRefs.current[23] = ref}
+        >
+          <input
+            className="submitValuesInput"
+            type="submit"
+            value="Submit"
+          />
         </div>
 
 

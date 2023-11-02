@@ -203,6 +203,257 @@
 }
 
 
+/*Neighborhood adjectives*/
+.scrollbarContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.scrollbarContainer::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.scrollbarContainer::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.scrollbarContainer::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+/*In general, how would you describe the neighborhood*/
+.textarea_text {
+  width: 90%;
+  height: 40px;
+  border-width: 1px;
+  border-style: solid;
+  border: transparent;
+  border-bottom: solid 1px #bdbdbd;
+  background-color: transparent;
+  padding-left: 20px;
+  padding-top: 15px;
+  padding-bottom: 0px;
+  outline: none;
+  resize: none;
+}
+
+.textarea_text:focus {
+  border-color: #1192e9;
+}
+
+
+/** Which of the following best describes the cost of food in {neighborhood}? */
+.statementResponseContainer {
+  position: relative;
+  margin: 10px 0;
+  padding: 1px;
+  display:flex;
+  justify-content: center;
+}
+
+.statementResponseContainer input {
+  display: none;
+}
+
+.statementResponseContainer label {
+  padding: 6px;
+  width: 100px;
+  height: 35px;
+  border: 1px solid;
+  text-align: center;
+  cursor: pointer;
+}
+
+.nhoodEvalLabelTrue{
+  background-color: #f8f9fa;
+}
+
+.nhoodEvalLabelFalse{
+  background-color: #f8f9fa;
+}
+
+.statementResponseContainerInput:checked + .nhoodEvalLabelTrue {
+  background-color: #7dcea0;
+}
+.statementResponseContainerInput:checked + .nhoodEvalLabelUnsure {
+  background-color: #aab7b8;
+}
+.statementResponseContainerInput:checked + .nhoodEvalLabelFalse {
+  background-color: #f1948a;
+}
+
+.elaborateNhoodEval {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  position: relative;
+  animation: fallFromTop 0.6s ease-in-out;
+}
+
+.inputElaborateNhoodEval {
+  margin-left: 3%;
+  border: none;
+  border-bottom: solid 1px rgb(100, 100, 100);
+  background-color: transparent;
+  outline: none;
+}
+
+
+/** Are there any nightlife venues (bars, restaurants, nighclubs) that youd like to  */
+
+.favPlacesCloseIconListContainer{
+  position:relative;
+  width:100%;
+}
+
+.favoritePlacesContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top:30px;
+}
+
+.favoritePlacesHeader {
+  display: flex;
+}
+
+.favoritePlacesHeader div {
+  padding: 7px;
+  text-align: center;
+}
+
+.favoritePlacesHeader div:nth-child(1) {
+  width: 50%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(222, 220, 220) transparent rgb(222, 220, 220) rgb(222, 220, 220);
+  /* top - right  - bottom - left*/
+}
+
+.favoritePlacesHeader div:nth-child(2) {
+  width: 50%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(222, 220, 220) rgb(222, 220, 220) rgb(222, 220, 220)
+    rgb(222, 220, 220);
+  /* top - right  - bottom - left*/
+}
+
+
+
+.favoritePlacesHeader div:nth-child(3) {
+  width: 25%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(222, 220, 220) rgb(222, 220, 220) rgb(222, 220, 220)
+   transparent;
+  /* top - right  - bottom - left*/
+}
+
+.favoritePlacesHeader div:nth-child(4) {
+  width: 25%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(222, 220, 220) rgb(222, 220, 220) rgb(222, 220, 220) transparent;
+  /* top - right  - bottom - left*/
+}
+
+.favoritePlacesBody {
+  display: flex;
+  height:35px;
+}
+
+.favoritePlacesBody div:nth-child(1) {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent transparent rgb(222, 220, 220) rgb(222, 220, 220);
+  /* top - right  - bottom - left*/
+}
+
+.favoritePlacesBody div:nth-child(2) {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent rgb(222, 220, 220) rgb(222, 220, 220)
+    rgb(222, 220, 220);
+  /* top - right  - bottom - left*/
+}
+
+
+.favoritePlacesBody div:nth-child(3) {
+  width: 25%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent rgb(222, 220, 220) rgb(222, 220, 220)
+    transparent;
+  /* top - right  - bottom - left*/
+}
+
+
+.favoritePlacesBody div:nth-child(4) {
+  width: 25%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent rgb(222, 220, 220) rgb(222, 220, 220) transparent;
+  /* top - right  - bottom - left*/
+}
+
+.favoritePlacesTextArea {
+  resize: none;
+  width: 100%;
+  border: none;
+  outline-width: 0;
+  background-color: transparent;
+  position:relative;
+  height: 100%;
+  margin-left: 10px;
+}
+
+.addNewPlace {
+  padding: 5px;
+  width: 99%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent transparent rgb(222, 220, 220) transparent;
+  cursor: pointer;
+}
+.addNewPlace:hover {
+  background-color: #eee;
+  color: black;
+}
+
+
+/** GENERAL QUESTIONS */
+/** True or false statements, public transportation  */
+.nhoodEvalHeader {
+  text-align: center;
+  margin: 6%;
+  font-style: oblique;
+}
+
+/** Do you have any neighborhood pictures to share? */
+.nhoodImagesInput::file-selector-button {
+  font-weight: bold;
+  color: dodgerblue;
+  padding: 0.5em;
+  border: thin solid grey;
+  border-radius: 3px;
+}
+
+
+
+/*Submit*/
+.submitValuesInput {
+  background-color: rgb(222, 220, 220);
+  border: none;
+  color: black;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
 /*Arrows*/
 .arrowsContainer {
