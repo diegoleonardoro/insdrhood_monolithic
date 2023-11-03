@@ -188,8 +188,7 @@ const saveNeighborhoodData = async (req, res) => {
         user: user ? { id: user.id, name: user.name, email: user.email } : undefined
     });
     await neighborhood.save();
-    console.log("neighborhood", neighborhood);
-    res.status(201).send({ neighborhood });
+    res.status(201).send(neighborhood);
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
 /**
@@ -200,7 +199,9 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateUserData = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
+    console.log('upsss', updates);
     const user = await user_1.User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    console.log("updated user", user);
     res.status(200).send(user);
 };
 exports.updateUserData = updateUserData;

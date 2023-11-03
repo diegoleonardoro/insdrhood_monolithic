@@ -231,7 +231,6 @@ export const uploadFile = async (req: Request, res: Response) => {
  */
 export const saveNeighborhoodData = async (req: Request, res: Response) => {
 
-
   let user
   if (req.currentUser) {
     user = await User.findOne({ email: req.currentUser!.email });
@@ -244,9 +243,7 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
 
   await neighborhood.save();
 
-  console.log("neighborhood", neighborhood);
-
-  res.status(201).send({ neighborhood });
+  res.status(201).send( neighborhood );
 
 }
 
@@ -256,8 +253,15 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
  * @access private
  */
 export const updateUserData = async (req: Request, res: Response) => {
+
   const { id } = req.params;
   const updates = req.body;
+
+  console.log('upsss', updates);
+
+
   const user = await User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
+  console.log("updated user", user);
   res.status(200).send(user);
 }

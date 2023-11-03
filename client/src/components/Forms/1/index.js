@@ -117,20 +117,20 @@ const FormComponent = () => {
   }
 
 
-
   // Create function that makes request to save the form data:
   async function sendFormData() {
     try {
       const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
-      console.log("responseee", response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
     }
   }
 
   // Create function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
-  async function updateUser (dataToUpdate, id){
-
+  async function updateUser(dataToUpdate, id) {
+    const userupdated = await axios.put(`http://localhost:4000/api/updateuserdata/${id}`,  dataToUpdate )
+    console.log("userupdated", userupdated)
   }
 
 
@@ -278,31 +278,29 @@ const FormComponent = () => {
           formData.neighborhoodImages = imagesUrls;
 
           // make request to save form data:
-         const formDataResponse = await sendFormData();
+          const formDataResponse = await sendFormData();
 
 
-
-
+          console.log("formDataResponseee", formDataResponse)
 
           // If there is a currently logged in user, make a request to upate the following values of the user: formsResponded - residentId and userImagesId 
-          // if (loggedUser) {
+          if (loggedUser) {
+
+            // request to update the user:
+            updateUser({ 
+              formsResponded: 1, 
+              residentId: [formDataResponse.id], 
+              userImagesId: randomUUID 
+            }, loggedUser.id)
 
 
-          // };
+          };
 
-
-
-          // make request to save the resident data and update the residentId, forms
-
-
-
+      
           return;
-
 
           // If the user is not logged in, show the sign up form:
           keyWord = "personalInfo";
-
-
 
         };
 
