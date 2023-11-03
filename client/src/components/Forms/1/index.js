@@ -62,7 +62,7 @@ const FormComponent = () => {
     name: '',
     email: '',
     residentId: '',
-    formsResponded: 0,
+    formsResponded: 1,
     userImagesId: userUIID
   });
 
@@ -129,7 +129,7 @@ const FormComponent = () => {
 
   // Create function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
   async function updateUser(dataToUpdate, id) {
-    const userupdated = await axios.put(`http://localhost:4000/api/updateuserdata/${id}`,  dataToUpdate )
+    const userupdated = await axios.put(`http://localhost:4000/api/updateuserdata/${id}`, dataToUpdate)
     console.log("userupdated", userupdated)
   }
 
@@ -155,6 +155,8 @@ const FormComponent = () => {
       }, 3000);
     }
   };
+
+
 
   // The following function will be in charge of changing the quesitons:
   const changeQuestion = async (direction, flag, errs) => {
@@ -236,15 +238,10 @@ const FormComponent = () => {
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
-          console.log("formData", formData);
-
-
           // make request to save the images:
           const imagesUrls = [];
           const randomUUID = uuidv4();
           setUserUUID(randomUUID);
-
-
 
           if (formData.neighborhoodImages.length > 0) {
             for (var i = 0; i < formData.neighborhoodImages.length; i++) {
@@ -267,12 +264,8 @@ const FormComponent = () => {
                   "Content-Type": imageType,
                 },
               });
-
             }
           };
-
-          console.log("imagesUrlsimagesUrls", imagesUrls)
-
 
           // store the images in the formData state:
           formData.neighborhoodImages = imagesUrls;
@@ -280,43 +273,46 @@ const FormComponent = () => {
           // make request to save form data:
           const formDataResponse = await sendFormData();
 
-
-          console.log("formDataResponseee", formDataResponse)
-
           // If there is a currently logged in user, make a request to upate the following values of the user: formsResponded - residentId and userImagesId 
           if (loggedUser) {
-
             // request to update the user:
-            updateUser({ 
-              formsResponded: 1, 
-              residentId: [formDataResponse.id], 
-              userImagesId: randomUUID 
-            }, loggedUser.id)
+            updateUser({
+              formsResponded: 1,
+              residentId: [formDataResponse.id],
+              userImagesId: randomUUID
+            }, loggedUser.id);
 
-
+            // MAKE LOGIC TO DIRECT USER TO THEIR PROFILE
+            return;
           };
 
-      
-          return;
+          // this state needs to be updated to save the new user in the database:
+          setNewUserData(prevData=>({
+            ...prevData, 
+            "residentId": [formDataResponse.id], 
+            "userImagesId": randomUUID
+          }))
 
-          // If the user is not logged in, show the sign up form:
+
           keyWord = "personalInfo";
+          let nextIndex = activeIndex + 1;
+          setActiveIndex(nextIndex);
+          setDisplayKeyWord([keyWord]);
+          return;
 
         };
 
 
         // if the last key word is "end", then  do not display another question
-        keyWord = currentDiv.className.split(" ")[1];
-        if (keyWord === "end") {
-          return;
-        }
+        // keyWord = currentDiv.className.split(" ")[1];
+        // if (keyWord === "end") {
+        //   return;
+        // }
 
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
-
-
+        keyWord = currentDiv.className.split(" ")[1];
         let nextIndex = activeIndex + 1;
         setActiveIndex(nextIndex);
-
 
       }
     } else if (direction === "prev") {
@@ -338,8 +334,12 @@ const FormComponent = () => {
       setActiveIndex(nextIndex);
 
     }
+    
     setDisplayKeyWord([keyWord]);
   }
+
+
+
 
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
   const nhoodEvalHandler = (aspect) => {
@@ -372,14 +372,14 @@ const FormComponent = () => {
   // The followinf jsx will be rendered if the user sends the form data without registering. It will only be shown if there is no user logged in:
   const sendInfoWithoutDataAlert = (
     <>
-      <Alert show={showUserDataAlert} variant="primary" className={'userDataAlert'}>
+      <Alert show={showUserDataAlert} variant="primary" className='userDataAlert'>
         <Alert.Heading>Alert</Alert.Heading>
         <p>
           When sending anonymous responses, editing or deleting your responses will not be possible.
         </p>
         <hr />
         <div className="d-flex" style={{ flexDirection: "column", alignItems: "center" }}>
-          <Button style={{ width: "80%", marginBottom: "3px" }} variant="success" onClick={() => setShowUserDataAlert(false)}>Register</Button>
+          <Button style={{ width: "80%", marginBottom: "3px" }} variant="success" onClick={() => setShowUserDataAlert(false)}>Go back</Button>
           <Button style={{ width: "80%" }} variant="danger" onClick={() => { setShowUserDataAlert(false); hideForm('hide') }}>Send form data without authenticating</Button>
         </div>
       </Alert>
@@ -403,11 +403,27 @@ const FormComponent = () => {
   };
 
 
+
+  // function that will validate email format:
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  };
+
+
+
   // The following function will make the request to save the user user in the database:
   const submitNewUserData = (event) => {
 
-  };
+    event.preventDefault();
+    const emailValid = validateEmail(newUserData.email);
 
+    if(!emailValid){
+      // if the email is not valid, then show a pop that will alert the user that they are about to send the data without credentials:
+      setShowUserDataAlert(true);
+    };
+
+  };
 
 
   // The following functions will filter the neighborhoods when the user is responding what neighborhood they live in:
@@ -3091,9 +3107,7 @@ const FormComponent = () => {
           }
           ref={ref => divRefs.current[22] = ref}
         >
-
           {showUserDataAlert && sendInfoWithoutDataAlert}
-
           <Form.Group as={Row} className="mb-3" controlId="formHorizontalFirstName">
             <Form.Label column sm={2}>
               First Name:
@@ -3113,8 +3127,8 @@ const FormComponent = () => {
           </Form.Group>
 
           <Form.Group as={Row} className="mb-3">
-            <Col sm={{ span: 10, offset: 2 }}>
-              <Button size="lg" onClick={submitNewUserData} type="submit">Submit</Button>
+            <Col >
+              <Button variant="secondary"  size="lg" style={{width:"100%", marginTop:"10px"}}onClick={submitNewUserData} type="submit">Submit</Button>
             </Col>
           </Form.Group>
           {/* {errors2} */}

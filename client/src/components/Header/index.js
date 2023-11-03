@@ -22,7 +22,6 @@ function Header({ updateCurrentUser, currentuser }) {
 
   const handleSignOut = async () => {
     try {
-
       await axios.post("http://localhost:4000/api/signout");
       await axios.get('http://localhost:4000/api/currentuser');
       await updateCurrentUser(null);
@@ -34,7 +33,7 @@ function Header({ updateCurrentUser, currentuser }) {
   const links = [
     !currentuser && { label: "Sign Up", to: "/signup" },
     !currentuser && { label: "Sign In", to: "/signin" },
-    currentuser && { label: "questionnaire", to: "/questionnaire" },
+    { label: "questionnaire", to: "/questionnaire" },
     currentuser && { label: "Sign Out", onClick: handleSignOut },
   ]
     .filter((linkConfig) => linkConfig)
