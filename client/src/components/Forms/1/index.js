@@ -96,30 +96,46 @@ const FormComponent = () => {
   const foodDiversityExplanationRef = useRef(null);
   const neighborhoodInput = useRef();
   const favoritePlacesContainerRef = useRef();
-
   const showFormToResident = liveinNYC === "yes" ? "visible" : "hidden";
   const onlyNYCResidentsSign = liveinNYCSign === "no" ? "block" : "none";
 
+  const [loggedUser, setLoggedUser] = useState(null);
+
+
+  useEffect(() => {
+    checkCurrentUser();
+  }, [])
+
 
   // a request to check the currently logged in user needs to be made:
-  //   const loggedUser = currentUser;
+  const checkCurrentUser = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
+      setLoggedUser(response.data)
+    } catch (error) {
+    }
+  }
+
 
 
   // Create function that makes request to save the form data:
   async function sendFormData() {
     try {
       const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
-      console.log("responseee", response.data)
+      console.log("responseee", response.data);
     } catch (error) {
       console.log(error);
     }
   }
 
+  // Create function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
+  async function updateUser (dataToUpdate, id){
+
+  }
+
+
+
   // Create function that will save the user's data if they had not registered before
-
-
-  // Create function that will be called if the user was alredy logged in. This function will update the errorsFromUserUpdate value of the user.
-
 
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
@@ -262,24 +278,16 @@ const FormComponent = () => {
           formData.neighborhoodImages = imagesUrls;
 
           // make request to save form data:
-          sendFormData();
+         const formDataResponse = await sendFormData();
 
 
 
 
 
-          // save the resident id in the 'new user' object:
-          // setNewUserData((prevData) => ({
-          //   ...prevData,
-          //   residentId: saveFormDataResponse.resident.id,
-          //   formsResponded: 1,
-          //   userImagesId: 
-
-
-          // Check if the user is logged in and if so make request to udpate user:
+          // If there is a currently logged in user, make a request to upate the following values of the user: formsResponded - residentId and userImagesId 
           // if (loggedUser) {
-          //   await updateUserRequest();
-          //   hideForm();
+
+
           // };
 
 
@@ -691,6 +699,8 @@ const FormComponent = () => {
 
     }
   };
+
+
 
   return (
     <div className="mainContainer">

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.updateUserData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const neighborhood_1 = require("../models/neighborhood");
 const bad_request_error_1 = require("../errors/bad-request-error");
@@ -192,3 +192,15 @@ const saveNeighborhoodData = async (req, res) => {
     res.status(201).send({ neighborhood });
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
+/**
+ * @description updates user data
+ * @route PUT /api/updateuserdata/:id
+ * @access private
+ */
+const updateUserData = async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    const user = await user_1.User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    res.status(200).send(user);
+};
+exports.updateUserData = updateUserData;

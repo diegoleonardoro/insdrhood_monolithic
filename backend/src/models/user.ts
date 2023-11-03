@@ -11,7 +11,7 @@ interface UserAttrs {
   passwordSet: boolean;
   emailToken: string;
   formsResponded: number;
-  residentId: string;
+  residentId: string[];
   userImagesId: string;
 }
 
@@ -31,7 +31,7 @@ interface UserDoc extends mongoose.Document {
   passwordSet: boolean;
   emailToken: string;
   formsResponded: number;
-  residentId: string;
+  residentId: string[];
   userImagesId: string;
 }
 
@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema(
       required: true
     },
     residentId: {
-      type: String,
+      type: [String],
       required: false
     },
     passwordSet: {

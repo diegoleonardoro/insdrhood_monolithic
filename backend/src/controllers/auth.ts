@@ -192,7 +192,6 @@ export const verifyemail = async (req: Request, res: Response) => {
 
 }
 
-
 /**
  * @description makes request to aws S3 to get signed url
  * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
@@ -225,8 +224,6 @@ export const uploadFile = async (req: Request, res: Response) => {
 
 }
 
-
-
 /**
  * @description save form data
  * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
@@ -248,7 +245,19 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
   await neighborhood.save();
 
   console.log("neighborhood", neighborhood);
-  
+
   res.status(201).send({ neighborhood });
 
+}
+
+/**
+ * @description updates user data
+ * @route PUT /api/updateuserdata/:id
+ * @access private
+ */
+export const updateUserData = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const user = await User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+  res.status(200).send(user);
 }

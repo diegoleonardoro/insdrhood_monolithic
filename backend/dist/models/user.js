@@ -36,7 +36,7 @@ const userSchema = new mongoose_1.default.Schema({
         required: true
     },
     residentId: {
-        type: String,
+        type: [String],
         required: false
     },
     passwordSet: {

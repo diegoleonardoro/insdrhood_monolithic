@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { body } from "express-validator";
 import { validateRequest } from "../middlewares/validate-request";
 import { authenticationValidator } from "../middlewares/authentication-validator";
-import { login, signup, signout, currentuser, verifyemail, uploadFile, saveNeighborhoodData } from "../controllers/auth";
+import { login, signup, signout, currentuser, verifyemail, uploadFile, saveNeighborhoodData, updateUserData } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -29,9 +29,7 @@ router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
 router.put("/updateuser");// updateuser controller
 router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", uploadFile);
 router.post("/neighborhood/savedata", saveNeighborhoodData);
-
-
-
+router.put("/updateuserdata/:id", updateUserData);
 
 
 
