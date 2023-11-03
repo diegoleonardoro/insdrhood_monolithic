@@ -1,9 +1,21 @@
 import { Request, Response } from "express";
 import { User } from "../models/user";
+import { Neighborhood } from "../models/neighborhood";
 import { BadRequestError } from "../errors/bad-request-error";
 import { Password } from "../services/password";
 import jwt from "jsonwebtoken";
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
+const AWS = require("aws-sdk");
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  signatureVersion: "v4",
+  region: "us-east-1",
+});
+
+
 
 import { sendVerificationMail } from "../services/emailVerification";
 
@@ -181,4 +193,62 @@ export const verifyemail = async (req: Request, res: Response) => {
 }
 
 
+/**
+ * @description makes request to aws S3 to get signed url
+ * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @access public
+ */
+export const uploadFile = async (req: Request, res: Response) => {
 
+  const { neighborhood, randomUUID, imageType } = req.params;
+
+  const randomUUID_imageIdentifier = uuidv4();
+
+  const key = `places/${req.currentUser ? req.currentUser!.id
+    : randomUUID
+    }/${neighborhood}/${randomUUID_imageIdentifier}.${imageType}`;
+
+
+  s3.getSignedUrlPromise(
+    "putObject",
+    {
+      Bucket: "populace",
+      ContentType: imageType,
+      Key: key,
+    },
+    (err: object, url: string) => {
+      res.send({ key, url });
+    }
+  );
+
+
+
+}
+
+
+
+/**
+ * @description save form data
+ * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @access public 
+ */
+export const saveNeighborhoodData = async (req: Request, res: Response) => {
+
+
+  let user
+  if (req.currentUser) {
+    user = await User.findOne({ email: req.currentUser!.email });
+  }
+
+  const neighborhood = Neighborhood.build({
+    ...req.body,
+    user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
+  })
+
+  await neighborhood.save();
+
+  console.log("neighborhood", neighborhood);
+  
+  res.status(201).send({ neighborhood });
+
+}

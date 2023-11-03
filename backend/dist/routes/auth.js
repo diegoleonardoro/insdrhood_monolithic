@@ -27,4 +27,5 @@ router.post("/signout", asyncHandler(auth_1.signout));
 router.get("/currentuser", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
 router.put("/updateuser"); // updateuser controller
-router.put("/confirmemail"); // confirmemail controller
+router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", auth_1.uploadFile);
+router.post("/neighborhood/savedata", auth_1.saveNeighborhoodData);

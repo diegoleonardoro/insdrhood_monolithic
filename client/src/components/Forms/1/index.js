@@ -106,7 +106,14 @@ const FormComponent = () => {
 
 
   // Create function that makes request to save the form data:
-
+  async function sendFormData() {
+    try {
+      const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
+      console.log("responseee", response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // Create function that will save the user's data if they had not registered before
 
@@ -213,21 +220,26 @@ const FormComponent = () => {
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
+          console.log("formData", formData);
+
+
           // make request to save the images:
           const imagesUrls = [];
           const randomUUID = uuidv4();
           setUserUUID(randomUUID);
 
+
+
           if (formData.neighborhoodImages.length > 0) {
             for (var i = 0; i < formData.neighborhoodImages.length; i++) {
               const imageFile = formData.neighborhoodImages[i];
               const imageType = imageFile.type.split('/')[1];
-              console.log('imageType', imageType)
+
               /** 
               * In this request we will send a random UUID which will be used to 
               * relate users to the images that they upload. 
               */
-              const imageUploadConfig = await axios.get(`/api/residents/upload/${neighborhood}/${randomUUID}/${imageType}`);
+              const imageUploadConfig = await axios.get(`http://localhost:4000/api/neighborhood/imageupload/${neighborhood}/${randomUUID}/${imageType}`);
 
               imagesUrls.push({
                 image: imageUploadConfig.data.key,
@@ -243,16 +255,45 @@ const FormComponent = () => {
             }
           };
 
+          console.log("imagesUrlsimagesUrls", imagesUrls)
+
+
           // store the images in the formData state:
           formData.neighborhoodImages = imagesUrls;
 
+          // make request to save form data:
+          sendFormData();
 
-          // make request to save the resident data and update the residentId, formsResponded and userImagesId values of the user (if the user is alredy logged in):
 
+
+
+
+          // save the resident id in the 'new user' object:
+          // setNewUserData((prevData) => ({
+          //   ...prevData,
+          //   residentId: saveFormDataResponse.resident.id,
+          //   formsResponded: 1,
+          //   userImagesId: 
+
+
+          // Check if the user is logged in and if so make request to udpate user:
+          // if (loggedUser) {
+          //   await updateUserRequest();
+          //   hideForm();
+          // };
+
+
+
+          // make request to save the resident data and update the residentId, forms
+
+
+
+          return;
 
 
           // If the user is not logged in, show the sign up form:
           keyWord = "personalInfo";
+
 
 
         };
@@ -431,7 +472,7 @@ const FormComponent = () => {
   // ------- -------- --------- ---------- --------- ---------- ----------
 
 
-    // THIS FUNCTION WILL BE ACTIVATED EVERY TIME ANY OF THE OPTION BUTTONS IN THE FORM ARE CLICKED.
+  // THIS FUNCTION WILL BE ACTIVATED EVERY TIME ANY OF THE OPTION BUTTONS IN THE FORM ARE CLICKED.
   // IT WILL UPATE THE FORM WITH THE RESPECTIVE VALUE.
   const handleOptionSelect = (option, description, event) => { // --->> ?????
 
@@ -558,7 +599,7 @@ const FormComponent = () => {
 
   };
 
-  const handleInputChange = (value) => { 
+  const handleInputChange = (value) => {
     setFoodTypesInput(value);
   };
 
@@ -641,6 +682,8 @@ const FormComponent = () => {
             },
           ],
         }));
+
+
       }
       setNighLifeRows([...nighLifeRows, items]);
       // IS THIS EVEN DOING ANYTHING?
@@ -1248,10 +1291,10 @@ const FormComponent = () => {
         >
           <label>
             In general, how would you describe
-            <span className= "questionHighlight nhoodName">{neighborhood}</span>?
+            <span className="questionHighlight nhoodName">{neighborhood}</span>?
           </label>
           <textarea
-            className= "textarea_text inputCheck"
+            className="textarea_text inputCheck"
             name="neighborhood_description"
             id="nhoodDescription"
             onChange={(e) => {
@@ -1282,7 +1325,7 @@ const FormComponent = () => {
           </label>
 
           {residentsAdjsSelectedOpts.length > 0 && (
-            <div className= "scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+            <div className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
               {residentsAdjsSelectedOpts.map((option, index) => (
                 <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
                   {option}
@@ -1724,7 +1767,7 @@ const FormComponent = () => {
           </label>
 
           {foodTypesSelectedOpts.length > 0 && (
-            <div ref={favTypesOfFoodRef} className= "scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
+            <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
               {foodTypesSelectedOpts.map((option, index) => (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.foodType}>
 
@@ -2205,7 +2248,7 @@ const FormComponent = () => {
 
         {/** Do you agree or disagree withe the following statements: 
            * "food in {neighborhood} is authentic"
-          */}  
+          */}
         <div className={"foodPrice describeNighLife agreeOrDisagreeFoodQuestions " +
           displayQuestion("agreeOrDisagreeFood")}
           ref={ref => divRefs.current[13] = ref}
@@ -2367,12 +2410,12 @@ const FormComponent = () => {
                 return (
                   <div
                     key={index}
-                    className= "favoritePlacesBody favPlacesDiv"
+                    className="favoritePlacesBody favPlacesDiv"
                   >
-                    <div style={{width:"50%"}}>
+                    <div style={{ width: "50%" }}>
                       <textarea
                         className=
-                          "favoritePlacesTextArea nameOfFavPlaceTextArea"
+                        "favoritePlacesTextArea nameOfFavPlaceTextArea"
                         ref={(e) =>
                         (nightLifeRecommendationsRef.current["placeName"] =
                           e)
@@ -2477,8 +2520,6 @@ const FormComponent = () => {
             </div>
           </div>
         </div>
-
-
 
         {/** GENERAL QUESTIONS */}
         {/** True or false statements, public transportation  */}
@@ -2621,8 +2662,6 @@ const FormComponent = () => {
           </div>
         </div>
 
-
-
         {/** True or false statements, having pets in your neighborhood is convenient */}
         <div
           className={
@@ -2654,7 +2693,7 @@ const FormComponent = () => {
                     ...formData,
                     statements: {
                       ...formData.statements,
-                        "owningPets": {
+                      "owningPets": {
                         ...formData.statements.owningPets,
                         convenient: e.target.value,
                       },
@@ -3017,11 +3056,9 @@ const FormComponent = () => {
           </div>
         </div>
 
-
-
         {/** Do you have any neighborhood pictures to share? */}
         <div className={
-          "neighborhoodEvaluationFourthQuestion submit " 
+          "neighborhoodEvaluationFourthQuestion submit "
           // +  (loggedUser ? "submit " : "personalInfo ")
           + displayQuestion("neighborhoodPictures")
         }
@@ -3034,7 +3071,6 @@ const FormComponent = () => {
           <input className="nhoodImagesInput" onChange={(e) => { setFormData({ ...formData, neighborhoodImages: Array.from(e.target.files) }) }} id="nhoodImagesInput" type="file" name="nhoodImages" multiple></input>
 
         </div>
-
 
 
         {/* if the user is not logged in here, render a question that asks for his email, name and a password  */}
@@ -3075,6 +3111,9 @@ const FormComponent = () => {
           </Form.Group>
           {/* {errors2} */}
         </div>
+
+
+
 
         {/** Submit */}
         <div

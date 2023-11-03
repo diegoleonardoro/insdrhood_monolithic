@@ -19,11 +19,14 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@aws-sdk/types": "^3.433.0",
     "@types/cookie-session": "^2.0.46",
     "@types/cors": "^2.8.15",
     "@types/jsonwebtoken": "^9.0.4",
     "@types/mjml": "^4.7.3",
     "@types/nodemailer": "^6.4.13",
+    "@types/uuid": "^9.0.6",
+    "aws-sdk": "^2.1486.0",
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -33,6 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "mjml": "^4.14.1",
     "mongoose": "^7.6.3",
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^6.9.7",
+    "uuid": "^9.0.1"
   }
 }

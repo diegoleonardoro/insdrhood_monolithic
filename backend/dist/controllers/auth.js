@@ -3,12 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyemail = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
+const neighborhood_1 = require("../models/neighborhood");
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
+const uuid_1 = require("uuid");
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3({
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    signatureVersion: "v4",
+    region: "us-east-1",
+});
 const emailVerification_1 = require("../services/emailVerification");
 /**
  * @description registers a new user
@@ -145,3 +154,41 @@ const verifyemail = async (req, res) => {
     res.status(200).send(user);
 };
 exports.verifyemail = verifyemail;
+/**
+ * @description makes request to aws S3 to get signed url
+ * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @access public
+ */
+const uploadFile = async (req, res) => {
+    const { neighborhood, randomUUID, imageType } = req.params;
+    const randomUUID_imageIdentifier = (0, uuid_1.v4)();
+    const key = `places/${req.currentUser ? req.currentUser.id
+        : randomUUID}/${neighborhood}/${randomUUID_imageIdentifier}.${imageType}`;
+    s3.getSignedUrlPromise("putObject", {
+        Bucket: "populace",
+        ContentType: imageType,
+        Key: key,
+    }, (err, url) => {
+        res.send({ key, url });
+    });
+};
+exports.uploadFile = uploadFile;
+/**
+ * @description save form data
+ * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @access public
+ */
+const saveNeighborhoodData = async (req, res) => {
+    let user;
+    if (req.currentUser) {
+        user = await user_1.User.findOne({ email: req.currentUser.email });
+    }
+    const neighborhood = neighborhood_1.Neighborhood.build({
+        ...req.body,
+        user: user ? { id: user.id, name: user.name, email: user.email } : undefined
+    });
+    await neighborhood.save();
+    console.log("neighborhood", neighborhood);
+    res.status(201).send({ neighborhood });
+};
+exports.saveNeighborhoodData = saveNeighborhoodData;
