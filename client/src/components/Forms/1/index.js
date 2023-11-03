@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 
 let addLastPlace = false;
@@ -107,6 +108,8 @@ const FormComponent = () => {
   }, [])
 
 
+  const navigate = useNavigate();
+
   // a request to check the currently logged in user needs to be made:
   const checkCurrentUser = async () => {
     try {
@@ -136,6 +139,13 @@ const FormComponent = () => {
 
 
   // Create function that will save the user's data if they had not registered before
+  const registerNewUser = async (data) => {
+    await axios.post('http://localhost:4000/api/signup',
+      data);
+    navigate('/');
+    return
+  }
+
 
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
@@ -157,10 +167,8 @@ const FormComponent = () => {
   };
 
 
-
   // The following function will be in charge of changing the quesitons:
   const changeQuestion = async (direction, flag, errs) => {
-
 
     let keyWord;
     const currentDiv = divRefs.current[activeIndex];
@@ -287,9 +295,9 @@ const FormComponent = () => {
           };
 
           // this state needs to be updated to save the new user in the database:
-          setNewUserData(prevData=>({
-            ...prevData, 
-            "residentId": [formDataResponse.id], 
+          setNewUserData(prevData => ({
+            ...prevData,
+            "residentId": [formDataResponse.id],
             "userImagesId": randomUUID
           }))
 
@@ -334,11 +342,9 @@ const FormComponent = () => {
       setActiveIndex(nextIndex);
 
     }
-    
+
     setDisplayKeyWord([keyWord]);
   }
-
-
 
 
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
@@ -418,11 +424,12 @@ const FormComponent = () => {
     event.preventDefault();
     const emailValid = validateEmail(newUserData.email);
 
-    if(!emailValid){
+    if (!emailValid) {
       // if the email is not valid, then show a pop that will alert the user that they are about to send the data without credentials:
       setShowUserDataAlert(true);
     };
-
+    // make request to save user
+    registerNewUser(newUserData);
   };
 
 
@@ -3128,7 +3135,7 @@ const FormComponent = () => {
 
           <Form.Group as={Row} className="mb-3">
             <Col >
-              <Button variant="secondary"  size="lg" style={{width:"100%", marginTop:"10px"}}onClick={submitNewUserData} type="submit">Submit</Button>
+              <Button variant="secondary" size="lg" style={{ width: "100%", marginTop: "10px" }} onClick={submitNewUserData} type="submit">Submit</Button>
             </Col>
           </Form.Group>
           {/* {errors2} */}
