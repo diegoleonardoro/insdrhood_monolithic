@@ -8,6 +8,7 @@ import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 
 const SignUp = ({ updateCurrentUser }) => {
+  
   axios.defaults.withCredentials = true;
 
   const navigate = useNavigate();

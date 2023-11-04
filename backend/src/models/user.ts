@@ -22,7 +22,7 @@ interface UserModel extends mongoose.Model<UserDoc> {
 }
 
 // Add an interface that describes the properties that a User document has:
-interface UserDoc extends mongoose.Document {
+export interface UserDoc extends mongoose.Document {
   name: string;
   email: string;
   image: string;
@@ -92,6 +92,7 @@ const userSchema = new mongoose.Schema(
     },
   }
 );
+
 
 
 // pre ('save') is a middleware function implemented by mongoose, executed before saving a user to the database. 'done' needs to be called in every async function used with mongoose.

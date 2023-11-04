@@ -22,6 +22,7 @@ function App() {
   const updateCurrentUser = (data) => {
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
+        console.log(data)
         setCurrentUser(data)
         resolve()
       } else {
@@ -53,7 +54,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
-          <Route path="/questionnaire" element={<FormComponent />} />
+          <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
           <Route path="/emailconfimation/:emailtoken" element={<VerifyEmail />} />
         </Routes>
       </div>

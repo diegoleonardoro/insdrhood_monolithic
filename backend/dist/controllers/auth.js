@@ -198,7 +198,10 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
  */
 const updateUserData = async (req, res) => {
     const { id } = req.params;
-    const updates = req.body;
+    let updates = req.body;
+    if (updates.password) {
+        updates.password = await password_1.Password.toHash(updates.password);
+    }
     const user = await user_1.User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
     res.status(200).send(user);
 };

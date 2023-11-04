@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../models/user";
+import { UserDoc } from "../models/user";
 import { Neighborhood } from "../models/neighborhood";
 import { BadRequestError } from "../errors/bad-request-error";
 import { Password } from "../services/password";
@@ -254,7 +255,14 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
  */
 export const updateUserData = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const updates = req.body;
+  let updates = req.body;
+
+  if (updates.password) {
+    updates.password = await Password.toHash(updates.password);
+  }
+
   const user = await User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
   res.status(200).send(user);
+  
 }

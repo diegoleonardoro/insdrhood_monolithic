@@ -38,7 +38,6 @@ const VerifyEmail = () => {
   // make request to get the user with the emailtoken
   const makeRequest = async () => {
     try {
-
       const response = await axios.get(`http://localhost:4000/api/emailVerification/${emailtoken}`);
       setUser(response.data);
 
@@ -83,15 +82,14 @@ const VerifyEmail = () => {
     }
   }, [user])
 
-
   async function checkPasswordsMatch(password1, password2) {
     if (password1 !== password2) {
       //Show a banner telling that the passwords do not match 
       setUnmatchingPasswords(true);
     } else {
-      // make the request to update the user's information (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
-
-
+      // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
+      await axios.put(`http://localhost:4000/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true})
+      navigate('/');
     }
   }
 
@@ -126,7 +124,7 @@ const VerifyEmail = () => {
 
       </Alert>) : null}
 
-      {showPasswordForm ? (<div style={{ width: "40%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+      {showPasswordForm ? (<div style={{ width: "20%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
         <h3 style={{ display: "block" }} id="passwordHelpBlock" muted>
           Set a password for future logins
         </h3>

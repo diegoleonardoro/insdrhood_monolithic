@@ -14,7 +14,7 @@ let addLastPlace = false;
 let addPlaceFromForm = true;
 let addPlaceFromFormNightLife = true;
 
-const FormComponent = () => {
+const FormComponent = ({ updateCurrentUser }) => {
 
   const [displayKeyWord, setDisplayKeyWord] = useState(["liveInNY"]);
   const [neighborhood, setNeighborhood] = useState("");
@@ -104,7 +104,9 @@ const FormComponent = () => {
 
 
   useEffect(() => {
-    checkCurrentUser();
+    if(loggedUser===null){
+      checkCurrentUser()
+    };
   }, [])
 
 
@@ -140,8 +142,9 @@ const FormComponent = () => {
 
   // Create function that will save the user's data if they had not registered before
   const registerNewUser = async (data) => {
-    await axios.post('http://localhost:4000/api/signup',
+    const response = await axios.post('http://localhost:4000/api/signup',
       data);
+    await updateCurrentUser(response.data);
     navigate('/');
     return
   }
@@ -246,6 +249,7 @@ const FormComponent = () => {
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
+          
           // make request to save the images:
           const imagesUrls = [];
           const randomUUID = uuidv4();
@@ -278,8 +282,12 @@ const FormComponent = () => {
           // store the images in the formData state:
           formData.neighborhoodImages = imagesUrls;
 
+
+
           // make request to save form data:
           const formDataResponse = await sendFormData();
+
+          console.log("rere", formDataResponse);
 
           // If there is a currently logged in user, make a request to upate the following values of the user: formsResponded - residentId and userImagesId 
           if (loggedUser) {
@@ -430,6 +438,8 @@ const FormComponent = () => {
     };
     // make request to save user
     registerNewUser(newUserData);
+
+
   };
 
 
