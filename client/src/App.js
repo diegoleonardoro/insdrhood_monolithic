@@ -9,9 +9,8 @@ import Signin from './components/Signin';
 import SignUp from './components/Signup';
 import VerifyEmail from './components/EmailConfirmation';
 import FormComponent from './components/Forms/1';
+import Alert from 'react-bootstrap/Alert';
 
-
-// custom hook to fetch dataa:
 
 function App() {
 
@@ -19,11 +18,11 @@ function App() {
 
   const [currentuser, setCurrentUser] = useState(null);
 
+
   const updateCurrentUser = (data) => {
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
-        console.log(data)
-        setCurrentUser(data)
+        setCurrentUser(data);
         resolve()
       } else {
         reject(new Error('No user data provided.'))
@@ -49,13 +48,24 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
+        <div>
+          <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
+          {
+            currentuser && currentuser.isVerified === false ? (
+              <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0" }}>
+                <Alert variant="dark">
+                  Verify Email {currentuser.email}
+                </Alert>
+              </div>
+            ) : null
+          }
+        </div>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
-          <Route path="/emailconfimation/:emailtoken" element={<VerifyEmail />} />
+          <Route path="/emailconfimation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
         </Routes>
       </div>
     </Router>

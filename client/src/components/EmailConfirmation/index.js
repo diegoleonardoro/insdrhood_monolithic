@@ -10,7 +10,7 @@ import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 
 
-const VerifyEmail = () => {
+const VerifyEmail = ({ updateCurrentUser }) => {
 
   const { emailtoken } = useParams();
   const [errors, setErrors] = useState(null);
@@ -88,11 +88,11 @@ const VerifyEmail = () => {
       setUnmatchingPasswords(true);
     } else {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
-      await axios.put(`http://localhost:4000/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true})
+      const resposen = await axios.put(`http://localhost:4000/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
+      updateCurrentUser(resposen.data);
       navigate('/');
     }
   }
-
 
   // the following three states are meant to be used when the user has not set their password.
   // const [showRedirecting, setShowRedirecting] = useState(false);
