@@ -52,9 +52,11 @@ function App() {
           <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
           {
             currentuser && currentuser.isVerified === false ? (
-              <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0" }}>
-                <Alert variant="dark">
-                  Verify Email {currentuser.email}
+              <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0"}}>
+                <Alert style={{ height: "10px" }} variant="warning">
+                  <div style={{position:"relative", top:"-12px"}}>
+                    Verify Email {currentuser.email}
+                  </div>
                 </Alert>
               </div>
             ) : null
