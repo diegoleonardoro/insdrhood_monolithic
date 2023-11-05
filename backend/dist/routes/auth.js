@@ -18,6 +18,9 @@ function asyncHandler(fn) {
 }
 const router = express_1.default.Router();
 exports.auth = router;
+/**
+ * AUTHENTICATION ROUTES:
+*/
 router.post("/signin", [
     (0, express_validator_1.body)("email").isEmail().withMessage("Email must be valid"),
     (0, express_validator_1.body)("password").trim().notEmpty().withMessage("You must supply a password"),
@@ -26,8 +29,11 @@ router.post("/signup", asyncHandler(auth_1.signup));
 router.post("/signout", asyncHandler(auth_1.signout));
 router.get("/currentuser", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
-router.put("/updateuser"); // updateuser controller
+router.put("/updateuserdata/:id", auth_1.updateUserData);
+/**
+ * NEIGHBORHOOD DATA ROUTES:
+*/
 router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", auth_1.uploadFile);
 router.post("/neighborhood/savedata", authentication_validator_1.authenticationValidator, auth_1.saveNeighborhoodData);
+router.put("/updateneighborhood/:id", auth_1.updateNeighborhoodData);
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
-router.put("/updateuserdata/:id", auth_1.updateUserData);

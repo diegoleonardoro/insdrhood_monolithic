@@ -29,18 +29,17 @@ const FormComponent = ({ updateCurrentUser }) => {
   const favTypesOfFoodRef = useRef(null);
   const nightLifeRecommendationsRef = useRef([]);
   const foodRecommendationsRef = useRef([]);
-
   const divRefs = useRef([]);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const neighborhoodsDiv = useRef();
 
+  const [activeIndex, setActiveIndex] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [residentsAdjsSelectedOpts, setResidentsAdjsSelectedOpts] = useState([]);
   const [foodTypesSelectedOpts, setFoodTypesSelectedOpts] = useState([]);
   const [foodTypesInput, setFoodTypesInput] = useState("");
-  const neighborhoodsDiv = useRef();
-
   const [userUIID, setUserUUID] = useState();
   const [showUserDataAlert, setShowUserDataAlert] = useState(false);
+  const [neighborhoodId, setNeighborhoodId] = useState()
 
   const [rows, setRows] = useState([
     {
@@ -147,11 +146,18 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   // function that will save the user's data if they had not registered before
   const registerNewUser = async (data) => {
+
+    // request to save new user's data:
     const response = await axios.post('http://localhost:4000/api/signup',
       data);
+
+    // request to update the neighborhood's data with the new user data:
+    console.log('neighbrhood id', neighborhoodId);
+
     await updateCurrentUser(response.data);
     navigate('/');
-    return
+    return;
+
   }
 
 
@@ -173,6 +179,8 @@ const FormComponent = ({ updateCurrentUser }) => {
       }, 3000);
     }
   };
+
+
 
 
   // The following function will be in charge of changing the quesitons:
@@ -255,12 +263,13 @@ const FormComponent = ({ updateCurrentUser }) => {
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
-
           // make request to save the images:
           const imagesUrls = [];
           const randomUUID = uuidv4();
           setUserUUID(randomUUID);
 
+
+          // get url images from aws s3:
           if (formData.neighborhoodImages.length > 0) {
             for (var i = 0; i < formData.neighborhoodImages.length; i++) {
               const imageFile = formData.neighborhoodImages[i];
@@ -288,11 +297,11 @@ const FormComponent = ({ updateCurrentUser }) => {
           // store the images in the formData state:
           formData.neighborhoodImages = imagesUrls;
 
-
-    
-
           // make request to save form data:
           const formDataResponse = await sendFormData();
+
+          // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
+          setNeighborhoodId(formDataResponse.id);
 
 
           // if there is a logged in user, make a request to udpate the user
@@ -308,21 +317,12 @@ const FormComponent = ({ updateCurrentUser }) => {
           };
 
 
-
-
-
-
-
-
-
-
           // this state needs to be updated to save the new user in the database:
           setNewUserData(prevData => ({
             ...prevData,
             "residentId": [formDataResponse.id],
             "userImagesId": randomUUID
           }))
-
 
           keyWord = "personalInfo";
           let nextIndex = activeIndex + 1;
@@ -367,6 +367,10 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     setDisplayKeyWord([keyWord]);
   }
+
+
+
+
 
 
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
@@ -452,6 +456,8 @@ const FormComponent = ({ updateCurrentUser }) => {
     };
     // make request to save user
     registerNewUser(newUserData);
+
+
 
 
   };
@@ -3187,8 +3193,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             value="Submit"
           />
         </div>
-
-
 
 
 

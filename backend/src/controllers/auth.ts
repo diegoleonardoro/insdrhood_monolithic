@@ -244,7 +244,7 @@ export const uploadFile = async (req: Request, res: Response) => {
 
 /**
  * @description saves form data
- * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @route POST /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
  * @access public 
  */
 export const saveNeighborhoodData = async (req: Request, res: Response) => {
@@ -254,18 +254,31 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
     user = await User.findOne({ email: req.currentUser!.email });
   };
 
-  console.log('usererererere', user)
-
   const neighborhood = Neighborhood.build({
     ...req.body,
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
   });
 
-  console.log("nhoooddd", neighborhood);
-
   await neighborhood.save();
   res.status(201).send(neighborhood);
 }
+
+
+/**
+ * @description updates neighborhood data
+ * @route PUT /api/updateneighborhood/:id
+ * @access public
+*/
+export const updateNeighborhoodData = async (req: Request, res: Response) => {
+
+  const { id } = req.params;
+  let updates = req.body;
+
+  const neighborhood = await Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
+  res.status(200).send(neighborhood);
+}
+
 
 
 
@@ -275,9 +288,6 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
-
   const allNeighborhoods = await Neighborhood.find({});
-  console.log("all nhoods", allNeighborhoods);
   res.status(200).send(allNeighborhoods);
-
 }

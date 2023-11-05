@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllNeighborhoods = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const neighborhood_1 = require("../models/neighborhood");
 const bad_request_error_1 = require("../errors/bad-request-error");
@@ -190,7 +190,7 @@ const uploadFile = async (req, res) => {
 exports.uploadFile = uploadFile;
 /**
  * @description saves form data
- * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @route POST /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
  * @access public
  */
 const saveNeighborhoodData = async (req, res) => {
@@ -199,16 +199,26 @@ const saveNeighborhoodData = async (req, res) => {
         user = await user_1.User.findOne({ email: req.currentUser.email });
     }
     ;
-    console.log('usererererere', user);
     const neighborhood = neighborhood_1.Neighborhood.build({
         ...req.body,
         user: user ? { id: user.id, name: user.name, email: user.email } : undefined
     });
-    console.log("nhoooddd", neighborhood);
     await neighborhood.save();
     res.status(201).send(neighborhood);
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
+/**
+ * @description updates neighborhood data
+ * @route PUT /api/updateneighborhood/:id
+ * @access public
+*/
+const updateNeighborhoodData = async (req, res) => {
+    const { id } = req.params;
+    let updates = req.body;
+    const neighborhood = await neighborhood_1.Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    res.status(200).send(neighborhood);
+};
+exports.updateNeighborhoodData = updateNeighborhoodData;
 /**
  * @description gets all neighbohoods data submitted from the form
  * @route /api/neighborhoods
@@ -216,7 +226,6 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
  */
 const getAllNeighborhoods = async (req, res) => {
     const allNeighborhoods = await neighborhood_1.Neighborhood.find({});
-    console.log("all nhoods", allNeighborhoods);
     res.status(200).send(allNeighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
