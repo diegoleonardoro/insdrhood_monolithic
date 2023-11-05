@@ -28,6 +28,6 @@ router.get("/currentuser", authentication_validator_1.authenticationValidator, a
 router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
 router.put("/updateuser"); // updateuser controller
 router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", auth_1.uploadFile);
-router.post("/neighborhood/savedata", auth_1.saveNeighborhoodData);
+router.post("/neighborhood/savedata", authentication_validator_1.authenticationValidator, auth_1.saveNeighborhoodData);
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
 router.put("/updateuserdata/:id", auth_1.updateUserData);

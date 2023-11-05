@@ -38,7 +38,7 @@ router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
 router.put("/updateuser");// updateuser controller
 router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", uploadFile);
-router.post("/neighborhood/savedata", saveNeighborhoodData);
+router.post("/neighborhood/savedata", authenticationValidator, saveNeighborhoodData);
 router.get("/neighborhoods", getAllNeighborhoods);
 router.put("/updateuserdata/:id", updateUserData);
 

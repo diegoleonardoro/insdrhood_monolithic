@@ -252,12 +252,16 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
   let user
   if (req.currentUser) {
     user = await User.findOne({ email: req.currentUser!.email });
-  }
+  };
+
+  console.log('usererererere', user)
 
   const neighborhood = Neighborhood.build({
     ...req.body,
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
   });
+
+  console.log("nhoooddd", neighborhood);
 
   await neighborhood.save();
   res.status(201).send(neighborhood);
@@ -271,9 +275,9 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
-  
+
   const allNeighborhoods = await Neighborhood.find({});
   console.log("all nhoods", allNeighborhoods);
   res.status(200).send(allNeighborhoods);
-  
+
 }

@@ -85,7 +85,8 @@ const FormComponent = ({ updateCurrentUser }) => {
     nightLifeRecommendations: [],
     onePlaceForNightLife: { place: "", explanation: "" },
     statements: {},
-    neighborhoodImages: []
+    neighborhoodImages: [],
+    user: {}
   });
 
   const formUseRef = useRef(null);
@@ -104,14 +105,12 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
   useEffect(() => {
-    if(loggedUser===null){
+    if (loggedUser === null) {
       checkCurrentUser()
     };
-  }, [])
-
+  }, []);
 
   const navigate = useNavigate();
-
   // a request to check the currently logged in user needs to be made:
   const checkCurrentUser = async () => {
     try {
@@ -124,6 +123,10 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   // Create function that makes request to save the form data:
   async function sendFormData() {
+    // check if there is a currently logged in user and if so include it in the formData:
+
+
+
     try {
       const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
       return response.data;
@@ -132,7 +135,9 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   }
 
-  // Create function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
+
+
+  //  function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
   async function updateUser(dataToUpdate, id) {
     const userupdated = await axios.put(`http://localhost:4000/api/updateuserdata/${id}`, dataToUpdate)
     console.log("userupdated", userupdated)
@@ -140,7 +145,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
 
-  // Create function that will save the user's data if they had not registered before
+  // function that will save the user's data if they had not registered before
   const registerNewUser = async (data) => {
     const response = await axios.post('http://localhost:4000/api/signup',
       data);
@@ -174,6 +179,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const changeQuestion = async (direction, flag, errs) => {
 
     let keyWord;
+
     const currentDiv = divRefs.current[activeIndex];
 
     if (direction === "next") {
@@ -249,7 +255,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
-          
+
           // make request to save the images:
           const imagesUrls = [];
           const randomUUID = uuidv4();
@@ -283,13 +289,13 @@ const FormComponent = ({ updateCurrentUser }) => {
           formData.neighborhoodImages = imagesUrls;
 
 
+    
 
           // make request to save form data:
           const formDataResponse = await sendFormData();
 
-          console.log("rere", formDataResponse);
 
-          // If there is a currently logged in user, make a request to upate the following values of the user: formsResponded - residentId and userImagesId 
+          // if there is a logged in user, make a request to udpate the user
           if (loggedUser) {
             // request to update the user:
             updateUser({
@@ -297,10 +303,18 @@ const FormComponent = ({ updateCurrentUser }) => {
               residentId: [formDataResponse.id],
               userImagesId: randomUUID
             }, loggedUser.id);
-
             // MAKE LOGIC TO DIRECT USER TO THEIR PROFILE
             return;
           };
+
+
+
+
+
+
+
+
+
 
           // this state needs to be updated to save the new user in the database:
           setNewUserData(prevData => ({
