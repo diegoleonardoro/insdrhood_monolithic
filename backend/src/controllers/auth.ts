@@ -272,9 +272,14 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
 export const updateNeighborhoodData = async (req: Request, res: Response) => {
 
   const { id } = req.params;
+  
   let updates = req.body;
 
+  console.log("updatessss", updates);
+
   const neighborhood = await Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
+  console.log("nhood updated", neighborhood)
 
   res.status(200).send(neighborhood);
 }

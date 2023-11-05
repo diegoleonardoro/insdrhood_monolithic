@@ -144,20 +144,19 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
 
-  // function that will save the user's data if they had not registered before
+  // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
 
     // request to save new user's data:
-    const response = await axios.post('http://localhost:4000/api/signup',
+    const newuser = await axios.post('http://localhost:4000/api/signup',
       data);
 
     // request to update the neighborhood's data with the new user data:
-    console.log('neighbrhood id', neighborhoodId);
+    await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } })
 
-    await updateCurrentUser(response.data);
+    await updateCurrentUser(newuser.data);
     navigate('/');
     return;
-
   }
 
 
