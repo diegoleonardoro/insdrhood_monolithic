@@ -18,7 +18,6 @@ function App() {
 
   const [currentuser, setCurrentUser] = useState(null);
 
-
   const updateCurrentUser = (data) => {
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
@@ -41,7 +40,11 @@ function App() {
 
   useEffect(() => {
     if (currentuser === null) {
-      checkCurrentUser()
+
+      setTimeout(() => {
+         checkCurrentUser()
+      }, 1000);
+     
     }
   }, []);
 

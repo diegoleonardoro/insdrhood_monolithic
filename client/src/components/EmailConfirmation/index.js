@@ -24,14 +24,12 @@ const VerifyEmail = ({ updateCurrentUser }) => {
   // when set to true, this state will will show a windown telling the user thaty they have successfully verified their email.
   const [showRedirecting, setShowRedirecting] = useState(false);
 
-
   // state used when the use has not set their passwords and we need to update their data:
   const [userDataToUpdate, setUserDataToUpdate] = useState({
     id: 'user.id',
     password: "",
     passwordSet: true
   });
-
 
   const navigate = useNavigate();
 
@@ -63,12 +61,20 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
         // DIRECT THE USER TO RESPOND THE FORM 
 
+        console.log("userrr", user)
+
+        updateCurrentUser(user);
+
         setTimeout(() => {
           navigate('/');
         }, 2000);
 
 
       } else {
+
+
+
+
 
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
@@ -99,7 +105,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
   return (
     <div>
-
       {errors && (
         <Alert style={{ marginTop: "10px" }} variant='danger'>
           {errors}

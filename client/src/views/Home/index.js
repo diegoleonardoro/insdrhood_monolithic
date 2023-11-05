@@ -49,7 +49,7 @@ function Home() {
 
 
   return (
-    <Table striped bordered hover size="sm" style={{width:"90%", margin:"30px auto"}} > 
+    <Table striped bordered hover size="sm" style={{width:"90%", margin:"50px auto"}} > 
         <thead>
           <tr>
             <th>Resident</th>
