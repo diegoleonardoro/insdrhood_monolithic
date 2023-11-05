@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.getAllNeighborhoods = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const neighborhood_1 = require("../models/neighborhood");
 const bad_request_error_1 = require("../errors/bad-request-error");
@@ -124,6 +124,21 @@ const signout = async (req, res) => {
 };
 exports.signout = signout;
 /**
+ * @description updates user data
+ * @route PUT /api/updateuserdata/:id
+ * @access private
+ */
+const updateUserData = async (req, res) => {
+    const { id } = req.params;
+    let updates = req.body;
+    if (updates.password) {
+        updates.password = await password_1.Password.toHash(updates.password);
+    }
+    const user = await user_1.User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    res.status(200).send(user);
+};
+exports.updateUserData = updateUserData;
+/**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
  * @access only accessible with the email verification link
@@ -174,7 +189,7 @@ const uploadFile = async (req, res) => {
 };
 exports.uploadFile = uploadFile;
 /**
- * @description save form data
+ * @description saves form data
  * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
  * @access public
  */
@@ -192,17 +207,13 @@ const saveNeighborhoodData = async (req, res) => {
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
 /**
- * @description updates user data
- * @route PUT /api/updateuserdata/:id
- * @access private
+ * @description gets all neighbohoods data submitted from the form
+ * @route /api/neighborhoods
+ * @access public
  */
-const updateUserData = async (req, res) => {
-    const { id } = req.params;
-    let updates = req.body;
-    if (updates.password) {
-        updates.password = await password_1.Password.toHash(updates.password);
-    }
-    const user = await user_1.User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
-    res.status(200).send(user);
+const getAllNeighborhoods = async (req, res) => {
+    const allNeighborhoods = await neighborhood_1.Neighborhood.find({});
+    console.log("all nhoods", allNeighborhoods);
+    res.status(200).send(allNeighborhoods);
 };
-exports.updateUserData = updateUserData;
+exports.getAllNeighborhoods = getAllNeighborhoods;

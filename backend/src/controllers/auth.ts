@@ -16,8 +16,6 @@ const s3 = new AWS.S3({
   region: "us-east-1",
 });
 
-
-
 import { sendVerificationMail } from "../services/emailVerification";
 
 /**
@@ -151,6 +149,25 @@ export const signout = async (req: Request, res: Response) => {
 }
 
 /**
+ * @description updates user data
+ * @route PUT /api/updateuserdata/:id
+ * @access private
+ */
+export const updateUserData = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  let updates = req.body;
+
+  if (updates.password) {
+    updates.password = await Password.toHash(updates.password);
+  }
+
+  const user = await User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
+  res.status(200).send(user);
+
+}
+
+/**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
  * @access only accessible with the email verification link
@@ -226,7 +243,7 @@ export const uploadFile = async (req: Request, res: Response) => {
 }
 
 /**
- * @description save form data
+ * @description saves form data
  * @route POST /neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
  * @access public 
  */
@@ -240,29 +257,23 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
   const neighborhood = Neighborhood.build({
     ...req.body,
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
-  })
+  });
 
   await neighborhood.save();
-
-  res.status(201).send( neighborhood );
-
+  res.status(201).send(neighborhood);
 }
 
+
+
 /**
- * @description updates user data
- * @route PUT /api/updateuserdata/:id
- * @access private
+ * @description gets all neighbohoods data submitted from the form 
+ * @route /api/neighborhoods
+ * @access public 
  */
-export const updateUserData = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  let updates = req.body;
-
-  if (updates.password) {
-    updates.password = await Password.toHash(updates.password);
-  }
-
-  const user = await User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
-
-  res.status(200).send(user);
+export const getAllNeighborhoods = async (req: Request, res: Response) => {
+  
+  const allNeighborhoods = await Neighborhood.find({});
+  console.log("all nhoods", allNeighborhoods);
+  res.status(200).send(allNeighborhoods);
   
 }

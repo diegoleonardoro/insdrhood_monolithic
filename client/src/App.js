@@ -40,11 +40,9 @@ function App() {
 
   useEffect(() => {
     if (currentuser === null) {
-
       setTimeout(() => {
          checkCurrentUser()
       }, 1000);
-     
     }
   }, []);
 
