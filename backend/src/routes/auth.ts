@@ -12,7 +12,8 @@ import {
   saveNeighborhoodData,
   updateUserData,
   getAllNeighborhoods,
-  updateNeighborhoodData
+  updateNeighborhoodData,
+  getNeighborhood
 } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
@@ -51,6 +52,7 @@ router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", upl
 router.post("/neighborhood/savedata", authenticationValidator, saveNeighborhoodData);
 router.put("/updateneighborhood/:id", updateNeighborhoodData)
 router.get("/neighborhoods", getAllNeighborhoods);
+router.get("/neighborhood/:neighborhoodid", getNeighborhood);
 
 
 

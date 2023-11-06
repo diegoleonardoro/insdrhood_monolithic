@@ -9,6 +9,7 @@ import Signin from './components/Signin';
 import SignUp from './components/Signup';
 import VerifyEmail from './components/EmailConfirmation';
 import FormComponent from './components/Forms/1';
+import NeighborhoodProfile from './components/Neighborhood';
 import Alert from 'react-bootstrap/Alert';
 
 
@@ -69,6 +70,7 @@ function App() {
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
           <Route path="/emailconfimation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
+          <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuser={currentuser} />} />
         </Routes>
       </div>
     </Router>

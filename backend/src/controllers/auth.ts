@@ -272,19 +272,10 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
 export const updateNeighborhoodData = async (req: Request, res: Response) => {
 
   const { id } = req.params;
-  
   let updates = req.body;
-
-  console.log("updatessss", updates);
-
   const neighborhood = await Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
-
-  console.log("nhood updated", neighborhood)
-
   res.status(200).send(neighborhood);
 }
-
-
 
 
 /**
@@ -295,4 +286,20 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
   const allNeighborhoods = await Neighborhood.find({});
   res.status(200).send(allNeighborhoods);
+}
+
+
+/**
+ * @description get a specific neighborhood
+ * @route /api/neighborhood/:neighborhoodid
+ * @access public 
+ */
+
+export const getNeighborhood = async (req: Request, res: Response) => {
+
+  const { neighborhoodid } = req.params;
+  const neighborhood = await Neighborhood.findById(neighborhoodid);
+  console.log("neighborhooddd", neighborhood);
+  res.status(200).send(neighborhood);
+
 }

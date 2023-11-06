@@ -143,7 +143,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   }
 
 
-
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
 
@@ -158,7 +157,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate('/');
     return;
   }
-
 
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
@@ -178,7 +176,6 @@ const FormComponent = ({ updateCurrentUser }) => {
       }, 3000);
     }
   };
-
 
 
 
@@ -266,7 +263,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           const imagesUrls = [];
           const randomUUID = uuidv4();
           setUserUUID(randomUUID);
-
 
           // get url images from aws s3:
           if (formData.neighborhoodImages.length > 0) {

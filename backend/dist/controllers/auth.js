@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const user_1 = require("../models/user");
 const neighborhood_1 = require("../models/neighborhood");
 const bad_request_error_1 = require("../errors/bad-request-error");
@@ -215,9 +215,7 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateNeighborhoodData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
-    console.log("updatessss", updates);
     const neighborhood = await neighborhood_1.Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
-    console.log("nhood updated", neighborhood);
     res.status(200).send(neighborhood);
 };
 exports.updateNeighborhoodData = updateNeighborhoodData;
@@ -231,3 +229,15 @@ const getAllNeighborhoods = async (req, res) => {
     res.status(200).send(allNeighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
+/**
+ * @description get a specific neighborhood
+ * @route /api/neighborhood/:neighborhoodid
+ * @access public
+ */
+const getNeighborhood = async (req, res) => {
+    const { neighborhoodid } = req.params;
+    const neighborhood = await neighborhood_1.Neighborhood.findById(neighborhoodid);
+    console.log("neighborhooddd", neighborhood);
+    res.status(200).send(neighborhood);
+};
+exports.getNeighborhood = getNeighborhood;
