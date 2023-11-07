@@ -21,8 +21,6 @@ const NeighborhoodEditableDiv = ({
   complementaryText = "" // complementarytext is text that is going to be rendered by this editable component but the user will not have the option to edit. 
 }) => {
 
-  console.log('isEditable', isEditable);
-
 
   // this state will be set to true wheneber the user clicks the "edit" button.
   const [isEditing, setIsEditing] = useState(false);
@@ -41,6 +39,13 @@ const NeighborhoodEditableDiv = ({
   const [recommendationsHistory, setRecommendations_History] = useState(recommendations);
 
 
+  // function that will update the neighborhood data
+  const updateNeighborhoodData = async(dataToUpdate)=>{
+    console.log("dataToUpdate", dataToUpdate);
+    await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
+  }
+
+
   // the following state will be used when creating the request body to update the neighborhood data:
   const [reqBody, setReqBody] = useState({ key: "", data: "" });
 
@@ -50,18 +55,15 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
-
-
   const handleChange = (event) => {
     setText(event.target.value);
   };
-
 
   // function to save edited data:
   const handleSaveClick = async () => {
     setTextHistory(prevText => {
       if (prevText !== text) {
-        setReqBody({ key: objectKey, data: text });
+        updateNeighborhoodData({ [objectKey] : text})
       }
       return text;
     });
@@ -72,6 +74,7 @@ const NeighborhoodEditableDiv = ({
     setText(textHistory);
     setIsEditing(false);
   };
+
 
 
 
@@ -100,7 +103,7 @@ const NeighborhoodEditableDiv = ({
 
       ) : (
 
-        <div style={{border:"1px dotted black "}}>
+        <div style={{border:"1px dotted black ", padding:"15px"}}>
 
           {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
 
@@ -118,6 +121,8 @@ const NeighborhoodEditableDiv = ({
 
 
   )
+
+
 }
 
 export default NeighborhoodEditableDiv;

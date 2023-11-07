@@ -9,8 +9,6 @@ import Button from 'react-bootstrap/Button';
 const NeighborhoodProfile = ({ currentuser }) => {
 
 
-  console.log("currentuserooo", currentuser);
-
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
@@ -44,7 +42,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
           <img alt="profileImage" style={{ width: "100%" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/mainimg2.png"></img>
 
           <div className="userInfo">
-
             <div>
               <h4 className="introHeader" style={{ textAlign: "center" }}>
                 <span>
@@ -59,17 +56,20 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
                 <div style={{ margin: "10px", display: "flex", justifyContent: "center", flexDirection: "column" , width:"70%", position: "relative",left:"50%", transform:"translate(-50%, 0)"}}>
 
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} content={"I have been living in " + neighborhood.neighborhood + " " + neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} />
+                  <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood"/>
 
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
                 </div>
 
               )}
-
-
-
-              {/* <EditableDiv isEditable={isEditable} neighborhoodid={residentId} objectKey={'timeLivingInNeighborhood'} content={"I have been living in " + neighborhood.neighborhood + " " + neighborhood.timeLivingInNeighborhood.toLowerCase() + "."} /> */}
             </div>
+
+          </div>
+
+
+          <div className="contentContainer" style={{ width: "100%" }}>
+
+            
 
           </div>
 

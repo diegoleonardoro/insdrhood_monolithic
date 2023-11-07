@@ -215,6 +215,7 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateNeighborhoodData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
+    console.log("updatess", updates);
     const neighborhood = await neighborhood_1.Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
     res.status(200).send(neighborhood);
 };

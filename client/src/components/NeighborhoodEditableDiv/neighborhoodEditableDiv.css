@@ -21,3 +21,10 @@
 .buttonDataSave{
   margin :10px
 }
+
+
+/*Content container*/
+
+.contentContainer{
+   margin: 0 auto;
+}
