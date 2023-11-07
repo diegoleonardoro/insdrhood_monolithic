@@ -8,3 +8,16 @@
   cursor: pointer;
   background-color: rgb(228, 228, 228);
 }
+
+
+.inputNhoodIntro{
+  background-color: rgb(241, 241, 241);
+  padding:10px;
+}
+.divSaveCancelBtns{
+  margin:5px;
+}
+
+.buttonDataSave{
+  margin :10px
+}

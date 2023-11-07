@@ -2,7 +2,9 @@ import "./neighborhood.css";
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index"
+import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index";
+import Button from 'react-bootstrap/Button';
+
 
 const NeighborhoodProfile = ({ currentuser }) => {
 
@@ -20,10 +22,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
       const neighborhood = await axios.get(`http://localhost:4000/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
-
-      console.log("neighborhood.data.id -->>> ", neighborhood.data.id)
-      console.log("currentuser?.residentId[0] -->>> ", currentuser?.residentId[0]);
-
       setIsEditable(neighborhood.data.id === currentuser?.residentId[0]);
 
     } catch (error) { }
@@ -60,7 +58,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
               {neighborhood && (
 
                 <div style={{ margin: "10px", display: "flex", justifyContent: "center", flexDirection: "column" , width:"70%", position: "relative",left:"50%", transform:"translate(-50%, 0)"}}>
-                  
+
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} content={"I have been living in " + neighborhood.neighborhood + " " + neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} />

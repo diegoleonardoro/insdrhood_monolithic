@@ -91,8 +91,8 @@ const NeighborhoodEditableDiv = ({
           />
 
           <div className="divSaveCancelBtns">
-            <button className="saveButton" onClick={handleSaveClick}>Save</button>
-            <button className="cancelButton" onClick={handleCancelClick}>Cancel</button>
+            <Button variant='outline-primary' className ="buttonDataSave"onClick={handleSaveClick}>Save</Button>
+            <Button variant='outline-danger' className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
           </div>
 
 
