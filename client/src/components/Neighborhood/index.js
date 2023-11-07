@@ -59,7 +59,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
               {neighborhood && (
 
-                <div style={{ margin: "10px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
+                <div style={{ margin: "10px", display: "flex", justifyContent: "center", flexDirection: "column" , width:"70%", position: "relative",left:"50%", transform:"translate(-50%, 0)"}}>
+                  
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} content={"I have been living in " + neighborhood.neighborhood + " " + neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} />

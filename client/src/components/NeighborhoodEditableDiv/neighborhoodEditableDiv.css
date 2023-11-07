@@ -1,3 +1,8 @@
 .inputNhoodIntro{
   width:100%;
 }
+
+.editSvg{
+  position: absolute;
+  right: 0;
+}
