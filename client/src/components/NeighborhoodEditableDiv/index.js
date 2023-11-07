@@ -22,6 +22,8 @@ const NeighborhoodEditableDiv = ({
   complementaryText = "" // complementarytext is text that is going to be rendered by this editable component but the user will not have the option to edit. 
 }) => {
 
+  console.log('isEditable', isEditable);
+
 
   // this state will be set to true wheneber the user clicks the "edit" button.
   const [isEditing, setIsEditing] = useState(false);

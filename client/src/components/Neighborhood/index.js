@@ -7,23 +7,26 @@ import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index"
 const NeighborhoodProfile = ({ currentuser }) => {
 
   const { neighborhoodid } = useParams();
-
   const [neighborhood, setNeighborhood] = useState(null);
+  const [isEditable, setIsEditable] = useState(false);
 
-  const isEditable = neighborhoodid === currentuser?.id;
+
+
+  // console.log("currentUser", currentuser)
+  // console.log("neighborhoodid: ", neighborhoodid, "currentuser?.id: ", currentuser?.residentId[0])
+
+  // const isEditable = neighborhoodid === currentuser?.residentId[0];
 
   // make requequest to get the neeighborhood data with id of neighborhoodid
-
   const getNeighorhoodData = async () => {
     try {
       const neighborhood = await axios.get(`http://localhost:4000/api/neighborhood/${neighborhoodid}`);
-
-      console.log(neighborhood.data);
       setNeighborhood(neighborhood.data);
 
-    } catch (error) {
-
-    }
+      console.log('neighborhood.data.id', neighborhood.data.id)
+      console.log('currentuser?.residentId[0]', currentuser?.residentId[0])
+      setIsEditable(neighborhood.data.id === currentuser?.residentId[0])
+    } catch (error) { }
   }
 
   useEffect(() => {
@@ -58,8 +61,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
               {neighborhood && (
 
-                <div style ={{margin:"10px", display:"flex", justifyContent:"center", flexDirection:"column"}}>
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} content={"I have been living in " + neighborhood.neighborhood + " " + neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "}  />
+                <div style={{ margin: "10px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} content={"I have been living in " + neighborhood.neighborhood + " " + neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} />
                 </div>

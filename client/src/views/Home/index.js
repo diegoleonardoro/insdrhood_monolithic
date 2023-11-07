@@ -39,9 +39,7 @@ function Home() {
   //     setLoading(false);
   //   }
   // };
-
   // fetchData();
-
   // }, []);  // The empty array means this useEffect will run once when the component mounts
 
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {

@@ -123,24 +123,18 @@ const FormComponent = ({ updateCurrentUser }) => {
   //  function that makes request to save the form data:
   async function sendFormData() {
     try {
-      const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
-      //request that will send user to their profile:
-      const neighborhoodid = response.data.id
-      navigate(`/neighborhood/${neighborhoodid}`);
+      const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);    
       return response.data;
     } catch (error) {
       console.log(error);
     }
   }
 
-
-
   //  function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
   async function updateUser(dataToUpdate, id) {
-    const userupdated = await axios.put(`http://localhost:4000/api/updateuserdata/${id}`, dataToUpdate)
-    console.log("userupdated", userupdated)
+    await axios.put(`http://localhost:4000/api/updateuserdata/${id}`, dataToUpdate);
+    navigate(`/neighborhood/${neighborhoodId}`);
   }
-
 
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
@@ -156,7 +150,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate('/');
     return;
   }
-
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
   const nycResidentChecker = (value) => {
@@ -175,8 +168,6 @@ const FormComponent = ({ updateCurrentUser }) => {
       }, 3000);
     }
   };
-
-
 
   // The following function will be in charge of changing the quesitons:
   const changeQuestion = async (direction, flag, errs) => {
@@ -300,13 +291,18 @@ const FormComponent = ({ updateCurrentUser }) => {
 
           // if there is a logged in user, make a request to udpate the user
           if (loggedUser) {
+
+            console.log("currentuserrrr", loggedUser)
+
             // request to update the user:
-            updateUser({
+            await updateUser({
               formsResponded: 1,
               residentId: [formDataResponse.id],
               userImagesId: randomUUID
             }, loggedUser.id);
             // MAKE LOGIC TO DIRECT USER TO THEIR PROFILE
+
+           
             return;
           };
 
@@ -361,7 +357,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     setDisplayKeyWord([keyWord]);
   }
-
 
 
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
@@ -426,14 +421,11 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
 
 
-
   // function that will validate email format:
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
-
-
 
   // The following function will make the request to save the user user in the database:
   const submitNewUserData = (event) => {
@@ -447,9 +439,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     };
     // make request to save user
     registerNewUser(newUserData);
-
-
-
 
   };
 
@@ -527,6 +516,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const handleOptionSelect = (option, description, event) => { // --->> ?????
 
     if (description === "nhood") {
+
       if (selectedOptions.length < 5) {
 
         let updatedOptions
@@ -629,7 +619,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
   };
-
   const handleRecommendedRestaurant = (value, index) => {
     const updatedRecommendedFoodTypes = formData.recommendedFoodTypes.map((foodType, i) => {
       if (i === index) {
@@ -648,7 +637,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     }));
 
   };
-
   const handleInputChange = (value) => {
     setFoodTypesInput(value);
   };
@@ -746,8 +734,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   return (
     <div className="mainContainer">
-
-
       <div
         style={{ display: onlyNYCResidentsSign }}
         className="onlyNYCResident"
