@@ -120,14 +120,17 @@ const FormComponent = ({ updateCurrentUser }) => {
   }
 
 
-  // Create function that makes request to save the form data:
+  //  function that makes request to save the form data:
   async function sendFormData() {
-    // check if there is a currently logged in user and if so include it in the formData:
-
-
 
     try {
       const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
+      //request that will send user to their profile:
+
+      const neighborhoodid = response.data.id
+
+      navigate(`/neighborhood/${neighborhoodid}`);
+      
       return response.data;
     } catch (error) {
       console.log(error);
@@ -362,9 +365,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     setDisplayKeyWord([keyWord]);
   }
-
-
-
 
 
 
