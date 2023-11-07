@@ -88,15 +88,18 @@ const VerifyEmail = ({ updateCurrentUser }) => {
     }
   }, [user])
 
+
+
+  // this funciton will only be called when the user has registered responding the form. That will be the only case in which the user has not set their password
   async function checkPasswordsMatch(password1, password2) {
     if (password1 !== password2) {
       //Show a banner telling that the passwords do not match 
       setUnmatchingPasswords(true);
     } else {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
-      const resposen = await axios.put(`http://localhost:4000/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
-      updateCurrentUser(resposen.data);
-      navigate('/');
+      const response = await axios.put(`http://localhost:4000/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
+      updateCurrentUser(response.data);
+      navigate(`/neighborhood/${response.data.residentId[0]}`);
     }
   }
 

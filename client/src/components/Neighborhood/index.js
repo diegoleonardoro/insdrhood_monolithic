@@ -11,20 +11,11 @@ const NeighborhoodProfile = ({ currentuser }) => {
   const [isEditable, setIsEditable] = useState(false);
 
 
-
-  // console.log("currentUser", currentuser)
-  // console.log("neighborhoodid: ", neighborhoodid, "currentuser?.id: ", currentuser?.residentId[0])
-
-  // const isEditable = neighborhoodid === currentuser?.residentId[0];
-
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
       const neighborhood = await axios.get(`http://localhost:4000/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
-
-      console.log('neighborhood.data.id', neighborhood.data.id)
-      console.log('currentuser?.residentId[0]', currentuser?.residentId[0])
       setIsEditable(neighborhood.data.id === currentuser?.residentId[0])
     } catch (error) { }
   }
@@ -32,7 +23,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
   useEffect(() => {
     getNeighorhoodData();
   }, []);
-
 
 
   return (
@@ -45,7 +35,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
           style={{ borderBottom: "solid black 1px", position: "relative" }}>
 
           <img alt="profileImage" style={{ width: "100%" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/mainimg2.png"></img>
-
 
           <div className="userInfo">
 
