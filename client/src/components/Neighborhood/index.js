@@ -6,6 +6,9 @@ import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index"
 
 const NeighborhoodProfile = ({ currentuser }) => {
 
+
+  console.log("currentuserooo", currentuser);
+
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
@@ -14,15 +17,21 @@ const NeighborhoodProfile = ({ currentuser }) => {
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
+
       const neighborhood = await axios.get(`http://localhost:4000/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
-      setIsEditable(neighborhood.data.id === currentuser?.residentId[0])
+
+      console.log("neighborhood.data.id -->>> ", neighborhood.data.id)
+      console.log("currentuser?.residentId[0] -->>> ", currentuser?.residentId[0]);
+
+      setIsEditable(neighborhood.data.id === currentuser?.residentId[0]);
+
     } catch (error) { }
   }
 
   useEffect(() => {
     getNeighorhoodData();
-  }, []);
+  }, [currentuser]);
 
 
   return (

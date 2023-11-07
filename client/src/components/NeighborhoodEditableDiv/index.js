@@ -9,7 +9,6 @@ import "./neighborhoodEditableDiv.css";
 
 
 const NeighborhoodEditableDiv = ({
-
   isEditable, // this state will be set to true if whoever is logged in is the owner of the neighbohood profile. 
   neighborhoodid,
   objectKey,

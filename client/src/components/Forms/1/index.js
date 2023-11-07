@@ -138,14 +138,12 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
-
     // request to save new user's data:
     const newuser = await axios.post('http://localhost:4000/api/signup',
       data);
     // request to update the neighborhood's data with the new user data:
     await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } })
     await updateCurrentUser(newuser.data);
-
     navigate(`/neighborhood/${neighborhoodId}`);
     return;
   }
@@ -375,8 +373,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   const foodAuthenticityandDiversityHandler = () => {
     foodDiversityExplanationRef.current.style.display = "flex"
   }
-
-
 
   const displayQuestion = (keyWord) => {
     if (displayKeyWord.indexOf(keyWord) > -1) {
