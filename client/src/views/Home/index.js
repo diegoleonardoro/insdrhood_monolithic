@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import './home.css';
 import Table from 'react-bootstrap/Table';
-import axios from "axios"
+import axios from "axios";
+import { Link } from "react-router-dom"
 
 function Home() {
 
@@ -12,7 +13,8 @@ function Home() {
     (async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/neighborhoods");
-        setNeighborhoodsData(response.data); // Assuming response.data is the array
+        setNeighborhoodsData(response.data);
+        console.log("responsee", response.data)
       } catch (error) {
         console.error("Failed to fetch neighborhoods", error);
         // Handle the error state appropriately here
@@ -51,9 +53,9 @@ function Home() {
           {neighborhood.neighborhoodDescription}
         </td>
         <td>
-          {/* <Link href={"/residents/profile/[residentId]"} as ={`/residents/profile/${resident.id}`}  > 
-            View
-          </Link> */}
+          <Link to={`/neighborhood/${neighborhood.id}`}  >
+            Learn more
+          </Link>
         </td>
       </tr>
     );

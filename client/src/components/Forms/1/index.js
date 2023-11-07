@@ -122,15 +122,11 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   //  function that makes request to save the form data:
   async function sendFormData() {
-
     try {
       const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
       //request that will send user to their profile:
-
       const neighborhoodid = response.data.id
-
       navigate(`/neighborhood/${neighborhoodid}`);
-      
       return response.data;
     } catch (error) {
       console.log(error);
