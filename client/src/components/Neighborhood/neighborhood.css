@@ -8,3 +8,11 @@
   top:-100px;
 }
 
+/* Images: */
+.contentContainer{
+  margin: 0 auto;
+}
+.containerNhoodItems{
+  position:relative;
+  text-align: center;
+}

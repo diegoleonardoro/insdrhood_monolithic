@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import axios from "axios";
 import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
 
 import "./neighborhoodEditableDiv.css";
 

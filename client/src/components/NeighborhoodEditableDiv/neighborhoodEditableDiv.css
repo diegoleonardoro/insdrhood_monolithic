@@ -40,3 +40,16 @@
   top: 3px;
   border-radius: 5px;
 }
+
+/* Images */
+
+.placeImageEditContainer{
+  border-top: 1px solid #c5c5c5;
+  border-bottom: 1px solid #c5c5c5;
+  border-right: 1px solid #c5c5c5;
+  padding:10px
+}
+.firstDiv {
+  border: 1px solid #c5c5c5;
+  padding:10px/* Add left margin to the first div */
+}
