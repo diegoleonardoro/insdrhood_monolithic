@@ -41,24 +41,26 @@ const NeighborhoodProfile = ({ currentuser }) => {
       <div className="userProfileContainer" style={{ width: "70%", position: "relative", left: "50%", transform: "translate(-50%, 0)", border: "1px solid black" }}>
 
         <div className="userIntroContainer"
-          style={{ borderBottom: "solid black 1px", position: "relative" }}>
+          style={{ position: "relative" }}>
 
           <img alt="profileImage" style={{ width: "100%" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/mainimg2.png"></img>
 
+          <h4 className="introHeader" style={{ textAlign: "center", position: "relative", top: "-90px" }}>
+            <span>
+              <b>{neighborhood?.neighborhood}</b>
+            </span>{" "}
+            {neighborhood?.user?.name ? (
+              <p> by <b>{neighborhood.user.name}</b>.</p>
+            ) : (<p>by anonymous.</p>)}
+          </h4>
+
+          <hr></hr>
+
           <div className="userInfo">
             <div>
-              <h4 className="introHeader" style={{ textAlign: "center" }}>
-                <span>
-                  <b>{neighborhood?.neighborhood}</b>
-                </span>{" "}
-                {neighborhood?.user?.name ? (
-                  <p> by <b>{neighborhood.user.name}</b>.</p>
-                ) : (<p>by anonymous.</p>)}
-              </h4>
-
               {neighborhood && (
 
-                <div style={{ marginTop: "60px", display: "flex", justifyContent: "center", flexDirection: "column", width: "70%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", width: "70%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
 
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
 
@@ -70,29 +72,29 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
           </div>
 
+          <hr></hr>
 
-          <div className="contentContainer" style={{ width: "100%" }}>
 
-            <div className="containerNhoodItems" >
+          <div className="containerNhoodItems" >
 
-              {neighborhood && (
+            {neighborhood && (
 
-                <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", borderBottom: "1px solid black" }}>
-                  <NeighborhoodEditableDiv
-                    neighborhoodid={neighborhoodid}
-                    isEditable={isEditable}
-                    objectKey={'neighborhoodImages'}
-                    images={neighborhood.neighborhoodImages}
-                    neighborhood={neighborhood.neighborhood}
-                    imagesId={currentuser?.imagesId}
-                  />
-                </div>
+              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <NeighborhoodEditableDiv
+                  neighborhoodid={neighborhoodid}
+                  isEditable={isEditable}
+                  objectKey={'neighborhoodImages'}
+                  images={neighborhood.neighborhoodImages}
+                  neighborhood={neighborhood.neighborhood}
+                  imagesId={currentuser?.imagesId}
+                />
+              </div>
 
-              )}
-
-            </div>
+            )}
 
           </div>
+
+          <hr></hr>
 
 
         </div>

@@ -240,7 +240,7 @@ const NeighborhoodEditableDiv = ({
 
     return (
       <div className="galleryParent" ref={galleryParentRef}
-        style={{ overflow: "hidden", position: "relative" }}
+        style={{  position: "relative" }}
       >
 
         {isEditing ? (
@@ -253,7 +253,7 @@ const NeighborhoodEditableDiv = ({
                   key={index} >
                   <InputGroup style={{ marginBottom: "10px" }}>
                     <InputGroup.Text style={{ marginLeft: "5px", marginTop: "5px", fontSize: "10px" }}>Describe picture:</InputGroup.Text>
-                    <Form.Control id={`photoDescriptionInput-${index}`} style={{ marginRight: "5px", marginTop: "5px", fontSize: "10px" }} onChange={handleChange} defaultValue={image.description} as="textarea" aria-label="With textarea" />
+                    <Form.Control id={`photoDescriptionInput-${index}`} style={{ marginRight: "5px", marginTop: "5px", fontSize: "10px", width:"18%"}} onChange={handleChange} defaultValue={image.description} as="textarea" aria-label="With textarea" />
                   </InputGroup>
                   <img alt="neighborhoodimage"
                     ref={(el) => { imgRefs.current[index] = el }}
