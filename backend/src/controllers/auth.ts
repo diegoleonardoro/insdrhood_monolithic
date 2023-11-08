@@ -18,6 +18,11 @@ const s3 = new AWS.S3({
 
 import { sendVerificationMail } from "../services/emailVerification";
 
+interface updateQuery {
+  $set?: any, 
+  $push?: any
+}
+
 /**
  * @description registers a new user
  * @route POST /api/signup
@@ -62,7 +67,8 @@ export const signup = async (req: Request, res: Response) => {
       name: user.name,
       image: user.image,
       isVerified: user.isVerified,
-      residentId: user.residentId
+      residentId: user.residentId, 
+      userImagesId: user.userImagesId
     },
     process.env.JWT_KEY!
   );
@@ -115,7 +121,8 @@ export const login = async (req: Request, res: Response) => {
       name: existingUser.name,
       image: existingUser.image,
       isVerified: existingUser.isVerified,
-      residentId: existingUser.residentId
+      residentId: existingUser.residentId, 
+      userImagesId: existingUser.userImagesId
     },
     process.env.JWT_KEY!
   );
@@ -196,7 +203,8 @@ export const verifyemail = async (req: Request, res: Response) => {
       name: user.name,
       image: user.image,
       isVerified: user.isVerified,
-      residentId: user.residentId
+      residentId: user.residentId, 
+      userImagesId: user.userImagesId
     },
     process.env.JWT_KEY!
   );
@@ -270,13 +278,25 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
  * @access public
 */
 export const updateNeighborhoodData = async (req: Request, res: Response) => {
+ 
   const { id } = req.params;
   let updates = req.body;
 
-  console.log("updatess", updates);
-  
-  const neighborhood = await Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
+  let updateQuery:updateQuery = {};
+  if (updates.neighborhoodImages) {
+    // If updating neighborhoodImages, use $push to add images to the existing array
+    updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };
+    delete updates.neighborhoodImages; // Remove the property after adding to $push
+  }
+  if (Object.keys(updates).length > 0) {
+    // If there are other updates, use $set to update fields
+    updateQuery.$set = updates;
+  }
+
+  const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
   res.status(200).send(neighborhood);
+
 }
 
 
@@ -296,7 +316,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
  * @route /api/neighborhood/:neighborhoodid
  * @access public 
  */
-
 export const getNeighborhood = async (req: Request, res: Response) => {
 
   const { neighborhoodid } = req.params;

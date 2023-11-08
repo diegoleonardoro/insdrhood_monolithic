@@ -1,0 +1,10 @@
+.containerNhoodItems{
+  position:relative;
+  text-align: center;
+}
+
+ .userInfo {
+  position: relative;
+  top:-100px;
+}
+

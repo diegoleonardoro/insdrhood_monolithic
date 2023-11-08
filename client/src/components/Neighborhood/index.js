@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/Button';
 
 const NeighborhoodProfile = ({ currentuser }) => {
 
+  console.log("current user: ", currentuser);
+
 
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
@@ -20,6 +22,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
       const neighborhood = await axios.get(`http://localhost:4000/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
+
+      console.log(neighborhood.data)
       setIsEditable(neighborhood.data.id === currentuser?.residentId[0]);
 
     } catch (error) { }
@@ -54,9 +58,9 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
               {neighborhood && (
 
-                <div style={{ margin: "10px", display: "flex", justifyContent: "center", flexDirection: "column" , width:"70%", position: "relative",left:"50%", transform:"translate(-50%, 0)"}}>
+                <div style={{ marginTop: "60px", display: "flex", justifyContent: "center", flexDirection: "column", width: "70%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
 
-                  <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood"/>
+                  <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
                 </div>
@@ -69,7 +73,24 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
           <div className="contentContainer" style={{ width: "100%" }}>
 
-            
+            <div className="containerNhoodItems" >
+
+              {neighborhood && (
+
+                <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", borderBottom: "1px solid black" }}>
+                  <NeighborhoodEditableDiv
+                    neighborhoodid={neighborhoodid}
+                    isEditable={isEditable}
+                    objectKey={'neighborhoodImages'}
+                    images={neighborhood.neighborhoodImages}
+                    neighborhood={neighborhood.neighborhood}
+                    imagesId={currentuser?.imagesId}
+                  />
+                </div>
+
+              )}
+
+            </div>
 
           </div>
 

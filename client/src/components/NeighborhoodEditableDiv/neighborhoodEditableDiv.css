@@ -26,5 +26,17 @@
 /*Content container*/
 
 .contentContainer{
-   margin: 0 auto;
+   margin-bottom: 100px;
+}
+.divSaveCancelBtns{
+  margin:10px;
+  display: flex;
+  justify-content: center;
+}
+
+.editSvgRecommendedPlaces{
+  position:absolute;
+  right: 5px;
+  top: 3px;
+  border-radius: 5px;
 }

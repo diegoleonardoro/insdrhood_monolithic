@@ -22,9 +22,6 @@ function App() {
   const updateCurrentUser = (data) => {
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
-
-        console.log("dataaaaa ", data);
-
         setCurrentUser(data);
         resolve()
       } else {

@@ -288,9 +288,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
           // if there is a logged in user, make a request to udpate the user
           if (loggedUser) {
-
-            console.log("currentuserrrr", loggedUser)
-
             // request to update the user:
             await updateUser({
               formsResponded: 1,
@@ -304,7 +301,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           };
 
 
-          // this state needs to be updated to save the new user in the database:
+          // this state needs to be updated to save a new user in the database:
           setNewUserData(prevData => ({
             ...prevData,
             "residentId": [formDataResponse.id],

@@ -57,7 +57,8 @@ const signup = async (req, res) => {
         name: user.name,
         image: user.image,
         isVerified: user.isVerified,
-        residentId: user.residentId
+        residentId: user.residentId,
+        userImagesId: user.userImagesId
     }, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
@@ -95,7 +96,8 @@ const login = async (req, res) => {
         name: existingUser.name,
         image: existingUser.image,
         isVerified: existingUser.isVerified,
-        residentId: existingUser.residentId
+        residentId: existingUser.residentId,
+        userImagesId: existingUser.userImagesId
     }, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
@@ -160,7 +162,8 @@ const verifyemail = async (req, res) => {
         name: user.name,
         image: user.image,
         isVerified: user.isVerified,
-        residentId: user.residentId
+        residentId: user.residentId,
+        userImagesId: user.userImagesId
     }, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
@@ -215,8 +218,17 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateNeighborhoodData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
-    console.log("updatess", updates);
-    const neighborhood = await neighborhood_1.Neighborhood.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    let updateQuery = {};
+    if (updates.neighborhoodImages) {
+        // If updating neighborhoodImages, use $push to add images to the existing array
+        updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };
+        delete updates.neighborhoodImages; // Remove the property after adding to $push
+    }
+    if (Object.keys(updates).length > 0) {
+        // If there are other updates, use $set to update fields
+        updateQuery.$set = updates;
+    }
+    const neighborhood = await neighborhood_1.Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
     res.status(200).send(neighborhood);
 };
 exports.updateNeighborhoodData = updateNeighborhoodData;

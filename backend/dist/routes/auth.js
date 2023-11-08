@@ -33,7 +33,7 @@ router.put("/updateuserdata/:id", auth_1.updateUserData);
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */
-router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype", auth_1.uploadFile);
+router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imageType", auth_1.uploadFile);
 router.post("/neighborhood/savedata", authentication_validator_1.authenticationValidator, auth_1.saveNeighborhoodData);
 router.put("/updateneighborhood/:id", auth_1.updateNeighborhoodData);
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
