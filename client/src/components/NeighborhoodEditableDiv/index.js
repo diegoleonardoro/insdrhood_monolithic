@@ -52,10 +52,11 @@ const NeighborhoodEditableDiv = ({
   const imgRefs = useRef([]);
   const addImagesInput = useRef(null);
 
+  console.log("text->", text);
 
 
   const galleryParentRef = useRef(null);
-  ;
+
 
 
   /** Images slider */
@@ -164,12 +165,6 @@ const NeighborhoodEditableDiv = ({
     setText(event.target.value);
   };
 
-
-
-
-
-
-
   // function to save edited data:
   const handleSaveClick = async () => {
 
@@ -220,14 +215,8 @@ const NeighborhoodEditableDiv = ({
       return text;
     });
     setIsEditing(false);
-  
+
   };
-
-
-
-
-
-
 
   const handleCancelClick = () => {
     setText(textHistory);
@@ -240,7 +229,7 @@ const NeighborhoodEditableDiv = ({
 
     return (
       <div className="galleryParent" ref={galleryParentRef}
-        style={{  position: "relative" }}
+        style={{ position: "relative" }}
       >
 
         {isEditing ? (
@@ -253,7 +242,7 @@ const NeighborhoodEditableDiv = ({
                   key={index} >
                   <InputGroup style={{ marginBottom: "10px" }}>
                     <InputGroup.Text style={{ marginLeft: "5px", marginTop: "5px", fontSize: "10px" }}>Describe picture:</InputGroup.Text>
-                    <Form.Control id={`photoDescriptionInput-${index}`} style={{ marginRight: "5px", marginTop: "5px", fontSize: "10px", width:"18%"}} onChange={handleChange} defaultValue={image.description} as="textarea" aria-label="With textarea" />
+                    <Form.Control id={`photoDescriptionInput-${index}`} style={{ marginRight: "5px", marginTop: "5px", fontSize: "10px", width: "18%" }} onChange={handleChange} defaultValue={image.description} as="textarea" aria-label="With textarea" />
                   </InputGroup>
                   <img alt="neighborhoodimage"
                     ref={(el) => { imgRefs.current[index] = el }}
@@ -318,27 +307,76 @@ const NeighborhoodEditableDiv = ({
             ))}
 
           </Slider>
-
         )
-
         }
-
         {isEditable ? (<svg onClick={handleEditClick} className="editSvgRecommendedPlaces" cursor="pointer" fill="none" height="24" stroke="currentColor" strokeLinecap="round" zindex="3" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
-
-
       </div>
     )
 
   }
 
+  /** If we are going to render list of adjectives: */
+  if (adjectives.length > 0) {
+
+    return (
+      <div className="adjectivesDiv">
+        {isEditing ? (
+          <div className="nhoodIntroItemList">
+            <div className="nhoodRecommendationText"> {text}</div>
+            <div>
+              <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput">Make sure you include a comma-separated list of words:</label>
+              <input
+                type="text"
+                value={adjectivesText.join(", ")}
+                onChange={handleChange}
+                id="wordListInput"
+                autoFocus
+                className="inputNhoodIntro"
+              />
+            </div>
+
+            <div className="divSaveCancelBtns">
+              <button className="saveButton" onClick={handleSaveClick}>Save</button>
+              <button className="cancelButton" onClick={handleCancelClick}>Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ border: "1px dotted black ", padding: "15px", width: "100%" }} className="nhoodIntroItemList">
+            <div className="nhoodRecommendationText">{text}</div>
+            <div className="nhoodAdjectivesDivSpanContainer">
+              {
+                isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null
+              }
+
+              <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+                {complementaryText !== "" ? complementaryText : null} {text}
+              </p>
+
+              <div style={{ textAlign: "start" }}>
+                {adjectivesText.map((adjective, index) => {
+                  return (
+                    <span className="nhoodAdjectivesSpan" key={index}>
+                      {adjective.toLowerCase() + ", "}
+                    </span>
+                  )
+                })}
+              </div>
+
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   /** When we only render plain text: */
   return (
-    <div style={{ padding: "15px" }}>
+    <div style={{ padding: "15px", width: "100%" }}>
 
       {isEditing ? (
 
         <div>
-          {complementaryText !== "" ? (<p>{complementaryText}</p>) : null}
+          {complementaryText !== "" ? (<p style={{ textAlign: "start" }}>{complementaryText}:</p>) : null}
           <input
             type="text"
             value={text}

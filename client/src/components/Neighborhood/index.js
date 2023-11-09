@@ -33,6 +33,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
     getNeighorhoodData();
   }, [currentuser]);
 
+  console.log("neighborhood.neighborhoodAdjectives", neighborhood?.neighborhoodAdjectives)
+
 
   return (
 
@@ -57,15 +59,19 @@ const NeighborhoodProfile = ({ currentuser }) => {
           <hr></hr>
 
           <div className="userInfo">
+
             <div>
               {neighborhood && (
 
-                <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", width: "70%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", width: "50%",alignItems:"start", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
 
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
 
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the neighborhood as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={neighborhood.neighborhood + " can be described as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
+
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The neighborhood has a vibe that's "} adjectives={neighborhood.neighborhoodAdjectives} objectKey="neighborhoodDescription" />
                 </div>
+
 
               )}
             </div>
@@ -76,9 +82,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
 
           <div className="containerNhoodItems" >
-
             {neighborhood && (
-
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                 <NeighborhoodEditableDiv
                   neighborhoodid={neighborhoodid}
@@ -89,12 +93,17 @@ const NeighborhoodProfile = ({ currentuser }) => {
                   imagesId={currentuser?.imagesId}
                 />
               </div>
-
             )}
-
           </div>
 
           <hr></hr>
+
+
+          <div className="containerNhoodItems" >
+
+
+
+          </div>
 
 
         </div>

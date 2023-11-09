@@ -34,6 +34,10 @@
   justify-content: center;
 }
 
+.nhoodRecommendationText{
+  text-align:start;
+}
+
 .editSvgRecommendedPlaces{
   position:absolute;
   right: 5px;
