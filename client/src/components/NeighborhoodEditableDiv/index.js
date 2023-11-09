@@ -35,7 +35,13 @@ const NeighborhoodEditableDiv = ({
 
   // the following two states will be used when editing a section of adjectives:
   const [adjectivesText, setAdjectivesText] = useState(adjectives);
-  const [adjectivesTextHistory, setAdjectivesTextHistory] = useState(adjectives)
+  const [adjectivesTextHistory, setAdjectivesTextHistory] = useState(adjectives);
+
+  console.log('adjectivesText', adjectivesText);
+  console.log('adjectivesTextHistory', adjectivesTextHistory);
+
+
+
 
   // the following states will be used when editing an array of recommendations:
   const [recommendationsArray, setRecommendationsArray] = useState(recommendations);
@@ -162,13 +168,20 @@ const NeighborhoodEditableDiv = ({
   };
 
   const handleChange = (event) => {
+
+
+    // If the user is adding or removing neighborhood adjectives
+    if (adjectivesText.length > 0) {
+      console.log(event.target.value.split(", "));
+      setAdjectivesText(event.target.value.split(", "))
+    };
+
     setText(event.target.value);
+
   };
 
   // function to save edited data:
   const handleSaveClick = async () => {
-
-
 
     // user is editing the images of the neighborhood:
     if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
@@ -205,7 +218,13 @@ const NeighborhoodEditableDiv = ({
       return;
     };
 
-
+    // user is editing the list of neighborhood adjectives 
+    setAdjectivesTextHistory(prevAdjectivesText => {
+      if (!areArraysEqual(prevAdjectivesText, adjectivesText)) {
+        updateNeighborhoodData({ [objectKey]: adjectivesText })
+      }
+      return [...adjectivesText];
+    });
 
     // user is editing a text-based section of the neighborhood profile:
     setTextHistory(prevText => {
@@ -214,11 +233,13 @@ const NeighborhoodEditableDiv = ({
       }
       return text;
     });
+
     setIsEditing(false);
 
   };
 
   const handleCancelClick = () => {
+    setAdjectivesText(adjectivesTextHistory);
     setText(textHistory);
     setIsEditing(false);
   };
@@ -322,12 +343,17 @@ const NeighborhoodEditableDiv = ({
       <div className="adjectivesDiv">
         {isEditing ? (
           <div className="nhoodIntroItemList">
-            <div className="nhoodRecommendationText"> {text}</div>
+
             <div>
               <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput">Make sure you include a comma-separated list of words:</label>
               <input
                 type="text"
-                value={adjectivesText.map((adjective, index) => { return " " + adjective.toLowerCase() })}
+                value={
+
+                  adjectivesText.map((adjective, index) => {
+                    return (index === 0 ? "" : " ") + adjective.toLowerCase();
+                  })
+                }
                 onChange={handleChange}
                 id="wordListInput"
                 autoFocus
@@ -342,31 +368,37 @@ const NeighborhoodEditableDiv = ({
           </div>
         ) : (
           <div style={{ border: "1px dotted black ", padding: "15px", width: "100%" }} className="nhoodIntroItemList">
-            <div className="nhoodRecommendationText">{text}</div>
+
             <div className="nhoodAdjectivesDivSpanContainer">
               {
                 isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null
               }
 
               <p style={{ marginBottom: "0px", margin: isEditable ? "0px" : "0px" }} className="nhoodRecommendationText">
-                {complementaryText !== "" ? complementaryText : null} {text}
+                {complementaryText !== "" ? complementaryText : null}
+
+                {
+                  adjectivesText.map((adjective, index) => {
+                    // const isLastItem = index === adjectivesText.length - 1;
+                    return (
+                      <span className="nhoodAdjectivesSpan" key={index}>
+                        {adjective.toLowerCase()}
+                      </span>
+                    )
+                  })
+                }
+
+
               </p>
 
-              <div style={{ textAlign: "start" }}>
-                {adjectivesText.map((adjective, index) => {
-                  return (
-                    <span className="nhoodAdjectivesSpan" key={index}>
-                      {adjective.toLowerCase() + ", "}
-                    </span>
-                  )
-                })}
-              </div>
+
 
             </div>
           </div>
         )}
       </div>
     )
+
   }
 
   /** When we only render plain text: */
@@ -414,6 +446,22 @@ const NeighborhoodEditableDiv = ({
   )
 
 
+}
+
+
+
+function areArraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 export default NeighborhoodEditableDiv;

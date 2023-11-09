@@ -65,3 +65,11 @@
   width: 100%;
   padding:15px;
 }
+
+.nhoodAdjectivesSpan{
+  padding: 5px;
+  margin:5px;
+  border: 1px solid rgb(121 121 121);
+  border-radius: 5px;
+  display: inline-block;
+}
