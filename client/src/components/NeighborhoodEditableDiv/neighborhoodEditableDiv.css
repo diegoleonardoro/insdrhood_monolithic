@@ -58,3 +58,10 @@
   border: 1px solid #c5c5c5;
   padding:10px/* Add left margin to the first div */
 }
+
+
+/* neighborhood adjectives */
+.adjectivesDiv{
+  width: 100%;
+  padding:15px;
+}
