@@ -168,16 +168,12 @@ const NeighborhoodEditableDiv = ({
   };
 
   const handleChange = (event) => {
-
-
     // If the user is adding or removing neighborhood adjectives
     if (adjectivesText.length > 0) {
       console.log(event.target.value.split(", "));
       setAdjectivesText(event.target.value.split(", "))
     };
-
     setText(event.target.value);
-
   };
 
   // function to save edited data:
