@@ -110,8 +110,50 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
           <hr></hr>
 
+          <div className="containerNhoodItems" >
+            {neighborhood && (
+              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <div className="detailsContainer">
+                  <div className="sectionContainer">
+                    <h5 className="sectionHeader">The residents</h5>
+                    <img className="imageResidents" alt="residentsimage" style={{ padding: "20px" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/socialbutterflies.png" />
+                  </div>
+
+                  <div style={{ width: "100%" }}>
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The typical resident of " + neighborhood.neighborhood + " tends to be "} content={neighborhood.typicalResidentDescription
+                    } objectKey="typicalResidentDescription" />
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The average resident can be described as "} adjectives={neighborhood.residentAdjectives} objectKey="residentAdjectives" />
+                  </div>
+
+                </div>
+              </div>
+            )}
+          </div>
+
+          <hr></hr>
 
           <div className="containerNhoodItems" >
+
+            {neighborhood && (
+
+              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+
+                <div>
+                  <h5 className="recommendationsHeader" >Food</h5>
+                  <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png"></img>
+                </div>
+
+
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + neighborhood.neighborhood + " can be generally described as "} content={neighborhood.foodCulture
+                } objectKey="foodCulture" />
+
+
+
+
+              </div>
+
+
+            )}
 
 
 

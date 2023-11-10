@@ -6,8 +6,9 @@
  .userInfo {
   position: relative;
 
-  
 }
+
+
 
 /* Images: */
 .contentContainer{
@@ -16,4 +17,19 @@
 .containerNhoodItems{
   position:relative;
   text-align: center;
+}
+
+
+.detailsContainer{
+  display: flex;
+}
+
+
+/*recommendations images: */
+
+.imageResidents{
+  width:100px;
+}
+.recommendationsImage{
+  width:100px;
 }
