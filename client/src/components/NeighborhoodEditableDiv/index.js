@@ -137,7 +137,6 @@ const NeighborhoodEditableDiv = ({
 
   // function that will update the neighborhood data
   const updateNeighborhoodData = async (dataToUpdate) => {
-    console.log("dataToUpdate", dataToUpdate);
     await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
   }
 
@@ -170,7 +169,6 @@ const NeighborhoodEditableDiv = ({
 
     // If the user is adding or removing neighborhood adjectives:
     if (adjectivesText.length > 0) {
-      console.log(event.target.value.split(", "));
       setAdjectivesText(event.target.value.split(", "));
       return
     };
@@ -181,21 +179,8 @@ const NeighborhoodEditableDiv = ({
 
 
 
-
-
   // function to save edited data:
   const handleSaveClick = async () => {
-
-
-    // user is updating information that came is as an object:
-    // if (typeof objectData === "object") {
-
-    //   if (areObjectsDifferent(objectData_, objectDataHistory)) {
-    //     console.log(objectData_)
-    //     console.log(objectDataHistory)
-    //   }
-    //   return;
-    // }
 
     setObjectDataHistory(prevState => {
       if (areObjectsDifferent(objectData_, objectDataHistory)) {
@@ -204,7 +189,6 @@ const NeighborhoodEditableDiv = ({
       }
       return { ...objectData_ }
     })
-
 
 
     // user is editing the images of the neighborhood:
@@ -263,24 +247,14 @@ const NeighborhoodEditableDiv = ({
   };
 
 
-
-
-
-
-
-
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
     setText(textHistory);
     setIsEditing(false);
   };
-
-  console.log('object data', objectData_)
-
+  
   /** We are rendering information that comes in as an object: */
   if (typeof objectData_ === "object") {
-
-
 
     return (
       <div style={{ padding: "15px", width: "100%" }}>

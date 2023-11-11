@@ -12,7 +12,7 @@ interface NeighborhoodAttrs {
   typicalResidentDescription: string;
   foodCulture: string;
   foodIsAuthentic: {};
-  foodPrices: { price: string, explanation: string };
+  foodPrices: { assesment: string, explanation: string };
   onePlaceToEat: {};
   recommendedFoodTypes: [];
   neighborhoodImages: [];
@@ -35,7 +35,7 @@ export interface NeighborhoodDoc extends mongoose.Document {
   typicalResidentDescription: string;
   foodCulture: string;
   foodIsAuthentic: {};
-  foodPrices: { price: string, explanation: string };
+  foodPrices: { assesment: string, explanation: string };
   onePlaceToEat: {};
   recommendedFoodTypes: [];
   neighborhoodImages: [];

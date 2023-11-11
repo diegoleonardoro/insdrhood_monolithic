@@ -77,12 +77,12 @@ const FormComponent = ({ updateCurrentUser }) => {
     typicalResidentDescription: "",
     foodCulture: "",
     recommendedFoodTypes: [],
-    onePlaceToEat: { place: "", explanation: "" },
-    foodPrices: { price: "", explanation: "" },
+    onePlaceToEat: { assesment: "", explanation: "" },
+    foodPrices: { assesment: "", explanation: "" },
     foodIsAuthentic: { assesment: "", explanation: "" },
     nightLife: "",
     nightLifeRecommendations: [],
-    onePlaceForNightLife: { place: "", explanation: "" },
+    onePlaceForNightLife: { assesment: "", explanation: "" },
     statements: {},
     neighborhoodImages: [],
     user: {}
@@ -2130,7 +2130,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData,
                       onePlaceToEat: {
                         ...formData.onePlaceToEat,
-                        place: e.target.value
+                        assesment: e.target.value
                       }
                     })
                   }
@@ -2184,7 +2184,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodPrices: {
                       ...formData.foodPrices,
-                      price: e.target.value
+                      assesment: e.target.value
                     }
                   });
                 }}
@@ -2211,7 +2211,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodPrices: {
                       ...formData.foodPrices,
-                      price: e.target.value
+                      assesment: e.target.value
                     }
                   });
                 }}
@@ -2238,7 +2238,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodPrices: {
                       ...formData.foodPrices,
-                      price: e.target.value
+                      assesment: e.target.value
                     }
                   });
                 }}
@@ -2517,7 +2517,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData,
                       onePlaceForNightLife: {
                         ...formData.onePlaceforNightLife,
-                        place: e.target.value
+                        assesment: e.target.value
                       }
                     })
                   }

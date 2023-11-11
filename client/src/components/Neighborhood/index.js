@@ -8,32 +8,22 @@ import Button from 'react-bootstrap/Button';
 
 const NeighborhoodProfile = ({ currentuser }) => {
 
-  console.log("current user: ", currentuser);
-
-
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
 
-
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
-
       const neighborhood = await axios.get(`http://localhost:4000/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
-
-      console.log(neighborhood.data)
       setIsEditable(neighborhood.data.id === currentuser?.residentId[0]);
-
     } catch (error) { }
   }
 
   useEffect(() => {
     getNeighorhoodData();
   }, [currentuser]);
-
-  console.log("neighborhood.neighborhoodAdjectives", neighborhood?.neighborhoodAdjectives)
 
 
   return (
@@ -133,33 +123,20 @@ const NeighborhoodProfile = ({ currentuser }) => {
           <hr></hr>
 
           <div className="containerNhoodItems" >
-
             {neighborhood && (
-
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-
                 <div>
                   <h5 className="recommendationsHeader" >Food</h5>
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png"></img>
                 </div>
-
-
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + neighborhood.neighborhood + " can be generally described as "} content={neighborhood.foodCulture
                 } objectKey="foodCulture" />
-
-
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${neighborhood.neighborhood} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                 } objectKey="foodIsAuthentic" />
 
-
-
-
               </div>
 
-
             )}
-
-
 
           </div>
 
@@ -173,6 +150,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
 
   )
+
 }
 
 
