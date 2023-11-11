@@ -2293,7 +2293,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     type="radio"
                     className="statementResponseContainerInput"
                     name="diverseAndAuthenticFood"
-                    value="Expensive"
+                    value="diverse and authentic"
                     id="AgreeDestinationForNewFood"
                     onChange={
                       (e) => {
@@ -2324,7 +2324,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     type="radio"
                     className="statementResponseContainerInput"
                     name="diverseAndAuthenticFood"
-                    value="Expensive"
+                    value="not diverse and not very authentic"
                     id="DisagreeDestinationForNewFood"
                     onChange={
                       (e) => {

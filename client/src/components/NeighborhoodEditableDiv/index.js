@@ -7,6 +7,7 @@ import axios from "axios";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 
+
 import "./neighborhoodEditableDiv.css";
 
 
@@ -14,13 +15,12 @@ const NeighborhoodEditableDiv = ({
   isEditable, // this state will be set to true if whoever is logged in is the owner of the neighbohood profile. 
   neighborhoodid,
   objectKey,
-  content = "",
+  content,
   adjectives = [],
-  recommendations = [],
   images = [],
-  recommendationsType = "",
-  neighborhood = "",
-  complementaryText = "", // complementarytext is text that is going to be rendered by this editable component but the user will not have the option to edit. 
+  neighborhood,
+  objectData,
+  complementaryText, // complementarytext is text that is going to be rendered by this editable component but the user will not have the option to edit. 
   imagesId// this will be used to associate images with an user when the user adds more images
 }) => {
 
@@ -37,15 +37,10 @@ const NeighborhoodEditableDiv = ({
   const [adjectivesText, setAdjectivesText] = useState(adjectives);
   const [adjectivesTextHistory, setAdjectivesTextHistory] = useState(adjectives);
 
-  console.log('adjectivesText', adjectivesText);
-  console.log('adjectivesTextHistory', adjectivesTextHistory);
 
-
-
-
-  // the following states will be used when editing an array of recommendations:
-  const [recommendationsArray, setRecommendationsArray] = useState(recommendations);
-  const [recommendationsHistory, setRecommendations_History] = useState(recommendations);
+  // the following states will be used when the user is updating data that came in object format
+  const [objectData_, setObjectData_] = useState(objectData);
+  const [objectDataHistory, setObjectDataHistory] = useState(objectData);
 
 
   // the following states will be used when editing the neighborhood images:
@@ -58,11 +53,8 @@ const NeighborhoodEditableDiv = ({
   const imgRefs = useRef([]);
   const addImagesInput = useRef(null);
 
-  console.log("text->", text);
-
 
   const galleryParentRef = useRef(null);
-
 
 
   /** Images slider */
@@ -168,16 +160,52 @@ const NeighborhoodEditableDiv = ({
   };
 
   const handleChange = (event) => {
-    // If the user is adding or removing neighborhood adjectives
+
+    // If user is trying to edit any of the data came as an  object:
+    if (typeof objectData === "object") {
+      setObjectData_(prevState => {
+        return { ...prevState, [event.target.id]: event.target.value }
+      })
+    };
+
+    // If the user is adding or removing neighborhood adjectives:
     if (adjectivesText.length > 0) {
       console.log(event.target.value.split(", "));
-      setAdjectivesText(event.target.value.split(", "))
+      setAdjectivesText(event.target.value.split(", "));
+      return
     };
     setText(event.target.value);
+
   };
+
+
+
+
+
 
   // function to save edited data:
   const handleSaveClick = async () => {
+
+
+    // user is updating information that came is as an object:
+    // if (typeof objectData === "object") {
+
+    //   if (areObjectsDifferent(objectData_, objectDataHistory)) {
+    //     console.log(objectData_)
+    //     console.log(objectDataHistory)
+    //   }
+    //   return;
+    // }
+
+    setObjectDataHistory(prevState => {
+      if (areObjectsDifferent(objectData_, objectDataHistory)) {
+        // make request:
+        updateNeighborhoodData({ [objectKey]: objectData_ })
+      }
+      return { ...objectData_ }
+    })
+
+
 
     // user is editing the images of the neighborhood:
     if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
@@ -234,11 +262,67 @@ const NeighborhoodEditableDiv = ({
 
   };
 
+
+
+
+
+
+
+
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
     setText(textHistory);
     setIsEditing(false);
   };
+
+  console.log('object data', objectData_)
+
+  /** We are rendering information that comes in as an object: */
+  if (typeof objectData_ === "object") {
+
+
+
+    return (
+      <div style={{ padding: "15px", width: "100%" }}>
+        {isEditing ? (
+          <div>
+            <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
+              <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
+              <Form.Control id="assesment" onChange={handleChange} type="text" value={objectData_.assesment} style={{ width: "50%", marginLeft: "10px" }} />
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
+              <p style={{ textAlign: "start" }}> {complementaryText[1] + ":"}</p>
+              <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation} style={{ width: "50%", marginLeft: "10px" }} />
+            </div>
+
+            <div className="divSaveCancelBtns">
+              <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
+              <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
+
+            {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+
+            <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+              {complementaryText[0] + objectData_.assesment}
+            </p>
+
+            {objectData_.explanation !== "" ? (
+              <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+                {complementaryText[1] + objectData_.explanation}
+              </p>
+            ) : (
+              null
+            )}
+          </div>
+        )}
+
+      </div>
+    )
+  }
 
 
   /** When we render the neighboorhood images: */
@@ -458,6 +542,26 @@ function areArraysEqual(arr1, arr2) {
   }
 
   return true;
+}
+
+
+function areObjectsDifferent(obj1, obj2) {
+  // Assuming the two keys are known and called 'key1' and 'key2'
+  const key1 = 'assesment';
+  const key2 = 'explanation';
+
+  // Check if both objects have the same keys and if not, return true
+  if (!(key1 in obj1) || !(key2 in obj1) || !(key1 in obj2) || !(key2 in obj2)) {
+    return true;
+  }
+
+  // Compare the values of the two keys
+  if (obj1[key1] !== obj2[key1] || obj1[key2] !== obj2[key2]) {
+    return true;
+  }
+
+  // If none of the above conditions are true, return false
+  return false;
 }
 
 export default NeighborhoodEditableDiv;
