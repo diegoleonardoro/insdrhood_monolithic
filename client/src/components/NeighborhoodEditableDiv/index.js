@@ -262,12 +262,12 @@ const NeighborhoodEditableDiv = ({
           <div>
             <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
               <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
-              <Form.Control id="assesment" onChange={handleChange} type="text" value={objectData_.assesment} style={{ width: "50%", marginLeft: "10px" }} />
+              <Form.Control id="assesment" onChange={handleChange} type="text" value={objectData_.assesment.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
             </div>
 
             <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
               <p style={{ textAlign: "start" }}> {complementaryText[1] + ":"}</p>
-              <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation} style={{ width: "50%", marginLeft: "10px" }} />
+              <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
             </div>
 
             <div className="divSaveCancelBtns">
@@ -281,12 +281,12 @@ const NeighborhoodEditableDiv = ({
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
 
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-              {complementaryText[0] + objectData_.assesment}
+              {complementaryText[0] + objectData_.assesment.toLowerCase()}
             </p>
 
             {objectData_.explanation !== "" ? (
               <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                {complementaryText[1] + objectData_.explanation}
+                  {complementaryText[1] + objectData_.explanation.toLowerCase()}
               </p>
             ) : (
               null

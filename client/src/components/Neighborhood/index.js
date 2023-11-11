@@ -133,7 +133,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
                 } objectKey="foodCulture" />
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${neighborhood.neighborhood} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                 } objectKey="foodIsAuthentic" />
-
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${neighborhood.neighborhood} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices"/>
               </div>
 
             )}
