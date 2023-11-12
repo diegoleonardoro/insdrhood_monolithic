@@ -77,12 +77,12 @@ const FormComponent = ({ updateCurrentUser }) => {
     typicalResidentDescription: "",
     foodCulture: "",
     recommendedFoodTypes: [],
-    onePlaceToEat: { assesment: "", explanation: "" },
-    foodPrices: { assesment: "", explanation: "" },
-    foodIsAuthentic: { assesment: "", explanation: "" },
+    onePlaceToEat: { assessment: "", explanation: "" },
+    foodPrices: { assessment: "", explanation: "" },
+    foodIsAuthentic: { assessment: "", explanation: "" },
     nightLife: "",
     nightLifeRecommendations: [],
-    onePlaceForNightLife: { assesment: "", explanation: "" },
+    onePlaceForNightLife: { assessment: "", explanation: "" },
     statements: {},
     neighborhoodImages: [],
     user: {}
@@ -123,7 +123,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   //  function that makes request to save the form data:
   async function sendFormData() {
     try {
-      const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);    
+      const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -296,7 +296,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             }, loggedUser.id);
             // MAKE LOGIC TO DIRECT USER TO THEIR PROFILE
 
-           
+
             return;
           };
 
@@ -540,24 +540,19 @@ const FormComponent = ({ updateCurrentUser }) => {
     } else if (description === "foodType") {
 
       if (foodTypesSelectedOpts.length < 5) {
-        
+
         let updatedOptions;
 
         if (event) {
           event.target.style.backgroundColor = "#EBEBE4";
         }
 
-        const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.recommendation.includes(option));
-
+        const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.assessment.includes(option));
 
         if (!containsSpecificWord) {
 
-          // foodTypesSlectedOpts will be used to show the types of food the user has selected 
-          
           setFoodTypesSelectedOpts(prevOptions => {
-            updatedOptions = [...prevOptions, { "recommendation": option }];
-
-            // setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
+            updatedOptions = [...prevOptions, { "assessment": option }];
 
             return updatedOptions;
           })
@@ -575,8 +570,6 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
       }
 
-     
-
       const favTypesOfFoodDiv = favTypesOfFoodRef.current;
       if (favTypesOfFoodDiv) {
 
@@ -587,9 +580,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
   };
-  
 
-  console.log("formData", formData);
 
   const handleOptionRemove = (option, description) => {
     if (description === "neighborhood") {
@@ -630,19 +621,20 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
       }
 
-      const updatedOptions = foodTypesSelectedOpts.filter((item) => item.recommendation !== option);
-      setFoodTypesSelectedOpts(prevOptions => {
-        setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
-        return updatedOptions
-      });
+      const updatedOptions = formData.recommendedFoodTypes.filter((item) => item.assessment !== option);
+
+      setFoodTypesSelectedOpts(updatedOptions);
+
+      // update formData with updatedOptions 
+      setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
+      
       return updatedOptions;
 
     }
   };
-  
 
 
-
+  console.log("formData", formData)
 
 
   // this function will be triggered when the user is adding restaurants to the recommended food types:
@@ -1842,14 +1834,14 @@ const FormComponent = ({ updateCurrentUser }) => {
           {foodTypesSelectedOpts.length > 0 && (
             <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
               {foodTypesSelectedOpts.map((option, index) => (
-                
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.recommendation}>
+
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.assessment}>
 
                   <div ref={(e) => { foodRecommendationsRef.current['explanation'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
-                    {option.recommendation}
+                    {option.assessment}
                     <div
                       onClick={(e) => {
-                        handleOptionRemove(option.recommendation, "foodTypes");
+                        handleOptionRemove(option.assessment, "foodTypes");
                       }}
                       style={{
                         marginLeft: '5px',
@@ -2173,7 +2165,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData,
                       onePlaceToEat: {
                         ...formData.onePlaceToEat,
-                        assesment: e.target.value
+                        assessment: e.target.value
                       }
                     })
                   }
@@ -2227,7 +2219,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodPrices: {
                       ...formData.foodPrices,
-                      assesment: e.target.value
+                      assessment: e.target.value
                     }
                   });
                 }}
@@ -2254,7 +2246,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodPrices: {
                       ...formData.foodPrices,
-                      assesment: e.target.value
+                      assessment: e.target.value
                     }
                   });
                 }}
@@ -2281,7 +2273,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodPrices: {
                       ...formData.foodPrices,
-                      assesment: e.target.value
+                      assessment: e.target.value
                     }
                   });
                 }}
@@ -2344,7 +2336,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           ...formData,
                           foodIsAuthentic: {
                             ...formData.foodIsAuthentic,
-                            assesment: e.target.value
+                            assessment: e.target.value
                           }
                         })
                       }
@@ -2375,7 +2367,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           ...formData,
                           foodIsAuthentic: {
                             ...formData.foodIsAuthentic,
-                            assesment: e.target.value
+                            assessment: e.target.value
                           }
                         })
                       }
@@ -2560,7 +2552,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData,
                       onePlaceForNightLife: {
                         ...formData.onePlaceforNightLife,
-                        assesment: e.target.value
+                        assessment: e.target.value
                       }
                     })
                   }
