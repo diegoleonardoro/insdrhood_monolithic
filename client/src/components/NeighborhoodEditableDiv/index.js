@@ -20,6 +20,7 @@ const NeighborhoodEditableDiv = ({
   images = [],
   neighborhood,
   objectData,
+  recommendationsArrayOfObjects,
   complementaryText, // complementarytext is text that is going to be rendered by this editable component but the user will not have the option to edit. 
   imagesId// this will be used to associate images with an user when the user adds more images
 }) => {
@@ -158,6 +159,7 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
+
   const handleChange = (event) => {
 
     // If user is trying to edit any of the data came as an  object:
@@ -175,8 +177,6 @@ const NeighborhoodEditableDiv = ({
     setText(event.target.value);
 
   };
-
-
 
 
   // function to save edited data:
@@ -252,7 +252,43 @@ const NeighborhoodEditableDiv = ({
     setText(textHistory);
     setIsEditing(false);
   };
-  
+
+  /** we are rendering an object that contains information of recommended restaurants or nightlife venues */
+
+
+
+  if (recommendationsArrayOfObjects.length > 0) {
+
+    <div>
+      {isEditing ? (
+
+        <div>
+
+        </div>
+
+
+      ) : (
+
+        <div>
+
+          {recommendationsArrayOfObjects.map((item, index) => (
+            <div>
+              <p>{item.recommendation}</p>
+              <p>{item.explanation }</p>
+            </div>
+          ))}
+
+        </div>
+
+      )}
+
+    </div>
+
+
+  }
+
+
+
   /** We are rendering information that comes in as an object: */
   if (typeof objectData_ === "object") {
 
@@ -286,7 +322,7 @@ const NeighborhoodEditableDiv = ({
 
             {objectData_.explanation !== "" ? (
               <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                  {complementaryText[1] + objectData_.explanation.toLowerCase()}
+                {complementaryText[1] + objectData_.explanation.toLowerCase()}
               </p>
             ) : (
               null

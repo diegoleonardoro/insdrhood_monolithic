@@ -505,6 +505,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   // THIS FUNCTION WILL BE ACTIVATED EVERY TIME ANY OF THE OPTION BUTTONS IN THE FORM ARE CLICKED.
   // IT WILL UPATE THE FORM WITH THE RESPECTIVE VALUE.
+
   const handleOptionSelect = (option, description, event) => { // --->> ?????
 
     if (description === "nhood") {
@@ -513,6 +514,9 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         let updatedOptions
         event.target.style.backgroundColor = "#EBEBE4";
+
+       
+        
         if (!selectedOptions.includes(option)) {
           setSelectedOptions(prevOptions => {
             updatedOptions = [...prevOptions, option];
@@ -545,14 +549,20 @@ const FormComponent = ({ updateCurrentUser }) => {
           event.target.style.backgroundColor = "#EBEBE4";
         }
 
-        const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.foodType.includes(option));
+        const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.recommendation.includes(option));
+
+
         if (!containsSpecificWord) {
           setFoodTypesSelectedOpts(prevOptions => {
-            updatedOptions = [...prevOptions, { "foodType": option }];
+            updatedOptions = [...prevOptions, { "recommendation": option }];
+
+            console.log('updatedOptions', updatedOptions)
+
             setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
             return updatedOptions;
           })
         }
+
       }
 
       const favTypesOfFoodDiv = favTypesOfFoodRef.current;
@@ -565,6 +575,10 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
   };
+  
+
+
+
   const handleOptionRemove = (option, description) => {
     if (description === "neighborhood") {
       const advjectivesListDivs = [...nehoodAdjectivesDivRef.current.children];
@@ -602,7 +616,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
       }
 
-      const updatedOptions = foodTypesSelectedOpts.filter((item) => item.foodType !== option);
+      const updatedOptions = foodTypesSelectedOpts.filter((item) => item.recommendation !== option);
       setFoodTypesSelectedOpts(prevOptions => {
         setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
         return updatedOptions
@@ -611,12 +625,16 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
   };
+  
+
+  // this function will be triggered when the user is adding restaurants to the recommended food types:
   const handleRecommendedRestaurant = (value, index) => {
+
     const updatedRecommendedFoodTypes = formData.recommendedFoodTypes.map((foodType, i) => {
       if (i === index) {
         return {
           ...foodType, // Spread the existing key-value pairs from the original object
-          "recommendedRestaurant": value, // Add the new key-value pair
+          "explanation": value, // Add the new key-value pair
         };
       }
       return foodType; // Keep other objects unchanged
@@ -629,6 +647,10 @@ const FormComponent = ({ updateCurrentUser }) => {
     }));
 
   };
+
+  console.log('formData', formData);
+
+
   const handleInputChange = (value) => {
     setFoodTypesInput(value);
   };
@@ -1799,14 +1821,14 @@ const FormComponent = ({ updateCurrentUser }) => {
           {foodTypesSelectedOpts.length > 0 && (
             <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
               {foodTypesSelectedOpts.map((option, index) => (
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.foodType}>
+                
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.recommendation}>
 
-
-                  <div ref={(e) => { foodRecommendationsRef.current['placeName'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
-                    {option.foodType}
+                  <div ref={(e) => { foodRecommendationsRef.current['explanation'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
+                    {option.recommendation}
                     <div
                       onClick={(e) => {
-                        handleOptionRemove(option.foodType, "foodTypes");
+                        handleOptionRemove(option.recommendation, "foodTypes");
                       }}
                       style={{
                         marginLeft: '5px',
