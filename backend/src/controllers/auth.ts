@@ -262,6 +262,8 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
     user = await User.findOne({ email: req.currentUser!.email });
   };
 
+  console.log(req.body)
+
   const neighborhood = Neighborhood.build({
     ...req.body,
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined

@@ -514,9 +514,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         let updatedOptions
         event.target.style.backgroundColor = "#EBEBE4";
-
-       
-        
         if (!selectedOptions.includes(option)) {
           setSelectedOptions(prevOptions => {
             updatedOptions = [...prevOptions, option];
@@ -543,6 +540,7 @@ const FormComponent = ({ updateCurrentUser }) => {
     } else if (description === "foodType") {
 
       if (foodTypesSelectedOpts.length < 5) {
+        
         let updatedOptions;
 
         if (event) {
@@ -553,17 +551,31 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
         if (!containsSpecificWord) {
+
+          // foodTypesSlectedOpts will be used to show the types of food the user has selected 
+          
           setFoodTypesSelectedOpts(prevOptions => {
             updatedOptions = [...prevOptions, { "recommendation": option }];
 
-            console.log('updatedOptions', updatedOptions)
+            // setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
 
-            setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
             return updatedOptions;
           })
-        }
 
+          setFormData(prevFormData => {
+            return {
+              ...prevFormData,
+              recommendedFoodTypes: [
+                ...prevFormData.recommendedFoodTypes,
+                { assessment: option }
+              ]
+            };
+          });
+
+        }
       }
+
+     
 
       const favTypesOfFoodDiv = favTypesOfFoodRef.current;
       if (favTypesOfFoodDiv) {
@@ -577,12 +589,12 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
   
 
-
+  console.log("formData", formData);
 
   const handleOptionRemove = (option, description) => {
     if (description === "neighborhood") {
       const advjectivesListDivs = [...nehoodAdjectivesDivRef.current.children];
-      for (var i = 0; i < advjectivesListDivs.length; i++) {
+      for (let i = 0; i < advjectivesListDivs.length; i++) {
 
         if (advjectivesListDivs[i].dataset.option === option) {
           advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
@@ -596,7 +608,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
     } else if (description === "resident") {
       const advjectivesListDivs = [...residentAdjectivesDivRef.current.children];
-      for (var i = 0; i < advjectivesListDivs.length; i++) {
+      for (let i = 0; i < advjectivesListDivs.length; i++) {
         if (advjectivesListDivs[i].dataset.option === option) {
           advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
         }
@@ -609,8 +621,10 @@ const FormComponent = ({ updateCurrentUser }) => {
       setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
     } else if (description === "foodTypes") {
 
+
+
       const advjectivesListDivs = [...typesOfFoodRecommendationsRef.current.children];
-      for (var i = 0; i < advjectivesListDivs.length; i++) {
+      for (let i = 0; i < advjectivesListDivs.length; i++) {
         if (advjectivesListDivs[i].dataset.option === option) {
           advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
         }
@@ -627,28 +641,35 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
   
 
+
+
+
+
   // this function will be triggered when the user is adding restaurants to the recommended food types:
   const handleRecommendedRestaurant = (value, index) => {
 
-    const updatedRecommendedFoodTypes = formData.recommendedFoodTypes.map((foodType, i) => {
-      if (i === index) {
-        return {
-          ...foodType, // Spread the existing key-value pairs from the original object
-          "explanation": value, // Add the new key-value pair
-        };
-      }
-      return foodType; // Keep other objects unchanged
+
+    setFormData((prevFormData) => {
+      // Map over the recommendedFoodTypes to create a new array
+      const updatedFoodTypes = prevFormData.recommendedFoodTypes.map((item, idx) => {
+        // Update the item at the specific index with the new value
+        if (idx === index) {
+          return { ...item, explanation: value };
+        }
+        // Return the item as is for other indices
+        return item;
+      });
+
+      // Return the new state object with the updated recommendedFoodTypes
+      return {
+        ...prevFormData,
+        recommendedFoodTypes: updatedFoodTypes,
+      };
     });
 
-    // Update the copied formData object with the new array
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      recommendedFoodTypes: updatedRecommendedFoodTypes,
-    }));
+
 
   };
-
-  console.log('formData', formData);
 
 
   const handleInputChange = (value) => {

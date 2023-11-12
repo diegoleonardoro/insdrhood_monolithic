@@ -257,7 +257,9 @@ const NeighborhoodEditableDiv = ({
 
 
 
-  if (recommendationsArrayOfObjects.length > 0) {
+  if (Array.isArray(recommendationsArrayOfObjects)) {
+
+    console.log('recommendationsArrayOfObjects', recommendationsArrayOfObjects);
 
     <div>
       {isEditing ? (
@@ -272,7 +274,7 @@ const NeighborhoodEditableDiv = ({
         <div>
 
           {recommendationsArrayOfObjects.map((item, index) => (
-            <div>
+            <div key={index}>
               <p>{item.recommendation}</p>
               <p>{item.explanation }</p>
             </div>
