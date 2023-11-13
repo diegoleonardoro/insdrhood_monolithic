@@ -6,6 +6,10 @@ import Card from 'react-bootstrap/Card';
 import axios from "axios";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
+import Table from 'react-bootstrap/Table';
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+
 
 
 import "./neighborhoodEditableDiv.css";
@@ -265,28 +269,115 @@ const NeighborhoodEditableDiv = ({
 
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
-    return (<div>
-      {isEditing ? (
+    return (
+      <div style={{ padding: "15px", width: "100%" }}>
+        {isEditing ? (
 
-        <div>
-
-        </div>
-
-
-      ) : (
-
-        <div>
+          <div style={{ marginTop: "20px" }}>
 
             {recommendationsArrayOfObjects.map((item, index) => {
 
               let text;
-              if(index ===0){
-                text='Make sure to try ';
-              }else if(index===1){
+              if (index === 0) {
+                text = 'Make sure to try ';
+              } else if (index === 1) {
                 text = 'You should also try ';
-              }else if(index===2){
+              } else if (index === 2) {
                 text = 'Also make sure to try ';
-              }else{
+              } else {
+                text = "You'll also want to try ";
+              }
+
+              return (
+                <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding:"15px" }}>
+
+                  <OverlayTrigger
+                    
+                    placement="bottom"
+                    overlay={
+                      <Tooltip  id="button-tooltip-2">
+                        Delete item
+                      </Tooltip>
+                    }
+                  >
+                    {({ ref, ...triggerHandler }) => (
+                      <svg
+                        ref={ref}
+                        {...triggerHandler}
+                        style={{
+                          position: "absolute",
+                          right: "5px",
+                          backgroundColor: "rgb(228, 228, 228)",
+                          marginTop: "10px",
+                          cursor: "pointer"
+                        }}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="25"
+                        fill="currentColor"
+                        className="bi bi-trash"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                      </svg>
+                    )}
+                  </OverlayTrigger>
+
+
+                  <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+                    <div style={{ marginTop: "none" }}>{text}</div ><Form.Control id="assessment" onChange={handleChange} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} /> <div style={{ marginLeft: "10px" }}> food. </div >
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
+                    <div >Go to </div ><Form.Control id="assessment" onChange={handleChange} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} /> <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
+                  </div>
+                </div>
+              )
+            })}
+
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Food Type</th>
+                  <th>Restaurants</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><input style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: "80%" }} /></td>
+                  <td><input placeholder='Include comma separated words' style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: "80%" }} /></td>
+                </tr>
+              </tbody>
+            </Table>
+
+
+
+
+
+
+            <div className="divSaveCancelBtns">
+              <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
+              <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
+            </div>
+
+          </div>
+        ) : (
+
+          <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
+            {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+
+            {recommendationsArrayOfObjects.map((item, index) => {
+
+              let text;
+              if (index === 0) {
+                text = 'Make sure to try ';
+              } else if (index === 1) {
+                text = 'You should also try ';
+              } else if (index === 2) {
+                text = 'Also make sure to try ';
+              } else {
                 text = "You'll also want to try ";
               }
               text += item.assessment;
@@ -294,13 +385,13 @@ const NeighborhoodEditableDiv = ({
               return (
                 <div key={index} style={{ display: "flex" }}>
                   <p>{text} food.</p>
-                  <p style={{ marginLeft: "10px" }}>{`Go to: ${item.explanation}`}</p>
+                  <p style={{ marginLeft: "10px" }}>{`Go to: ${item.explanation} for authentic ${item.assessment} food.`}  </p>
                 </div>
               );
             })}
-        </div>
-      )}
-    </div>)
+          </div>
+        )}
+      </div>)
   }
 
 
