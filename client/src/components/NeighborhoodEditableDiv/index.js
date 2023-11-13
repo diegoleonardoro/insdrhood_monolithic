@@ -57,9 +57,13 @@ const NeighborhoodEditableDiv = ({
   const [newImages, setNewImages] = useState([])
   const imgRefs = useRef([]);
   const addImagesInput = useRef(null);
-
-
   const galleryParentRef = useRef(null);
+
+
+  // The following state will be used when the user is editing the recommendations that come as an array of object (food and restaurants recommend)
+  const [recommendationsArrayOfObjects_, setRecommendationsArrayOfObjects_] = useState(recommendationsArrayOfObjects);
+  const [recommendationsArrayOfObjectsHistory, setRecommendationsArrayOfObjectsHistory] = useState(recommendationsArrayOfObjects);
+
 
 
   /** Images slider */
@@ -139,12 +143,10 @@ const NeighborhoodEditableDiv = ({
     ]
   };
 
-
   // function that will update the neighborhood data
   const updateNeighborhoodData = async (dataToUpdate) => {
     await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
   }
-
 
   const removePhoto = (index) => {
 
@@ -163,8 +165,18 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
+  const handleChange = (event, index) => {
 
-  const handleChange = (event) => {
+    // user is trying to update the data that came in as an array of obects:
+    if (Array.isArray(recommendationsArrayOfObjects)) {
+      const updatedArray = recommendationsArrayOfObjects_.map((item, i) => {
+        if (i === index) {
+          return { ...item, [event.target.name]: event.target.value }
+        }
+        return item;
+      });
+      setRecommendationsArrayOfObjects_(updatedArray);
+    };
 
     // If user is trying to edit any of the data came as an  object:
     if (typeof objectData === "object") {
@@ -182,70 +194,90 @@ const NeighborhoodEditableDiv = ({
 
   };
 
-
   // function to save edited data:
   const handleSaveClick = async () => {
 
-    setObjectDataHistory(prevState => {
-      if (areObjectsDifferent(objectData_, objectDataHistory)) {
-        // make request:
-        updateNeighborhoodData({ [objectKey]: objectData_ })
-      }
-      return { ...objectData_ }
-    })
+    // user is editing an array of objects, such as food recommendations:
+    if (Array.isArray(recommendationsArrayOfObjects)) {
+      setRecommendationsArrayOfObjectsHistory(prevState => {
+        if (areObjectsDifferent(recommendationsArrayOfObjects_, recommendationsArrayOfObjectsHistory)) {
+          // make request to update data:
+          console.log(recommendationsArrayOfObjects_);
+      
+        };
+        // update the state:
+        return recommendationsArrayOfObjects_
+      })
+    }
 
+    // user is editing an object, such as food prices assessment and explanation:
+    if (typeof objectData_ === 'object') {
+      setObjectDataHistory(prevState => {
+        if (areObjectsDifferent(objectData_, objectDataHistory)) {
+          // make request:
+          updateNeighborhoodData({ [objectKey]: objectData_ })
+        }
+        return { ...objectData_ }
+      })
+    }
 
     // user is editing the images of the neighborhood:
-    if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
-      const newImages = Array.from(addImagesInput.current.files);
+    if (images.length > 0) {
+      if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
+        const newImages = Array.from(addImagesInput.current.files);
 
-      const uploadPromises = newImages.map(async imageFile => {
-        const imageType = imageFile.type.split('/')[1];
-        const imageUploadConfig = await axios.get(`http://localhost:4000/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
+        const uploadPromises = newImages.map(async imageFile => {
+          const imageType = imageFile.type.split('/')[1];
+          const imageUploadConfig = await axios.get(`http://localhost:4000/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
 
-        await axios.put(imageUploadConfig.data.url, imageFile, {
-          headers: {
-            "Content-Type": imageType,
-          }
+          await axios.put(imageUploadConfig.data.url, imageFile, {
+            headers: {
+              "Content-Type": imageType,
+            }
+          });
+          return { image: imageUploadConfig.data.key, description: "" };
         });
-        return { image: imageUploadConfig.data.key, description: "" };
-      });
 
-      const imagesUrls = await Promise.all(uploadPromises);
+        const imagesUrls = await Promise.all(uploadPromises);
 
-      setNhoodImagesHistory(prevNhoodImagesArray => {
-        const newImages = [...prevNhoodImagesArray, ...imagesUrls];
-        // updating the newImages state will trigger the server request to save the new images
-        setNewImages(newImages);
-        return newImages;
-      });
+        setNhoodImagesHistory(prevNhoodImagesArray => {
+          const newImages = [...prevNhoodImagesArray, ...imagesUrls];
+          // updating the newImages state will trigger the server request to save the new images
+          setNewImages(newImages);
+          return newImages;
+        });
 
-      setNhoodImages(prevNhoodImagesArray => {
-        const newImages = [...prevNhoodImagesArray, ...imagesUrls]
-        return newImages
-      });
+        setNhoodImages(prevNhoodImagesArray => {
+          const newImages = [...prevNhoodImagesArray, ...imagesUrls]
+          return newImages
+        });
 
-      updateNeighborhoodData({ [objectKey]: imagesUrls })
-      setIsEditing(false);
-      return;
-    };
+        updateNeighborhoodData({ [objectKey]: imagesUrls })
+        setIsEditing(false);
+        return;
+      };
+    }
 
     // user is editing the list of neighborhood adjectives 
-    setAdjectivesTextHistory(prevAdjectivesText => {
-      if (!areArraysEqual(prevAdjectivesText, adjectivesText)) {
-        updateNeighborhoodData({ [objectKey]: adjectivesText })
-      }
-      return [...adjectivesText];
-    });
+    if (adjectives.length > 0) {
+      setAdjectivesTextHistory(prevAdjectivesText => {
+        if (!areArraysEqual(prevAdjectivesText, adjectivesText)) {
+          updateNeighborhoodData({ [objectKey]: adjectivesText })
+        }
+        return [...adjectivesText];
+      });
+    }
 
     // user is editing a text-based section of the neighborhood profile:
-    setTextHistory(prevText => {
-      if (prevText !== text) {
-        updateNeighborhoodData({ [objectKey]: text })
-      }
-      return text;
-    });
-
+    if (content) {
+      setTextHistory(prevText => {
+        if (prevText !== text) {
+          updateNeighborhoodData({ [objectKey]: text })
+        }
+        return text;
+      });
+    };
+    
     setIsEditing(false);
 
   };
@@ -258,15 +290,6 @@ const NeighborhoodEditableDiv = ({
   };
 
   /** we are rendering an object that contains information of recommended restaurants or nightlife venues */
-
-  const textOptions = [
-    "Make sure to try",
-    "You should also try",
-    "Also try",
-    ""
-    // ... more text options
-  ]
-
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
     return (
@@ -275,7 +298,9 @@ const NeighborhoodEditableDiv = ({
 
           <div style={{ marginTop: "20px" }}>
 
-            {recommendationsArrayOfObjects.map((item, index) => {
+            {recommendationsArrayOfObjects_.map((item, index) => {
+
+              console.log('recommendationsArrayOfObjects_recommendationsArrayOfObjects_', recommendationsArrayOfObjects_)
 
               let text;
               if (index === 0) {
@@ -289,13 +314,13 @@ const NeighborhoodEditableDiv = ({
               }
 
               return (
-                <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding:"15px" }}>
+                <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding: "15px" }}>
 
                   <OverlayTrigger
-                    
+
                     placement="bottom"
                     overlay={
-                      <Tooltip  id="button-tooltip-2">
+                      <Tooltip id="button-tooltip-2">
                         Delete item
                       </Tooltip>
                     }
@@ -326,16 +351,34 @@ const NeighborhoodEditableDiv = ({
 
 
                   <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-                    <div style={{ marginTop: "none" }}>{text}</div ><Form.Control id="assessment" onChange={handleChange} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} /> <div style={{ marginLeft: "10px" }}> food. </div >
+
+                    <div style={{ marginTop: "none" }}>{text}</div>
+
+                    <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} />
+
+                    <div style={{ marginLeft: "10px" }}> food. </div >
+
                   </div>
+
                   <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
-                    <div >Go to </div ><Form.Control id="assessment" onChange={handleChange} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} /> <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
+
+                    <div>Go to </div >
+
+                    <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} />
+
+                    <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
+
                   </div>
+
                 </div>
-              )
+              );
+
+
             })}
 
-            <Table striped bordered hover>
+            <h4 style={{ marginTop: "20px" }}>Add more: </h4>
+
+            <Table style={{ marginTop: "20px" }} striped bordered hover>
               <thead>
                 <tr>
                   <th>#</th>
@@ -352,11 +395,6 @@ const NeighborhoodEditableDiv = ({
               </tbody>
             </Table>
 
-
-
-
-
-
             <div className="divSaveCancelBtns">
               <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
               <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
@@ -368,7 +406,7 @@ const NeighborhoodEditableDiv = ({
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
 
-            {recommendationsArrayOfObjects.map((item, index) => {
+            {recommendationsArrayOfObjects_.map((item, index) => {
 
               let text;
               if (index === 0) {
@@ -385,7 +423,7 @@ const NeighborhoodEditableDiv = ({
               return (
                 <div key={index} style={{ display: "flex" }}>
                   <p>{text} food.</p>
-                  <p style={{ marginLeft: "10px" }}>{`Go to: ${item.explanation} for authentic ${item.assessment} food.`}  </p>
+                  {item.explanation && (<p style={{ marginLeft: "10px" }}>{`Go to: ${item.explanation} for authentic ${item.assessment} food.`}  </p>)}
                 </div>
               );
             })}
@@ -393,8 +431,6 @@ const NeighborhoodEditableDiv = ({
         )}
       </div>)
   }
-
-
 
   /** We are rendering information that comes in as an object: */
   if (typeof objectData_ === "object") {
@@ -440,7 +476,6 @@ const NeighborhoodEditableDiv = ({
       </div>
     )
   }
-
 
   /** When we render the neighboorhood images: */
   if (images.length > 0) {
