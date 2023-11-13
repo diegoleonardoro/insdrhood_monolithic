@@ -255,13 +255,17 @@ const NeighborhoodEditableDiv = ({
 
   /** we are rendering an object that contains information of recommended restaurants or nightlife venues */
 
-
+  const textOptions = [
+    "Make sure to try",
+    "You should also try",
+    "Also try",
+    ""
+    // ... more text options
+  ]
 
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
-    console.log('recommendationsArrayOfObjects', recommendationsArrayOfObjects);
-
-    <div>
+    return (<div>
       {isEditing ? (
 
         <div>
@@ -273,20 +277,30 @@ const NeighborhoodEditableDiv = ({
 
         <div>
 
-          {recommendationsArrayOfObjects.map((item, index) => (
-            <div key={index}>
-              <p>{item.recommendation}</p>
-              <p>{item.explanation }</p>
-            </div>
-          ))}
+            {recommendationsArrayOfObjects.map((item, index) => {
 
+              let text;
+              if(index ===0){
+                text='Make sure to try ';
+              }else if(index===1){
+                text = 'You should also try ';
+              }else if(index===2){
+                text = 'Also make sure to try ';
+              }else{
+                text = "You'll also want to try ";
+              }
+              text += item.assessment;
+
+              return (
+                <div key={index} style={{ display: "flex" }}>
+                  <p>{text} food.</p>
+                  <p style={{ marginLeft: "10px" }}>{`Go to: ${item.explanation}`}</p>
+                </div>
+              );
+            })}
         </div>
-
       )}
-
-    </div>
-
-
+    </div>)
   }
 
 
@@ -300,7 +314,7 @@ const NeighborhoodEditableDiv = ({
           <div>
             <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
               <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
-              <Form.Control id="assesment" onChange={handleChange} type="text" value={objectData_.assesment.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
+              <Form.Control id="assessment" onChange={handleChange} type="text" value={objectData_.assessment.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
             </div>
 
             <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
@@ -319,7 +333,7 @@ const NeighborhoodEditableDiv = ({
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
 
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-              {complementaryText[0] + objectData_.assesment.toLowerCase()}
+              {complementaryText[0] + objectData_.assessment.toLowerCase()}
             </p>
 
             {objectData_.explanation !== "" ? (
@@ -559,7 +573,7 @@ function areArraysEqual(arr1, arr2) {
 
 function areObjectsDifferent(obj1, obj2) {
   // Assuming the two keys are known and called 'key1' and 'key2'
-  const key1 = 'assesment';
+  const key1 = 'assessment';
   const key2 = 'explanation';
 
   // Check if both objects have the same keys and if not, return true

@@ -285,7 +285,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
           setNeighborhoodId(formDataResponse.id);
 
-
           // if there is a logged in user, make a request to udpate the user
           if (loggedUser) {
             // request to update the user:
@@ -294,12 +293,9 @@ const FormComponent = ({ updateCurrentUser }) => {
               residentId: [formDataResponse.id],
               userImagesId: randomUUID
             }, loggedUser.id);
-            // MAKE LOGIC TO DIRECT USER TO THEIR PROFILE
-
-
+           
             return;
           };
-
 
           // this state needs to be updated to save a new user in the database:
           setNewUserData(prevData => ({
@@ -315,7 +311,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
 
         };
-
 
         // if the last key word is "end", then  do not display another question
         // keyWord = currentDiv.className.split(" ")[1];
@@ -548,10 +543,13 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
 
         const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.assessment.includes(option));
-
+        
+        console.log("option", option);
+        
         if (!containsSpecificWord) {
 
           setFoodTypesSelectedOpts(prevOptions => {
+
             updatedOptions = [...prevOptions, { "assessment": option }];
 
             return updatedOptions;
@@ -566,7 +564,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               ]
             };
           });
-
         }
       }
 
@@ -622,7 +619,6 @@ const FormComponent = ({ updateCurrentUser }) => {
       }
 
       const updatedOptions = formData.recommendedFoodTypes.filter((item) => item.assessment !== option);
-
       setFoodTypesSelectedOpts(updatedOptions);
 
       // update formData with updatedOptions 
@@ -632,10 +628,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
   };
-
-
-  console.log("formData", formData)
-
 
   // this function will be triggered when the user is adding restaurants to the recommended food types:
   const handleRecommendedRestaurant = (value, index) => {
@@ -1858,7 +1850,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", width: "50%" }}>
                     <label className="labelFavFoods" style={{ fontSize: "12px", textAlign: "center" }} htmlFor={"foodTypePlaceRecommendation " + index}>
-                      <span className="questionHighlight">Best {option.foodType} restaurant</span> in {neighborhood}:
+                      <span className="questionHighlight">Best {option.assessment} restaurant</span> in {neighborhood}:
                       <input
                         id={"foodTypePlaceRecommendation " + index}
                         className="foodTypeInput"
@@ -3175,9 +3167,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           {/* {errors2} */}
         </div>
 
-
-
-
         {/** Submit */}
         <div
           className={
@@ -3197,7 +3186,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             value="Submit"
           />
         </div>
-
 
 
         {/** Arrows */}
