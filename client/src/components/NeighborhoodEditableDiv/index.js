@@ -66,13 +66,13 @@ const NeighborhoodEditableDiv = ({
   const [recommendationsArrayOfObjectsHistory, setRecommendationsArrayOfObjectsHistory] = useState(recommendationsArrayOfObjects);
 
   // The following satate will be used to add more rows to the table that adds more recommended places:
-  const [rows, setRows] = useState([{ foodType: '', restaurants: '' }]);
+  const [rows, setRows] = useState([{ assessment: '', recommendations: '' }]);
 
   // Function that will add more rows to the table if an input has been typed:
   const addRow = () => {
     // Check if any input is filled
     if (rows.length === 0 || rows[rows.length - 1].foodType.trim() || rows[rows.length - 1].restaurants.trim()) {
-      setRows([...rows, { foodType: '', restaurants: '' }]);
+      setRows([...rows, { assessment: '', recommendations: '' }]);
     };
 
   };
@@ -195,25 +195,18 @@ const NeighborhoodEditableDiv = ({
       if (flag === 'table') {
 
         const newEntries = [...recommendationsArrayOfObjectsFromTable_];
-
-        console.log('newEntries', newEntries);
         const field = event.target.name;
 
         // I want to add a new row only when 
         // // Check if the last entry is already filled
-        if (index === recommendationsArrayOfObjectsFromTable_.length  ) {
+        if (index === recommendationsArrayOfObjectsFromTable_.length) {
           // If both fields are filled, add a new object
           newEntries.push({ assessment: '', explanation: '' });
         }
 
-
-
         // Update the field in the last object of the array
         newEntries[index][field] = event.target.value;
-
-        console.log('newEntries2', newEntries);
         setRecommendationsArrayOfObjectsFromTable_(newEntries);
-
 
       } else {
         const updatedArray = recommendationsArrayOfObjects_.map((item, i) => {
@@ -250,21 +243,38 @@ const NeighborhoodEditableDiv = ({
     setRecommendationsArrayOfObjects_(array);
   };
 
+
+
+
+
   // function to save edited data:
   const handleSaveClick = async () => {
 
+
+
     // user is editing an array of objects, such as food recommendations:
     if (Array.isArray(recommendationsArrayOfObjects)) {
+      let dataToUpdate = [...recommendationsArrayOfObjects_];
+
+      if (recommendationsArrayOfObjectsFromTable_.length > 0) {// checks if user has typed values on the table
+        dataToUpdate = [...dataToUpdate, ...recommendationsArrayOfObjectsFromTable_];
+        setRecommendationsArrayOfObjectsFromTable_([])
+        setRows([{ assessment: '', recommendations: '' }]);
+      };
+
       setRecommendationsArrayOfObjectsHistory(prevState => {
-        if (areObjectsDifferent(recommendationsArrayOfObjects_, recommendationsArrayOfObjectsHistory)) {
+        if (areObjectsDifferent(dataToUpdate, recommendationsArrayOfObjectsHistory)) {
           // make request to update data:
-          updateNeighborhoodData({ [objectKey]: recommendationsArrayOfObjects_ });
+          updateNeighborhoodData({ [objectKey]: dataToUpdate });
         };
         // update the state:
-        return recommendationsArrayOfObjects_
-      })
-    }
+        return dataToUpdate
+      });
+    };
 
+
+
+    
     // user is editing an object, such as food prices assessment and explanation:
     if (typeof objectData_ === 'object') {
       setObjectDataHistory(prevState => {
@@ -336,6 +346,11 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(false);
 
   };
+
+
+
+
+
 
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
@@ -433,7 +448,7 @@ const NeighborhoodEditableDiv = ({
                       <input
                         style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
                         value={row.foodType}
-                        name ="assessment"
+                        name="assessment"
                         onChange={(e) => {
                           updateField(index, 'foodType', e.target.value);
                           handleChange(e, index, 'table'); /// <<<----------
@@ -474,7 +489,7 @@ const NeighborhoodEditableDiv = ({
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
 
-            {recommendationsArrayOfObjects_.map((item, index) => {
+            {recommendationsArrayOfObjectsHistory.map((item, index) => {
 
               let text;
               if (index === 0) {
