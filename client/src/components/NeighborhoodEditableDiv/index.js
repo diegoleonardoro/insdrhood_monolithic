@@ -194,6 +194,19 @@ const NeighborhoodEditableDiv = ({
 
   };
 
+
+
+  // function that will remove objects from an array of recommendations
+  const removeObject = (index)=>{
+    const array = [...recommendationsArrayOfObjects_]; 
+    array.splice(index, 1);
+    setRecommendationsArrayOfObjects_(array);
+  };
+
+
+
+
+
   // function to save edited data:
   const handleSaveClick = async () => {
 
@@ -202,8 +215,7 @@ const NeighborhoodEditableDiv = ({
       setRecommendationsArrayOfObjectsHistory(prevState => {
         if (areObjectsDifferent(recommendationsArrayOfObjects_, recommendationsArrayOfObjectsHistory)) {
           // make request to update data:
-          console.log(recommendationsArrayOfObjects_);
-      
+          updateNeighborhoodData({ [objectKey]: recommendationsArrayOfObjects_ });
         };
         // update the state:
         return recommendationsArrayOfObjects_
@@ -282,7 +294,6 @@ const NeighborhoodEditableDiv = ({
 
   };
 
-
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
     setText(textHistory);
@@ -295,12 +306,8 @@ const NeighborhoodEditableDiv = ({
     return (
       <div style={{ padding: "15px", width: "100%" }}>
         {isEditing ? (
-
           <div style={{ marginTop: "20px" }}>
-
             {recommendationsArrayOfObjects_.map((item, index) => {
-
-              console.log('recommendationsArrayOfObjects_recommendationsArrayOfObjects_', recommendationsArrayOfObjects_)
 
               let text;
               if (index === 0) {
@@ -328,6 +335,7 @@ const NeighborhoodEditableDiv = ({
                     {({ ref, ...triggerHandler }) => (
                       <svg
                         ref={ref}
+                        onClick={(e) => { removeObject (index)}}
                         {...triggerHandler}
                         style={{
                           position: "absolute",
