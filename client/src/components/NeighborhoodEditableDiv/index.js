@@ -62,7 +62,28 @@ const NeighborhoodEditableDiv = ({
 
   // The following state will be used when the user is editing the recommendations that come as an array of object (food and restaurants recommend)
   const [recommendationsArrayOfObjects_, setRecommendationsArrayOfObjects_] = useState(recommendationsArrayOfObjects);
+  const [recommendationsArrayOfObjectsFromTable_, setRecommendationsArrayOfObjectsFromTable_] = useState([]);
   const [recommendationsArrayOfObjectsHistory, setRecommendationsArrayOfObjectsHistory] = useState(recommendationsArrayOfObjects);
+
+  // The following satate will be used to add more rows to the table that adds more recommended places:
+  const [rows, setRows] = useState([{ foodType: '', restaurants: '' }]);
+
+  // Function that will add more rows to the table if an input has been typed:
+  const addRow = () => {
+    // Check if any input is filled
+    if (rows.length === 0 || rows[rows.length - 1].foodType.trim() || rows[rows.length - 1].restaurants.trim()) {
+      setRows([...rows, { foodType: '', restaurants: '' }]);
+    };
+
+  };
+
+  const updateField = (index, field, value) => {
+    const newRows = [...rows];
+    newRows[index][field] = value;
+    setRows(newRows);
+  };
+
+
 
 
 
@@ -165,17 +186,45 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
-  const handleChange = (event, index) => {
+
+  const handleChange = (event, index, flag) => {
 
     // user is trying to update the data that came in as an array of obects:
     if (Array.isArray(recommendationsArrayOfObjects)) {
-      const updatedArray = recommendationsArrayOfObjects_.map((item, i) => {
-        if (i === index) {
-          return { ...item, [event.target.name]: event.target.value }
+
+      if (flag === 'table') {
+
+        const newEntries = [...recommendationsArrayOfObjectsFromTable_];
+
+        console.log('newEntries', newEntries);
+        const field = event.target.name;
+
+        // I want to add a new row only when 
+        // // Check if the last entry is already filled
+        if (index === recommendationsArrayOfObjectsFromTable_.length  ) {
+          // If both fields are filled, add a new object
+          newEntries.push({ assessment: '', explanation: '' });
         }
-        return item;
-      });
-      setRecommendationsArrayOfObjects_(updatedArray);
+
+
+
+        // Update the field in the last object of the array
+        newEntries[index][field] = event.target.value;
+
+        console.log('newEntries2', newEntries);
+        setRecommendationsArrayOfObjectsFromTable_(newEntries);
+
+
+      } else {
+        const updatedArray = recommendationsArrayOfObjects_.map((item, i) => {
+          if (i === index) {
+            return { ...item, [event.target.name]: event.target.value }
+          }
+          return item;
+        });
+        setRecommendationsArrayOfObjects_(updatedArray);
+      }
+
     };
 
     // If user is trying to edit any of the data came as an  object:
@@ -194,18 +243,12 @@ const NeighborhoodEditableDiv = ({
 
   };
 
-
-
   // function that will remove objects from an array of recommendations
-  const removeObject = (index)=>{
-    const array = [...recommendationsArrayOfObjects_]; 
+  const removeObject = (index) => {
+    const array = [...recommendationsArrayOfObjects_];
     array.splice(index, 1);
     setRecommendationsArrayOfObjects_(array);
   };
-
-
-
-
 
   // function to save edited data:
   const handleSaveClick = async () => {
@@ -289,7 +332,7 @@ const NeighborhoodEditableDiv = ({
         return text;
       });
     };
-    
+
     setIsEditing(false);
 
   };
@@ -335,7 +378,7 @@ const NeighborhoodEditableDiv = ({
                     {({ ref, ...triggerHandler }) => (
                       <svg
                         ref={ref}
-                        onClick={(e) => { removeObject (index)}}
+                        onClick={(e) => { removeObject(index) }}
                         {...triggerHandler}
                         style={{
                           position: "absolute",
@@ -357,36 +400,24 @@ const NeighborhoodEditableDiv = ({
                     )}
                   </OverlayTrigger>
 
-
                   <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-
                     <div style={{ marginTop: "none" }}>{text}</div>
-
                     <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} />
-
                     <div style={{ marginLeft: "10px" }}> food. </div >
-
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
-
                     <div>Go to </div >
-
                     <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} />
-
                     <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
-
                   </div>
-
                 </div>
               );
-
-
             })}
 
             <h4 style={{ marginTop: "20px" }}>Add more: </h4>
 
-            <Table style={{ marginTop: "20px" }} striped bordered hover>
+            <Table style={{ margin: "5px" }} striped bordered hover>
               <thead>
                 <tr>
                   <th>#</th>
@@ -395,12 +426,41 @@ const NeighborhoodEditableDiv = ({
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td><input style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: "80%" }} /></td>
-                  <td><input placeholder='Include comma separated words' style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: "80%" }} /></td>
-                </tr>
+                {rows.map((row, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <input
+                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
+                        value={row.foodType}
+                        name ="assessment"
+                        onChange={(e) => {
+                          updateField(index, 'foodType', e.target.value);
+                          handleChange(e, index, 'table'); /// <<<----------
+                        }}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        placeholder='Include comma separated words'
+                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
+                        value={row.restaurants}
+                        name="explanation"
+                        onChange={(e) => {
+                          updateField(index, 'restaurants', e.target.value);
+                          handleChange(e, index, 'table'); /// <<<----------
+                        }}
+                      />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
+              <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", border: "3px dotted rgb(120 120 120)", cursor: "pointer" }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
+                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+              </div>
             </Table>
 
             <div className="divSaveCancelBtns">
