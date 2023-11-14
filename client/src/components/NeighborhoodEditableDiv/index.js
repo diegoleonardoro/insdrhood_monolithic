@@ -71,10 +71,9 @@ const NeighborhoodEditableDiv = ({
   // Function that will add more rows to the table if an input has been typed:
   const addRow = () => {
     // Check if any input is filled
-    if (rows.length === 0 || rows[rows.length - 1].foodType.trim() || rows[rows.length - 1].restaurants.trim()) {
+    if (rows.length === 0 || rows[rows.length - 1].assessment.trim() || rows[rows.length - 1].recommendation.trim()) {
       setRows([...rows, { assessment: '', recommendations: '' }]);
     };
-
   };
 
   const updateField = (index, field, value) => {
@@ -82,9 +81,6 @@ const NeighborhoodEditableDiv = ({
     newRows[index][field] = value;
     setRows(newRows);
   };
-
-
-
 
 
   /** Images slider */
@@ -250,8 +246,6 @@ const NeighborhoodEditableDiv = ({
   // function to save edited data:
   const handleSaveClick = async () => {
 
-
-
     // user is editing an array of objects, such as food recommendations:
     if (Array.isArray(recommendationsArrayOfObjects)) {
       let dataToUpdate = [...recommendationsArrayOfObjects_];
@@ -272,9 +266,6 @@ const NeighborhoodEditableDiv = ({
       });
     };
 
-
-
-    
     // user is editing an object, such as food prices assessment and explanation:
     if (typeof objectData_ === 'object') {
       setObjectDataHistory(prevState => {
@@ -447,10 +438,10 @@ const NeighborhoodEditableDiv = ({
                     <td>
                       <input
                         style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
-                        value={row.foodType}
+                        value={row.assessment}
                         name="assessment"
                         onChange={(e) => {
-                          updateField(index, 'foodType', e.target.value);
+                          updateField(index, 'assessment', e.target.value); // this function will add a new row to the table 
                           handleChange(e, index, 'table'); /// <<<----------
                         }}
                       />
@@ -459,10 +450,10 @@ const NeighborhoodEditableDiv = ({
                       <input
                         placeholder='Include comma separated words'
                         style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
-                        value={row.restaurants}
+                        value={row.recommendations}
                         name="explanation"
                         onChange={(e) => {
-                          updateField(index, 'restaurants', e.target.value);
+                          updateField(index, 'recommendations', e.target.value); // this function will add a new row to the table 
                           handleChange(e, index, 'table'); /// <<<----------
                         }}
                       />
@@ -470,14 +461,14 @@ const NeighborhoodEditableDiv = ({
                   </tr>
                 ))}
               </tbody>
-              <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", border: "3px dotted rgb(120 120 120)", cursor: "pointer" }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                </svg>
-              </div>
-            </Table>
 
+            </Table>
+            <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", border: "3px dotted rgb(120 120 120)", cursor: "pointer" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
+                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+              </svg>
+            </div>
             <div className="divSaveCancelBtns">
               <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
               <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
