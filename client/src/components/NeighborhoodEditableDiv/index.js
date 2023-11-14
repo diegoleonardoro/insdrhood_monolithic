@@ -240,9 +240,6 @@ const NeighborhoodEditableDiv = ({
   };
 
 
-
-
-
   // function to save edited data:
   const handleSaveClick = async () => {
 
@@ -337,11 +334,6 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(false);
 
   };
-
-
-
-
-
 
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
