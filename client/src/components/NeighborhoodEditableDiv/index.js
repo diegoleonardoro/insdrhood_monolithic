@@ -26,9 +26,9 @@ const NeighborhoodEditableDiv = ({
   objectData,
   recommendationsArrayOfObjects,
   complementaryText, // complementarytext is text that is going to be rendered by this editable component but the user will not have the option to edit. 
-  imagesId// this will be used to associate images with an user when the user adds more images
+  imagesId,// this will be used to associate images with an user when the user adds more images
+  nestedObjects
 }) => {
-
 
   // this state will be set to true wheneber the user clicks the "edit" button.
   const [isEditing, setIsEditing] = useState(false);
@@ -182,7 +182,6 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
-
   const handleChange = (event, index, flag) => {
 
     // user is trying to update the data that came in as an array of obects:
@@ -238,7 +237,6 @@ const NeighborhoodEditableDiv = ({
     array.splice(index, 1);
     setRecommendationsArrayOfObjects_(array);
   };
-
 
   // function to save edited data:
   const handleSaveClick = async () => {
@@ -341,7 +339,15 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(false);
   };
 
-  /** we are rendering an object that contains information of recommended restaurants or nightlife venues */
+
+  // RETURN OBJECTS:
+
+  /** We are rendering an object of nested objects, such as the statements  */
+  if (hasNestedObjects(nestedObjects)) {
+    
+  }
+
+  /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
     return (
@@ -535,7 +541,7 @@ const NeighborhoodEditableDiv = ({
                     </div>
                   ) : objectKey === 'nightLifeRecommendations' ? (
                     <div>
-                        <p className='nhoodRecommendationText'>{text + item.assessment.trimEnd()}
+                      <p className='nhoodRecommendationText'>{text + item.assessment.trimEnd()}
                         {item.explanation && (
                           <span className='nhoodRecommendationText'  >
                             {`, because ${item.explanation}.`}
@@ -544,12 +550,8 @@ const NeighborhoodEditableDiv = ({
                     </div>
 
                   ) : null}
-
-
                 </div>
               );
-
-
             })}
           </div>
         )}
@@ -597,7 +599,7 @@ const NeighborhoodEditableDiv = ({
 
       </div>
     )
-  }
+  };
 
   /** When we render the neighboorhood images: */
   if (images.length > 0) {
@@ -688,7 +690,7 @@ const NeighborhoodEditableDiv = ({
       </div>
     )
 
-  }
+  };
 
   /** If we are going to render list of adjectives: */
   if (adjectives.length > 0) {
@@ -753,7 +755,7 @@ const NeighborhoodEditableDiv = ({
       </div>
     )
 
-  }
+  };
 
   /** When we only render plain text: */
   return (
@@ -797,12 +799,36 @@ const NeighborhoodEditableDiv = ({
     </div>
 
 
-  )
-
+  );
 
 }
 
+// The following two functions will be used to see if the structure of the data coming is an object of nested objects
+function isObject(value) {
+  // Check if value is an object and not null
+  return value !== null && typeof value === 'object';
+}
+function hasNestedObjects(obj) {
+  // First ensure obj is an object
+  if (!isObject(obj)) {
+    return false;
+  }
 
+  // Iterate over the object's properties
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      // If a property is an object, recursively check for nested objects
+      if (isObject(obj[key])) {
+        // If a nested object is found, return true
+        return true;
+      }
+    }
+  }
+
+  // If no nested objects are found, return false
+  return false;
+}
+//-------------------------------------------------------------------------------------------------------------------
 
 function areArraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) {

@@ -153,13 +153,16 @@ const NeighborhoodProfile = ({ currentuser }) => {
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + neighborhood.neighborhood + " as "} content={neighborhood.nightLife} objectKey="nightLife" />
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.nightLifeRecommendations} objectKey="nightLifeRecommendations" />
 
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE plave to have fun at night, it would be `, 'because ']} objectData={neighborhood.onePlaceForNightLife} objectKey="onePlaceForNightLife" />
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place for a fun at night, it would be `, 'because ']} objectData={neighborhood.onePlaceForNightLife} objectKey="onePlaceForNightLife" />
               </div>
 
 
             )}
 
           </div>
+
+
+          
 
 
         </div>
