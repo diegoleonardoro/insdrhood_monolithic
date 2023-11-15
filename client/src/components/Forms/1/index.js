@@ -354,12 +354,10 @@ const FormComponent = ({ updateCurrentUser }) => {
     element.style.display = "flex";
   };
 
-
   //This event hanlder will be triggered when the user is responding the questions about  how pricy food is in their neighborhood. It will show an input asking users to expand on  the option that they selected. 
   const foodPricesExplanationHandler = () => {
     foodPriceExplanationRef.current.style.display = "flex"
   }
-
 
   // This event hanlder will be triggered when the user is responding the questions about how authentic and diverse food is in their neighborhood. It will show an input asking users to expand on the option that they selected. 
   const foodAuthenticityandDiversityHandler = () => {
@@ -734,22 +732,17 @@ const FormComponent = ({ updateCurrentUser }) => {
           nightLifeRecommendations: [
             ...prevFormData.nightLifeRecommendations,
             {
-              place: nightLifeRecommendationsRef.current.placeName.value,
-              description: nightLifeRecommendationsRef.current.placeDescription.value,
+              assessment: nightLifeRecommendationsRef.current.placeName.value,
+              explanation: nightLifeRecommendationsRef.current.placeDescription.value,
             },
           ],
         }));
-
-
       }
       setNighLifeRows([...nighLifeRows, items]);
       // IS THIS EVEN DOING ANYTHING?
       addPlaceFromFormNightLife = true;
-
     }
   };
-
-
 
   return (
     <div className="mainContainer">
@@ -805,7 +798,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           </div>
         </div>
 
-
         {/** What neighborhood do you live in? */}
         <div
           className={
@@ -850,7 +842,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             })}
           </div>
         </div>
-
 
         {/** How long have you been living in you neighborhood? */}
         <div
@@ -2458,9 +2449,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             >
               <div className="favoritePlacesHeader">
                 <div>Name of venue:</div>
-
                 <div>Description: </div>
-
               </div>
 
               {nighLifeRows.map((item, index) => {
@@ -2492,6 +2481,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                 );
               })}
+
 
               <div
                 onClick={() => addNewPlace("nightLife")}

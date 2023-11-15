@@ -348,18 +348,36 @@ const NeighborhoodEditableDiv = ({
       <div style={{ padding: "15px", width: "100%" }}>
         {isEditing ? (
           <div style={{ marginTop: "20px" }}>
+
+            {console.log('recommendationsArrayOfObjects', recommendationsArrayOfObjects)}
+
             {recommendationsArrayOfObjects_.map((item, index) => {
 
+            
               let text;
-              if (index === 0) {
-                text = 'Make sure to try ';
-              } else if (index === 1) {
-                text = 'You should also try ';
-              } else if (index === 2) {
-                text = 'Also make sure to try ';
-              } else {
-                text = "You'll also want to try ";
+
+              if (objectKey === 'recommendedFoodTypes') {
+                if (index === 0) {
+                  text = 'Make sure to try ';
+                } else if (index === 1) {
+                  text = 'You should also try ';
+                } else if (index === 2) {
+                  text = 'Also make sure to try ';
+                } else {
+                  text = "You'll also want to try ";
+                }
+              } else if (objectKey === 'nightLifeRecommendations') {
+                if (index === 0) {
+                  text = 'I would recommend going to';
+                } else if (index === 1) {
+                  text = 'You should also go to';
+                } else if (index === 2) {
+                  text = 'You will also want to go to';
+                } else {
+                  text = "Also visit";
+                }
               }
+
 
               return (
                 <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding: "15px" }}>
@@ -399,14 +417,22 @@ const NeighborhoodEditableDiv = ({
                   </OverlayTrigger>
 
                   <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+
                     <div style={{ marginTop: "none" }}>{text}</div>
                     <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} />
-                    <div style={{ marginLeft: "10px" }}> food. </div >
+                    {objectKey === 'recommendedFoodTypes' ? (<div style={{ marginLeft: "10px" }}> food. </div >) : null}
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
-                    <div>Go to </div >
+
+                    {objectKey === 'recommendedFoodTypes' ? (
+                      <div>Go to </div >
+                    ) : objectKey === 'nightLifeRecommendations' ? (
+                      <div>Because </div >
+                    ) : null}
+
                     <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} />
+
                     <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
                   </div>
                 </div>
@@ -475,23 +501,60 @@ const NeighborhoodEditableDiv = ({
             {recommendationsArrayOfObjectsHistory.map((item, index) => {
 
               let text;
-              if (index === 0) {
-                text = 'Make sure to try ';
-              } else if (index === 1) {
-                text = 'You should also try ';
-              } else if (index === 2) {
-                text = 'Also make sure to try ';
-              } else {
-                text = "You'll also want to try ";
+
+              if (objectKey === 'recommendedFoodTypes') {
+
+                if (index === 0) {
+                  text = 'Make sure to try ';
+                } else if (index === 1) {
+                  text = 'You should also try ';
+                } else if (index === 2) {
+                  text = 'Also make sure to try ';
+                } else {
+                  text = "You'll also want to try ";
+                }
+                text += item.assessment;
+              } else if (objectKey === 'nightLifeRecommendations') {
+                if (index === 0) {
+                  text = 'I would recommend going to ';
+                } else if (index === 1) {
+                  text = 'You should also go to ';
+                } else if (index === 2) {
+                  text = 'You will also want to go to ';
+                } else {
+                  text = "Also visit ";
+                }
               }
-              text += item.assessment;
+
 
               return (
                 <div key={index} style={{ display: "flex" }}>
-                  <p>{text} food.</p>
-                  {item.explanation && (<p style={{ marginLeft: "10px" }}>{`Go to: ${item.explanation} for authentic ${item.assessment} food.`}  </p>)}
+                  {objectKey === 'recommendedFoodTypes' ? (
+                    <>
+                      <p>{text} food.</p>
+                      {item.explanation && (
+                        <p style={{ marginLeft: "10px" }}>
+                          {`Go to: ${item.explanation} for authentic ${item.assessment} food.`}
+                        </p>
+                      )}
+                    </>
+                  ) : objectKey === 'nightLifeRecommendations' ? (
+                    <>
+                      <p>{text + item.assessment + "."}</p>
+                      {item.explanation && (
+                        <p style={{ marginLeft: "10px" }}>
+                          {`I suggest going to ${item.assessment} because ${item.explanation}.`}
+                        </p>
+                      )}
+                    </>
+
+                  ) : null}
+
+
                 </div>
               );
+
+
             })}
           </div>
         )}

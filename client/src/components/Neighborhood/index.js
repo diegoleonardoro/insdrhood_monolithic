@@ -133,12 +133,32 @@ const NeighborhoodProfile = ({ currentuser }) => {
                 } objectKey="foodCulture" />
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${neighborhood.neighborhood} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                 } objectKey="foodIsAuthentic" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${neighborhood.neighborhood} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices"/>
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${neighborhood.neighborhood} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.recommendedFoodTypes} objectKey="recommendedFoodTypes" />
-
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to sugges ONE place to eat in ${neighborhood.neighborhood} it would be `, 'because ']} objectData={neighborhood.onePlaceToEat} objectKey="onePlaceToEat" />
-
               </div>
+            )}
+          </div>
+
+          <hr></hr>
+
+          <div className="containerNhoodItems" >
+
+            {neighborhood && (
+
+              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+
+                <div>
+                  <h5 className="recommendationsHeader" >Night Life</h5>
+                  <img alt='nightlifeimage' className="recommendationsImage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E-2023-11-14-11.10.18---A-linear-pencil-sketch-of-a-cocktail-glass-with-a-grain-effect%2C-symbolizing-nightlife.-The-sketch-is-defined-by-clean%2C-crisp-lines-to-illustrate-the-s.png"></img>
+                </div>
+
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + neighborhood.neighborhood + " as "} content={neighborhood.nightLife} objectKey="nightLife" />
+
+
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.nightLifeRecommendations} objectKey="nightLifeRecommendations" />
+              </div>
+
 
             )}
 
