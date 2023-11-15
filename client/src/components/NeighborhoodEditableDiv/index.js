@@ -349,13 +349,8 @@ const NeighborhoodEditableDiv = ({
         {isEditing ? (
           <div style={{ marginTop: "20px" }}>
 
-            {console.log('recommendationsArrayOfObjects', recommendationsArrayOfObjects)}
-
             {recommendationsArrayOfObjects_.map((item, index) => {
-
-            
               let text;
-
               if (objectKey === 'recommendedFoodTypes') {
                 if (index === 0) {
                   text = 'Make sure to try ';
@@ -526,27 +521,27 @@ const NeighborhoodEditableDiv = ({
                 }
               }
 
-
               return (
-                <div key={index} style={{ display: "flex" }}>
+                <div key={index} >
                   {objectKey === 'recommendedFoodTypes' ? (
-                    <>
-                      <p>{text} food.</p>
-                      {item.explanation && (
-                        <p style={{ marginLeft: "10px" }}>
-                          {`Go to: ${item.explanation} for authentic ${item.assessment} food.`}
-                        </p>
-                      )}
-                    </>
+                    <div>
+                      <p className='nhoodRecommendationText'>{text} food
+                        {item.explanation && (
+                          <span className='nhoodRecommendationText' >
+                            {` at ${item.explanation}.`}
+                          </span>
+                        )}</p>
+
+                    </div>
                   ) : objectKey === 'nightLifeRecommendations' ? (
-                    <>
-                      <p>{text + item.assessment + "."}</p>
-                      {item.explanation && (
-                        <p style={{ marginLeft: "10px" }}>
-                          {`I suggest going to ${item.assessment} because ${item.explanation}.`}
-                        </p>
-                      )}
-                    </>
+                    <div>
+                        <p className='nhoodRecommendationText'>{text + item.assessment.trimEnd()}
+                        {item.explanation && (
+                          <span className='nhoodRecommendationText'  >
+                            {`, because ${item.explanation}.`}
+                          </span>
+                        )}</p>
+                    </div>
 
                   ) : null}
 
@@ -589,16 +584,14 @@ const NeighborhoodEditableDiv = ({
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
 
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-              {complementaryText[0] + objectData_.assessment.toLowerCase()}
+              {complementaryText[0] + objectData_.assessment.toLowerCase()}  {objectData_.explanation !== "" ? (
+                <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+                  {complementaryText[1] + objectData_.explanation.toLowerCase()}
+                </span>
+              ) : (
+                null
+              )}
             </p>
-
-            {objectData_.explanation !== "" ? (
-              <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                {complementaryText[1] + objectData_.explanation.toLowerCase()}
-              </p>
-            ) : (
-              null
-            )}
           </div>
         )}
 
