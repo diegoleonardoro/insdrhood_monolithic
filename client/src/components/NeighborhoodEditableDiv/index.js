@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -161,9 +161,9 @@ const NeighborhoodEditableDiv = ({
   };
 
   // function that will update the neighborhood data
-  const updateNeighborhoodData = async (dataToUpdate) => {
+  const updateNeighborhoodData = useCallback(async (dataToUpdate) => {
     await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
-  }
+  }, [neighborhoodid]);
 
   const removePhoto = (index) => {
 
@@ -343,13 +343,61 @@ const NeighborhoodEditableDiv = ({
   // RETURN OBJECTS:
 
   /** We are rendering an object of nested objects, such as the statements  */
-  if (hasNestedObjects(nestedObjects)) {
-    
+
+  const assessmentsTexts = {
+    publicTransportation: [`Public transportation in ${neighborhood} is `],
+    owningPets: ['I ', `having pets in ${neighborhood}`],
+    safety: [`I think safety in ${neighborhood} is `],
+    socializing: [`I think ${neighborhood} is `, 'for meeting new people']
   }
+
+
+
+  if (hasNestedObjects(nestedObjects)) {
+
+    const renderObject = (key, object) => {
+
+      const explanation = object.hasOwnProperty('explanation') ? (', because ' + object['explanation']) : null;
+
+      const periodAfterAssessment = explanation === null ? (".") : "";
+      const periodAfterExplanation = explanation ? (".") : "";
+
+
+      if (key === "publicTransportation") {
+        return (
+          <div> {assessmentsTexts[key][0] + object["assessment"] + periodAfterAssessment + explanation + periodAfterExplanation}</div>
+        );
+      } else if (key === "owningPets") {
+        return (
+          <div> {assessmentsTexts[key][0] + object["assessment"] + assessmentsTexts[key][1] + periodAfterAssessment + explanation + periodAfterExplanation}  </div>
+        )
+      } else if (key === 'safety') {
+        return (
+          <div> {assessmentsTexts[key][0] + object["assessment"] + periodAfterAssessment + explanation + periodAfterExplanation}</div>
+        )
+      } else if (key === 'socializing') {
+        return (
+          <div> {assessmentsTexts[key][0] + object["assessment"] + assessmentsTexts[key][1] + periodAfterAssessment + explanation + periodAfterExplanation}  </div>
+        )
+      }
+    };
+
+    const content = Object.keys(nestedObjects).map((key) => {
+      return (
+        <div style={{ marginTop: "10px", marginBottom: "10px" }} key={key}>
+          {renderObject(key, nestedObjects[key])}
+        </div>
+      )
+    });
+
+    // Return the constructed content
+    return <div className="adjectivesDiv" style={{ border: "1px dotted black", margin: "15px", display: "flex", flexDirection: "column", alignItems: "start", padding: "15px" }}>{content}</div>;
+
+  };
+
 
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
-
     return (
       <div style={{ padding: "15px", width: "100%" }}>
         {isEditing ? (
@@ -498,11 +546,8 @@ const NeighborhoodEditableDiv = ({
 
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
-
             {recommendationsArrayOfObjectsHistory.map((item, index) => {
-
               let text;
-
               if (objectKey === 'recommendedFoodTypes') {
 
                 if (index === 0) {
@@ -526,7 +571,6 @@ const NeighborhoodEditableDiv = ({
                   text = "Also visit ";
                 }
               }
-
               return (
                 <div key={index} >
                   {objectKey === 'recommendedFoodTypes' ? (

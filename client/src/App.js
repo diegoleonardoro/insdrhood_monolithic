@@ -19,33 +19,38 @@ function App() {
 
   const [currentuser, setCurrentUser] = useState(null);
 
-  const updateCurrentUser = (data) => {
+  const updateCurrentUser = useCallback((data) => {
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
         setCurrentUser(data);
-        resolve()
+        resolve();
       } else {
-        reject(new Error('No user data provided.'))
+        reject(new Error('No user data provided.'));
       }
-    })
-  };
+    });
+  }, []);
 
-  const checkCurrentUser = async () => {
+  // Memoize checkCurrentUser so it's not recreated on every render
+  const checkCurrentUser = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
-      // setCurrentUser(response.data);
-      updateCurrentUser(response.data)
+      updateCurrentUser(response.data);
     } catch (error) {
+      // Handle the error appropriately
+      console.error('Failed to check current user:', error);
     }
-  }
+  }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
   useEffect(() => {
     if (currentuser === null) {
-      setTimeout(() => {
-         checkCurrentUser()
+      const timer = setTimeout(() => {
+        checkCurrentUser();
       }, 1000);
+      return () => clearTimeout(timer); // Clear the timeout if the component unmounts
     }
-  }, []);
+  }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
+
+
 
   return (
     <Router>
@@ -54,9 +59,9 @@ function App() {
           <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
           {
             currentuser && currentuser.isVerified === false ? (
-              <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0"}}>
+              <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0" }}>
                 <Alert style={{ height: "10px" }} variant="warning">
-                  <div style={{position:"relative", top:"-12px"}}>
+                  <div style={{ position: "relative", top: "-12px" }}>
                     Verify Email {currentuser.email}
                   </div>
                 </Alert>

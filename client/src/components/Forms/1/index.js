@@ -293,7 +293,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               residentId: [formDataResponse.id],
               userImagesId: randomUUID
             }, loggedUser.id);
-           
+
             return;
           };
 
@@ -541,9 +541,9 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
 
         const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.assessment.includes(option));
-        
+
         console.log("option", option);
-        
+
         if (!containsSpecificWord) {
 
           setFoodTypesSelectedOpts(prevOptions => {
@@ -621,7 +621,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       // update formData with updatedOptions 
       setFormData(formData => ({ ...formData, recommendedFoodTypes: updatedOptions }));
-      
+
       return updatedOptions;
 
     }
@@ -669,6 +669,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   // this function will add new rows when the user wants to recommend more places
   //  NOT SURE THIS FUNCTION IS DOING ANYTHING OTHER THAN ADDING NEW ROWS 
   const addNewPlace = (list) => {
+
     const items = {
       name: "",
       description: "",
@@ -711,6 +712,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       setRows([...rows, items]);
 
+
+
       // IS THIS EVEN DOING ANYTHING?
       addPlaceFromForm = true; // needs to be set to true because it was set to false when the next question was clicked.
 
@@ -722,7 +725,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       // If none of the input elements has a value:
       if (placeName === "" && placeDescription === "") {
         return;
-      }
+      };
 
 
       // THIS WILL BE TRIGERED EVERY TIME THE USER CLICKS TO ADD A NEW NIGHTLIFE RECOMMENDATION 
@@ -737,12 +740,16 @@ const FormComponent = ({ updateCurrentUser }) => {
             },
           ],
         }));
-      }
-      setNighLifeRows([...nighLifeRows, items]);
+      };
+
+      setNighLifeRows([...nighLifeRows, items]);//this state is being used just for adeeing new rows to the table.
+
       // IS THIS EVEN DOING ANYTHING?
       addPlaceFromFormNightLife = true;
+
     }
   };
+
 
   return (
     <div className="mainContainer">
@@ -2533,7 +2540,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     setFormData({
                       ...formData,
                       onePlaceForNightLife: {
-                        ...formData.onePlaceforNightLife,
+                        ...formData.onePlaceForNightLife,
                         assessment: e.target.value
                       }
                     })
@@ -2557,7 +2564,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     setFormData({
                       ...formData,
                       onePlaceForNightLife: {
-                        ...formData.onePlaceforNightLife,
+                        ...formData.onePlaceForNightLife,
                         explanation: e.target.value
                       }
                     })
@@ -2591,7 +2598,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div className="nhoodEvalHeader">
               <span className="questionHighlight"> "Public transportation in{" "}
                 <span className="nhoodName">{neighborhood}</span> is easily
-                accessible."
+                accessible and convenient."
               </span>
             </div>
 
@@ -2600,7 +2607,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="publicTransport"
-                value="true"
+                value="accessible and convenient"
                 id="yesPublicTransport"
                 onChange={(e) => {
                   setFormData({
@@ -2609,7 +2616,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "publicTransportation": {
                         ...formData.statements.publicTransportation,
-                        accesible: e.target.value,
+                        assessment: e.target.value, //<<<<--------------------------------------
                       },
                     },
                   });
@@ -2629,7 +2636,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="publicTransport"
-                value="unsure"
+                value="acceptable"
                 id="unsurePublicTransport"
                 onChange={(e) => {
                   setFormData({
@@ -2638,7 +2645,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "publicTransportation": {
                         ...formData.statements.publicTransportation,
-                        accesible: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2658,7 +2665,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="publicTransport"
-                value="false"
+                value="inconvenient"
                 id="noPublicTransport"
                 onChange={(e) => {
                   setFormData({
@@ -2667,7 +2674,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "publicTransportation": {
                         ...formData.statements.publicTransportation,
-                        accesible: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2688,7 +2695,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               className="elaborateNhoodEval"
             >
-              <div>What is the best way to get to {neighborhood}?</div>
+              <div>Can you explain why?</div>
               <input
                 name="public_transport_explanation"
                 className="inputElaborateNhoodEval"
@@ -2733,7 +2740,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="havingPets"
-                value="true"
+                value="recommend"
                 id="trueHavingPets"
                 onChange={(e) => {
                   setFormData({
@@ -2742,7 +2749,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "owningPets": {
                         ...formData.statements.owningPets,
-                        convenient: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2761,7 +2768,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               <input
                 type="radio"
                 className="statementResponseContainerInput"
-                value="unsure"
+                value="am neutral on"
                 id="unsureHavingPets"
                 name="havingPets"
                 onChange={(e) => {
@@ -2771,7 +2778,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "owningPets": {
                         ...formData.statements.owningPets,
-                        convenient: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2791,7 +2798,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="havingPets"
-                value="false"
+                value="do not recommend"
                 id="falseHavingPets"
                 onChange={(e) => {
                   setFormData({
@@ -2800,7 +2807,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "owningPets": {
                         ...formData.statements.owningPets,
-                        convenient: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2864,7 +2871,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="safe"
-                value="true"
+                value="good"
                 id="trueSafe"
                 onChange={(e) => {
                   setFormData({
@@ -2873,7 +2880,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "safety": {
                         ...formData.statements.safety,
-                        safe: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2893,7 +2900,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="safe"
-                value="unsure"
+                value="unpredictable"
                 id="unsureSafe"
                 onChange={(e) => {
                   setFormData({
@@ -2902,7 +2909,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "safety": {
                         ...formData.statements.safety,
-                        safe: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2922,7 +2929,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="safe"
-                value="false"
+                value="bad"
                 id="falseSafe"
                 onChange={(e) => {
                   setFormData({
@@ -2931,7 +2938,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                       ...formData.statements,
                       "safety": {
                         ...formData.statements.safety,
-                        safe: e.target.value,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -2994,7 +3001,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="meetingNewPeople"
-                value="true"
+                value="convenient"
                 id="trueMeetingNewPeople"
                 onChange={(e) => {
                   setFormData({
@@ -3002,8 +3009,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     statements: {
                       ...formData.statements,
                       "socializing": {
-                        ...formData.statements.owningPets,
-                        convenient: e.target.value,
+                        ...formData.statements.socializing,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -3023,7 +3030,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="meetingNewPeople"
-                value="unsure"
+                value="moderate"
                 id="unsureMeetingNewPeople"
                 onChange={(e) => {
                   setFormData({
@@ -3031,8 +3038,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     statements: {
                       ...formData.statements,
                       "socializing": {
-                        ...formData.statements.owningPets,
-                        convenient: e.target.value,
+                        ...formData.statements.socializing,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -3052,7 +3059,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 type="radio"
                 className="statementResponseContainerInput"
                 name="meetingNewPeople"
-                value="false"
+                value="not the best"
                 id="falseMeetingNewPeople"
                 onChange={(e) => {
                   setFormData({
@@ -3060,8 +3067,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     statements: {
                       ...formData.statements,
                       "socializing": {
-                        ...formData.statements.owningPets,
-                        convenient: e.target.value,
+                        ...formData.statements.socializing,
+                        assessment: e.target.value,
                       },
                     },
                   });
@@ -3092,7 +3099,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     statements: {
                       ...formData.statements,
                       socializing: {
-                        ...formData.statements.owningPets,
+                        ...formData.statements.socializing,
                         explanation: e.target.value,
                       },
                     },
@@ -3103,6 +3110,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           </div>
         </div>
 
+        {/**PICTURES */}
         {/** Do you have any neighborhood pictures to share? */}
         <div className={
           "neighborhoodEvaluationFourthQuestion submit "
@@ -3176,7 +3184,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             value="Submit"
           />
         </div>
-
 
         {/** Arrows */}
         <div

@@ -262,7 +262,7 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
     user = await User.findOne({ email: req.currentUser!.email });
   };
 
-  console.log(req.body)
+  console.log("body request:-->>>>", req.body)
 
   const neighborhood = Neighborhood.build({
     ...req.body,
