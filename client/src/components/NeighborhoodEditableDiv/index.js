@@ -292,21 +292,17 @@ const NeighborhoodEditableDiv = ({
       // update the nestedObjectsHistory satate
       // check if nestedObjectsHistory and nestedObjects_ are the same and if they are not, then make the request to safe the data.
 
-
       // console.log('nestedObjects_', nestedObjects_)
 
       // let dataToUpdate = [...nestedObjects_];
-
-
-
       setNestedObjectsHistory(prevState => {
         // check if the prev state 
-        if (objectsAreEqual(nestedObjectsHistory, nestedObjects_)) {
-          console.log("equallll")
+        if (!objectsAreEqual(nestedObjectsHistory, nestedObjects_)) {
+          // make the request to update the state:
+          updateNeighborhoodData({ [objectKey]: nestedObjects_ });
         }
         return nestedObjects_
       })
-
 
     }
 
