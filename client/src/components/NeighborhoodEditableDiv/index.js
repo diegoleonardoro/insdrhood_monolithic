@@ -189,8 +189,11 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
-  const handleChange = (event, index, flag) => {
 
+
+
+
+  const handleChange = (event, index, flag) => {
 
 
 
@@ -210,6 +213,7 @@ const NeighborhoodEditableDiv = ({
         }
       }))
     }
+
 
 
 
@@ -265,6 +269,12 @@ const NeighborhoodEditableDiv = ({
 
   };
 
+
+
+
+
+
+
   // function that will remove objects from an array of recommendations
   const removeObject = (index) => {
     const array = [...recommendationsArrayOfObjects_];
@@ -274,6 +284,40 @@ const NeighborhoodEditableDiv = ({
 
   // function to save edited data:
   const handleSaveClick = async () => {
+
+    // user is editing an object of objects, such as the statements:
+
+    if (hasNestedObjects(nestedObjects)) {
+
+      // update the nestedObjectsHistory satate
+      // check if nestedObjectsHistory and nestedObjects_ are the same and if they are not, then make the request to safe the data.
+
+
+      // console.log('nestedObjects_', nestedObjects_)
+
+      // let dataToUpdate = [...nestedObjects_];
+
+
+
+      setNestedObjectsHistory(prevState => {
+        // check if the prev state 
+        if (objectsAreEqual(nestedObjectsHistory, nestedObjects_)) {
+          console.log("equallll")
+        }
+        return nestedObjects_
+      })
+
+
+    }
+
+
+
+
+
+
+
+
+
 
     // user is editing an array of objects, such as food recommendations:
     if (Array.isArray(recommendationsArrayOfObjects)) {
@@ -293,6 +337,7 @@ const NeighborhoodEditableDiv = ({
         // update the state:
         return dataToUpdate
       });
+
     };
 
     // user is editing an object, such as food prices assessment and explanation:
@@ -988,7 +1033,6 @@ function areArraysEqual(arr1, arr2) {
   return true;
 }
 
-
 function areObjectsDifferent(obj1, obj2) {
   // Assuming the two keys are known and called 'key1' and 'key2'
   const key1 = 'assessment';
@@ -1007,5 +1051,29 @@ function areObjectsDifferent(obj1, obj2) {
   // If none of the above conditions are true, return false
   return false;
 }
+
+function objectsAreEqual(obj1, obj2) {
+  // Get the keys of both objects
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  // Check if both objects have the same number of keys
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  // Check if all keys in obj1 exist in obj2 and have the same values
+  for (let key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  // If no differences were found, the objects are equal
+  return true;
+}
+
+
+
 
 export default NeighborhoodEditableDiv;
