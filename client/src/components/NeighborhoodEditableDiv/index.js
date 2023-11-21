@@ -65,6 +65,13 @@ const NeighborhoodEditableDiv = ({
   const [recommendationsArrayOfObjectsFromTable_, setRecommendationsArrayOfObjectsFromTable_] = useState([]);
   const [recommendationsArrayOfObjectsHistory, setRecommendationsArrayOfObjectsHistory] = useState(recommendationsArrayOfObjects);
 
+
+  // The following statements will be used when the use is editing nested objects such as the statements:
+  const [nestedObjects_, setNestedObjects_] = useState(nestedObjects);
+  const [nestedObjectsHistory, setNestedObjectsHistory] = useState(nestedObjects);
+
+
+
   // The following satate will be used to add more rows to the table that adds more recommended places:
   const [rows, setRows] = useState([{ assessment: '', recommendations: '' }]);
 
@@ -183,6 +190,33 @@ const NeighborhoodEditableDiv = ({
   };
 
   const handleChange = (event, index, flag) => {
+
+
+
+
+
+
+
+
+    // user is trying to update the data that came as an object of objects:
+    if (hasNestedObjects(nestedObjects)) {
+      const key = event.target.id;
+      const subKey = event.target.name;
+      setNestedObjects_(prevState => ({
+        ...prevState,
+        [key]: {
+          ...prevState[key],
+          [subKey]: event.target.value
+        }
+      }))
+    }
+
+
+
+
+
+
+
 
     // user is trying to update the data that came in as an array of obects:
     if (Array.isArray(recommendationsArrayOfObjects)) {
@@ -339,9 +373,7 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(false);
   };
 
-
   // RETURN OBJECTS:
-
   /** We are rendering an object of nested objects, such as the statements  */
 
   const assessmentsTexts = {
@@ -351,48 +383,120 @@ const NeighborhoodEditableDiv = ({
     socializing: [`I think ${neighborhood} is `, 'for meeting new people']
   }
 
-
-
   if (hasNestedObjects(nestedObjects)) {
 
-    const renderObject = (key, object) => {
+    const inputStyle = { width: "50%", marginLeft: "10px" };
 
-      const explanation = object.hasOwnProperty('explanation') ? (', because ' + object['explanation']) : null;
+    const renderAssessmentInput = (object, index, key) => (
+      <Form.Control
+        name="assessment"
+        id={key}
+        onChange={(e) => handleChange(e, index)} // <<<<<<----------------------------------------------------------------------------
+        type="text"
+        value={object["assessment"]}
+        style={inputStyle}
+      />
+    );
 
-      const periodAfterAssessment = explanation === null ? (".") : "";
-      const periodAfterExplanation = explanation ? (".") : "";
+    const renderExplanation = (object, index, key) => (
+      object.hasOwnProperty('explanation') && (
+        <div style={{ display: "flex", margin: "10px", alignItems: "center" }}>
+          <div>because:</div>
+          <Form.Control
+            name="explanation"
+            id={key}
+            onChange={(e) => handleChange(e, index)} // <<<<<<----------------------------------------------------------------------------
+            type="text"
+            value={object["explanation"]}
+            style={inputStyle}
+          />
+        </div>
+      )
+    );
 
 
-      if (key === "publicTransportation") {
-        return (
-          <div> {assessmentsTexts[key][0] + object["assessment"] + periodAfterAssessment + explanation + periodAfterExplanation}</div>
-        );
-      } else if (key === "owningPets") {
-        return (
-          <div> {assessmentsTexts[key][0] + object["assessment"] + assessmentsTexts[key][1] + periodAfterAssessment + explanation + periodAfterExplanation}  </div>
-        )
-      } else if (key === 'safety') {
-        return (
-          <div> {assessmentsTexts[key][0] + object["assessment"] + periodAfterAssessment + explanation + periodAfterExplanation}</div>
-        )
-      } else if (key === 'socializing') {
-        return (
-          <div> {assessmentsTexts[key][0] + object["assessment"] + assessmentsTexts[key][1] + periodAfterAssessment + explanation + periodAfterExplanation}  </div>
-        )
-      }
+
+
+    const renderNonEditableContent = (key, object, assessmentsTexts) => {
+      const explanation = object.hasOwnProperty('explanation') ? `, because ${object['explanation']}` : "";
+      return (
+        <div>
+          {`${assessmentsTexts[key][0]}${object["assessment"]}${assessmentsTexts[key][1] || ''}${explanation}.`}
+        </div>
+      );
     };
 
-    const content = Object.keys(nestedObjects).map((key) => {
+
+    const renderObject = (key, object, editing, index, handleChange) => {
+
+
+      const assessmentText = assessmentsTexts[key] ? assessmentsTexts[key][0] : '';
+      const additionalText = assessmentsTexts[key] && assessmentsTexts[key][1] ? assessmentsTexts[key][1] : '';
+      if (!editing) {
+        return renderNonEditableContent(key, object, assessmentsTexts);
+      }
+
+      return (
+        <div>
+          <div style={{ display: "flex", margin: "10px", alignItems: "center" }}>
+            <div>{`${assessmentText}:`}</div>
+            {renderAssessmentInput(object, index, key)}{/** need to pass the 'key' and whether it is an assessment or an explanation   */}
+            <div>{additionalText}</div>
+          </div>
+          {renderExplanation(object, index, key)} {/** need to pass the 'key' and whether it is an assessment or an explanation   */}
+        </div>
+      );
+
+    };
+
+
+    const content = Object.keys(nestedObjects_).map((key) => {
       return (
         <div style={{ marginTop: "10px", marginBottom: "10px" }} key={key}>
-          {renderObject(key, nestedObjects[key])}
+          {renderObject(key, nestedObjects_[key], false)}
         </div>
       )
     });
 
-    // Return the constructed content
-    return <div className="adjectivesDiv" style={{ border: "1px dotted black", margin: "15px", display: "flex", flexDirection: "column", alignItems: "start", padding: "15px" }}>{content}</div>;
 
+    const contentEditing = Object.keys(nestedObjects_).map((key) => {
+      return (
+        <div style={{ marginTop: "10px", marginBottom: "10px" }} key={key}>
+          {renderObject(key, nestedObjects_[key], true)}
+        </div>
+      )
+    });
+
+
+
+
+
+    // Return the constructed content
+    return (
+
+      <div style={{ padding: "15px", width: "100%" }}>
+
+        {isEditing ? (
+
+          <div>
+            {contentEditing}
+            <div className="divSaveCancelBtns">
+              <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
+              <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
+            </div>
+          </div>
+
+        ) : (
+
+          <div className="adjectivesDiv" style={{ border: "1px dotted black", margin: "15px", display: "flex", flexDirection: "column", alignItems: "start" }}>
+            {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+            {content}
+          </div>
+
+        )}
+      </div>
+
+    )
   };
 
 
@@ -613,12 +717,10 @@ const NeighborhoodEditableDiv = ({
               <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
               <Form.Control id="assessment" onChange={handleChange} type="text" value={objectData_.assessment.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
             </div>
-
             <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
               <p style={{ textAlign: "start" }}> {complementaryText[1] + ":"}</p>
               <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
             </div>
-
             <div className="divSaveCancelBtns">
               <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
               <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
@@ -626,9 +728,7 @@ const NeighborhoodEditableDiv = ({
           </div>
         ) : (
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
-
             {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
-
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
               {complementaryText[0] + objectData_.assessment.toLowerCase()}  {objectData_.explanation !== "" ? (
                 <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
