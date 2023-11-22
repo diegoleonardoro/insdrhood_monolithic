@@ -89,7 +89,6 @@ const NeighborhoodEditableDiv = ({
     setRows(newRows);
   };
 
-
   /** Images slider */
   const PrevArrowPhotos = ({ onClick }) => {
     return (
@@ -189,10 +188,6 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
-
-
-
-
   const handleChange = (event, index, flag) => {
 
 
@@ -269,12 +264,6 @@ const NeighborhoodEditableDiv = ({
 
   };
 
-
-
-
-
-
-
   // function that will remove objects from an array of recommendations
   const removeObject = (index) => {
     const array = [...recommendationsArrayOfObjects_];
@@ -288,12 +277,6 @@ const NeighborhoodEditableDiv = ({
     // user is editing an object of objects, such as the statements:
 
     if (hasNestedObjects(nestedObjects)) {
-
-      // update the nestedObjectsHistory satate
-      // check if nestedObjectsHistory and nestedObjects_ are the same and if they are not, then make the request to safe the data.
-
-      // console.log('nestedObjects_', nestedObjects_)
-
       // let dataToUpdate = [...nestedObjects_];
       setNestedObjectsHistory(prevState => {
         // check if the prev state 
@@ -303,17 +286,7 @@ const NeighborhoodEditableDiv = ({
         }
         return nestedObjects_
       })
-
     }
-
-
-
-
-
-
-
-
-
 
     // user is editing an array of objects, such as food recommendations:
     if (Array.isArray(recommendationsArrayOfObjects)) {
