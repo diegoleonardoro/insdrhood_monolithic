@@ -304,7 +304,7 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
 
 /**
  * @description gets all neighbohoods data submitted from the form 
- * @route /api/neighborhoods
+ * @route GET/api/neighborhoods
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
