@@ -113,7 +113,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   // a request to check the currently logged in user needs to be made:
   const checkCurrentUser = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/currentuser`, { withCredentials: true });
       setLoggedUser(response.data)
     } catch (error) {
     }
@@ -123,7 +123,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   //  function that makes request to save the form data:
   async function sendFormData() {
     try {
-      const response = await axios.post("http://localhost:4000/api/neighborhood/savedata", formData);
+      const response = await axios.post(`${process.env.BACKEND_URL}/api/neighborhood/savedata`, formData);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -132,17 +132,17 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   //  function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
   async function updateUser(dataToUpdate, id) {
-    await axios.put(`http://localhost:4000/api/updateuserdata/${id}`, dataToUpdate);
+    await axios.put(`${process.env.BACKEND_URL}/api/updateuserdata/${id}`, dataToUpdate);
     navigate(`/neighborhood/${neighborhoodId}`);
   }
 
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
     // request to save new user's data:
-    const newuser = await axios.post('http://localhost:4000/api/signup',
+    const newuser = await axios.post(`${process.env.BACKEND_URL}/api/signup`,
       data);
     // request to update the neighborhood's data with the new user data:
-    await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } })
+    await axios.put(`${process.env.BACKEND_URL}/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } })
     await updateCurrentUser(newuser.data);
     navigate(`/neighborhood/${neighborhoodId}`);
     return;
@@ -261,7 +261,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               * In this request we will send a random UUID which will be used to 
               * relate users to the images that they upload. 
               */
-              const imageUploadConfig = await axios.get(`http://localhost:4000/api/neighborhood/imageupload/${neighborhood}/${randomUUID}/${imageType}`);
+              const imageUploadConfig = await axios.get(`${process.env.BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${randomUUID}/${imageType}`);
 
               imagesUrls.push({
                 image: imageUploadConfig.data.key,

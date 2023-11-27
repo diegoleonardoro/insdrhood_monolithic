@@ -9,20 +9,47 @@ import { config } from 'dotenv';
 config();
 // import routes:
 import { auth } from "./routes/auth";
+import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
 
-const envPath = path.join(__dirname);
-config({ path: envPath });
+
+
+
+
+/** -------- -------- MongoDB Connection -------- -------- */
+const uri = "mongodb+srv://diegoleoro:r85i3VAYY6k8UVDs@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+let dbConnection: Db;
+const connectToServer = async () => {
+  try {
+    await client.connect();
+    dbConnection = client.db("insiderhood")
+    console.log("Connected to MongoDB")
+  } catch (error) {
+    console.error(error)
+  }
+}
+connectToServer();
+export const getDb = (): Db => dbConnection;
+/** -------- -------- ---------- -------- -------- -------- */
+
 
 const app = express();
 const PORT = 4000;
 app.use(cors({
-  origin: 'http://localhost:3000', // React client's URL
+  origin: process.env.BASE_URL, // React client's URL
   credentials: true
 }));
 
 app.use(json());
 app.set("trust proxy", true);
-mongoose.connect('mongodb://127.0.0.1:27017/insider_hood');
+// mongoose.connect('mongodb+srv://diegoleoro:Sinnerman_0915@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority');
 
 
 app.use(
@@ -33,19 +60,15 @@ app.use(
   })
 );
 
-
-app.use(express.static(path.join(__dirname, '../../client/public')));
 app.use("/api", auth);
 app.use(errorHandler);
 
-// Fallback route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/public/index.html'));
+app.get('/', (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: "Hi yaaaa! :)",
+  })
 });
-
-// app.get('/api', (req, res) => {
-//   res.send('Hello from the TypeScript backend!');
-// });ll
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

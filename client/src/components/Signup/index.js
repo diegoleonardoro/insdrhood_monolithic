@@ -30,7 +30,10 @@ const SignUp = ({ updateCurrentUser }) => {
 
   async function saveUserData() {
     try {
-      const response = await axios.post('http://localhost:4000/api/signup',
+
+    
+
+      const response = await axios.post(`${process.env.BACKEND_URL}/api/signup`,
         formData);        
       await updateCurrentUser(response.data);
       navigate('/');

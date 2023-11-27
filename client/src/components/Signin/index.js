@@ -19,7 +19,7 @@ const Signin = ({ updateCurrentUser }) => {
 
   async function sendUserCredentials() {
     try {
-      const response = await axios.post('http://localhost:4000/api/signin',
+      const response = await axios.post(`${process.env.BACKEND_URL}/api/signin`,
         { email, password });
       await updateCurrentUser(response.data);
       navigate('/');

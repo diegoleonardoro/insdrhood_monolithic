@@ -8,3 +8,5 @@ steps:
       # Deploy container image to Cloud Run
     - name: "gcr.io/cloud-builders/gcloud"
       args: ['run', 'deploy', 'clientt', '--image', 'gcr.io/insider-hoods321/clientt', '--region', 'europe-west4', '--platform', 'managed', '--allow-unauthenticated']
+
+      

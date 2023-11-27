@@ -38,3 +38,4 @@ router.post("/neighborhood/savedata", authentication_validator_1.authenticationV
 router.put("/updateneighborhood/:id", auth_1.updateNeighborhoodData);
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
 router.get("/neighborhood/:neighborhoodid", auth_1.getNeighborhood);
+//# sourceMappingURL=auth.js.map

@@ -75,3 +75,4 @@ userSchema.statics.build = (attrs) => {
 };
 const User = mongoose_1.default.model("User", userSchema);
 exports.User = User;
+//# sourceMappingURL=user.js.map

@@ -21,9 +21,10 @@ function Header({ updateCurrentUser, currentuser }) {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
+    //${process.env.BACKEND_URL}
     try {
-      await axios.post("http://localhost:4000/api/signout");
-      await axios.get('http://localhost:4000/api/currentuser');
+      await axios.post(`${process.env.BACKEND_URL}/api/signout`);
+      await axios.get(`${process.env.BACKEND_URL}/api/currentuser`);
       await updateCurrentUser(null);
       navigate('/');
 

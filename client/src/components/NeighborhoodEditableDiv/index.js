@@ -168,7 +168,7 @@ const NeighborhoodEditableDiv = ({
 
   // function that will update the neighborhood data
   const updateNeighborhoodData = useCallback(async (dataToUpdate) => {
-    await axios.put(`http://localhost:4000/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
+    await axios.put(`${process.env.BACKEND_URL}/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
   }, [neighborhoodid]);
 
   const removePhoto = (index) => {
@@ -327,7 +327,7 @@ const NeighborhoodEditableDiv = ({
 
         const uploadPromises = newImages.map(async imageFile => {
           const imageType = imageFile.type.split('/')[1];
-          const imageUploadConfig = await axios.get(`http://localhost:4000/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
+          const imageUploadConfig = await axios.get(`${process.env.BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
 
           await axios.put(imageUploadConfig.data.url, imageFile, {
             headers: {

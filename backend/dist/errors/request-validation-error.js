@@ -18,3 +18,4 @@ class RequestValidationError extends custom_error_1.CustomError {
     }
 }
 exports.RequestValidationError = RequestValidationError;
+//# sourceMappingURL=request-validation-error.js.map

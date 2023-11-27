@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { User } from "../models/user";
-import { UserDoc } from "../models/user";
 import { Neighborhood } from "../models/neighborhood";
 import { BadRequestError } from "../errors/bad-request-error";
 import { Password } from "../services/password";
@@ -8,6 +7,7 @@ import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 const AWS = require("aws-sdk");
+import { getDb } from "../index";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -19,7 +19,7 @@ const s3 = new AWS.S3({
 import { sendVerificationMail } from "../services/emailVerification";
 
 interface updateQuery {
-  $set?: any, 
+  $set?: any,
   $push?: any
 }
 
@@ -32,19 +32,24 @@ export const signup = async (req: Request, res: Response) => {
 
   const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
 
-  const existingUser = await User.findOne({ email });
+ 
+
+  const db = getDb();
+  const users = db.collection("users");
+
+
+  const existingUser = await users.findOne({ email });
   if (existingUser) {
     throw new BadRequestError("Email in use");
   };
 
-  // capiralize name and create email token:
+  // // capiralize name and create email token:
   const nameFirstLetterCapitalized = name.charAt(0).toUpperCase();
   const remainingName = name.slice(1);
   const nameCapitalized = nameFirstLetterCapitalized + remainingName;
   const emailToken = crypto.randomBytes(64).toString("hex");
 
-  // save user in database:
-  const user = await User.build({
+  const user = {
     name: nameCapitalized,
     email,
     password: password ? password : '',
@@ -55,19 +60,18 @@ export const signup = async (req: Request, res: Response) => {
     residentId: residentId ? residentId : null,
     passwordSet: password ? true : false,
     userImagesId
-  });
-
-  await user.save();
+  }
+  const newUser = await users.insertOne(user);
 
   // Generate JWT
   const userJwt = jwt.sign(
     {
-      id: user.id,
+      id: newUser.insertedId,
       email: user.email,
       name: user.name,
       image: user.image,
       isVerified: user.isVerified,
-      residentId: user.residentId, 
+      residentId: user.residentId,
       userImagesId: user.userImagesId
     },
     process.env.JWT_KEY!
@@ -85,8 +89,7 @@ export const signup = async (req: Request, res: Response) => {
     baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
   })
 
-  // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);  
-  res.status(201).send(user);
+  res.status(201).send(newUser);
 }
 
 /**
@@ -121,7 +124,7 @@ export const login = async (req: Request, res: Response) => {
       name: existingUser.name,
       image: existingUser.image,
       isVerified: existingUser.isVerified,
-      residentId: existingUser.residentId, 
+      residentId: existingUser.residentId,
       userImagesId: existingUser.userImagesId
     },
     process.env.JWT_KEY!
@@ -142,7 +145,14 @@ export const login = async (req: Request, res: Response) => {
  * @access public 
  */
 export const currentuser = async (req: Request, res: Response) => {
-  res.send(req.currentUser || null);
+
+
+  /** dummie data */
+
+  const user = { "id": "655d5e471a772b1e2dd1d3e0", "email": "diegoleoro@gmail.com", "name": "Diego", "image": null, "isVerified": true, "residentId": ["655d5e3c1a772b1e2dd1d3dd"], "userImagesId": "039670c9-5956-4e20-a913-c12f0617eab3", "iat": 1700617818 }
+
+  res.send(user || null);
+  // res.send(req.currentUser || null);
 }
 
 /**
@@ -203,7 +213,7 @@ export const verifyemail = async (req: Request, res: Response) => {
       name: user.name,
       image: user.image,
       isVerified: user.isVerified,
-      residentId: user.residentId, 
+      residentId: user.residentId,
       userImagesId: user.userImagesId
     },
     process.env.JWT_KEY!
@@ -280,12 +290,12 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
  * @access public
 */
 export const updateNeighborhoodData = async (req: Request, res: Response) => {
- 
+
   const { id } = req.params;
   let updates = req.body;
 
 
-  let updateQuery:updateQuery = {};
+  let updateQuery: updateQuery = {};
   if (updates.neighborhoodImages) {
     // If updating neighborhoodImages, use $push to add images to the existing array
     updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };

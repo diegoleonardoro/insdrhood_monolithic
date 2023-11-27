@@ -77,3 +77,4 @@ NeighborhoodSchema.statics.build = (attrs) => {
 };
 const Neighborhood = mongoose_1.default.model("Resident", NeighborhoodSchema);
 exports.Neighborhood = Neighborhood;
+//# sourceMappingURL=neighborhood.js.map

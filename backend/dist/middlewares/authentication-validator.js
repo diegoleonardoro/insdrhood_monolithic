@@ -26,3 +26,4 @@ const authenticationValidator = async (req, res, next) => {
     next();
 };
 exports.authenticationValidator = authenticationValidator;
+//# sourceMappingURL=authentication-validator.js.map

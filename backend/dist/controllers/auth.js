@@ -12,6 +12,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
 const uuid_1 = require("uuid");
 const AWS = require("aws-sdk");
+const index_1 = require("../index");
 const s3 = new AWS.S3({
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
@@ -26,18 +27,19 @@ const emailVerification_1 = require("../services/emailVerification");
 */
 const signup = async (req, res) => {
     const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
-    const existingUser = await user_1.User.findOne({ email });
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
+    const existingUser = await users.findOne({ email });
     if (existingUser) {
         throw new bad_request_error_1.BadRequestError("Email in use");
     }
     ;
-    // capiralize name and create email token:
+    // // capiralize name and create email token:
     const nameFirstLetterCapitalized = name.charAt(0).toUpperCase();
     const remainingName = name.slice(1);
     const nameCapitalized = nameFirstLetterCapitalized + remainingName;
     const emailToken = crypto_1.default.randomBytes(64).toString("hex");
-    // save user in database:
-    const user = await user_1.User.build({
+    const user = {
         name: nameCapitalized,
         email,
         password: password ? password : '',
@@ -48,11 +50,11 @@ const signup = async (req, res) => {
         residentId: residentId ? residentId : null,
         passwordSet: password ? true : false,
         userImagesId
-    });
-    await user.save();
+    };
+    const newUser = await users.insertOne(user);
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign({
-        id: user.id,
+        id: newUser.insertedId,
         email: user.email,
         name: user.name,
         image: user.image,
@@ -70,8 +72,7 @@ const signup = async (req, res) => {
         emailToken: user.emailToken,
         baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
     });
-    // sendVerificationMail({ name: user.name, email: user.email, emailToken: user.emailToken }, baseUrlForEmailVerification);  
-    res.status(201).send(user);
+    res.status(201).send(newUser);
 };
 exports.signup = signup;
 /**
@@ -112,7 +113,10 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
-    res.send(req.currentUser || null);
+    /** dummie data */
+    const user = { "id": "655d5e471a772b1e2dd1d3e0", "email": "diegoleoro@gmail.com", "name": "Diego", "image": null, "isVerified": true, "residentId": ["655d5e3c1a772b1e2dd1d3dd"], "userImagesId": "039670c9-5956-4e20-a913-c12f0617eab3", "iat": 1700617818 };
+    res.send(user || null);
+    // res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
 /**
@@ -235,7 +239,7 @@ const updateNeighborhoodData = async (req, res) => {
 exports.updateNeighborhoodData = updateNeighborhoodData;
 /**
  * @description gets all neighbohoods data submitted from the form
- * @route /api/neighborhoods
+ * @route GET/api/neighborhoods
  * @access public
  */
 const getAllNeighborhoods = async (req, res) => {
@@ -255,3 +259,4 @@ const getNeighborhood = async (req, res) => {
     res.status(200).send(neighborhood);
 };
 exports.getNeighborhood = getNeighborhood;
+//# sourceMappingURL=auth.js.map
