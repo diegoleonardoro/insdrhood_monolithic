@@ -33,7 +33,7 @@ function App() {
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/currentuser', { withCredentials: true });
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       updateCurrentUser(response.data);
     } catch (error) {
       // Handle the error appropriately
@@ -74,7 +74,7 @@ function App() {
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
-          <Route path="/emailconfimation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
+          <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
           <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuser={currentuser} />} />
         </Routes>
       </div>

@@ -243,8 +243,10 @@ exports.updateNeighborhoodData = updateNeighborhoodData;
  * @access public
  */
 const getAllNeighborhoods = async (req, res) => {
-    const allNeighborhoods = await neighborhood_1.Neighborhood.find({});
-    res.status(200).send(allNeighborhoods);
+    // const allNeighborhoods = await Neighborhood.find({});
+    const db = (0, index_1.getDb)();
+    const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
+    res.status(200).send(neighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
 /**

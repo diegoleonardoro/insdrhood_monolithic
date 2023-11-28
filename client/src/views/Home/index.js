@@ -12,7 +12,7 @@ function Home() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/neighborhoods");
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
         setNeighborhoodsData(response.data);
         console.log("responsee", response.data)
       } catch (error) {
