@@ -17,8 +17,6 @@ function App() {
 
   const HeaderMemo = React.memo(Header);
 
-  
-
   const [currentuser, setCurrentUser] = useState(null);
 
   const updateCurrentUser = useCallback((data) => {

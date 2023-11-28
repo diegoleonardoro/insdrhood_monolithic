@@ -114,9 +114,9 @@ exports.login = login;
  */
 const currentuser = async (req, res) => {
     /** dummie data */
-    const user = { "id": "655d5e471a772b1e2dd1d3e0", "email": "diegoleoro@gmail.com", "name": "Diego", "image": null, "isVerified": true, "residentId": ["655d5e3c1a772b1e2dd1d3dd"], "userImagesId": "039670c9-5956-4e20-a913-c12f0617eab3", "iat": 1700617818 };
-    res.send(user || null);
-    // res.send(req.currentUser || null);
+    // const user = { "id": "655d5e471a772b1e2dd1d3e0", "email": "diegoleoro@gmail.com", "name": "Diego", "image": null, "isVerified": true, "residentId": ["655d5e3c1a772b1e2dd1d3dd"], "userImagesId": "039670c9-5956-4e20-a913-c12f0617eab3", "iat": 1700617818 }
+    // res.send(user || null);
+    res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
 /**
