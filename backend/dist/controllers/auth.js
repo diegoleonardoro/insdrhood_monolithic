@@ -246,6 +246,7 @@ const getAllNeighborhoods = async (req, res) => {
     // const allNeighborhoods = await Neighborhood.find({});
     const db = (0, index_1.getDb)();
     const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
+    console.log("neighborhoods", neighborhoods);
     res.status(200).send(neighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;

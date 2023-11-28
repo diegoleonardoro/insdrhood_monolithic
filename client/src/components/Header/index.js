@@ -22,8 +22,13 @@ function Header({ updateCurrentUser, currentuser }) {
 
   const handleSignOut = async () => {
     //${process.env.BACKEND_URL}
+
+    console.log("process.env.REACT_APP_BACKEND_URL", process.env.REACT_APP_BACKEND_URL);
+    
     try {
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
+      // await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
+      //https://backendd-w4arsp4ahq-uc.a.run.app
+      await axios.post('https://backendd-w4arsp4ahq-uc.a.run.app/api/signout');
       await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`);
       await updateCurrentUser(null);
       navigate('/');

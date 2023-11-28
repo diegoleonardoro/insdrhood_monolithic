@@ -1,18 +1,28 @@
 import express from 'express';
-import path from 'path';
+// import path from 'path';
 import mongoose from 'mongoose';
 import cookieSession from "cookie-session";
 import { json } from "body-parser";
 import cors from "cors";
 import { errorHandler } from './middlewares/error-handler';
-import { config } from 'dotenv';
-config();
+// import { config } from 'dotenv';
+// config();
 // import routes:
 import { auth } from "./routes/auth";
 import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
 
 
+// Determine the path based on NODE_ENV
+const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 
+// Set the DOTENV_CONFIG_PATH environment variable
+process.env.DOTENV_CONFIG_PATH = dotenvPath;
+
+// Dynamically import dotenv/config
+import('dotenv/config')
+  .catch(error => {
+    console.error('Error loading the dotenv configuration:', error);
+  });
 
 
 /** -------- -------- MongoDB Connection -------- -------- */
