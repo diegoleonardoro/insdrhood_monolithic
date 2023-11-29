@@ -73,10 +73,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
       } else {
 
-
-
-
-
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
 
@@ -88,7 +84,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       }
     }
   }, [user])
-
 
 
   // this funciton will only be called when the user has registered responding the form. That will be the only case in which the user has not set their password

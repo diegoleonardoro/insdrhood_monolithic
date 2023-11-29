@@ -76,7 +76,7 @@ app.use(errorHandler);
 app.get('/', (req, res) => {
   return res.status(200).json({
     success: true,
-    message: "Hi yaaaa! :)",
+    message: "Holaaaa youuuu! :)",
   })
 });
 
