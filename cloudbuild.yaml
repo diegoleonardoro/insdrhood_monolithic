@@ -22,7 +22,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'backend-service', '--image', 'gcr.io/insider-hoods321/backend', '--region', 'us-central1']
+    args: ['run', 'deploy', 'backendd', '--image', 'gcr.io/insider-hoods321/backend', '--region', 'us-central1']
     id: 'deploy-backend'
 
   # Build and push the client service
@@ -36,7 +36,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'client-service', '--image', 'gcr.io/insider-hoods321/client', '--region', 'us-central1']
+    args: ['run', 'deploy', 'clientt', '--image', 'gcr.io/insider-hoods321/client', '--region', 'us-central1']
     id: 'deploy-client'
 
       
