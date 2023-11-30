@@ -4,8 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
-const user_1 = require("../models/user");
-const neighborhood_1 = require("../models/neighborhood");
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -13,6 +11,7 @@ const crypto_1 = __importDefault(require("crypto"));
 const uuid_1 = require("uuid");
 const AWS = require("aws-sdk");
 const index_1 = require("../index");
+const mongodb_1 = require("mongodb");
 const s3 = new AWS.S3({
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
@@ -72,7 +71,8 @@ const signup = async (req, res) => {
         emailToken: user.emailToken,
         baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
     });
-    res.status(201).send(newUser);
+    const insertedRecord = await users.findOne({ _id: newUser.insertedId });
+    res.status(201).send(insertedRecord);
 };
 exports.signup = signup;
 /**
@@ -82,7 +82,9 @@ exports.signup = signup;
  */
 const login = async (req, res) => {
     const { email, password } = req.body;
-    const existingUser = await user_1.User.findOne({ email });
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
+    const existingUser = await users.findOne({ email });
     if (!existingUser) {
         throw new bad_request_error_1.BadRequestError("Invalid credentials");
     }
@@ -113,9 +115,7 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
-    /** dummie data */
-    // const user = { "id": "655d5e471a772b1e2dd1d3e0", "email": "diegoleoro@gmail.com", "name": "Diego", "image": null, "isVerified": true, "residentId": ["655d5e3c1a772b1e2dd1d3dd"], "userImagesId": "039670c9-5956-4e20-a913-c12f0617eab3", "iat": 1700617818 }
-    // res.send(user || null);
+    console.log("req.currentUser", req.currentUser);
     res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
@@ -140,7 +140,9 @@ const updateUserData = async (req, res) => {
     if (updates.password) {
         updates.password = await password_1.Password.toHash(updates.password);
     }
-    const user = await user_1.User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
+    const user = await users.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: updates }, { returnDocument: 'after' });
     res.status(200).send(user);
 };
 exports.updateUserData = updateUserData;
@@ -151,29 +153,38 @@ exports.updateUserData = updateUserData;
  */
 const verifyemail = async (req, res) => {
     const emailtoken = req.params.emailtoken;
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
     // find the user with the email token:
-    const user = await user_1.User.findOne({ emailToken: emailtoken });
+    const user = await users.findOne({ emailToken: emailtoken });
     if (!user) {
         throw new bad_request_error_1.BadRequestError("Invalid email token");
     }
-    user.isVerified = true;
-    user.emailToken = '';
-    await user.save();
+    // user.isVerified = true;
+    // user.emailToken = '';
+    // await user.save();
+    const updatedUser = await users.findOneAndUpdate({ _id: user._id }, {
+        $set: {
+            isVerified: true,
+            emailToken: ''
+        }
+    }, { returnDocument: 'after' });
+    console.log("asdfasdf", updatedUser);
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign({
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        image: user.image,
-        isVerified: user.isVerified,
-        residentId: user.residentId,
-        userImagesId: user.userImagesId
+        id: updatedUser?.id,
+        email: updatedUser?.email,
+        name: updatedUser?.name,
+        image: updatedUser?.image,
+        isVerified: updatedUser?.isVerified,
+        residentId: updatedUser?.residentId,
+        userImagesId: updatedUser?.userImagesId
     }, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
     };
-    res.status(200).send(user);
+    res.status(200).send(updatedUser);
 };
 exports.verifyemail = verifyemail;
 /**
@@ -201,18 +212,24 @@ exports.uploadFile = uploadFile;
  * @access public
  */
 const saveNeighborhoodData = async (req, res) => {
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
     let user;
     if (req.currentUser) {
-        user = await user_1.User.findOne({ email: req.currentUser.email });
+        user = await users.findOne({ email: req.currentUser.email });
     }
     ;
-    console.log("body request:-->>>>", req.body);
-    const neighborhood = neighborhood_1.Neighborhood.build({
+    const neighborhoods = db.collection("neighborhoods");
+    const newNeighborhood = neighborhoods.insertOne({
         ...req.body,
         user: user ? { id: user.id, name: user.name, email: user.email } : undefined
     });
-    await neighborhood.save();
-    res.status(201).send(neighborhood);
+    // const neighborhood = Neighborhood.build({
+    //   ...req.body,
+    //   user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
+    // });
+    // await neighborhood.save();
+    res.status(201).send(newNeighborhood);
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
 /**
@@ -223,6 +240,8 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateNeighborhoodData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
+    const db = (0, index_1.getDb)();
+    const neighborhoods = db.collection("neighborhoods");
     let updateQuery = {};
     if (updates.neighborhoodImages) {
         // If updating neighborhoodImages, use $push to add images to the existing array
@@ -233,7 +252,8 @@ const updateNeighborhoodData = async (req, res) => {
         // If there are other updates, use $set to update fields
         updateQuery.$set = updates;
     }
-    const neighborhood = await neighborhood_1.Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
+    const neighborhood = await neighborhoods.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, updateQuery, { returnDocument: "after" });
+    // const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
     res.status(200).send(neighborhood);
 };
 exports.updateNeighborhoodData = updateNeighborhoodData;
@@ -257,8 +277,11 @@ exports.getAllNeighborhoods = getAllNeighborhoods;
  */
 const getNeighborhood = async (req, res) => {
     const { neighborhoodid } = req.params;
-    const neighborhood = await neighborhood_1.Neighborhood.findById(neighborhoodid);
-    console.log("neighborhooddd", neighborhood);
+    // const neighborhood = await Neighborhood.findById(neighborhoodid);
+    // console.log("neighborhooddd", neighborhood);
+    const db = (0, index_1.getDb)();
+    const neighbohoods = db.collection("neighborhood");
+    const neighborhood = await neighbohoods.findOne({ _id: new mongodb_1.ObjectId(neighborhoodid) });
     res.status(200).send(neighborhood);
 };
 exports.getNeighborhood = getNeighborhood;

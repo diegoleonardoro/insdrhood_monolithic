@@ -14,8 +14,7 @@ function Home() {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
         setNeighborhoodsData(response.data);
-        console.log("REACT_APP_BACKEND_URL", process.env.REACT_APP_BACKEND_URL)
-        console.log("responsee", response.data)
+
       } catch (error) {
         console.error("Failed to fetch neighborhoods", error);
         // Handle the error state appropriately here

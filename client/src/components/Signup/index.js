@@ -30,14 +30,15 @@ const SignUp = ({ updateCurrentUser }) => {
 
   async function saveUserData() {
     try {
-
-    
-
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`,
         formData);        
+
+      console.log("kk", response.data)
       await updateCurrentUser(response.data);
+
       navigate('/');
-      return
+      
+      // return
 
     } catch (error) {
       setErrors(error?.response?.data?.errors?.[0]?.message);

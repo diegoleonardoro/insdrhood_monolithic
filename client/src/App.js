@@ -20,6 +20,7 @@ function App() {
   const [currentuser, setCurrentUser] = useState(null);
 
   const updateCurrentUser = useCallback((data) => {
+    
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
         setCurrentUser(data);
@@ -34,6 +35,7 @@ function App() {
   const checkCurrentUser = useCallback(async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+      console.log("responseeee", response)
       updateCurrentUser(response.data);
     } catch (error) {
       // Handle the error appropriately
@@ -80,6 +82,7 @@ function App() {
       </div>
     </Router>
   );
+  
 }
 
 export default App;

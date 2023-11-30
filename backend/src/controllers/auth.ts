@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 const AWS = require("aws-sdk");
 import { getDb } from "../index";
+import { ObjectId } from 'mongodb';
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -85,9 +86,11 @@ export const signup = async (req: Request, res: Response) => {
     email: user.email,
     emailToken: user.emailToken,
     baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
-  })
+  });
 
-  res.status(201).send(newUser);
+  const insertedRecord =  await users.findOne({_id: newUser.insertedId})
+  res.status(201).send(insertedRecord);
+
 }
 
 /**
@@ -99,7 +102,9 @@ export const login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
 
-  const existingUser = await User.findOne({ email });
+  const db = getDb();
+  const users = db.collection("users");
+  const existingUser = await users.findOne({ email });
 
   if (!existingUser) {
     throw new BadRequestError("Invalid credentials");
@@ -144,10 +149,8 @@ export const login = async (req: Request, res: Response) => {
  */
 export const currentuser = async (req: Request, res: Response) => {
 
-  /** dummie data */
-  // const user = { "id": "655d5e471a772b1e2dd1d3e0", "email": "diegoleoro@gmail.com", "name": "Diego", "image": null, "isVerified": true, "residentId": ["655d5e3c1a772b1e2dd1d3dd"], "userImagesId": "039670c9-5956-4e20-a913-c12f0617eab3", "iat": 1700617818 }
-  // res.send(user || null);
-
+  console.log("req.currentUser", req.currentUser);
+  
   res.send(req.currentUser || null);
 }
 
@@ -167,14 +170,21 @@ export const signout = async (req: Request, res: Response) => {
  * @access private
  */
 export const updateUserData = async (req: Request, res: Response) => {
+
   const { id } = req.params;
   let updates = req.body;
-
   if (updates.password) {
     updates.password = await Password.toHash(updates.password);
   }
 
-  const user = await User.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+  const db = getDb();
+  const users = db.collection("users");
+
+  const user = await users.findOneAndUpdate(
+    { _id: new ObjectId(id) },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
 
   res.status(200).send(user);
 
@@ -189,28 +199,47 @@ export const verifyemail = async (req: Request, res: Response) => {
 
   const emailtoken = req.params.emailtoken;
 
+  const db = getDb();
+  const users = db.collection("users");
+
   // find the user with the email token:
-  const user = await User.findOne({ emailToken: emailtoken });
+  const user = await users.findOne({ emailToken: emailtoken });
 
   if (!user) {
     throw new BadRequestError("Invalid email token")
   }
 
-  user.isVerified = true;
+  // user.isVerified = true;
+  // user.emailToken = '';
+  // await user.save();
 
-  user.emailToken = '';
-  await user.save();
+
+  const updatedUser = await users.findOneAndUpdate(
+    { _id: user._id },
+    {
+      $set: {
+        isVerified: true,
+        emailToken: ''
+      }
+    },
+    { returnDocument: 'after' }
+  );
+
+  console.log("asdfasdf", updatedUser)
+
+
+
 
   // Generate JWT
   const userJwt = jwt.sign(
     {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      image: user.image,
-      isVerified: user.isVerified,
-      residentId: user.residentId,
-      userImagesId: user.userImagesId
+      id: updatedUser?.id,
+      email: updatedUser?.email,
+      name: updatedUser?.name,
+      image: updatedUser?.image,
+      isVerified: updatedUser?.isVerified,
+      residentId: updatedUser?.residentId,
+      userImagesId: updatedUser?.userImagesId
     },
     process.env.JWT_KEY!
   );
@@ -220,7 +249,7 @@ export const verifyemail = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  res.status(200).send(user);
+  res.status(200).send(updatedUser);
 
 }
 
@@ -263,20 +292,28 @@ export const uploadFile = async (req: Request, res: Response) => {
  */
 export const saveNeighborhoodData = async (req: Request, res: Response) => {
 
+  const db = getDb();
+  const users = db.collection("users");
+
   let user
   if (req.currentUser) {
-    user = await User.findOne({ email: req.currentUser!.email });
+    user = await users.findOne({ email: req.currentUser!.email });
   };
 
-  console.log("body request:-->>>>", req.body)
+  const neighborhoods = db.collection("neighborhoods");
 
-  const neighborhood = Neighborhood.build({
+  const newNeighborhood = neighborhoods.insertOne({
     ...req.body,
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
-  });
+  })
 
-  await neighborhood.save();
-  res.status(201).send(neighborhood);
+  // const neighborhood = Neighborhood.build({
+  //   ...req.body,
+  //   user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
+  // });
+  // await neighborhood.save();
+
+  res.status(201).send(newNeighborhood);
 }
 
 
@@ -290,6 +327,9 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
   const { id } = req.params;
   let updates = req.body;
 
+  const db = getDb();
+  const neighborhoods = db.collection("neighborhoods")
+
 
   let updateQuery: updateQuery = {};
   if (updates.neighborhoodImages) {
@@ -302,9 +342,16 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
     updateQuery.$set = updates;
   }
 
-  const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
-  res.status(200).send(neighborhood);
 
+  const neighborhood = await neighborhoods.findOneAndUpdate(
+    {_id : new ObjectId(id)},
+    updateQuery, 
+    {returnDocument:"after"}
+  );
+
+  // const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
+  
+  res.status(200).send(neighborhood);
 }
 
 
@@ -330,8 +377,11 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
 export const getNeighborhood = async (req: Request, res: Response) => {
 
   const { neighborhoodid } = req.params;
-  const neighborhood = await Neighborhood.findById(neighborhoodid);
-  console.log("neighborhooddd", neighborhood);
+  // const neighborhood = await Neighborhood.findById(neighborhoodid);
+  // console.log("neighborhooddd", neighborhood);
+  const db = getDb();
+  const neighbohoods= db.collection("neighborhood");
+  const neighborhood = await neighbohoods.findOne({_id:new ObjectId(neighborhoodid)})
   res.status(200).send(neighborhood);
 
 }

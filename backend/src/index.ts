@@ -8,22 +8,16 @@ import { errorHandler } from './middlewares/error-handler';
 // import { config } from 'dotenv';
 // config();
 // import routes:
+import dotenv from "dotenv";
 import { auth } from "./routes/auth";
 import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
+import path from 'path';
 
 
 // Determine the path based on NODE_ENV
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
-
-// Set the DOTENV_CONFIG_PATH environment variable
-process.env.DOTENV_CONFIG_PATH = dotenvPath;
-
-// Dynamically import dotenv/config
-import('dotenv/config')
-  .catch(error => {
-    console.error('Error loading the dotenv configuration:', error);
-  });
-
+const envPath = path.resolve(__dirname, '..', dotenvPath);
+dotenv.config({path:envPath});
 
 /** -------- -------- MongoDB Connection -------- -------- */
 const uri = "mongodb+srv://diegoleoro:r85i3VAYY6k8UVDs@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority";
