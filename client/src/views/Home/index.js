@@ -13,6 +13,8 @@ function Home() {
     (async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
+
+        console.log("response", response)
         setNeighborhoodsData(response.data);
 
       } catch (error) {
@@ -44,14 +46,14 @@ function Home() {
 
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {
     return (
-      <tr key={neighborhood.id}>
+      <tr key={neighborhood._id}>
         <td >{neighborhood.user ? neighborhood.user.name : null}</td>
         <td >{neighborhood.neighborhood}</td>
         <td>
           {neighborhood.neighborhoodDescription}
         </td>
         <td>
-          <Link to={`/neighborhood/${neighborhood.id}`}  >
+          <Link to={`/neighborhood/${neighborhood._id}`}  >
             Learn more
           </Link>
         </td>

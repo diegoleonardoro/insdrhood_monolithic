@@ -342,6 +342,9 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
   // const allNeighborhoods = await Neighborhood.find({});
   const db = getDb();
   const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
+
+  console.log("neighborhoods", neighborhoods);
+  
   res.status(200).send(neighborhoods);
 }
 
