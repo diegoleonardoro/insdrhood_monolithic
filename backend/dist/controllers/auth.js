@@ -12,12 +12,6 @@ const uuid_1 = require("uuid");
 const AWS = require("aws-sdk");
 const index_1 = require("../index");
 const mongodb_1 = require("mongodb");
-const s3 = new AWS.S3({
-    accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-    signatureVersion: "v4",
-    region: "us-east-1",
-});
 const emailVerification_1 = require("../services/emailVerification");
 /**
  * @description registers a new user
@@ -115,7 +109,6 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
-    console.log("req.currentUser", req.currentUser);
     res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
@@ -160,16 +153,12 @@ const verifyemail = async (req, res) => {
     if (!user) {
         throw new bad_request_error_1.BadRequestError("Invalid email token");
     }
-    // user.isVerified = true;
-    // user.emailToken = '';
-    // await user.save();
     const updatedUser = await users.findOneAndUpdate({ _id: user._id }, {
         $set: {
             isVerified: true,
             emailToken: ''
         }
     }, { returnDocument: 'after' });
-    console.log("asdfasdf", updatedUser);
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign({
         id: updatedUser?.id,
@@ -193,12 +182,18 @@ exports.verifyemail = verifyemail;
  * @access public
  */
 const uploadFile = async (req, res) => {
+    const s3 = new AWS.S3({
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+        signatureVersion: "v4",
+        region: "us-east-1",
+    });
     const { neighborhood, randomUUID, imageType } = req.params;
     const randomUUID_imageIdentifier = (0, uuid_1.v4)();
     const key = `places/${req.currentUser ? req.currentUser.id
         : randomUUID}/${neighborhood}/${randomUUID_imageIdentifier}.${imageType}`;
     s3.getSignedUrlPromise("putObject", {
-        Bucket: "populace",
+        Bucket: "insiderhood",
         ContentType: imageType,
         Key: key,
     }, (err, url) => {
@@ -208,7 +203,7 @@ const uploadFile = async (req, res) => {
 exports.uploadFile = uploadFile;
 /**
  * @description saves form data
- * @route POST /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @route POST /neighborhood/savedata
  * @access public
  */
 const saveNeighborhoodData = async (req, res) => {
@@ -220,10 +215,11 @@ const saveNeighborhoodData = async (req, res) => {
     }
     ;
     const neighborhoods = db.collection("neighborhoods");
-    const newNeighborhood = neighborhoods.insertOne({
+    const newNeighborhood = await neighborhoods.insertOne({
         ...req.body,
         user: user ? { id: user.id, name: user.name, email: user.email } : undefined
     });
+    console.log('newNeighborhood->', newNeighborhood);
     // const neighborhood = Neighborhood.build({
     //   ...req.body,
     //   user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
@@ -266,7 +262,6 @@ const getAllNeighborhoods = async (req, res) => {
     // const allNeighborhoods = await Neighborhood.find({});
     const db = (0, index_1.getDb)();
     const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
-    console.log("neighborhoods", neighborhoods);
     res.status(200).send(neighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
