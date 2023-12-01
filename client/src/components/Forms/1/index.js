@@ -291,7 +291,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             // request to update the user:
             await updateUser({
               formsResponded: 1,
-              residentId: [formDataResponse.id],
+              residentId: [formDataResponse.insertedId],
               userImagesId: randomUUID
             }, loggedUser.id);
 
@@ -301,7 +301,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           // this state needs to be updated to save a new user in the database:
           setNewUserData(prevData => ({
             ...prevData,
-            "residentId": [formDataResponse.id],
+            "residentId": [formDataResponse.insertedId],
             "userImagesId": randomUUID
           }))
 

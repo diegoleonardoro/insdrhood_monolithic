@@ -21,9 +21,7 @@ function Header({ updateCurrentUser, currentuser }) {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
-    //${process.env.BACKEND_URL}
-
-    console.log("process.env.REACT_APP_BACKEND_URL", process.env.REACT_APP_BACKEND_URL);
+ 
     
     try {
       // await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);

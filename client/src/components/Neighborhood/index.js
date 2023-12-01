@@ -18,7 +18,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
       console.log("neighborhoodid", neighborhoodid)
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
-      setIsEditable(neighborhood.data.id === currentuser?.residentId[0]);
+      setIsEditable(neighborhood.data._id === currentuser?.residentId[0]);
     } catch (error) { }
   }
 

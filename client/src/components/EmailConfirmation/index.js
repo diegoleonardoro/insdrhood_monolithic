@@ -38,6 +38,8 @@ const VerifyEmail = ({ updateCurrentUser }) => {
    
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
+
+      console.log('asdf', response)
       setUser(response.data);
 
     } catch (error) {
@@ -61,11 +63,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO RESPOND THE FORM 
-
-        console.log("userrr", user)
-
         updateCurrentUser(user);
-
         setTimeout(() => {
           navigate('/');
         }, 2000);
@@ -93,7 +91,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       setUnmatchingPasswords(true);
     } else {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
-      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user._id}`, { password: password1, passwordSet :true});
       updateCurrentUser(response.data);
       navigate(`/neighborhood/${response.data.residentId[0]}`);
     }
