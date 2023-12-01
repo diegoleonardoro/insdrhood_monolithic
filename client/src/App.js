@@ -35,7 +35,7 @@ function App() {
   const checkCurrentUser = useCallback(async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      console.log("responseeee", response)
+
       updateCurrentUser(response.data);
     } catch (error) {
       // Handle the error appropriately
