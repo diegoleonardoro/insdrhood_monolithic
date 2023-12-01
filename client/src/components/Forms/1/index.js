@@ -173,6 +173,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     const currentDiv = divRefs.current[activeIndex];
     if (direction === "next") {
+
       if (currentDiv) {
 
         // check if the user has not responded a question that required to be responded:
@@ -272,7 +273,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                   "Content-Type": 'image/jpeg',
                 },
               })
-
             }
           };
 
@@ -312,12 +312,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
 
         };
-
-        // if the last key word is "end", then  do not display another question
-        // keyWord = currentDiv.className.split(" ")[1];
-        // if (keyWord === "end") {
-        //   return;
-        // }
 
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
         keyWord = currentDiv.className.split(" ")[1];

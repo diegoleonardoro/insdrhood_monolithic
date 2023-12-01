@@ -291,14 +291,6 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
   })
 
-  console.log('newNeighborhood->', newNeighborhood)
-
-  // const neighborhood = Neighborhood.build({
-  //   ...req.body,
-  //   user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
-  // });
-  // await neighborhood.save();
-
   res.status(201).send(newNeighborhood);
 }
 
@@ -365,7 +357,7 @@ export const getNeighborhood = async (req: Request, res: Response) => {
   // const neighborhood = await Neighborhood.findById(neighborhoodid);
   // console.log("neighborhooddd", neighborhood);
   const db = getDb();
-  const neighbohoods = db.collection("neighborhood");
+  const neighbohoods = db.collection("neighborhoods");
   const neighborhood = await neighbohoods.findOne({ _id: new ObjectId(neighborhoodid) })
   res.status(200).send(neighborhood);
 

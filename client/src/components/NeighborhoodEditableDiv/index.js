@@ -168,7 +168,7 @@ const NeighborhoodEditableDiv = ({
 
   // function that will update the neighborhood data
   const updateNeighborhoodData = useCallback(async (dataToUpdate) => {
-    await axios.put(`${process.env.BACKEND_URL}/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
+    await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
   }, [neighborhoodid]);
 
   const removePhoto = (index) => {
@@ -191,11 +191,6 @@ const NeighborhoodEditableDiv = ({
   const handleChange = (event, index, flag) => {
 
 
-
-
-
-
-
     // user is trying to update the data that came as an object of objects:
     if (hasNestedObjects(nestedObjects)) {
       const key = event.target.id;
@@ -208,13 +203,6 @@ const NeighborhoodEditableDiv = ({
         }
       }))
     }
-
-
-
-
-
-
-
 
 
     // user is trying to update the data that came in as an array of obects:
@@ -327,7 +315,7 @@ const NeighborhoodEditableDiv = ({
 
         const uploadPromises = newImages.map(async imageFile => {
           const imageType = imageFile.type.split('/')[1];
-          const imageUploadConfig = await axios.get(`${process.env.BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
+          const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
 
           await axios.put(imageUploadConfig.data.url, imageFile, {
             headers: {
@@ -781,7 +769,7 @@ const NeighborhoodEditableDiv = ({
                   </InputGroup>
                   <img alt="neighborhoodimage"
                     ref={(el) => { imgRefs.current[index] = el }}
-                    style={{ width: "100%", height: "300px", objectFit: "cover" }} src={"https://populace.s3.amazonaws.com/" + image.image}
+                    style={{ width: "100%", height: "300px", objectFit: "cover" }} src={"https://insiderhood.s3.amazonaws.com/" + image.image}
                   />
                   <Button
                     style={{
@@ -830,7 +818,7 @@ const NeighborhoodEditableDiv = ({
 
             {nhoodImages.map((image, index) => (
               <Card key={index} style={{ width: '18rem', margin: '5px', background: "transparent" }}>
-                <Card.Img style={{ width: "100%", height: "300px", objectFit: "cover", background: "#e4e4e4" }} variant="top" src={"https://populace.s3.amazonaws.com/" + image.image} />
+                <Card.Img style={{ width: "100%", height: "300px", objectFit: "cover", background: "#e4e4e4" }} variant="top" src={"https://insiderhood.s3.amazonaws.com/" + image.image} />
                 {image.description !== "" ?
                   (<Card.Body>
                     <Card.Text>

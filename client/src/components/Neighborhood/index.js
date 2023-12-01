@@ -15,7 +15,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
-      const neighborhood = await axios.get(`${process.env.BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
+      const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       setNeighborhood(neighborhood.data);
       setIsEditable(neighborhood.data.id === currentuser?.residentId[0]);
     } catch (error) { }

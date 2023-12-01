@@ -219,12 +219,6 @@ const saveNeighborhoodData = async (req, res) => {
         ...req.body,
         user: user ? { id: user.id, name: user.name, email: user.email } : undefined
     });
-    console.log('newNeighborhood->', newNeighborhood);
-    // const neighborhood = Neighborhood.build({
-    //   ...req.body,
-    //   user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
-    // });
-    // await neighborhood.save();
     res.status(201).send(newNeighborhood);
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
@@ -275,7 +269,7 @@ const getNeighborhood = async (req, res) => {
     // const neighborhood = await Neighborhood.findById(neighborhoodid);
     // console.log("neighborhooddd", neighborhood);
     const db = (0, index_1.getDb)();
-    const neighbohoods = db.collection("neighborhood");
+    const neighbohoods = db.collection("neighborhoods");
     const neighborhood = await neighbohoods.findOne({ _id: new mongodb_1.ObjectId(neighborhoodid) });
     res.status(200).send(neighborhood);
 };

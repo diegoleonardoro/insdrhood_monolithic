@@ -19,7 +19,7 @@ const Signin = ({ updateCurrentUser }) => {
 
   async function sendUserCredentials() {
     try {
-      const response = await axios.post(`${process.env.BACKEND_URL}/api/signin`,
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_UR}/api/signin`,
         { email, password });
       await updateCurrentUser(response.data);
       navigate('/');
