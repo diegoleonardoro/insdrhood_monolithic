@@ -1304,6 +1304,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               paddingLeft: "10px",
               top: "0px"
             }}
+              className="textInput"
               onChange={
                 (e) => {
                   setFormData({
@@ -1346,7 +1347,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         </div>
 
-
         {/** In general, how would you describe {neighborhood}? */}
         <div
           className={
@@ -1371,7 +1371,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             }}
           ></textarea>
         </div>
-
 
         {/**  THE RESIDENTS */}
         {/** Adjectives to describe the typical resident of the neighborhood */}
