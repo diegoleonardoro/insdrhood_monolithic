@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
+// import { setTimeout } from "timers";
 
 
 let addLastPlace = false;
@@ -24,8 +25,9 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [shakie, setShakie] = useState("shakieCheck");
 
   const nehoodAdjectivesDivRef = useRef(null);
-  const nehoodAdjectivesDivContainerDisplay= useRef(null);
+  const nehoodAdjectivesDivContainerDisplay = useRef(null);
   const residentAdjectivesDivRef = useRef(null);
+  const residentAdjectivesDivContainer = useRef(null);
   const typesOfFoodRecommendationsRef = useRef(null);
   const favTypesOfFoodRef = useRef(null);
   const nightLifeRecommendationsRef = useRef([]);
@@ -506,41 +508,42 @@ const FormComponent = ({ updateCurrentUser }) => {
       }
       setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
 
-
-
-
-
-     
-
-      if (nehoodAdjectivesDivContainerDisplay.current){
-        
+      if (nehoodAdjectivesDivContainerDisplay.current) {
         setTimeout(() => {
           nehoodAdjectivesDivContainerDisplay.current.scrollTop = nehoodAdjectivesDivContainerDisplay.current.scrollHeight;
         }, 0);
       }
 
-
-
-
-
-
-
-
       // }
     } else if (description === "resident") {
-      if (residentsAdjsSelectedOpts.length < 5) {
-        let updatedOptions;
-        event.target.style.backgroundColor = "#EBEBE4";
-        if (!residentsAdjsSelectedOpts.includes(option)) {
-          setResidentsAdjsSelectedOpts(prevOptions => {
-            updatedOptions = [...prevOptions, option];
-            setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
-            return updatedOptions;
-          })
-        }
 
-        setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+      // if (residentsAdjsSelectedOpts.length < 5) {
+      let updatedOptions;
+      event.target.style.backgroundColor = "#EBEBE4";
+      if (!residentsAdjsSelectedOpts.includes(option)) {
+        setResidentsAdjsSelectedOpts(prevOptions => {
+          updatedOptions = [...prevOptions, option];
+          setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+          return updatedOptions;
+        })
       }
+      setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
+
+
+
+      if (residentAdjectivesDivContainer.current){
+        setTimeout(() => {
+          residentAdjectivesDivContainer.current.scrollTop = residentAdjectivesDivContainer.current.scrollHeight
+        }, 0);
+      }
+
+
+
+      //residentAdjectivesDivContainer
+
+
+      
+      // }
     } else if (description === "foodType") {
 
       if (foodTypesSelectedOpts.length < 5) {
@@ -600,6 +603,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       });
       setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
     } else if (description === "resident") {
+
       const advjectivesListDivs = [...residentAdjectivesDivRef.current.children];
       for (let i = 0; i < advjectivesListDivs.length; i++) {
         if (advjectivesListDivs[i].dataset.option === option) {
@@ -916,7 +920,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         >
           <label>
             What <span className="questionHighlight"> adjectives</span> describe
-            <span style={{textDecoration:"underline"}} className="nhoodName"> {neighborhood}: </span>
+            <span style={{ textDecoration: "underline" }} className="nhoodName"> {neighborhood}: </span>
           </label>
 
 
@@ -1387,7 +1391,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           </label>
 
           {residentsAdjsSelectedOpts.length > 0 && (
-            <div className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+            <div ref={residentAdjectivesDivContainer} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
               {residentsAdjsSelectedOpts.map((option, index) => (
                 <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
                   {option}
