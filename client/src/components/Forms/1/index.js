@@ -24,6 +24,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [shakie, setShakie] = useState("shakieCheck");
 
   const nehoodAdjectivesDivRef = useRef(null);
+  const nehoodAdjectivesDivContainerDisplay= useRef(null);
   const residentAdjectivesDivRef = useRef(null);
   const typesOfFoodRecommendationsRef = useRef(null);
   const favTypesOfFoodRef = useRef(null);
@@ -282,7 +283,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           const formDataResponse = await sendFormData();
 
           // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
-          
+
           setNeighborhoodId(formDataResponse.insertedId);
 
           // if there is a logged in user, make a request to udpate the user
@@ -493,20 +494,39 @@ const FormComponent = ({ updateCurrentUser }) => {
   const handleOptionSelect = (option, description, event) => {
 
     if (description === "nhood") {
-
-      if (selectedOptions.length < 5) {
-
-        let updatedOptions
-        event.target.style.backgroundColor = "#EBEBE4";
-        if (!selectedOptions.includes(option)) {
-          setSelectedOptions(prevOptions => {
-            updatedOptions = [...prevOptions, option];
-            setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
-            return updatedOptions;
-          });
-        }
-        setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+      // if (selectedOptions.length < 5) {
+      let updatedOptions
+      event.target.style.backgroundColor = "#EBEBE4";
+      if (!selectedOptions.includes(option)) {
+        setSelectedOptions(prevOptions => {
+          updatedOptions = [...prevOptions, option];
+          setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+          return updatedOptions;
+        });
       }
+      setFormData(formData => ({ ...formData, neighborhoodAdjectives: updatedOptions }));
+
+
+
+
+
+     
+
+      if (nehoodAdjectivesDivContainerDisplay.current){
+        
+        setTimeout(() => {
+          nehoodAdjectivesDivContainerDisplay.current.scrollTop = nehoodAdjectivesDivContainerDisplay.current.scrollHeight;
+        }, 0);
+      }
+
+
+
+
+
+
+
+
+      // }
     } else if (description === "resident") {
       if (residentsAdjsSelectedOpts.length < 5) {
         let updatedOptions;
@@ -533,8 +553,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         const containsSpecificWord = foodTypesSelectedOpts.some((obj) => obj.assessment.includes(option));
 
-        console.log("option", option);
-
         if (!containsSpecificWord) {
 
           setFoodTypesSelectedOpts(prevOptions => {
@@ -558,7 +576,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       const favTypesOfFoodDiv = favTypesOfFoodRef.current;
       if (favTypesOfFoodDiv) {
-
         setTimeout(() => {
           favTypesOfFoodDiv.scrollTop = favTypesOfFoodDiv.scrollHeight;
         }, 0);
@@ -596,7 +613,6 @@ const FormComponent = ({ updateCurrentUser }) => {
       })
       setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
     } else if (description === "foodTypes") {
-
 
 
       const advjectivesListDivs = [...typesOfFoodRecommendationsRef.current.children];
@@ -899,13 +915,15 @@ const FormComponent = ({ updateCurrentUser }) => {
           ref={ref => divRefs.current[3] = ref}
         >
           <label>
-            Choose no more than <span className="questionHighlight">5 adjectives to describe
-              <span className="nhoodName"> {neighborhood}: </span> </span>
+            What <span className="questionHighlight"> adjectives</span> describe
+            <span style={{textDecoration:"underline"}} className="nhoodName"> {neighborhood}: </span>
           </label>
 
 
+
+
           {selectedOptions.length > 0 && (
-            <div className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+            <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
               {selectedOptions.map((option, index) => (
                 <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
                   {option}
@@ -3208,8 +3226,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     </div>
   )
-
-
 
 
 }
