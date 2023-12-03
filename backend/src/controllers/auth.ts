@@ -342,9 +342,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
   // const allNeighborhoods = await Neighborhood.find({});
   const db = getDb();
   const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
-
-  console.log("neighborhoods", neighborhoods);
-  
   res.status(200).send(neighborhoods);
 }
 
@@ -355,10 +352,7 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getNeighborhood = async (req: Request, res: Response) => {
-
   const { neighborhoodid } = req.params;
-  // const neighborhood = await Neighborhood.findById(neighborhoodid);
-  // console.log("neighborhooddd", neighborhood);
   const db = getDb();
   const neighbohoods = db.collection("neighborhoods");
   const neighborhood = await neighbohoods.findOne({ _id: new ObjectId(neighborhoodid) })

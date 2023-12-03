@@ -17,12 +17,10 @@ import Navbar from 'react-bootstrap/Navbar';
 function Header({ updateCurrentUser, currentuser }) {
   
   axios.defaults.withCredentials = true;
-
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
- 
-    
+     
     try {
       // await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
       //https://backendd-w4arsp4ahq-uc.a.run.app
@@ -53,8 +51,8 @@ function Header({ updateCurrentUser, currentuser }) {
 
   return (
     <Navbar bg="dark" data-bs-theme="dark">
-      <Container>
-        <Navbar.Brand as={Link} to="/">Insdr Hood</Navbar.Brand>
+      <Container id="container_">
+        <Navbar.Brand id="navBrand" as={Link} to="/">Insdr Hood</Navbar.Brand>
         <Nav className="me-auto">
           {links}
         </Nav>

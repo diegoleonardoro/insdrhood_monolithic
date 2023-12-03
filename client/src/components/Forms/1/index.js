@@ -136,6 +136,10 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate(`/neighborhood/${neighborhoodId}`);
   }
 
+
+
+
+
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
     // request to save new user's data:
@@ -147,6 +151,11 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate(`/neighborhood/${neighborhoodId}`);
     return;
   }
+
+
+
+
+
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
   const nycResidentChecker = (value) => {
@@ -399,12 +408,16 @@ const FormComponent = ({ updateCurrentUser }) => {
     }))
   };
 
-
   // function that will validate email format:
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
+
+
+
+
+
 
   // The following function will make the request to save the user user in the database:
   const submitNewUserData = (event) => {
@@ -418,8 +431,11 @@ const FormComponent = ({ updateCurrentUser }) => {
     };
     // make request to save user
     registerNewUser(newUserData);
-
   };
+
+
+
+
 
 
   // The following functions will filter the neighborhoods when the user is responding what neighborhood they live in:
@@ -570,7 +586,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   };
 
-
   const handleOptionRemove = (option, description) => {
     if (description === "neighborhood") {
       const advjectivesListDivs = [...nehoodAdjectivesDivRef.current.children];
@@ -623,7 +638,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   // this function will be triggered when the user is adding restaurants to the recommended food types:
   const handleRecommendedRestaurant = (value, index) => {
-
 
     setFormData((prevFormData) => {
       // Map over the recommendedFoodTypes to create a new array

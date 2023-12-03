@@ -256,7 +256,6 @@ const getAllNeighborhoods = async (req, res) => {
     // const allNeighborhoods = await Neighborhood.find({});
     const db = (0, index_1.getDb)();
     const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
-    console.log("neighborhoods", neighborhoods);
     res.status(200).send(neighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
@@ -267,8 +266,6 @@ exports.getAllNeighborhoods = getAllNeighborhoods;
  */
 const getNeighborhood = async (req, res) => {
     const { neighborhoodid } = req.params;
-    // const neighborhood = await Neighborhood.findById(neighborhoodid);
-    // console.log("neighborhooddd", neighborhood);
     const db = (0, index_1.getDb)();
     const neighbohoods = db.collection("neighborhoods");
     const neighborhood = await neighbohoods.findOne({ _id: new mongodb_1.ObjectId(neighborhoodid) });

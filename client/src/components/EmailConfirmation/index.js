@@ -15,7 +15,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
   const { emailtoken } = useParams();
   const [errors, setErrors] = useState(null);
   const [user, setUser] = useState(null);
-
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
@@ -38,10 +37,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
    
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
-
-      console.log('asdf', response)
       setUser(response.data);
-
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }
