@@ -99,7 +99,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   const favoritePlacesContainerRef = useRef();
   const showFormToResident = liveinNYC === "yes" ? "visible" : "hidden";
   const onlyNYCResidentsSign = liveinNYCSign === "no" ? "block" : "none";
-
   const [loggedUser, setLoggedUser] = useState(null);
 
 
@@ -136,10 +135,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate(`/neighborhood/${neighborhoodId}`);
   }
 
-
-
-
-
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
     // request to save new user's data:
@@ -151,11 +146,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate(`/neighborhood/${neighborhoodId}`);
     return;
   }
-
-
-
-
-
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
   const nycResidentChecker = (value) => {
@@ -415,10 +405,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
 
 
-
-
-
-
   // The following function will make the request to save the user user in the database:
   const submitNewUserData = (event) => {
 
@@ -433,18 +419,13 @@ const FormComponent = ({ updateCurrentUser }) => {
     registerNewUser(newUserData);
   };
 
-
-
-
-
-
   // The following functions will filter the neighborhoods when the user is responding what neighborhood they live in:
   const neighborhoodsArray = [];
   const displayNhoodsContainer = neighborhoods.length === 0 ? "none" : "flex";
   const selectNeighborhoods = (e) => {
     const val = e.target.value;
     setNeighborhoods([]);
-    if (val.length > 0) {
+    if (val.length > 2) {
       for (var i = 0; i < arr.length; i++) {
         if (
           arr[i].substring(0, val.length).toUpperCase() === val.toUpperCase()
@@ -509,7 +490,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   // THIS FUNCTION WILL BE ACTIVATED EVERY TIME ANY OF THE OPTION BUTTONS IN THE FORM ARE CLICKED.
   // IT WILL UPATE THE FORM WITH THE RESPECTIVE VALUE.
 
-  const handleOptionSelect = (option, description, event) => { // --->> ?????
+  const handleOptionSelect = (option, description, event) => {
 
     if (description === "nhood") {
 
