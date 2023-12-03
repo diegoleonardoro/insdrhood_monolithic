@@ -2,7 +2,6 @@
   position: relative;
   width: 50%;
   left: 50%;
-  top: 150px;
   transform: translate(-50%, 0%);
   background-color: #f8f9fa;
   display: flex;
@@ -487,3 +486,13 @@
 }
 
 
+
+
+/* media queries: */
+
+@media screen and (max-width: 777px) {
+  .mainContainer {
+    width: 90%; /* Adjust width to 90% */
+    max-width: 90%;
+  }
+}
