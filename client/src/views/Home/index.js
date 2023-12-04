@@ -25,25 +25,6 @@ function Home() {
   }, []);
 
 
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-
-  // useEffect(() => {
-  // Define an async function
-  // const fetchData = async () => {
-  //   try {
-  //     // Replace the URL with your backend endpoint
-  //     const response = await axios.get('http://localhost:3001/api/data-endpoint');
-  //     setResidentsData(response.data);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     setError(err.message);
-  //     setLoading(false);
-  //   }
-  // };
-  // fetchData();
-  // }, []);  // The empty array means this useEffect will run once when the component mounts
-
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {
     return (
       <tr key={neighborhood._id}>

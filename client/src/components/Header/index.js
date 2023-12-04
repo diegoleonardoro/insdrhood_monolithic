@@ -4,23 +4,34 @@ import { Link } from 'react-router-dom';
 import axios from "axios"
 import "./header.css";
 import { useNavigate } from "react-router-dom";
-
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 
 // import Col from 'react-bootstrap/Col';
 // import Image from 'react-bootstrap/Image';
 
 function Header({ updateCurrentUser, currentuser }) {
-  
+
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
 
+  const location = useLocation();
+
+  const [showHeader, setShowHeader] = useState(true);
+
+  useEffect(() => {
+    // Set the showHeader state based on the current route
+
+    setShowHeader(location.pathname === '/questionnaire');
+
+  }, [location]);
+
   const handleSignOut = async () => {
-     
+
     try {
       // await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
       //https://backendd-w4arsp4ahq-uc.a.run.app
@@ -50,23 +61,29 @@ function Header({ updateCurrentUser, currentuser }) {
     });
 
   return (
-    <Navbar bg="dark" data-bs-theme="dark">
-      <Container id="container_">
-        <Navbar.Brand id="navBrand" as={Link} to="/">Insdr Hood</Navbar.Brand>
-        <Nav className="me-auto">
-          {links}
-        </Nav>
-        <Form className="d-flex">
-          <Form.Control
-            type="search"
-            placeholder="Search neighborhood"
-            className="me-2"
-            aria-label="Search neighborhood"
-          />
-          <Button variant="outline-warning">Search</Button>
-        </Form>
-      </Container>
-    </Navbar>
+    <>
+      {!showHeader ? (
+        <Navbar bg="dark" data-bs-theme="dark">
+          <Container id="container_">
+            <Navbar.Brand id="navBrand" as={Link} to="/">
+              Insdr Hood
+            </Navbar.Brand>
+            <Nav className="me-auto">
+              {links}
+            </Nav>
+            <Form className="d-flex">
+              <Form.Control
+                type="search"
+                placeholder="Search neighborhood"
+                className="me-2"
+                aria-label="Search neighborhood"
+              />
+              <Button variant="outline-warning">Search</Button>
+            </Form>
+          </Container>
+        </Navbar>
+      ) : null}
+    </>
   )
 }
 

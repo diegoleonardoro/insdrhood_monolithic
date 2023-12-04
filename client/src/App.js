@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from "axios"
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback  } from "react";
 import Home from "./views/Home";
 import Header from "./components/Header";
 import Signin from './components/Signin';
@@ -19,8 +19,11 @@ function App() {
 
   const [currentuser, setCurrentUser] = useState(null);
 
+
+
+
   const updateCurrentUser = useCallback((data) => {
-    
+
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
         setCurrentUser(data);
@@ -58,7 +61,7 @@ function App() {
     <Router>
       <div className="App">
         <div>
-          <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
+           <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
           {
             currentuser && currentuser.isVerified === false ? (
               <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0" }}>
@@ -82,7 +85,7 @@ function App() {
       </div>
     </Router>
   );
-  
+
 }
 
 export default App;
