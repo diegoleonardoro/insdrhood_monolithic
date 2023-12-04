@@ -125,7 +125,7 @@
   visibility: hidden;
 }
 
-.form > div input:not(.inputCheck):not(.foodTypeInput){
+.form > div input:not(.inputCheck):not(.foodTypeInput):not(.completeSentenceInput){
   position:relative;
   top:10px;
   width:70%;
@@ -175,8 +175,7 @@
   margin-top:20px;
 }
 
-.textInput:focus{
-
+input:focus{
     outline:none !important;
     outline-width: 0 !important;
     box-shadow: none;
@@ -208,15 +207,27 @@
 
 
 
+.completeSentenceInput{
+  width: 70%; 
+  border-color:transparent transparent rgb(222, 220, 220) transparent ;
+  outline-width: 0;
+  background-color: transparent;
+  outline: none;
+  padding-left: 10px;
+  top:0px
+}
+
+
+
+
+
 /*How long have you lived in the neighborhood*/
 .selectOptions{
   padding: 10px;
   border: 1px solid #aba7a7;
   cursor: pointer;
   outline-width: 0;
-  -webkit-appearance: none; 
-  -moz-appearance: none;
-  appearance: none;
+ 
 }
 
 
@@ -255,6 +266,10 @@
   padding-bottom: 0px;
   outline: none;
   resize: none;
+}
+
+#nhoodDescription{
+  top:0px;
 }
 
 .textarea_text:focus {

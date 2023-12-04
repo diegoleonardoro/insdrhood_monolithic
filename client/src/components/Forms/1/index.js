@@ -531,7 +531,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
 
-      if (residentAdjectivesDivContainer.current){
+      if (residentAdjectivesDivContainer.current) {
         setTimeout(() => {
           residentAdjectivesDivContainer.current.scrollTop = residentAdjectivesDivContainer.current.scrollHeight
         }, 0);
@@ -542,7 +542,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       //residentAdjectivesDivContainer
 
 
-      
+
       // }
     } else if (description === "foodType") {
 
@@ -1295,16 +1295,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           <h5 style={{ marginBottom: "15px", width: '100%' }}>Complete the sentence:</h5>
           <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
             <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
-            <input style={{
-              width: "auto",
-              border: "none",
-              borderBottom: "1px solid black",
-              backgroundColor: "transparent",
-              outline: "none",
-              paddingLeft: "10px",
-              top: "0px"
-            }}
-              className="textInput"
+            <input
+              className="completeSentenceInput"
               onChange={
                 (e) => {
                   setFormData({
@@ -1326,15 +1318,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
           <div>
             People should visit {neighborhood} <span className="questionHighlight">if they want:</span>
-            <input style={{
-              width: "auto",
-              border: "none",
-              borderBottom: "1px solid black",
-              backgroundColor: "transparent",
-              outline: "none",
-              paddingLeft: "10px",
-              top: "0px"
-            }}
+            <input
+              className="completeSentenceInput"
               onChange={
                 (e) => {
                   setFormData({
@@ -1360,7 +1345,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <span className="questionHighlight nhoodName">{neighborhood}</span>?
           </label>
           <textarea
-            className="textarea_text inputCheck"
+            className="textarea_text"
             name="neighborhood_description"
             id="nhoodDescription"
             onChange={(e) => {
@@ -1763,15 +1748,9 @@ const FormComponent = ({ updateCurrentUser }) => {
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
           <div>
             <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
-            <input style={{
-              width: "auto",
-              border: "none",
-              borderBottom: "1px solid black",
-              backgroundColor: "transparent",
-              outline: "none",
-              paddingLeft: "10px",
-              top: "0px"
-            }}
+            <input
+
+              className="completeSentenceInput"
               onChange={(e) => {
                 setFormData({
                   ...formData,
@@ -1805,7 +1784,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             What makes <span className="questionHighlight"> food in  <span className="nhoodName">{neighborhood}</span></span> special?
           </label>
           <textarea
-            className="textarea_text inputCheck"
+            className="textarea_text"
             onChange={(e) => {
               setFormData({
                 ...formData,
@@ -1864,7 +1843,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                         className="foodTypeInput"
                         type="text"
                         onChange={(e) => handleRecommendedRestaurant(e.target.value, index)}
-                        style={{ border: "none", borderBottom: "1px solid #b5afaf", outline: "none", width: "100%" }}
+                        style={{ border: "none", borderBottom: "1px solid #b5afaf", outline: "none", width: "100%", backgroundColor: "transparent" }}
                       />
                     </label>
                   </div>
@@ -2148,7 +2127,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         >
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
           <div style={{ display: "fex", alignItems: "center", width: "120%", position: "relative" }}>
-            <div style={{ display: "fex", alignItems: "center" }}>
+            <div style={{ display: "fex", alignItems: "center", textAlign:"left" }}>
               <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
               <input style={{
                 display: 'inline-block',
@@ -2156,7 +2135,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 borderBottom: '1px solid black',
                 backgroundColor: 'transparent',
                 outline: 'none',
-                width: '25%',
+               
                 top: '0px'
               }}
                 onChange={
@@ -2180,7 +2159,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 backgroundColor: 'transparent',
                 marginLeft: '5px',
                 outline: 'none',
-                width: '25%',
+                
                 top: '0px'
               }}
                 onChange={
@@ -2534,7 +2513,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
 
           <div style={{ display: "fex", alignItems: "center", position: "relative" }}>
-            <div style={{ display: "fex", alignItems: "center" }}>
+            <div style={{ display: "fex", alignItems: "center" , textAlign:"left"}}>
               <p style={{ display: "inline" }}>If I had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
               <input style={{
                 display: 'inline-block',
