@@ -18,16 +18,12 @@ function Header({ updateCurrentUser, currentuser }) {
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
-
   const location = useLocation();
-
   const [showHeader, setShowHeader] = useState(true);
 
   useEffect(() => {
     // Set the showHeader state based on the current route
-
     setShowHeader(location.pathname === '/questionnaire');
-
   }, [location]);
 
   const handleSignOut = async () => {
@@ -51,7 +47,6 @@ function Header({ updateCurrentUser, currentuser }) {
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, to, onClick }, index) => {
-
       if (onClick) {
         return <Nav.Link key={index} onClick={onClick}>{label}</Nav.Link>
       }

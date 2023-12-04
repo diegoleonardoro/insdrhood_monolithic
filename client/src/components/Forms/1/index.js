@@ -8,6 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
+
+
 // import { setTimeout } from "timers";
 
 
@@ -16,6 +18,8 @@ let addPlaceFromForm = true;
 let addPlaceFromFormNightLife = true;
 
 const FormComponent = ({ updateCurrentUser }) => {
+
+
 
   const [displayKeyWord, setDisplayKeyWord] = useState(["liveInNY"]);
   const [neighborhood, setNeighborhood] = useState("");
@@ -109,19 +113,16 @@ const FormComponent = ({ updateCurrentUser }) => {
     if (loggedUser === null) {
       checkCurrentUser()
     };
-
-    // const handleTouchStart = (e) => {
-    //   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-    //     e.preventDefault();
-    //   }
-    // };
-    // document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    // return () => {
-    //   document.removeEventListener('touchstart', handleTouchStart);
-    // };
   }, []);
 
   const navigate = useNavigate();
+
+
+
+  const handleGoBack = () => {
+    navigate(-1); // This function navigates back to the previous path
+  };
+  
   // a request to check the currently logged in user needs to be made:
   const checkCurrentUser = async () => {
     try {
@@ -782,6 +783,19 @@ const FormComponent = ({ updateCurrentUser }) => {
       </div>
 
 
+
+
+
+
+      <div style={{ position: "absolute", top: "10px", right: "10px" }} onClick={handleGoBack}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+        </svg>
+      </div>
+
+
+
+
       <form ref={formUseRef} className="form" >
 
         {/** Do you live in NYC? */}
@@ -1303,7 +1317,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           ref={ref => divRefs.current[4] = ref}
         >
           <h5 style={{ marginBottom: "15px", width: '100%' }}>Complete the sentence:</h5>
-          <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", textAlign:"left"}}>
+          <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", textAlign: "left" }}>
             <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
             <input
               className="completeSentenceInput"
@@ -2145,7 +2159,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 borderBottom: '1px solid black',
                 backgroundColor: 'transparent',
                 outline: 'none',
-                width:"35%",
+                width: "35%",
                 top: '0px'
               }}
                 onChange={
