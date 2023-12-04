@@ -109,6 +109,16 @@ const FormComponent = ({ updateCurrentUser }) => {
     if (loggedUser === null) {
       checkCurrentUser()
     };
+
+    // const handleTouchStart = (e) => {
+    //   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    //     e.preventDefault();
+    //   }
+    // };
+    // document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    // return () => {
+    //   document.removeEventListener('touchstart', handleTouchStart);
+    // };
   }, []);
 
   const navigate = useNavigate();
@@ -2127,7 +2137,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         >
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
           <div style={{ display: "fex", alignItems: "center", width: "120%", position: "relative" }}>
-            <div style={{ display: "fex", alignItems: "center", textAlign:"left" }}>
+            <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
               <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
               <input style={{
                 display: 'inline-block',
@@ -2135,7 +2145,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 borderBottom: '1px solid black',
                 backgroundColor: 'transparent',
                 outline: 'none',
-               
+
                 top: '0px'
               }}
                 onChange={
@@ -2159,7 +2169,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 backgroundColor: 'transparent',
                 marginLeft: '5px',
                 outline: 'none',
-                
+
                 top: '0px'
               }}
                 onChange={
@@ -2513,7 +2523,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
 
           <div style={{ display: "fex", alignItems: "center", position: "relative" }}>
-            <div style={{ display: "fex", alignItems: "center" , textAlign:"left"}}>
+            <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
               <p style={{ display: "inline" }}>If I had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
               <input style={{
                 display: 'inline-block',

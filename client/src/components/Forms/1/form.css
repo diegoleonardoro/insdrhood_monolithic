@@ -26,6 +26,12 @@
   margin:50px;
 }
 
+input, textarea {
+    font-size: 16px; /* Set a base font size */
+    max-height: 100px; /* Set a maximum height for input elements */
+    -webkit-text-size-adjust: none; /* Disable automatic font resizing */
+}
+
 .display {
   display: flex;
   flex-direction: column;
