@@ -1303,7 +1303,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           ref={ref => divRefs.current[4] = ref}
         >
           <h5 style={{ marginBottom: "15px", width: '100%' }}>Complete the sentence:</h5>
-          <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+          <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", textAlign:"left"}}>
             <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
             <input
               className="completeSentenceInput"
@@ -1326,7 +1326,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           ref={ref => divRefs.current[5] = ref}
         >
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
-          <div>
+          <div style={{ textAlign: "left" }}>
             People should visit {neighborhood} <span className="questionHighlight">if they want:</span>
             <input
               className="completeSentenceInput"
@@ -1756,7 +1756,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             shakie} ref={ref => divRefs.current[8] = ref}>
 
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
-          <div>
+          <div style={{ textAlign: "left" }}>
             <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
             <input
 
@@ -2145,7 +2145,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 borderBottom: '1px solid black',
                 backgroundColor: 'transparent',
                 outline: 'none',
-
+                width:"35%",
                 top: '0px'
               }}
                 onChange={
@@ -2169,7 +2169,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 backgroundColor: 'transparent',
                 marginLeft: '5px',
                 outline: 'none',
-
+                width: "35%",
                 top: '0px'
               }}
                 onChange={
@@ -2309,7 +2309,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         >
           <h4 style={{ textAlign: "center" }}>Agree or disagree: </h4>
           <div>
-            <label style={{ fontWeight: "normal", width: "150%", left: "50%", transform: "translate(-50%, 0)", marginBottom: "7px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
+            <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "7px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
             <div style={{ height: "30px", width: "100%", borderBottom: "1px dotted black" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="statementResponseContainer">
@@ -2402,7 +2402,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
         {/** NIGHTLIFE */}
-        {/** What differentiates the night life of {neighborhood}*/}
+        {/** How do you descrie the nighlife of {neighborhood}*/}
         <div
           className={
             "agreeOrDisagreeFood nightLifePlacesRecommendations nightLifeRecommendations nightlifeQuestions " +
@@ -2421,7 +2421,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <span className="nhoodName">{neighborhood}</span>?
           </label>
           <textarea
-            className="textarea_text inputCheck"
+            className="textarea_text" /** inputCheck */
             onChange={(e) => {
               setFormData({
                 ...formData,
@@ -2531,7 +2531,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 borderBottom: '1px solid black',
                 backgroundColor: 'transparent',
                 outline: 'none',
-                width: '25%',
+                width: '35%',
                 top: '0px'
               }}
                 onChange={
@@ -2555,7 +2555,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 borderBottom: '1px solid black',
                 backgroundColor: 'transparent',
                 outline: 'none',
-                width: '25%',
+                width: '35%',
                 top: '0px'
               }}
                 onChange={
