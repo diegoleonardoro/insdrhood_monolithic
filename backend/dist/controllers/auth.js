@@ -156,7 +156,7 @@ const verifyemail = async (req, res) => {
     const updatedUser = await users.findOneAndUpdate({ _id: user._id }, {
         $set: {
             isVerified: true,
-            emailToken: ''
+            // emailToken: ''
         }
     }, { returnDocument: 'after' });
     // Generate JWT

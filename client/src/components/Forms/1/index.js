@@ -19,8 +19,6 @@ let addPlaceFromFormNightLife = true;
 
 const FormComponent = ({ updateCurrentUser }) => {
 
-
-
   const [displayKeyWord, setDisplayKeyWord] = useState(["liveInNY"]);
   const [neighborhood, setNeighborhood] = useState("");
   const [liveinNYC, setLiveinNYC] = useState("no");
@@ -63,7 +61,6 @@ const FormComponent = ({ updateCurrentUser }) => {
       description: "",
     },
   ]);
-
 
   const [newUserData, setNewUserData] = useState({
     name: '',
@@ -110,19 +107,62 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
   useEffect(() => {
+
     if (loggedUser === null) {
       checkCurrentUser()
     };
+
+    /** localStorage stated updates */
+    // const savedFormData = JSON.parse(localStorage.getItem("formData"));
+    // if (savedFormData) {
+    //   setFormData(savedFormData)
+    // };
+
+    // const savedDisplayKeyWord = JSON.parse(localStorage.getItem("displayKeyWord"));
+    // if (savedDisplayKeyWord) {
+    //   console.log('savedDisplayKeyWord', savedDisplayKeyWord)
+    //   setDisplayKeyWord(savedDisplayKeyWord)
+    // }
+
+    // const savedNeighborhood = JSON.parse(localStorage.getItem("neighborhood") );
+    // if (savedNeighborhood){
+    //   setNeighborhood(savedNeighborhood);
+    // }
+
+    // const savedLiveinNYC = JSON.parse(localStorage.getItem("liveinNYC"));
+    // if (savedLiveinNYC){
+    //   setLiveinNYC("yes");
+    // }
+    /** ------------------------------ */
+
   }, []);
 
+
+ 
+  /** useEffects that will be used for localStorage: */
+  // useEffect(() => {
+  //   localStorage.setItem("formData", JSON.stringify(formData))
+  // }, [formData]);
+
+  // useEffect(() => {
+  //   console.log('displayKeyWord', displayKeyWord)
+  //   localStorage.setItem("displayKeyWord", JSON.stringify(displayKeyWord))
+  // }, [displayKeyWord]);
+
+  // useEffect(() => {
+  //   localStorage.setItem("neighborhood", JSON.stringify(neighborhood))
+  // }, [neighborhood]);
+  /** ----------------------------------------------- */
+
+
+
+
   const navigate = useNavigate();
-
-
 
   const handleGoBack = () => {
     navigate(-1); // This function navigates back to the previous path
   };
-  
+
   // a request to check the currently logged in user needs to be made:
   const checkCurrentUser = async () => {
     try {
@@ -168,6 +208,8 @@ const FormComponent = ({ updateCurrentUser }) => {
     if (value === "yes") {
       setLiveinNYC("yes");
       setDisplayKeyWord(["neighborhood"]);
+ 
+
     } else if (value === "no") {
       setLiveinNYCSign("no");
       form.style.display = "none";
@@ -249,6 +291,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             letsTalkAboutGeneralInfo.current.style.display = "none";
           }, 1000);
         };
+
 
         // This if statement sets the value the state "neighborhood", when the "next" arrow is clicked on the neighborhood input.
         if (currentDiv.className.indexOf("neighborhoodInput") > -1) {
@@ -352,6 +395,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
     setDisplayKeyWord([keyWord]);
+
   }
 
 
@@ -782,19 +826,11 @@ const FormComponent = ({ updateCurrentUser }) => {
         </Alert>
       </div>
 
-
-
-
-
-
       <div style={{ position: "absolute", top: "10px", right: "10px" }} onClick={handleGoBack}>
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
           <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
         </svg>
       </div>
-
-
-
 
       <form ref={formUseRef} className="form" >
 
@@ -856,6 +892,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             value={formData.neighborhood}
             onChange={(e) => {
               setFormData({ ...formData, neighborhood: e.target.value });
+              localStorage.setItem("neighborhood", JSON.stringify(e.target.value))
               selectNeighborhoods(e);
             }}
             onKeyDown={(e) => {

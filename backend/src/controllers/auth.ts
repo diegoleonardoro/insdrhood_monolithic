@@ -203,7 +203,7 @@ export const verifyemail = async (req: Request, res: Response) => {
     {
       $set: {
         isVerified: true,
-        emailToken: ''
+        // emailToken: ''
       }
     },
     { returnDocument: 'after' }
