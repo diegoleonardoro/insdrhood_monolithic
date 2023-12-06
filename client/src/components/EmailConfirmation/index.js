@@ -61,7 +61,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
         // DIRECT THE USER TO RESPOND THE FORM 
         const queryString = `token=${emailtoken}`
-        updateCurrentUser(user);
+        // updateCurrentUser(user);
         setTimeout(() => {
           navigate(`/?${queryString}`);
         }, 2000);

@@ -12,7 +12,7 @@ function Home({ currentuser, updateCurrentUser }) {
 
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
 
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
   useEffect(() => {
     // Extract the token from the URL
@@ -20,7 +20,8 @@ function Home({ currentuser, updateCurrentUser }) {
 
     const token = urlParams.get('token');
 
-    if (token && !currentuser) {
+    // && !currentuser
+    if (token) {
 
       const logUserWithToken = async () => {
         try {
@@ -45,7 +46,6 @@ function Home({ currentuser, updateCurrentUser }) {
       }
     })();
   }, []);
-
 
 
 
@@ -97,6 +97,7 @@ function Home({ currentuser, updateCurrentUser }) {
       {<tbody>{neighborhoodsList}</tbody>}
     </Table>
   );
+
 }
 
 export default Home;
