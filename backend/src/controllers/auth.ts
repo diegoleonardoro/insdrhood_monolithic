@@ -140,9 +140,22 @@ export const login = async (req: Request, res: Response) => {
  * @access public 
  */
 export const currentuser = async (req: Request, res: Response) => {
-
   res.send(req.currentUser || null);
 }
+
+
+
+/**
+ * @description authenticate user with email token
+ * @route GET /tokenauth/:token
+ * @access public 
+ */
+// Create route that will ahthenticate user with the email token 
+
+
+
+
+
 
 /**
  * @description logs user out 

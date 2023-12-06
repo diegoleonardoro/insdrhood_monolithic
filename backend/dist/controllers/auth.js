@@ -113,6 +113,12 @@ const currentuser = async (req, res) => {
 };
 exports.currentuser = currentuser;
 /**
+ * @description authenticate user with email token
+ * @route GET /tokenauth/:token
+ * @access public
+ */
+// Create route that will ahthenticate user with the email token 
+/**
  * @description logs user out
  * @route POST /api/signout
  * @access only accesible when user is authenticated

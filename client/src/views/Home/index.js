@@ -5,16 +5,31 @@ import Table from 'react-bootstrap/Table';
 import axios from "axios";
 import { Link } from "react-router-dom"
 
-function Home() {
+function Home({ currentuser }) {
 
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
 
   useEffect(() => {
+
+    console.log("currentuseryyyyy", currentuser);
+    // Extract the token from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token && !currentuser) {
+
+      console.log("tokennn", token);
+      
+      // make request that will authenticate user with the email token :
+
+
+      
+    } 
+
+
     (async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
-
-        console.log("response", response)
         setNeighborhoodsData(response.data);
 
       } catch (error) {

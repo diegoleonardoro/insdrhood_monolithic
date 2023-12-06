@@ -22,8 +22,9 @@ function App() {
 
 
 
-  const updateCurrentUser = useCallback((data) => {
 
+
+  const updateCurrentUser = useCallback((data) => {
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
         setCurrentUser(data);
@@ -75,7 +76,7 @@ function App() {
           }
         </div>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home currentuser={currentuser} />} />
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
