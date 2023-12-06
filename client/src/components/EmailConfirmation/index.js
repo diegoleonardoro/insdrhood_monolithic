@@ -59,9 +59,11 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO RESPOND THE FORM 
+
+        const queryString = `token=${emailtoken}`
         updateCurrentUser(user);
         setTimeout(() => {
-          navigate('/');
+          navigate(`/?${queryString}`);
         }, 2000);
 
 
@@ -71,8 +73,9 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO THE MAIN PAGE (EVENTUALLY DIRECT THEM TO THEIR PROFILE)
+        const queryString = `token=${emailtoken}`
         setTimeout(() => {
-          navigate('/');
+          navigate(`/?${queryString}`);
         }, 2000);
 
       }
