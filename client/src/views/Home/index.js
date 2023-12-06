@@ -4,28 +4,35 @@ import './home.css';
 import Table from 'react-bootstrap/Table';
 import axios from "axios";
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
-function Home({ currentuser }) {
+function Home({ currentuser, updateCurrentUser }) {
+
+  const navigate = useNavigate();
 
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
 
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
 
-    console.log("currentuseryyyyy", currentuser);
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
+
     const token = urlParams.get('token');
 
     if (token && !currentuser) {
 
-      console.log("tokennn", token);
-      
-      // make request that will authenticate user with the email token :
-
-
-      
-    } 
-
+      const logUserWithToken = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
+          setUser(response.data);
+        } catch (error) {
+          // Handle error here
+        }
+      };
+      logUserWithToken(); 
+    };
 
     (async () => {
       try {
@@ -38,6 +45,20 @@ function Home({ currentuser }) {
       }
     })();
   }, []);
+
+
+  useEffect(() => {
+    if (user !== null) {
+      // DIRECT THE USER TO RESPOND THE FORM 
+      updateCurrentUser(user);
+      setTimeout(() => {
+        navigate(`/`);
+      }, 2000);
+
+    } else {
+
+    }
+  }, [user])
 
 
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {
@@ -59,7 +80,6 @@ function Home({ currentuser }) {
 
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error}</div>;
-
 
   return (
     <Table striped bordered hover size="sm" style={{ width: "90%", margin: "50px auto" }} >

@@ -12,17 +12,11 @@ import FormComponent from './components/Forms/1';
 import NeighborhoodProfile from './components/Neighborhood';
 import Alert from 'react-bootstrap/Alert';
 
-
 function App() {
 
   const HeaderMemo = React.memo(Header);
 
   const [currentuser, setCurrentUser] = useState(null);
-
-
-
-
-
 
   const updateCurrentUser = useCallback((data) => {
     return new Promise((resolve, reject) => {
@@ -57,7 +51,6 @@ function App() {
   }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
 
 
-
   return (
     <Router>
       <div className="App">
@@ -76,7 +69,7 @@ function App() {
           }
         </div>
         <Routes>
-          <Route path="/" element={<Home currentuser={currentuser} />} />
+          <Route path="/" element={<Home currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
