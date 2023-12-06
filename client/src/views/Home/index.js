@@ -15,7 +15,6 @@ function Home({ currentuser, updateCurrentUser }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -26,7 +25,8 @@ function Home({ currentuser, updateCurrentUser }) {
       const logUserWithToken = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
-          setUser(response.data);
+          // setUser(response.data);
+          updateCurrentUser(response.data);
         } catch (error) {
           // Handle error here
         }
@@ -47,18 +47,21 @@ function Home({ currentuser, updateCurrentUser }) {
   }, []);
 
 
-  useEffect(() => {
-    if (user !== null) {
-      // DIRECT THE USER TO RESPOND THE FORM 
-      updateCurrentUser(user);
-      setTimeout(() => {
-        navigate(`/`);
-      }, 2000);
 
-    } else {
 
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (user !== null) {
+  //     // DIRECT THE USER TO RESPOND THE FORM 
+  //     updateCurrentUser(user);
+  //     // setTimeout(() => {
+  //     //   navigate(`/`);
+  //     // }, 2000);
+  //   } else {
+  //   }
+  // }, [user])
+
+
+
 
 
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {

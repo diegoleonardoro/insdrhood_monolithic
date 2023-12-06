@@ -32,6 +32,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
   const navigate = useNavigate();
 
+     
   // make request to get the user with the emailtoken
   const makeRequest = async () => {
     try {
@@ -42,6 +43,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
     }
   }
 
+  
   useEffect(() => {
     makeRequest()
   }, [])
@@ -167,6 +169,8 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       }
     </div>
   )
+
+
 
 }
 
