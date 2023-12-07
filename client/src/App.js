@@ -11,12 +11,19 @@ import VerifyEmail from './components/EmailConfirmation';
 import FormComponent from './components/Forms/1';
 import NeighborhoodProfile from './components/Neighborhood';
 import Alert from 'react-bootstrap/Alert';
+import { useLocation } from 'react-router-dom'; // Import useLocation
+
 
 function App() {
 
   const HeaderMemo = React.memo(Header);
 
   const [currentuser, setCurrentUser] = useState(null);
+
+  const hasTokenInUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.has('token');
+  };
 
   const updateCurrentUser = useCallback((data) => {
     return new Promise((resolve, reject) => {
@@ -29,17 +36,15 @@ function App() {
     });
   }, []);
 
+
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
  
     try {
-
       // I want to make the following request only when there is not a token in the url:
-
-      // const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      // console.log("response data", response.data);
-      // updateCurrentUser(response.data);
-
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+      console.log("response data", response.data);
+      updateCurrentUser(response.data);
 
     } catch (error) {
       // Handle the error appropriately
@@ -49,10 +54,9 @@ function App() {
 
 
 
-
   useEffect(() => {
 
-    if (currentuser === null) {
+    if (!hasTokenInUrl() && currentuser === null) {
       const timer = setTimeout(() => {
         checkCurrentUser();
       }, 1000);
