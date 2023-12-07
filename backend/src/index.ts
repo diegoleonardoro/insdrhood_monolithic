@@ -56,6 +56,9 @@ app.set("trust proxy", true);
 // mongoose.connect('mongodb+srv://diegoleoro:Sinnerman_0915@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority');
 
 
+
+console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+
 app.use(
   cookieSession({
     signed: false,
