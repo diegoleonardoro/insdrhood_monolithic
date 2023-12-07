@@ -31,17 +31,33 @@ function App() {
 
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
+
+    console.log("app componenttttt");
+    
     try {
+
+      // I want to make the following request only when there is not a token in the url:
+
+
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
 
+      console.log("response data", response.data);
+      
       updateCurrentUser(response.data);
+
     } catch (error) {
       // Handle the error appropriately
       console.error('Failed to check current user:', error);
     }
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
+
+
+
   useEffect(() => {
+
+    console.log("app componenttttaaaaaaa");
+
     if (currentuser === null) {
       const timer = setTimeout(() => {
         checkCurrentUser();

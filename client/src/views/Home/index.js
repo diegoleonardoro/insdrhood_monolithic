@@ -15,6 +15,7 @@ function Home({ currentuser, updateCurrentUser }) {
   // const [user, setUser] = useState(null);
 
   useEffect(() => {
+
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -24,15 +25,21 @@ function Home({ currentuser, updateCurrentUser }) {
     if (token) {
 
       const logUserWithToken = async () => {
+        console.log("lelelelel")
         try {
+
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
           // setUser(response.data);
           updateCurrentUser(response.data);
+
         } catch (error) {
           // Handle error here
         }
+
       };
+
       logUserWithToken(); 
+    
     };
 
     (async () => {
@@ -45,6 +52,7 @@ function Home({ currentuser, updateCurrentUser }) {
         // Handle the error state appropriately here
       }
     })();
+
   }, []);
 
 
