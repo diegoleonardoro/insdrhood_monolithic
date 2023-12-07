@@ -25,11 +25,11 @@ function Home({ currentuser, updateCurrentUser }) {
     if (token) {
 
       const logUserWithToken = async () => {
-        console.log("lelelelel")
         try {
 
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
           // setUser(response.data);
+          console.log('response from index component', response.data)
           updateCurrentUser(response.data);
 
         } catch (error) {
