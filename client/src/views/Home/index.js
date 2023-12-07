@@ -29,17 +29,15 @@ function Home({ currentuser, updateCurrentUser }) {
 
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
           // setUser(response.data);
-          console.log('response from index component', response.data)
           updateCurrentUser(response.data);
+          navigate(window.location.pathname, { replace: true });
 
         } catch (error) {
           // Handle error here
         }
-
       };
 
       logUserWithToken(); 
-    
     };
 
     (async () => {
@@ -67,8 +65,6 @@ function Home({ currentuser, updateCurrentUser }) {
   //   } else {
   //   }
   // }, [user])
-
-
 
 
 

@@ -14,6 +14,8 @@ import Alert from 'react-bootstrap/Alert';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 
 
+
+
 function App() {
 
   const HeaderMemo = React.memo(Header);
@@ -55,7 +57,6 @@ function App() {
 
 
   useEffect(() => {
-
     if (!hasTokenInUrl() && currentuser === null) {
       const timer = setTimeout(() => {
         checkCurrentUser();
