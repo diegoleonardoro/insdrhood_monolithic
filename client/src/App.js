@@ -57,12 +57,12 @@ function App() {
 
 
   useEffect(() => {
-    if (!hasTokenInUrl() && currentuser === null) {
-      const timer = setTimeout(() => {
+    // if (!hasTokenInUrl() && currentuser === null) {
+      // const timer = setTimeout(() => {
         checkCurrentUser();
-      }, 1000);
-      return () => clearTimeout(timer); // Clear the timeout if the component unmounts
-    }
+      // }, 1000);
+      // return () => clearTimeout(timer); // Clear the timeout if the component unmounts
+    // }
   }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
 
 
