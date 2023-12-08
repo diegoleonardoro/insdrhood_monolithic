@@ -46,7 +46,7 @@ const sendVerificationMail = (user) => {
     <mj-section vertical-align="middle" background-size="cover" background-repeat="no-repeat">
       <mj-column width="100%">
         <mj-text align="center" padding="50px 40px 0 40px" font-weight="300">Hello,${user.name}, Insider Hoold will give you unique perspectives on the enchatning neighborgoohds of New York City. We kindly ask for your email verification </mj-text>
-        <mj-button href="${user.baseUrlForEmailVerification}/emailconfirmation/${user.emailToken}" align="center" background-color="#5FA91D" color="#FFFFFF" border-radius="2px"  inner-padding="15px 30px" padding-bottom="100px" padding-top="20px">VERIFY EMAIL</mj-button>
+        <mj-button href="${user.baseUrlForEmailVerification}/emailconfirmation/${user.emailToken[0]}/${user.emailToken[1]}" align="center" background-color="#5FA91D" color="#FFFFFF" border-radius="2px"  inner-padding="15px 30px" padding-bottom="100px" padding-top="20px">VERIFY EMAIL</mj-button>
       </mj-column>
     </mj-section>
   </mj-body>

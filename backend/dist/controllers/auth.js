@@ -32,13 +32,14 @@ const signup = async (req, res) => {
     const remainingName = name.slice(1);
     const nameCapitalized = nameFirstLetterCapitalized + remainingName;
     const emailToken = crypto_1.default.randomBytes(64).toString("hex");
+    const secondEmailToken = crypto_1.default.randomBytes(64).toString("hex");
     const user = {
         name: nameCapitalized,
         email,
         password: password ? password : '',
         image: image ? image : null,
         isVerified: false,
-        emailToken,
+        emailToken: [emailToken, secondEmailToken],
         formsResponded: formsResponded,
         residentId: residentId ? residentId : null,
         passwordSet: password ? true : false,
@@ -113,12 +114,6 @@ const currentuser = async (req, res) => {
 };
 exports.currentuser = currentuser;
 /**
- * @description authenticate user with email token
- * @route GET /tokenauth/:token
- * @access public
- */
-// Create route that will ahthenticate user with the email token 
-/**
  * @description logs user out
  * @route POST /api/signout
  * @access only accesible when user is authenticated
@@ -155,7 +150,7 @@ const verifyemail = async (req, res) => {
     const db = (0, index_1.getDb)();
     const users = db.collection("users");
     // find the user with the email token:
-    const user = await users.findOne({ emailToken: emailtoken });
+    const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
     if (!user) {
         throw new bad_request_error_1.BadRequestError("Invalid email token");
     }

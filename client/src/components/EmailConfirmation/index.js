@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const VerifyEmail = ({ updateCurrentUser }) => {
 
-  const { emailtoken } = useParams();
+  const { emailtoken, emailtoken2 } = useParams();
   const [errors, setErrors] = useState(null);
   const [user, setUser] = useState(null);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -35,6 +35,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
      
   // make request to get the user with the emailtoken
   const makeRequest = async () => {
+
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
       setUser(response.data);
@@ -43,7 +44,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
     }
   }
 
-  
   useEffect(() => {
     makeRequest()
   }, [])
@@ -60,12 +60,11 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO RESPOND THE FORM 
-        const queryString = `token=${emailtoken}`
+        const queryString = `token=${emailtoken}&token2=${emailtoken2}`
         // updateCurrentUser(user);
         setTimeout(() => {
           navigate(`/?${queryString}`);
         }, 2000);
-
 
       } else {
 
@@ -73,11 +72,10 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO THE MAIN PAGE (EVENTUALLY DIRECT THEM TO THEIR PROFILE)
-        const queryString = `token=${emailtoken}`
+        const queryString = `token=${emailtoken}&token2=${emailtoken2}`
         setTimeout(() => {
           navigate(`/?${queryString}`);
         }, 2000);
-
       }
     }
   }, [user])

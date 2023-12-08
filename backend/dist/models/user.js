@@ -28,7 +28,7 @@ const userSchema = new mongoose_1.default.Schema({
         required: false,
     },
     emailToken: {
-        type: String,
+        type: [String],
         required: false,
     },
     formsResponded: {

@@ -39,6 +39,7 @@ export const signup = async (req: Request, res: Response) => {
   const remainingName = name.slice(1);
   const nameCapitalized = nameFirstLetterCapitalized + remainingName;
   const emailToken = crypto.randomBytes(64).toString("hex");
+  const secondEmailToken = crypto.randomBytes(64).toString("hex");
 
   const user = {
     name: nameCapitalized,
@@ -46,7 +47,7 @@ export const signup = async (req: Request, res: Response) => {
     password: password ? password : '',
     image: image ? image : null,
     isVerified: false,
-    emailToken,
+    emailToken: [emailToken, secondEmailToken ],
     formsResponded: formsResponded,
     residentId: residentId ? residentId : null,
     passwordSet: password ? true : false,
@@ -146,18 +147,6 @@ export const currentuser = async (req: Request, res: Response) => {
 
 
 /**
- * @description authenticate user with email token
- * @route GET /tokenauth/:token
- * @access public 
- */
-// Create route that will ahthenticate user with the email token 
-
-
-
-
-
-
-/**
  * @description logs user out 
  * @route POST /api/signout
  * @access only accesible when user is authenticated
@@ -193,6 +182,12 @@ export const updateUserData = async (req: Request, res: Response) => {
 
 }
 
+
+
+
+
+
+
 /**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
@@ -204,8 +199,9 @@ export const verifyemail = async (req: Request, res: Response) => {
   const db = getDb();
   const users = db.collection("users");
 
+
   // find the user with the email token:
-  const user = await users.findOne({ emailToken: emailtoken });
+  const user = await users.findOne({ emailToken: {$in:[emailtoken]} });
 
   if (!user) {
     throw new BadRequestError("Invalid email token")
@@ -245,6 +241,14 @@ export const verifyemail = async (req: Request, res: Response) => {
   res.status(200).send(updatedUser);
 
 }
+
+
+
+
+
+
+
+
 
 /**
  * @description makes request to aws S3 to get signed url

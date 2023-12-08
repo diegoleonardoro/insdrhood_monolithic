@@ -9,7 +9,7 @@ interface UserAttrs {
   password: string;
   isVerified: boolean;
   passwordSet: boolean;
-  emailToken: string;
+  emailToken: string[];
   formsResponded: number;
   residentId: string[];
   userImagesId: string;
@@ -29,7 +29,7 @@ export interface UserDoc extends mongoose.Document {
   password: string;
   isVerified: boolean;
   passwordSet: boolean;
-  emailToken: string;
+  emailToken: string[];
   formsResponded: number;
   residentId: string[];
   userImagesId: string;
@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema(
       required: false,
     },
     emailToken: {
-      type: String,
+      type: [String],
       required: false,
     },
     formsResponded: {

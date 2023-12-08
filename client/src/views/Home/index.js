@@ -15,29 +15,39 @@ function Home({ currentuser, updateCurrentUser }) {
   // const [user, setUser] = useState(null);
 
   useEffect(() => {
-
+    
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
-
     const token = urlParams.get('token');
+    const token2 = urlParams.get('token2');
 
-    // && !currentuser
     if (token) {
-
       const logUserWithToken = async () => {
         try {
-
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
           // setUser(response.data);
           updateCurrentUser(response.data);
-          navigate(window.location.pathname, { replace: true });
-
+          urlParams.delete('token');
+          const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+          navigate(newUrl, { replace: true });
         } catch (error) {
           // Handle error here
         }
       };
-
-      logUserWithToken(); 
+      logUserWithToken();
+    } else if (token2) {
+      const logUserWithToken = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token2}`);
+          updateCurrentUser(response.data);
+          urlParams.delete('token2');
+          const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+          navigate(newUrl, { replace: true });
+        } catch (error) {
+          // Handle error here
+        }
+      }
+      logUserWithToken();
     };
 
     (async () => {
