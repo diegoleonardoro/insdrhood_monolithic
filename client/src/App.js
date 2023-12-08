@@ -24,7 +24,7 @@ function App() {
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.has('token');
+    return urlParams.has('token') || urlParams.has('token2');
   };
 
   const updateCurrentUser = useCallback((data) => {
