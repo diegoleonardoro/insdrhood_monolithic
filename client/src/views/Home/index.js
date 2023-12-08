@@ -15,7 +15,7 @@ function Home({ currentuser, updateCurrentUser }) {
   // const [user, setUser] = useState(null);
 
   useEffect(() => {
-    
+
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -27,7 +27,7 @@ function Home({ currentuser, updateCurrentUser }) {
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
           // setUser(response.data);
           updateCurrentUser(response.data);
-          urlParams.delete('token');
+          // urlParams.delete('token');
           const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
           navigate(newUrl, { replace: true });
         } catch (error) {
