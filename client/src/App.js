@@ -63,7 +63,7 @@ function App() {
       // }, 1000);
       // return () => clearTimeout(timer); // Clear the timeout if the component unmounts
     // }
-  }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
+  }, []); // checkCurrentUser is now a stable function reference
 
 
   return (
