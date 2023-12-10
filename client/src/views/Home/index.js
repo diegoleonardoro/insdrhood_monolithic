@@ -19,16 +19,22 @@ function Home({ currentuser, updateCurrentUser }) {
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-  
+
     if (token) {
       const logUserWithToken = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
+          
           // setUser(response.data);
           updateCurrentUser(response.data);
-          // urlParams.delete('token');
-          const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+
+          // Extract the current URL search parameters
+          const urlParams = new URLSearchParams(window.location.search);
+          // Create the new URL, preserving the existing parameters
+          const newUrl = `/?${urlParams.toString()}`;
+          // Navigate to the new URL
           navigate(newUrl, { replace: true });
+
         } catch (error) {
           // Handle error here
         }
