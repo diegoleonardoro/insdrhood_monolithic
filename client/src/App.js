@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from "axios"
-import React, { useEffect, useState, useCallback  } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Home from "./views/Home";
 import Header from "./components/Header";
 import Signin from './components/Signin';
@@ -39,43 +39,54 @@ function App() {
   }, []);
 
 
+
   // Memoize checkCurrentUser so it's not recreated on every render
-  const checkCurrentUser = useCallback(async () => {
- 
-    try {
+  // const checkCurrentUser = useCallback(async () => {
+  //   try {
+  //     // I want to make the following request only when there is not a token in the url:
+  //     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
 
-      // I want to make the following request only when there is not a token in the url:
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-
-      console.log('current user from app componenet', response.data);
-      
-      updateCurrentUser(response.data);
-
-    } catch (error) {
-
-      // Handle the error appropriately
-      console.error('Failed to check current user:', error);
-    
-    }
-    
-  }, [updateCurrentUser]); // updateCurrentUser is a dependency
+  //     updateCurrentUser(response.data);
+  //   } catch (error) {
+  //     // Handle the error appropriately
+  //     console.error('Failed to check current user:', error);
+  //   }
+  // }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
 
   useEffect(() => {
-     if (!hasTokenInUrl() && currentuser === null) {
-       const timer = setTimeout(() => {
+
+
+    async function checkCurrentUser() {
+      try {
+        // I want to make the following request only when there is not a token in the url:
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+
+        console.log("repsonse from app.js component ", response)
+        updateCurrentUser(response.data);
+
+      } catch (error) {
+        // Handle the error appropriately
+        console.error('Failed to check current user:', error);
+      }
+    }
+
+  
+
+    if (!hasTokenInUrl()&& currentuser === null) {
+      const timer = setTimeout(() => {
         checkCurrentUser();
-       }, 1000);
-       return () => clearTimeout(timer); // Clear the timeout if the component unmounts
-     }
-  }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
+      }, 1000);
+      return () => clearTimeout(timer); // Clear the timeout if the component unmounts
+    }
+  }, []); // checkCurrentUser is now a stable function reference
 
 
   return (
     <Router>
       <div className="App">
         <div>
-           <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
+          <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
           {
             currentuser && currentuser.isVerified === false ? (
               <div style={{ position: "fixed", zIndex: "99999999999", width: '100%', top: "50px", left: "0" }}>

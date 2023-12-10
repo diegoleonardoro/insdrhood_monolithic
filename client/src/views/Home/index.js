@@ -22,8 +22,9 @@ function Home({ currentuser, updateCurrentUser }) {
     const token = urlParams.get('token');
 
     if (token) {
+      
       const logUserWithToken = async () => {
-        
+
         try {
           
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
