@@ -63,7 +63,7 @@ function App() {
       // }, 1000);
       // return () => clearTimeout(timer); // Clear the timeout if the component unmounts
     // }
-  }, []); // checkCurrentUser is now a stable function reference
+  }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
 
 
   return (
@@ -88,7 +88,7 @@ function App() {
           <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
           <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
           <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
-          <Route path="/emailconfirmation/:emailtoken/:emailtoken2" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
+          <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
           <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuser={currentuser} />} />
         </Routes>
       </div>

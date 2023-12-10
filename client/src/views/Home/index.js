@@ -19,8 +19,7 @@ function Home({ currentuser, updateCurrentUser }) {
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-    const token2 = urlParams.get('token2');
-
+  
     if (token) {
       const logUserWithToken = async () => {
         try {
@@ -35,20 +34,7 @@ function Home({ currentuser, updateCurrentUser }) {
         }
       };
       logUserWithToken();
-    } else if (token2) {
-      const logUserWithToken = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token2}`);
-          updateCurrentUser(response.data);
-          urlParams.delete('token2');
-          const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-          navigate(newUrl, { replace: true });
-        } catch (error) {
-          // Handle error here
-        }
-      }
-      logUserWithToken();
-    };
+    }
 
     (async () => {
       try {

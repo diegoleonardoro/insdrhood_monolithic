@@ -32,14 +32,13 @@ const signup = async (req, res) => {
     const remainingName = name.slice(1);
     const nameCapitalized = nameFirstLetterCapitalized + remainingName;
     const emailToken = crypto_1.default.randomBytes(64).toString("hex");
-    const secondEmailToken = crypto_1.default.randomBytes(64).toString("hex");
     const user = {
         name: nameCapitalized,
         email,
         password: password ? password : '',
         image: image ? image : null,
         isVerified: false,
-        emailToken: [emailToken, secondEmailToken],
+        emailToken: [emailToken],
         formsResponded: formsResponded,
         residentId: residentId ? residentId : null,
         passwordSet: password ? true : false,

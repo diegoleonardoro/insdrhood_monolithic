@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const VerifyEmail = ({ updateCurrentUser }) => {
 
-  const { emailtoken, emailtoken2 } = useParams();
+  const { emailtoken } = useParams();
   const [errors, setErrors] = useState(null);
   const [user, setUser] = useState(null);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -60,7 +60,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO RESPOND THE FORM 
-        const queryString = `token=${emailtoken}&token2=${emailtoken2}`
+        const queryString = `token=${emailtoken}`
         // updateCurrentUser(user);
         setTimeout(() => {
           navigate(`/?${queryString}`);
@@ -72,7 +72,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
         setShowRedirecting(true);
 
         // DIRECT THE USER TO THE MAIN PAGE (EVENTUALLY DIRECT THEM TO THEIR PROFILE)
-        const queryString = `token=${emailtoken}&token2=${emailtoken2}`
+        const queryString = `token=${emailtoken}`
         setTimeout(() => {
           navigate(`/?${queryString}`);
         }, 2000);
