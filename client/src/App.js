@@ -15,7 +15,6 @@ import { useLocation } from 'react-router-dom'; // Import useLocation
 
 
 
-
 function App() {
 
   const HeaderMemo = React.memo(Header);
@@ -56,7 +55,6 @@ function App() {
 
   useEffect(() => {
 
-
     async function checkCurrentUser() {
       try {
         // I want to make the following request only when there is not a token in the url:
@@ -70,8 +68,6 @@ function App() {
         console.error('Failed to check current user:', error);
       }
     }
-
-  
 
     if (!hasTokenInUrl()&& currentuser === null) {
       const timer = setTimeout(() => {
