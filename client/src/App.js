@@ -40,42 +40,29 @@ function App() {
 
 
   // Memoize checkCurrentUser so it's not recreated on every render
-  // const checkCurrentUser = useCallback(async () => {
-  //   try {
-  //     // I want to make the following request only when there is not a token in the url:
-  //     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+  const checkCurrentUser = useCallback(async () => {
+    try {
+      // I want to make the following request only when there is not a token in the url:
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
 
-  //     updateCurrentUser(response.data);
-  //   } catch (error) {
-  //     // Handle the error appropriately
-  //     console.error('Failed to check current user:', error);
-  //   }
-  // }, [updateCurrentUser]); // updateCurrentUser is a dependency
+      console.log("current user response from App.js component", response)
+
+      updateCurrentUser(response.data);
+    } catch (error) {
+      // Handle the error appropriately
+      console.error('Failed to check current user:', error);
+    }
+  }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
 
   useEffect(() => {
-
-    async function checkCurrentUser() {
-      try {
-        // I want to make the following request only when there is not a token in the url:
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-
-        console.log("repsonse from app.js component ", response)
-        updateCurrentUser(response.data);
-
-      } catch (error) {
-        // Handle the error appropriately
-        console.error('Failed to check current user:', error);
-      }
-    }
-
     if (!hasTokenInUrl()&& currentuser === null) {
       const timer = setTimeout(() => {
         checkCurrentUser();
       }, 1000);
       return () => clearTimeout(timer); // Clear the timeout if the component unmounts
     }
-  }, []); // checkCurrentUser is now a stable function reference
+  }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
 
 
   return (
