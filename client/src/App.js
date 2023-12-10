@@ -43,17 +43,22 @@ function App() {
   const checkCurrentUser = useCallback(async () => {
  
     try {
+
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      console.log("response data", response.data);
+
+      console.log('current user from app componenet', response.data);
+      
       updateCurrentUser(response.data);
 
     } catch (error) {
+
       // Handle the error appropriately
       console.error('Failed to check current user:', error);
+    
     }
+    
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
-
 
 
   useEffect(() => {

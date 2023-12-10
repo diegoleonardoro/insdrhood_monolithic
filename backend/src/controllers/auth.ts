@@ -80,7 +80,8 @@ export const signup = async (req: Request, res: Response) => {
     baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
   });
 
-  const insertedRecord = await users.findOne({ _id: newUser.insertedId })
+  const insertedRecord = await users.findOne({ _id: newUser.insertedId });
+  
   res.status(201).send(insertedRecord);
 
 }

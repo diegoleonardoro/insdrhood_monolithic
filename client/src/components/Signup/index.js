@@ -14,6 +14,7 @@ const SignUp = ({ updateCurrentUser }) => {
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState(null);
+  
   const [imageFile, setImageFile] = useState("");
 
   const [password1, setPassword1] = useState("");
@@ -29,20 +30,19 @@ const SignUp = ({ updateCurrentUser }) => {
   });
 
   async function saveUserData() {
+
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`,
-        formData);        
 
-      console.log("kk", response.data)
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData);        
+
       await updateCurrentUser(response.data);
-
       navigate('/');
-      
       // return
 
     } catch (error) {
       setErrors(error?.response?.data?.errors?.[0]?.message);
     }
+
   }
 
   async function checkPasswordsMatch(password1, password2) {
