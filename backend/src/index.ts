@@ -48,7 +48,7 @@ const app = express();
 const PORT = 4000;
 app.use(cors({
   origin: process.env.BASE_URL, // React client's URL
-  // credentials: true
+  credentials: true
 }));
 
 app.use(json());
