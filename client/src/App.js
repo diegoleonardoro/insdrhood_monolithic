@@ -66,7 +66,7 @@ function App() {
 
     console.log("log from useEffect in App componentn")
 
-    // checkCurrentUser();
+    checkCurrentUser();
 
     //&& currentuser === null
     // if (!hasTokenInUrl()) {

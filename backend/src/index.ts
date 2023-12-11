@@ -67,6 +67,7 @@ app.use(
     signed: false,
     // secure: process.env.NODE_ENV !== "test",
     secure: process.env.NODE_ENV === "production",
+    sameSite: false, // Set sameSite to false
     // secure: false
   })
 );
