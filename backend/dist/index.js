@@ -47,25 +47,25 @@ exports.getDb = getDb;
 const app = (0, express_1.default)();
 const PORT = 4000;
 app.use((0, cors_1.default)({
-    origin: "https://clientt-w4arsp4ahq-uc.a.run.app",
-    //process.env.BASE_URL, // React client's URL
+    origin: process.env.BASE_URL,
     credentials: true,
 }));
 app.use((0, body_parser_1.json)());
 app.set("trust proxy", true);
 // mongoose.connect('mongodb+srv://diegoleoro:Sinnerman_0915@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority');
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "https://clientt-w4arsp4ahq-uc.a.run.app"); // update to match the domain you will make the request from
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   next();
-// });
+//---------------------------------------------------------------------------------
 console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 console.log("process.env.BASE_URL", process.env.BASE_URL);
 console.log("process.env.NODE_ENV === production", process.env.NODE_ENV === "production");
+app.use((req, res, next) => {
+    console.log(`Request Method: ${req.method}, Path: ${req.path}`);
+    next();
+});
+app.use((req, res, next) => {
+    console.log("Request Headers:", req.headers);
+    next();
+});
+//---------------------------------------------------------------------------------
 app.use((0, cookie_session_1.default)({
     signed: false,
     // secure: process.env.NODE_ENV !== "test",
@@ -73,6 +73,16 @@ app.use((0, cookie_session_1.default)({
     sameSite: false, // Set sameSite to false
     // secure: false
 }));
+//---------------------------------------------------------------------------------
+app.use((req, res, next) => {
+    console.log("Request Body:", req.body);
+    next();
+});
+app.use((req, res, next) => {
+    console.log("Session Data:", req.session);
+    next();
+});
+//---------------------------------------------------------------------------------
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {
