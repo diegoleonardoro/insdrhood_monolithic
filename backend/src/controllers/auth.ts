@@ -73,6 +73,9 @@ export const signup = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
+
+  console.log("req session", req.session);
+  
   sendVerificationMail({
     name: user.name,
     email: user.email,

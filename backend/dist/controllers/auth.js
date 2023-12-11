@@ -59,6 +59,7 @@ const signup = async (req, res) => {
     req.session = {
         jwt: userJwt,
     };
+    console.log("req session", req.session);
     (0, emailVerification_1.sendVerificationMail)({
         name: user.name,
         email: user.email,
