@@ -23,6 +23,8 @@ interface updateQuery {
 */
 export const signup = async (req: Request, res: Response) => {
 
+  console.log("Entire Request:", req);
+
   const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
 
   const db = getDb();
@@ -75,7 +77,7 @@ export const signup = async (req: Request, res: Response) => {
 
 
   console.log("req session", req.session);
-  
+
   sendVerificationMail({
     name: user.name,
     email: user.email,
