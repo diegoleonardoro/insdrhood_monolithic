@@ -61,8 +61,10 @@ function App() {
 
   console.log("current user from App component", currentuser);
 
-  
+
   useEffect(() => {
+
+    console.log("log from useEffect in App componentn")
 
     checkCurrentUser();
 
