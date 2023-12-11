@@ -56,7 +56,8 @@ function App() {
 
 
   useEffect(() => {
-    if (!hasTokenInUrl()&& currentuser === null) {
+    //&& currentuser === null
+    if (!hasTokenInUrl()) {
       const timer = setTimeout(() => {
         checkCurrentUser();
       }, 1000);
