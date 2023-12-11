@@ -109,7 +109,6 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
-    console.log("currentuser==>>", req.currentUser);
     res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
@@ -256,7 +255,8 @@ exports.updateNeighborhoodData = updateNeighborhoodData;
 const getAllNeighborhoods = async (req, res) => {
     // const allNeighborhoods = await Neighborhood.find({});
     const db = (0, index_1.getDb)();
-    const neighborhoods = await db.collection("neighborhoods").find({}).toArray();
+    const neighborhoodsCollection = db.collection("neighborhoods");
+    const neighborhoods = await neighborhoodsCollection.find({}).toArray();
     res.status(200).send(neighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;

@@ -18,13 +18,15 @@ import { useLocation } from 'react-router-dom'; // Import useLocation
 function App() {
 
   const HeaderMemo = React.memo(Header);
-
   const [currentuser, setCurrentUser] = useState(null);
 
+
+  //--------------------------------------------
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.has('token');
   };
+  //--------------------------------------------
 
   const updateCurrentUser = useCallback((data) => {
     return new Promise((resolve, reject) => {
@@ -41,16 +43,18 @@ function App() {
 
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
+
     try {
+
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-
-      console.log("current user response from App.js component", response)
-
       updateCurrentUser(response.data);
+
     } catch (error) {
+
       // Handle the error appropriately
       console.error('Failed to check current user:', error);
+
     }
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
@@ -58,7 +62,7 @@ function App() {
   useEffect(() => {
 
     checkCurrentUser();
-    
+
     //&& currentuser === null
     // if (!hasTokenInUrl()) {
     //   const timer = setTimeout(() => {
