@@ -43,6 +43,8 @@ export const authenticationValidator = async (
     //   }
     // }
     //---------------------------------------
+
+    console.log("payyyloaddd", payload)
     req.currentUser = payload;
 
   } catch (err) { }

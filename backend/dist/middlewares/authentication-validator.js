@@ -20,6 +20,7 @@ const authenticationValidator = async (req, res, next) => {
         //   }
         // }
         //---------------------------------------
+        console.log("payyyloaddd", payload);
         req.currentUser = payload;
     }
     catch (err) { }

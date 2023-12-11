@@ -59,7 +59,7 @@ app.use((0, cookie_session_1.default)({
     signed: false,
     // secure: process.env.NODE_ENV !== "test",
     secure: process.env.NODE_ENV === "production",
-    // secure: true
+    // secure: false
 }));
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
