@@ -59,6 +59,9 @@ function App() {
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
 
+  console.log("current user from App component", currentuser);
+
+  
   useEffect(() => {
 
     checkCurrentUser();
