@@ -30,6 +30,7 @@ export const signup = async (req: Request, res: Response) => {
   const users = db.collection("users");
 
   const existingUser = await users.findOne({ email });
+
   if (existingUser) {
     throw new BadRequestError("Email in use");
   };
@@ -51,7 +52,9 @@ export const signup = async (req: Request, res: Response) => {
     residentId: residentId ? residentId : null,
     passwordSet: password ? true : false,
     userImagesId
-  }
+  };
+
+  
   const newUser = await users.insertOne(user);
 
   // Generate JWT
@@ -82,7 +85,8 @@ export const signup = async (req: Request, res: Response) => {
 
   const insertedRecord = await users.findOne({ _id: newUser.insertedId });
   res.status(201).send(insertedRecord);
-  
+
+
 }
 
 /**

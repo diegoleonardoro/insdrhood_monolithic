@@ -59,19 +59,15 @@ app.set("trust proxy", true);
 
 //---------------------------------------------------------------------------------
 
-console.log("process.env.NODE_ENV", process.env.NODE_ENV);
-console.log("process.env.BASE_URL", process.env.BASE_URL);
-console.log("process.env.NODE_ENV === production", process.env.NODE_ENV === "production");
+// app.use((req, res, next) => {
+//   console.log(`Request Method: ${req.method}, Path: ${req.path}`);
+//   next();
+// });
 
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}, Path: ${req.path}`);
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("Request Headers:", req.headers);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("Request Headers:", req.headers);
+//   next();
+// });
 
 //---------------------------------------------------------------------------------
 app.use(
@@ -92,9 +88,8 @@ app.use((req, res, next) => {
 });
 //---------------------------------------------------------------------------------
 
-
-
 app.use("/api", auth);
+
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
