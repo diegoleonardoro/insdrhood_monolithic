@@ -19,7 +19,6 @@ const emailVerification_1 = require("../services/emailVerification");
  * @access public
 */
 const signup = async (req, res) => {
-    console.log("Entire Request:", req);
     const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
     const db = (0, index_1.getDb)();
     const users = db.collection("users");
@@ -60,7 +59,6 @@ const signup = async (req, res) => {
     req.session = {
         jwt: userJwt,
     };
-    console.log("req session", req.session);
     (0, emailVerification_1.sendVerificationMail)({
         name: user.name,
         email: user.email,

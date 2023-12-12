@@ -54,18 +54,6 @@ app.use((0, body_parser_1.json)());
 app.set("trust proxy", true);
 // mongoose.connect('mongodb+srv://diegoleoro:Sinnerman_0915@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority');
 //---------------------------------------------------------------------------------
-console.log("process.env.NODE_ENV", process.env.NODE_ENV);
-console.log("process.env.BASE_URL", process.env.BASE_URL);
-console.log("process.env.NODE_ENV === production", process.env.NODE_ENV === "production");
-app.use((req, res, next) => {
-    console.log(`Request Method: ${req.method}, Path: ${req.path}`);
-    next();
-});
-app.use((req, res, next) => {
-    console.log("Request Headers:", req.headers);
-    next();
-});
-//---------------------------------------------------------------------------------
 app.use((0, cookie_session_1.default)({
     signed: false,
     // secure: process.env.NODE_ENV !== "test",
@@ -73,11 +61,6 @@ app.use((0, cookie_session_1.default)({
     sameSite: false, // Set sameSite to false
     // secure: false
 }));
-//---------------------------------------------------------------------------------
-app.use((req, res, next) => {
-    console.log("Session Data:", req.session);
-    next();
-});
 //---------------------------------------------------------------------------------
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);

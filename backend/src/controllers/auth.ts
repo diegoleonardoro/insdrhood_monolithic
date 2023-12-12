@@ -23,13 +23,11 @@ interface updateQuery {
 */
 export const signup = async (req: Request, res: Response) => {
 
-  console.log("Entire Request:", req);
-
   const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
 
   const db = getDb();
-  const users = db.collection("users");
 
+  const users = db.collection("users");
 
   const existingUser = await users.findOne({ email });
   if (existingUser) {
@@ -75,9 +73,6 @@ export const signup = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-
-  console.log("req session", req.session);
-
   sendVerificationMail({
     name: user.name,
     email: user.email,
@@ -86,9 +81,8 @@ export const signup = async (req: Request, res: Response) => {
   });
 
   const insertedRecord = await users.findOne({ _id: newUser.insertedId });
-  
   res.status(201).send(insertedRecord);
-
+  
 }
 
 /**
