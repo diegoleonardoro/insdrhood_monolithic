@@ -50,12 +50,10 @@ function App() {
   const checkCurrentUser = useCallback(async () => {
     try {
 
-      console.log("log inside of checkCurrentUser function ");
-
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       updateCurrentUser(response.data);
-
+    
     } catch (error) {
       // Handle the error appropriately
       console.error('Failed to check current user:', error);
@@ -67,18 +65,13 @@ function App() {
   console.log("current user from App component", currentuser);
 
   useEffect(() => {
-
-    console.log("log from useEffect inside App component");
-    
     if (!hasTokenInUrl() && currentuser === null) {
-      console.log("log from useEffect inside if statement of useEffect in App component");      
       const timer = setTimeout(() => {
         checkCurrentUser();
       }, 1000);
-      return () => clearTimeout(timer); // Clear the timeout if the component unmounts
+      return () => clearTimeout(timer);
     }
-
-  }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
+  }, []); // checkCurrentUser is now a stable function reference
 
 
   return (
