@@ -12,7 +12,7 @@ function Home({ currentuser, updateCurrentUser }) {
 
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
 
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
 
@@ -72,16 +72,16 @@ function Home({ currentuser, updateCurrentUser }) {
 
 
 
-  // useEffect(() => {
-  //   if (user !== null) {
-  //     // DIRECT THE USER TO RESPOND THE FORM 
-  //     updateCurrentUser(user);
-  //     // setTimeout(() => {
-  //     //   navigate(`/`);
-  //     // }, 2000);
-  //   } else {
-  //   }
-  // }, [user])
+  useEffect(() => {
+    if (user !== null) {
+      // DIRECT THE USER TO RESPOND THE FORM 
+      updateCurrentUser(user);
+      // setTimeout(() => {
+      //   navigate(`/`);
+      // }, 2000);
+    } else {
+    }
+  }, [])//user
 
 
 

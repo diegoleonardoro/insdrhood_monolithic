@@ -26,9 +26,8 @@ function asyncHandler(fn: Function) {
 
 const router = express.Router();
 
-
 /**
- * AUTHENTICATION ROUTES:
+* AUTHENTICATION ROUTES:
 */
 router.post("/signin",
   [

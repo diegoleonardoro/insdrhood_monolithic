@@ -19,7 +19,7 @@ function asyncHandler(fn) {
 const router = express_1.default.Router();
 exports.auth = router;
 /**
- * AUTHENTICATION ROUTES:
+* AUTHENTICATION ROUTES:
 */
 router.post("/signin", [
     (0, express_validator_1.body)("email").isEmail().withMessage("Email must be valid"),

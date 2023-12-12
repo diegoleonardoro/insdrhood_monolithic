@@ -54,7 +54,6 @@ export const signup = async (req: Request, res: Response) => {
     userImagesId
   };
 
-  
   const newUser = await users.insertOne(user);
 
   // Generate JWT
@@ -85,9 +84,9 @@ export const signup = async (req: Request, res: Response) => {
 
   const insertedRecord = await users.findOne({ _id: newUser.insertedId });
   res.status(201).send(insertedRecord);
-
-
 }
+
+
 
 /**
  * @description logs users in

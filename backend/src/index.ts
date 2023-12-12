@@ -54,33 +54,17 @@ app.use(cors({
 
 app.use(json());
 app.set("trust proxy", true);
-// mongoose.connect('mongodb+srv://diegoleoro:Sinnerman_0915@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority');
 
-
-//---------------------------------------------------------------------------------
-
-// app.use((req, res, next) => {
-//   console.log(`Request Method: ${req.method}, Path: ${req.path}`);
-//   next();
-// });
-
-// app.use((req, res, next) => {
-//   console.log("Request Headers:", req.headers);
-//   next();
-// });
-
-//---------------------------------------------------------------------------------
 app.use(
   cookieSession({
     signed: false,
-    // secure: process.env.NODE_ENV !== "test",
     secure: process.env.NODE_ENV === "production",
-    sameSite: false, // Set sameSite to false
-    // secure: false
+    sameSite: false, 
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
   })
 );
+
 //---------------------------------------------------------------------------------
 app.use((req, res, next) => {
   console.log("Session Data:", req.session);
