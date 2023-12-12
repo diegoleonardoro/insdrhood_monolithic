@@ -70,8 +70,10 @@ app.use((0, cookie_session_1.default)({
     signed: false,
     // secure: process.env.NODE_ENV !== "test",
     secure: process.env.NODE_ENV === "production",
-    sameSite: false, // Set sameSite to false
+    sameSite: false,
     // secure: false
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
 }));
 //---------------------------------------------------------------------------------
 app.use((req, res, next) => {
