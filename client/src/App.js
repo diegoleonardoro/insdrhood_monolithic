@@ -29,13 +29,19 @@ function App() {
   //--------------------------------------------
 
   const updateCurrentUser = useCallback((data) => {
+
+    console.log("log inside updateCurrentUser callback");
+
     return new Promise((resolve, reject) => {
+
       if (data !== undefined) {
+        console.log("log inside if statement inside updateCurrentUser function. ");
         setCurrentUser(data);
         resolve();
       } else {
         reject(new Error('No user data provided.'));
       }
+
     });
   }, []);
 
@@ -43,15 +49,16 @@ function App() {
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
     try {
+
+      console.log("log inside of checkCurrentUser function ");
+
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       updateCurrentUser(response.data);
 
     } catch (error) {
-
       // Handle the error appropriately
       console.error('Failed to check current user:', error);
-
     }
 
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
@@ -59,18 +66,18 @@ function App() {
 
   console.log("current user from App component", currentuser);
 
-
   useEffect(() => {
 
-    console.log("log from useEffect in App componentn");
-    // checkCurrentUser();
-    //&& currentuser === null
+    console.log("log from useEffect inside App component");
+    
     if (!hasTokenInUrl() && currentuser === null) {
+      console.log("log from useEffect inside if statement of useEffect in App component");      
       const timer = setTimeout(() => {
         checkCurrentUser();
       }, 1000);
       return () => clearTimeout(timer); // Clear the timeout if the component unmounts
     }
+
   }, [checkCurrentUser]); // checkCurrentUser is now a stable function reference
 
 
