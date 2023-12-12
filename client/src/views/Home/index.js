@@ -71,18 +71,16 @@ function Home({ currentuser, updateCurrentUser }) {
   }, []);
 
 
-
-  useEffect(() => {
-    if (user !== null) {
-      // DIRECT THE USER TO RESPOND THE FORM 
-      updateCurrentUser(user);
-      // setTimeout(() => {
-      //   navigate(`/`);
-      // }, 2000);
-    } else {
-    }
-  }, [])//user
-
+  // useEffect(() => {
+  //   if (user !== null) {
+  //     // DIRECT THE USER TO RESPOND THE FORM 
+  //     updateCurrentUser(user);
+  //     // setTimeout(() => {
+  //     //   navigate(`/`);
+  //     // }, 2000);
+  //   } else {
+  //   }
+  // }, [])//user
 
 
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {

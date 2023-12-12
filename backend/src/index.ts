@@ -59,7 +59,7 @@ app.use(
   cookieSession({
     signed: false,
     secure: process.env.NODE_ENV === "production",
-    sameSite: false, 
+    sameSite: "none", 
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
   })

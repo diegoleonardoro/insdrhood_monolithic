@@ -55,7 +55,7 @@ app.set("trust proxy", true);
 app.use((0, cookie_session_1.default)({
     signed: false,
     secure: process.env.NODE_ENV === "production",
-    sameSite: false,
+    sameSite: "none",
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
 }));
