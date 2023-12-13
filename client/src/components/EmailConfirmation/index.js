@@ -43,7 +43,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       setErrors(error.response.data.errors[0].message);
     }
   }
-
   useEffect(() => {
     makeRequest()
   }, [])
