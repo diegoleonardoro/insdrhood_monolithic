@@ -161,8 +161,8 @@ const verifyemail = async (req, res) => {
             // emailToken: ''
         }
     }, { returnDocument: 'after' });
-    const usserInfo = {
-        id: updatedUser?.id.toString(),
+    const userInfo = {
+        id: updatedUser?._id.toString(),
         email: updatedUser?.email,
         name: updatedUser?.name,
         image: updatedUser?.image,
@@ -171,12 +171,12 @@ const verifyemail = async (req, res) => {
         userImagesId: updatedUser?.userImagesId
     };
     // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign(usserInfo, process.env.JWT_KEY);
+    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
     };
-    res.status(200).send(usserInfo);
+    res.status(200).send(userInfo);
 };
 exports.verifyemail = verifyemail;
 /**

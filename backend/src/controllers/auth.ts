@@ -224,8 +224,8 @@ export const verifyemail = async (req: Request, res: Response) => {
     { returnDocument: 'after' }
   );
 
-  const usserInfo ={
-    id: updatedUser?.id.toString(),
+  const userInfo ={
+    id: updatedUser?._id.toString(),
     email: updatedUser?.email,
     name: updatedUser?.name,
     image: updatedUser?.image,
@@ -236,7 +236,7 @@ export const verifyemail = async (req: Request, res: Response) => {
 
   // Generate JWT
   const userJwt = jwt.sign(
-    usserInfo,
+    userInfo,
     process.env.JWT_KEY!
   );
 
@@ -245,7 +245,7 @@ export const verifyemail = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  res.status(200).send(usserInfo);
+  res.status(200).send(userInfo);
 
 }
 
