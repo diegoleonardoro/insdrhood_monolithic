@@ -167,6 +167,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const checkCurrentUser = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+      console.log("logged user", response)
       setLoggedUser(response.data)
     } catch (error) {
     }
@@ -298,6 +299,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           setNeighborhood(currentDiv.children[1].value);
         }
 
+
+        console.log("logged user ", loggedUser);
 
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
