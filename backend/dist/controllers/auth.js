@@ -45,9 +45,7 @@ const signup = async (req, res) => {
         userImagesId
     };
     const newUser = await users.insertOne(user);
-    console.log("newUserrr", newUser);
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign({
+    const iserInfo = {
         id: newUser.insertedId.toString(),
         email: user.email,
         name: user.name,
@@ -55,7 +53,9 @@ const signup = async (req, res) => {
         isVerified: user.isVerified,
         residentId: user.residentId,
         userImagesId: user.userImagesId
-    }, process.env.JWT_KEY);
+    };
+    // Generate JWT
+    const userJwt = jsonwebtoken_1.default.sign(iserInfo, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
@@ -66,8 +66,8 @@ const signup = async (req, res) => {
         emailToken: user.emailToken,
         baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
     });
-    const insertedRecord = await users.findOne({ _id: newUser.insertedId });
-    res.status(201).send(insertedRecord);
+    // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
+    res.status(201).send(iserInfo);
 };
 exports.signup = signup;
 /**
@@ -87,21 +87,22 @@ const login = async (req, res) => {
     if (!passwordMatch) {
         throw new bad_request_error_1.BadRequestError("Incorrect password");
     }
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign({
-        id: existingUser.id,
+    const userInfo = {
+        id: existingUser.id.toString(),
         email: existingUser.email,
         name: existingUser.name,
         image: existingUser.image,
         isVerified: existingUser.isVerified,
         residentId: existingUser.residentId,
         userImagesId: existingUser.userImagesId
-    }, process.env.JWT_KEY);
+    };
+    // Generate JWT
+    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
     };
-    res.status(200).send(existingUser); //existingUser
+    res.status(200).send(userInfo); //existingUser
 };
 exports.login = login;
 /**
@@ -140,6 +141,7 @@ const updateUserData = async (req, res) => {
     res.status(200).send(user);
 };
 exports.updateUserData = updateUserData;
+g;
 /**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
@@ -160,21 +162,22 @@ const verifyemail = async (req, res) => {
             // emailToken: ''
         }
     }, { returnDocument: 'after' });
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign({
-        id: updatedUser?.id,
+    const usserInfo = {
+        id: updatedUser?.id.toString(),
         email: updatedUser?.email,
         name: updatedUser?.name,
         image: updatedUser?.image,
         isVerified: updatedUser?.isVerified,
         residentId: updatedUser?.residentId,
         userImagesId: updatedUser?.userImagesId
-    }, process.env.JWT_KEY);
+    };
+    // Generate JWT
+    const userJwt = jsonwebtoken_1.default.sign(usserInfo, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
     };
-    res.status(200).send(updatedUser);
+    res.status(200).send(usserInfo);
 };
 exports.verifyemail = verifyemail;
 /**

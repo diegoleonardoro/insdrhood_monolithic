@@ -56,19 +56,21 @@ export const signup = async (req: Request, res: Response) => {
 
   const newUser = await users.insertOne(user);
 
-  console.log("newUserrr", newUser);
+
+  const iserInfo ={
+
+    id: newUser.insertedId.toString(),
+    email: user.email,
+    name: user.name,
+    image: user.image,
+    isVerified: user.isVerified,
+    residentId: user.residentId,
+    userImagesId: user.userImagesId
+  }
 
   // Generate JWT
   const userJwt = jwt.sign(
-    {
-      id: newUser.insertedId.toString(),
-      email: user.email,
-      name: user.name,
-      image: user.image,
-      isVerified: user.isVerified,
-      residentId: user.residentId,
-      userImagesId: user.userImagesId
-    },
+    iserInfo,
     process.env.JWT_KEY!
   );
 
@@ -84,8 +86,9 @@ export const signup = async (req: Request, res: Response) => {
     baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
   });
 
-  const insertedRecord = await users.findOne({ _id: newUser.insertedId });
-  res.status(201).send(insertedRecord);
+  // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
+
+  res.status(201).send(iserInfo);
 }
 
 
@@ -116,17 +119,20 @@ export const login = async (req: Request, res: Response) => {
     throw new BadRequestError("Incorrect password");
   }
 
+
+  const userInfo ={
+    id: existingUser.id.toString(),
+    email: existingUser.email,
+    name: existingUser.name,
+    image: existingUser.image,
+    isVerified: existingUser.isVerified,
+    residentId: existingUser.residentId,
+    userImagesId: existingUser.userImagesId
+  }
+
   // Generate JWT
   const userJwt = jwt.sign(
-    {
-      id: existingUser.id,
-      email: existingUser.email,
-      name: existingUser.name,
-      image: existingUser.image,
-      isVerified: existingUser.isVerified,
-      residentId: existingUser.residentId,
-      userImagesId: existingUser.userImagesId
-    },
+    userInfo,
     process.env.JWT_KEY!
   );
 
@@ -135,7 +141,7 @@ export const login = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  res.status(200).send(existingUser);//existingUser
+  res.status(200).send(userInfo);//existingUser
 
 }
 
@@ -185,10 +191,7 @@ export const updateUserData = async (req: Request, res: Response) => {
 
 }
 
-
-
-
-
+g
 
 
 /**
@@ -221,18 +224,19 @@ export const verifyemail = async (req: Request, res: Response) => {
     { returnDocument: 'after' }
   );
 
+  const usserInfo ={
+    id: updatedUser?.id.toString(),
+    email: updatedUser?.email,
+    name: updatedUser?.name,
+    image: updatedUser?.image,
+    isVerified: updatedUser?.isVerified,
+    residentId: updatedUser?.residentId,
+    userImagesId: updatedUser?.userImagesId
+  }
 
   // Generate JWT
   const userJwt = jwt.sign(
-    {
-      id: updatedUser?.id,
-      email: updatedUser?.email,
-      name: updatedUser?.name,
-      image: updatedUser?.image,
-      isVerified: updatedUser?.isVerified,
-      residentId: updatedUser?.residentId,
-      userImagesId: updatedUser?.userImagesId
-    },
+    usserInfo,
     process.env.JWT_KEY!
   );
 
@@ -241,16 +245,9 @@ export const verifyemail = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  res.status(200).send(updatedUser);
+  res.status(200).send(usserInfo);
 
 }
-
-
-
-
-
-
-
 
 
 /**
@@ -289,6 +286,7 @@ export const uploadFile = async (req: Request, res: Response) => {
 
 }
 
+
 /**
  * @description saves form data
  * @route POST /neighborhood/savedata
@@ -313,7 +311,6 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
 
   res.status(201).send(newNeighborhood);
 }
-
 
 /**
  * @description updates neighborhood data
@@ -352,7 +349,6 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
   res.status(200).send(neighborhood);
 }
 
-
 /**
  * @description gets all neighbohoods data submitted from the form 
  * @route GET/api/neighborhoods
@@ -365,7 +361,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
   const neighborhoods = await neighborhoodsCollection.find({}).toArray();
   res.status(200).send(neighborhoods);
 }
-
 
 /**
  * @description get a specific neighborhood

@@ -167,7 +167,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const checkCurrentUser = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      console.log("logged user", response)
+      console.log("logged user", response);
       setLoggedUser(response.data)
     } catch (error) {
     }
