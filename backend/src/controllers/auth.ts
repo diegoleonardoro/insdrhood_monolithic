@@ -56,10 +56,12 @@ export const signup = async (req: Request, res: Response) => {
 
   const newUser = await users.insertOne(user);
 
+  console.log("newUserrr", newUser);
+
   // Generate JWT
   const userJwt = jwt.sign(
     {
-      id: newUser.insertedId,
+      id: newUser.insertedId.toString(),
       email: user.email,
       name: user.name,
       image: user.image,

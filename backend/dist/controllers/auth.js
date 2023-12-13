@@ -45,9 +45,10 @@ const signup = async (req, res) => {
         userImagesId
     };
     const newUser = await users.insertOne(user);
+    console.log("newUserrr", newUser);
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign({
-        id: newUser.insertedId,
+        id: newUser.insertedId.toString(),
         email: user.email,
         name: user.name,
         image: user.image,
