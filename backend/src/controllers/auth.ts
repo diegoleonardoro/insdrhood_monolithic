@@ -191,7 +191,7 @@ export const updateUserData = async (req: Request, res: Response) => {
 
 }
 
-g
+
 
 
 /**

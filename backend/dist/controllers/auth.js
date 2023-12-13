@@ -141,7 +141,6 @@ const updateUserData = async (req, res) => {
     res.status(200).send(user);
 };
 exports.updateUserData = updateUserData;
-g;
 /**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
