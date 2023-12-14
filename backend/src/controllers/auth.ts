@@ -151,6 +151,9 @@ export const login = async (req: Request, res: Response) => {
  * @access public 
  */
 export const currentuser = async (req: Request, res: Response) => {
+
+  console.log("currenttt user", req.currentUser);
+  
   res.send(req.currentUser || null);
 }
 
@@ -162,6 +165,8 @@ export const currentuser = async (req: Request, res: Response) => {
  */
 export const signout = async (req: Request, res: Response) => {
   delete req.session?.jwt
+
+  console.log('req session', req.session)
   res.send({});
 }
 
@@ -308,6 +313,9 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
     ...req.body,
     user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
   })
+
+
+  console.log('newNeighborhood from backend', newNeighborhood)
 
   res.status(201).send(newNeighborhood);
 }

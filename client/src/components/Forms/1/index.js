@@ -184,11 +184,23 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   }
 
+
+
+
   //  function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
   async function updateUser(dataToUpdate, id) {
+
     await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${id}`, dataToUpdate);
+    console.log("neighborhoodId", neighborhoodId);
     navigate(`/neighborhood/${neighborhoodId}`);
+
   }
+
+
+
+
+
+
 
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
@@ -343,7 +355,15 @@ const FormComponent = ({ updateCurrentUser }) => {
 
           // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
 
+
+
+          console.log('formDataResponse ', formDataResponse);
           setNeighborhoodId(formDataResponse.insertedId);
+
+
+
+
+
 
           // if there is a logged in user, make a request to udpate the user
           if (loggedUser) {

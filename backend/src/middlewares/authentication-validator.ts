@@ -25,6 +25,8 @@ export const authenticationValidator = async (
   res: Response,
   next: NextFunction
 ) => {
+
+  console.log("reqqqq session", req.session);
   
   if (!req.session?.jwt) {
     return next();
@@ -35,14 +37,7 @@ export const authenticationValidator = async (
       req.session.jwt,
       process.env.JWT_KEY!
     ) as UserPayload;
-    //---------------------------------------
-    // if (payload.isVerified === false) {
-    //   const loggedUser = await User.findOne({ email: payload.email });
-    //   if (loggedUser?.isVerified === true) {
-    //     payload.isVerified = true;
-    //   }
-    // }
-    //---------------------------------------
+ 
 
     console.log("payyyloaddd", payload)
     req.currentUser = payload;

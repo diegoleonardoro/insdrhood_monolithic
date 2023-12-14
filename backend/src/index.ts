@@ -19,6 +19,8 @@ const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
 
+
+
 /** -------- -------- MongoDB Connection -------- -------- */
 const uri = "mongodb+srv://diegoleoro:r85i3VAYY6k8UVDs@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
@@ -59,18 +61,13 @@ app.use(
   cookieSession({
     signed: false,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none", 
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
+    // sameSite: "none", 
+    // httpOnly: true,
+    // maxAge: 24 * 60 * 60 * 1000,
   })
 );
 
-//---------------------------------------------------------------------------------
-app.use((req, res, next) => {
-  console.log("Session Data:", req.session);
-  next();
-});
-//---------------------------------------------------------------------------------
+
 
 app.use("/api", auth);
 

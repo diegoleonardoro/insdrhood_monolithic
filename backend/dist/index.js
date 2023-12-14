@@ -55,16 +55,10 @@ app.set("trust proxy", true);
 app.use((0, cookie_session_1.default)({
     signed: false,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
+    // sameSite: "none", 
+    // httpOnly: true,
+    // maxAge: 24 * 60 * 60 * 1000,
 }));
-//---------------------------------------------------------------------------------
-app.use((req, res, next) => {
-    console.log("Session Data:", req.session);
-    next();
-});
-//---------------------------------------------------------------------------------
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {
