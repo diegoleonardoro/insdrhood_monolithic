@@ -16,8 +16,6 @@ function Home({ currentuser, updateCurrentUser }) {
 
   useEffect(() => {
 
-    console.log("log inside useEffect of Home component ")
-
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -25,18 +23,11 @@ function Home({ currentuser, updateCurrentUser }) {
 
     if (token) {
 
-      console.log("log inside if statement of useEffect in Home component");
-
       const logUserWithToken = async () => {
-
-        console.log("log inside logUserWithToken function inside useEffect in Home component");
 
         try {
 
           const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
-
-          console.log("response to emailverificaiton route from Home component", response);
-
           // setUser(response.data);
           updateCurrentUser(response.data);
 
@@ -57,8 +48,6 @@ function Home({ currentuser, updateCurrentUser }) {
     (async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
-
-        console.log("response to get neighborhoods route in Home component ", response);
 
         setNeighborhoodsData(response.data);
 

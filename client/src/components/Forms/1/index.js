@@ -25,7 +25,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [liveinNYCSign, setLiveinNYCSign] = useState("yes");
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [shakie, setShakie] = useState("shakieCheck");
-
   const nehoodAdjectivesDivRef = useRef(null);
   const nehoodAdjectivesDivContainerDisplay = useRef(null);
   const residentAdjectivesDivRef = useRef(null);
@@ -36,7 +35,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   const foodRecommendationsRef = useRef([]);
   const divRefs = useRef([]);
   const neighborhoodsDiv = useRef();
-
   const [activeIndex, setActiveIndex] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [residentsAdjsSelectedOpts, setResidentsAdjsSelectedOpts] = useState([]);
@@ -65,7 +63,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [newUserData, setNewUserData] = useState({
     name: '',
     email: '',
-    residentId: '',
+    neighborhoodId: '',
     formsResponded: 1,
     userImagesId: userUIID
   });
@@ -136,8 +134,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     /** ------------------------------ */
 
   }, []);
-
-
  
   /** useEffects that will be used for localStorage: */
   // useEffect(() => {
@@ -155,8 +151,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   /** ----------------------------------------------- */
 
 
-
-
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -167,7 +161,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   const checkCurrentUser = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      console.log("logged user", response);
       setLoggedUser(response.data)
     } catch (error) {
     }
@@ -184,22 +177,11 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   }
 
-
-
-
   //  function that will be called if there is a logged in user and will update the formsResponded - residentId - userImagesId values 
   async function updateUser(dataToUpdate, id) {
-
     await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${id}`, dataToUpdate);
-    console.log("neighborhoodId", neighborhoodId);
-    navigate(`/neighborhood/${neighborhoodId}`);
-
+    navigate(`/neighborhood/${dataToUpdate.neighborhoodId[0]}`);
   }
-
-
-
-
-
 
 
   // function that will save the new user's data if they had not registered before
@@ -311,9 +293,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           setNeighborhood(currentDiv.children[1].value);
         }
 
-
-        console.log("logged user ", loggedUser);
-
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
@@ -354,35 +333,25 @@ const FormComponent = ({ updateCurrentUser }) => {
           const formDataResponse = await sendFormData();
 
           // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
-
-
-
-          console.log('formDataResponse ', formDataResponse);
           setNeighborhoodId(formDataResponse.insertedId);
-
-
-
-
-
 
           // if there is a logged in user, make a request to udpate the user
           if (loggedUser) {
             // request to update the user:
             await updateUser({
               formsResponded: 1,
-              residentId: [formDataResponse.insertedId],
+              neighborhoodId: [formDataResponse.insertedId],
               userImagesId: randomUUID
             }, loggedUser.id);
-
             return;
           };
 
           // this state needs to be updated to save a new user in the database:
           setNewUserData(prevData => ({
             ...prevData,
-            "residentId": [formDataResponse.insertedId],
+            "neighborhoodId": [formDataResponse.insertedId],
             "userImagesId": randomUUID
-          }))
+          }));
 
           keyWord = "personalInfo";
           let nextIndex = activeIndex + 1;

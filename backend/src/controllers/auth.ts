@@ -23,7 +23,7 @@ interface updateQuery {
 */
 export const signup = async (req: Request, res: Response) => {
 
-  const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
+  const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
 
   const db = getDb();
 
@@ -40,7 +40,7 @@ export const signup = async (req: Request, res: Response) => {
   const remainingName = name.slice(1);
   const nameCapitalized = nameFirstLetterCapitalized + remainingName;
   const emailToken = crypto.randomBytes(64).toString("hex");
- 
+
   const user = {
     name: nameCapitalized,
     email,
@@ -49,7 +49,7 @@ export const signup = async (req: Request, res: Response) => {
     isVerified: false,
     emailToken: [emailToken],
     formsResponded: formsResponded,
-    residentId: residentId ? residentId : null,
+    neighborhoodId: neighborhoodId ? neighborhoodId : null,
     passwordSet: password ? true : false,
     userImagesId
   };
@@ -57,20 +57,20 @@ export const signup = async (req: Request, res: Response) => {
   const newUser = await users.insertOne(user);
 
 
-  const iserInfo ={
+  const userInfo = {
 
     id: newUser.insertedId.toString(),
     email: user.email,
     name: user.name,
     image: user.image,
     isVerified: user.isVerified,
-    residentId: user.residentId,
+    neighborhoodId: user.neighborhoodId,
     userImagesId: user.userImagesId
   }
 
   // Generate JWT
   const userJwt = jwt.sign(
-    iserInfo,
+    userInfo,
     process.env.JWT_KEY!
   );
 
@@ -88,7 +88,8 @@ export const signup = async (req: Request, res: Response) => {
 
   // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
 
-  res.status(201).send(iserInfo);
+  res.status(201).send(userInfo);
+
 }
 
 
@@ -120,13 +121,13 @@ export const login = async (req: Request, res: Response) => {
   }
 
 
-  const userInfo ={
+  const userInfo = {
     id: existingUser.id.toString(),
     email: existingUser.email,
     name: existingUser.name,
     image: existingUser.image,
     isVerified: existingUser.isVerified,
-    residentId: existingUser.residentId,
+    neighborhoodId: existingUser.neighborhoodId,
     userImagesId: existingUser.userImagesId
   }
 
@@ -151,9 +152,6 @@ export const login = async (req: Request, res: Response) => {
  * @access public 
  */
 export const currentuser = async (req: Request, res: Response) => {
-
-  console.log("currenttt user", req.currentUser);
-  
   res.send(req.currentUser || null);
 }
 
@@ -165,8 +163,6 @@ export const currentuser = async (req: Request, res: Response) => {
  */
 export const signout = async (req: Request, res: Response) => {
   delete req.session?.jwt
-
-  console.log('req session', req.session)
   res.send({});
 }
 
@@ -192,6 +188,29 @@ export const updateUserData = async (req: Request, res: Response) => {
     { returnDocument: 'after' }
   );
 
+  const userInfo = {
+    id: user?._id.toString(),
+    email: user?.email,
+    name: user?.name,
+    image: user?.image,
+    isVerified: user?.isVerified,
+    neighborhoodId: user?.neighborhoodId,
+    userImagesId: user?.userImagesId
+  }
+
+  // Generate JWT
+  const userJwt = jwt.sign(
+    userInfo,
+    process.env.JWT_KEY!
+  );
+
+  // Store JWT on the session object created by cookieSession
+  req.session = {
+    jwt: userJwt,
+  };
+
+
+
   res.status(200).send(user);
 
 }
@@ -212,7 +231,7 @@ export const verifyemail = async (req: Request, res: Response) => {
 
 
   // find the user with the email token:
-  const user = await users.findOne({ emailToken: {$in:[emailtoken]} });
+  const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
 
   if (!user) {
     throw new BadRequestError("Invalid email token")
@@ -229,13 +248,13 @@ export const verifyemail = async (req: Request, res: Response) => {
     { returnDocument: 'after' }
   );
 
-  const userInfo ={
+  const userInfo = {
     id: updatedUser?._id.toString(),
     email: updatedUser?.email,
     name: updatedUser?.name,
     image: updatedUser?.image,
     isVerified: updatedUser?.isVerified,
-    residentId: updatedUser?.residentId,
+    neighborhoodId: updatedUser?.neighborhoodId,
     userImagesId: updatedUser?.userImagesId
   }
 
@@ -311,11 +330,9 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
 
   const newNeighborhood = await neighborhoods.insertOne({
     ...req.body,
-    user: user ? { id: user!.id, name: user!.name, email: user!.email } : undefined
+    user: user ? { id: user!._id, name: user!.name, email: user!.email } : undefined
   })
 
-
-  console.log('newNeighborhood from backend', newNeighborhood)
 
   res.status(201).send(newNeighborhood);
 }
@@ -365,7 +382,7 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
   // const allNeighborhoods = await Neighborhood.find({});
   const db = getDb();
-  const neighborhoodsCollection =  db.collection("neighborhoods")
+  const neighborhoodsCollection = db.collection("neighborhoods")
   const neighborhoods = await neighborhoodsCollection.find({}).toArray();
   res.status(200).send(neighborhoods);
 }

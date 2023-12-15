@@ -26,8 +26,6 @@ export const authenticationValidator = async (
   next: NextFunction
 ) => {
 
-  console.log("reqqqq session", req.session);
-  
   if (!req.session?.jwt) {
     return next();
   }
@@ -38,8 +36,6 @@ export const authenticationValidator = async (
       process.env.JWT_KEY!
     ) as UserPayload;
  
-
-    console.log("payyyloaddd", payload)
     req.currentUser = payload;
 
   } catch (err) { }

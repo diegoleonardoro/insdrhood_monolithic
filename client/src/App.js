@@ -20,7 +20,7 @@ function App() {
   const HeaderMemo = React.memo(Header);
   const [currentuser, setCurrentUser] = useState(null);
 
-
+ 
   //--------------------------------------------
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -29,19 +29,13 @@ function App() {
   //--------------------------------------------
 
   const updateCurrentUser = useCallback((data) => {
-
-    console.log("log inside updateCurrentUser callback");
-
     return new Promise((resolve, reject) => {
-
       if (data !== undefined) {
-        console.log("log inside if statement inside updateCurrentUser function. ");
         setCurrentUser(data);
         resolve();
       } else {
         reject(new Error('No user data provided.'));
       }
-
     });
   }, []);
 
@@ -49,7 +43,6 @@ function App() {
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
     try {
-
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       updateCurrentUser(response.data);
@@ -61,9 +54,6 @@ function App() {
 
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
-
-  console.log("current user from App component", currentuser);
-
   useEffect(() => {
     if (!hasTokenInUrl() && currentuser === null) {
       const timer = setTimeout(() => {
@@ -71,8 +61,10 @@ function App() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, []); // checkCurrentUser is now a stable function reference
+  }, [checkCurrentUser]); //  is now a stable function reference
 
+
+ 
 
   return (
     <Router>

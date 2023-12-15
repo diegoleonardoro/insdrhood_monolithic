@@ -19,7 +19,7 @@ const emailVerification_1 = require("../services/emailVerification");
  * @access public
 */
 const signup = async (req, res) => {
-    const { name, email, password, image, formsResponded, residentId, userImagesId } = req.body;
+    const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
     const db = (0, index_1.getDb)();
     const users = db.collection("users");
     const existingUser = await users.findOne({ email });
@@ -40,22 +40,22 @@ const signup = async (req, res) => {
         isVerified: false,
         emailToken: [emailToken],
         formsResponded: formsResponded,
-        residentId: residentId ? residentId : null,
+        neighborhoodId: neighborhoodId ? neighborhoodId : null,
         passwordSet: password ? true : false,
         userImagesId
     };
     const newUser = await users.insertOne(user);
-    const iserInfo = {
+    const userInfo = {
         id: newUser.insertedId.toString(),
         email: user.email,
         name: user.name,
         image: user.image,
         isVerified: user.isVerified,
-        residentId: user.residentId,
+        neighborhoodId: user.neighborhoodId,
         userImagesId: user.userImagesId
     };
     // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign(iserInfo, process.env.JWT_KEY);
+    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
     // Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
@@ -67,7 +67,7 @@ const signup = async (req, res) => {
         baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
     });
     // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
-    res.status(201).send(iserInfo);
+    res.status(201).send(userInfo);
 };
 exports.signup = signup;
 /**
@@ -93,7 +93,7 @@ const login = async (req, res) => {
         name: existingUser.name,
         image: existingUser.image,
         isVerified: existingUser.isVerified,
-        residentId: existingUser.residentId,
+        neighborhoodId: existingUser.neighborhoodId,
         userImagesId: existingUser.userImagesId
     };
     // Generate JWT
@@ -111,7 +111,6 @@ exports.login = login;
  * @access public
  */
 const currentuser = async (req, res) => {
-    console.log("currenttt user", req.currentUser);
     res.send(req.currentUser || null);
 };
 exports.currentuser = currentuser;
@@ -122,7 +121,6 @@ exports.currentuser = currentuser;
  */
 const signout = async (req, res) => {
     delete req.session?.jwt;
-    console.log('req session', req.session);
     res.send({});
 };
 exports.signout = signout;
@@ -140,6 +138,21 @@ const updateUserData = async (req, res) => {
     const db = (0, index_1.getDb)();
     const users = db.collection("users");
     const user = await users.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: updates }, { returnDocument: 'after' });
+    const userInfo = {
+        id: user?._id.toString(),
+        email: user?.email,
+        name: user?.name,
+        image: user?.image,
+        isVerified: user?.isVerified,
+        neighborhoodId: user?.neighborhoodId,
+        userImagesId: user?.userImagesId
+    };
+    // Generate JWT
+    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
+    // Store JWT on the session object created by cookieSession
+    req.session = {
+        jwt: userJwt,
+    };
     res.status(200).send(user);
 };
 exports.updateUserData = updateUserData;
@@ -169,7 +182,7 @@ const verifyemail = async (req, res) => {
         name: updatedUser?.name,
         image: updatedUser?.image,
         isVerified: updatedUser?.isVerified,
-        residentId: updatedUser?.residentId,
+        neighborhoodId: updatedUser?.neighborhoodId,
         userImagesId: updatedUser?.userImagesId
     };
     // Generate JWT
@@ -222,9 +235,8 @@ const saveNeighborhoodData = async (req, res) => {
     const neighborhoods = db.collection("neighborhoods");
     const newNeighborhood = await neighborhoods.insertOne({
         ...req.body,
-        user: user ? { id: user.id, name: user.name, email: user.email } : undefined
+        user: user ? { id: user._id, name: user.name, email: user.email } : undefined
     });
-    console.log('newNeighborhood from backend', newNeighborhood);
     res.status(201).send(newNeighborhood);
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
