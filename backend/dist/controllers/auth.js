@@ -52,7 +52,8 @@ const signup = async (req, res) => {
         image: user.image,
         isVerified: user.isVerified,
         neighborhoodId: user.neighborhoodId,
-        userImagesId: user.userImagesId
+        userImagesId: user.userImagesId,
+        passwordSet: user.passwordSet
     };
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
@@ -94,7 +95,8 @@ const login = async (req, res) => {
         image: existingUser.image,
         isVerified: existingUser.isVerified,
         neighborhoodId: existingUser.neighborhoodId,
-        userImagesId: existingUser.userImagesId
+        userImagesId: existingUser.userImagesId,
+        passwordSet: existingUser.passwordSet
     };
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
@@ -145,7 +147,8 @@ const updateUserData = async (req, res) => {
         image: user?.image,
         isVerified: user?.isVerified,
         neighborhoodId: user?.neighborhoodId,
-        userImagesId: user?.userImagesId
+        userImagesId: user?.userImagesId,
+        passwordSet: user?.passwordSet
     };
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
@@ -183,7 +186,8 @@ const verifyemail = async (req, res) => {
         image: updatedUser?.image,
         isVerified: updatedUser?.isVerified,
         neighborhoodId: updatedUser?.neighborhoodId,
-        userImagesId: updatedUser?.userImagesId
+        userImagesId: updatedUser?.userImagesId,
+        passwordSet: user?.passwordSet
     };
     // Generate JWT
     const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);

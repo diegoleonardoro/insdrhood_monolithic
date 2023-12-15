@@ -58,14 +58,14 @@ export const signup = async (req: Request, res: Response) => {
 
 
   const userInfo = {
-
     id: newUser.insertedId.toString(),
     email: user.email,
     name: user.name,
     image: user.image,
     isVerified: user.isVerified,
     neighborhoodId: user.neighborhoodId,
-    userImagesId: user.userImagesId
+    userImagesId: user.userImagesId,
+    passwordSet: user.passwordSet
   }
 
   // Generate JWT
@@ -128,7 +128,8 @@ export const login = async (req: Request, res: Response) => {
     image: existingUser.image,
     isVerified: existingUser.isVerified,
     neighborhoodId: existingUser.neighborhoodId,
-    userImagesId: existingUser.userImagesId
+    userImagesId: existingUser.userImagesId,
+    passwordSet: existingUser.passwordSet
   }
 
   // Generate JWT
@@ -195,7 +196,8 @@ export const updateUserData = async (req: Request, res: Response) => {
     image: user?.image,
     isVerified: user?.isVerified,
     neighborhoodId: user?.neighborhoodId,
-    userImagesId: user?.userImagesId
+    userImagesId: user?.userImagesId, 
+    passwordSet:user?.passwordSet
   }
 
   // Generate JWT
@@ -255,7 +257,8 @@ export const verifyemail = async (req: Request, res: Response) => {
     image: updatedUser?.image,
     isVerified: updatedUser?.isVerified,
     neighborhoodId: updatedUser?.neighborhoodId,
-    userImagesId: updatedUser?.userImagesId
+    userImagesId: updatedUser?.userImagesId,
+    passwordSet:user?.passwordSet
   }
 
   // Generate JWT

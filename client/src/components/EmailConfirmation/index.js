@@ -38,6 +38,9 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
+
+      console.log("user", response);
+
       setUser(response.data);
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
@@ -45,7 +48,8 @@ const VerifyEmail = ({ updateCurrentUser }) => {
   }
   useEffect(() => {
     makeRequest()
-  }, [])
+  }, []);
+  
 
   useEffect(() => {
     if (user !== null) {
