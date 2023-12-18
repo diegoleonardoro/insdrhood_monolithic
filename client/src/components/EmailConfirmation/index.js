@@ -49,7 +49,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
   useEffect(() => {
     makeRequest()
   }, []);
-  
 
   useEffect(() => {
     if (user !== null) {
