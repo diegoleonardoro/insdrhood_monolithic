@@ -32,15 +32,17 @@ const SignUp = ({ updateCurrentUser }) => {
   async function saveUserData() {
 
     try {
-
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
+      // const response = 
+      
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
         {
           withCredentials: true
         });
+        
 
-      await updateCurrentUser(response.data);
+      // await updateCurrentUser(response.data);
+
       navigate('/');
-      // return
 
     } catch (error) {
       setErrors(error?.response?.data?.errors?.[0]?.message);
@@ -139,6 +141,8 @@ const SignUp = ({ updateCurrentUser }) => {
 
     </div>
   )
+
+
 }
 
 export default SignUp;

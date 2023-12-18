@@ -37,11 +37,10 @@ const VerifyEmail = ({ updateCurrentUser }) => {
   const makeRequest = async () => {
 
     try {
+      
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
-
-      console.log("user", response);
-
       setUser(response.data);
+
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }
@@ -91,7 +90,9 @@ const VerifyEmail = ({ updateCurrentUser }) => {
     } else {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
       const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user._id}`, { password: password1, passwordSet :true});
+
       updateCurrentUser(response.data);
+      
       navigate(`/neighborhood/${response.data.residentId[0]}`);
     }
   }

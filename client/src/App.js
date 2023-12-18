@@ -20,6 +20,8 @@ function App() {
   const HeaderMemo = React.memo(Header);
   const [currentuser, setCurrentUser] = useState(null);
 
+
+  
  
   //--------------------------------------------
   const hasTokenInUrl = () => {
@@ -45,6 +47,7 @@ function App() {
     try {
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+      
       updateCurrentUser(response.data);
     
     } catch (error) {
@@ -61,10 +64,9 @@ function App() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [checkCurrentUser]); //  is now a stable function reference
+  }, []); // checkCurrentUser  is now a stable function reference
 
 
- 
 
   return (
     <Router>
