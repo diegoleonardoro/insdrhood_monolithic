@@ -27,7 +27,10 @@ function Home({ currentuser, updateCurrentUser }) {
 
         try {
 
-          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`);
+          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`,
+            {
+              withCredentials: true
+            });
           // setUser(response.data);
           updateCurrentUser(response.data);
 

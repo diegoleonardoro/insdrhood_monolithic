@@ -8,13 +8,13 @@ import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 
 const SignUp = ({ updateCurrentUser }) => {
-  
+
   axios.defaults.withCredentials = true;
 
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState(null);
-  
+
   const [imageFile, setImageFile] = useState("");
 
   const [password1, setPassword1] = useState("");
@@ -33,7 +33,10 @@ const SignUp = ({ updateCurrentUser }) => {
 
     try {
 
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData);        
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
+        {
+          withCredentials: true
+        });
 
       await updateCurrentUser(response.data);
       navigate('/');
