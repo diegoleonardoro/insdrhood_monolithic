@@ -80,8 +80,6 @@ export const signup = async (req: Request, res: Response) => {
   };
 
 
-  console.log("reqqq sessssion", req.session;)
-
   sendVerificationMail({
     name: user.name,
     email: user.email,

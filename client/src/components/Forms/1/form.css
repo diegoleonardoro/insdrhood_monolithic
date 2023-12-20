@@ -137,6 +137,17 @@ input, textarea {
   width:70%;
 }
 
+.foodTypeInput{
+  border: none;
+  border-bottom:px solid #b5afaf;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+  border-color: transparent transparent rgb(222, 220, 220) transparent;
+  border-style: solid;
+  outline-width: 0;
+
+}
 .form > div textarea:not(.favoritePlacesTextArea){
   position:relative;
   top:10px;
@@ -211,8 +222,6 @@ input:focus{
 }
 
 
-
-
 .completeSentenceInput{
   width: 70%; 
   border-color:transparent transparent rgb(222, 220, 220) transparent ;
@@ -220,11 +229,9 @@ input:focus{
   background-color: transparent;
   outline: none;
   padding-left: 10px;
-  top:0px
+  top:0px;
+  border-style: solid;
 }
-
-
-
 
 
 /*How long have you lived in the neighborhood*/
@@ -264,11 +271,10 @@ input:focus{
   height: 40px;
   border-width: 1px;
   border-style: solid;
-  border: transparent;
-  border-bottom: solid 1px #bdbdbd;
+  margin-top:10px;
   background-color: transparent;
+  outline-width: 0;
   padding-left: 20px;
-  padding-top: 15px;
   padding-bottom: 0px;
   outline: none;
   resize: none;
@@ -439,7 +445,7 @@ input:focus{
 }
 
 .favoritePlacesTextArea {
-  resize: none;
+  /* resize: none; */
   width: 100%;
   border: none;
   outline-width: 0;

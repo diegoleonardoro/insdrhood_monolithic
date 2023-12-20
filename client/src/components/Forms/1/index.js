@@ -1802,7 +1802,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           <div style={{ textAlign: "left" }}>
             <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
             <input
-
               className="completeSentenceInput"
               onChange={(e) => {
                 setFormData({
@@ -1896,7 +1895,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                         className="foodTypeInput"
                         type="text"
                         onChange={(e) => handleRecommendedRestaurant(e.target.value, index)}
-                        style={{ border: "none", borderBottom: "1px solid #b5afaf", outline: "none", width: "100%", backgroundColor: "transparent" }}
+                        
                       />
                     </label>
                   </div>
@@ -2182,15 +2181,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           <div style={{ display: "fex", alignItems: "center", width: "120%", position: "relative" }}>
             <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
               <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
-              <input style={{
-                display: 'inline-block',
-                border: 'none',
-                borderBottom: '1px solid black',
-                backgroundColor: 'transparent',
-                outline: 'none',
-                width: "35%",
-                top: '0px'
-              }}
+              <input style={{width: "35%"}}
+                className="completeSentenceInput"
                 onChange={
                   (e) => {
                     setFormData({
@@ -2205,16 +2197,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               >
               </input>
               <p style={{ display: "inline" }}> because</p>
-              <input style={{
-                display: 'inline-block',
-                border: 'none',
-                borderBottom: '1px solid black',
-                backgroundColor: 'transparent',
-                marginLeft: '5px',
-                outline: 'none',
-                width: "35%",
-                top: '0px'
-              }}
+              <input style={{ width: "35%"}}
+                className="completeSentenceInput"
                 onChange={
                   (e) => {
                     setFormData({
@@ -2569,14 +2553,9 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
               <p style={{ display: "inline" }}>If I had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
               <input style={{
-                display: 'inline-block',
-                border: 'none',
-                borderBottom: '1px solid black',
-                backgroundColor: 'transparent',
-                outline: 'none',
-                width: '35%',
-                top: '0px'
+                width: '35%'            
               }}
+                className="completeSentenceInput"
                 onChange={
                   (e) => {
                     setFormData({
@@ -2592,15 +2571,9 @@ const FormComponent = ({ updateCurrentUser }) => {
               </input>
               <p style={{ display: "inline" }}> because</p>
               <input style={{
-                display: 'inline-block',
-                border: 'none',
-                marginLeft: '5px',
-                borderBottom: '1px solid black',
-                backgroundColor: 'transparent',
-                outline: 'none',
-                width: '35%',
-                top: '0px'
+                width: '35%'
               }}
+                className="completeSentenceInput"
                 onChange={
                   (e) => {
                     setFormData({
