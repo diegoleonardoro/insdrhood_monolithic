@@ -344,6 +344,7 @@ input:focus{
   border-bottom: solid 1px rgb(100, 100, 100);
   background-color: transparent;
   outline: none;
+  border-style:solid;
 }
 
 
