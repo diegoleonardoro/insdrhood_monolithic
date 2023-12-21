@@ -223,7 +223,7 @@ input:focus{
 
 
 .completeSentenceInput{
-  width: 70%; 
+  width: 50%; 
   border-color:transparent transparent rgb(222, 220, 220) transparent ;
   outline-width: 0;
   background-color: transparent;
@@ -446,13 +446,17 @@ input:focus{
 
 .favoritePlacesTextArea {
   /* resize: none; */
-  width: 100%;
+  width: 90%;
   border: none;
   outline-width: 0;
   background-color: transparent;
   position:relative;
   height: 100%;
   margin-left: 10px;
+}
+
+.favoritePlacesTextArea:focus {
+  outline: none; /* Removes the default focus outline */
 }
 
 .addNewPlace {
