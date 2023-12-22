@@ -270,21 +270,21 @@ const FormComponent = ({ updateCurrentUser }) => {
         if (currentDiv.className.indexOf("stereotypicalResident") > -1) {
           setTimeout(() => {
             letsTalkAboutFoodRef.current.style.display = "none";
-          }, 1000);
+          }, 2000);
         };
 
         // Check if we are about to show the night life questions, so that we can change the display value of the header that annouces the upcoming night life questions questions:
         if (currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1) {
           setTimeout(() => {
             letsTalkAboutNightLifeRef.current.style.display = "none";
-          }, 1000);
+          }, 2000);
         };
 
         // Check if we are about to show the  general information questions, so that we can change the display value of the header that annouces the upcoming general information questions questions:
         if (currentDiv.className.indexOf("pickOneNightLifePlace") > -1) {
           setTimeout(() => {
             letsTalkAboutGeneralInfo.current.style.display = "none";
-          }, 1000);
+          }, 2000);
         };
 
 
@@ -2441,7 +2441,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         >
           <div ref={letsTalkAboutNightLifeRef} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
             <h4> Let's talk about the night life </h4>
-            <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/5067137.png" height="100px"></img>
+            <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-21%2018.35.59%20-%20A%20pencil%20sketch%20with%20a%20grain%20effect%2C%20emphasizing%20a%20_night_%20ambiance%20for%20a%20modern%20nightclub%20scene.%20The%20sketch%20should%20depict%20a%20contemporary%20nightclub%20at.png" height="170px"></img>
           </div>
           <label>
             How do you describe the <span className="questionHighlight">night life</span> of {" "}
@@ -2601,10 +2601,9 @@ const FormComponent = ({ updateCurrentUser }) => {
           }
           ref={ref => divRefs.current[17] = ref}
         >
-
           <div ref={letsTalkAboutGeneralInfo} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
             <h4> Let's talk about some general information </h4>
-            <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/download.png" height="50%"></img>
+            <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-22%2008.42.27%20-%20A%20black%20and%20white%2C%20highly%20minimalistic%20pencil%20sketch%2C%20focusing%20on%20the%20theme%20of%20'general%20questions.'%20This%20version%20should%20feature%20only%20a%20few%20floating%20qu.png" height="190px"></img>
           </div>
 
           <div> True or False: </div>
@@ -2730,6 +2729,10 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
           </div>
         </div>
+
+
+
+
 
         {/** True or false statements, having pets in your neighborhood is convenient */}
         <div
