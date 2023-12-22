@@ -2731,9 +2731,6 @@ const FormComponent = ({ updateCurrentUser }) => {
         </div>
 
 
-
-
-
         {/** True or false statements, having pets in your neighborhood is convenient */}
         <div
           className={

@@ -1,6 +1,16 @@
 .App {
   text-align: center;
+  font-size: 15px;
 }
+
+
+
+@media only screen and (max-width: 400px) {
+  .App {
+    font-size: 12px; /* Smaller font size for small screens */
+  }
+}
+
 
 
 /* 
