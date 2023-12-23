@@ -1,22 +1,40 @@
+
+
+hr{
+  margin: 0rem 0;
+}
 .containerNhoodItems{
   position:relative;
   text-align: center;
+   padding:20px;
 }
 
- .userInfo {
+.userInfo {
   position: relative;
-
+  background-color: #f3faf2;
 }
 
-
+.userInfoSubContainer{
+  /* padding:10px; */
+}
 
 /* Images: */
+
 .contentContainer{
   margin: 0 auto;
 }
 .containerNhoodItems{
   position:relative;
   text-align: center;
+}
+
+.containerFood{
+  display:flex;
+  flex-direction: row-reverse;
+}
+
+.foodEditableDivsContainer{
+  width: 100%;
 }
 
 
@@ -31,5 +49,11 @@
   width:100px;
 }
 .recommendationsImage{
-  width:100px;
+  height:100px;
+  margin-top:15px;
+}
+
+
+.sectionContainer{
+    background-color: #f3faf2;
 }

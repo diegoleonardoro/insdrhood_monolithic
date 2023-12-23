@@ -17,7 +17,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
     try {
 
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
-      
+
       setNeighborhood(neighborhood.data);
 
       setIsEditable(neighborhood.data.user.id === currentuser?.id);
@@ -31,12 +31,12 @@ const NeighborhoodProfile = ({ currentuser }) => {
   // console.log("is editable", isEditable);
 
 
-  
+
   return (
 
-    <div style={{ paddingTop: "30px", backgroundColor: "#e4e4e4" }}>
+    <div style={{ paddingTop: "30px" }}>
 
-      <div className="userProfileContainer" style={{ width: "70%", position: "relative", left: "50%", transform: "translate(-50%, 0)", border: "1px solid black" }}>
+      <div className="userProfileContainer" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", border: "1px solid black" }}>
 
         <div className="userIntroContainer"
           style={{ position: "relative" }}>
@@ -52,10 +52,10 @@ const NeighborhoodProfile = ({ currentuser }) => {
             ) : (<p>by anonymous.</p>)}
           </h4>
 
-          <hr></hr>
+         
 
-          <div className="userInfo">
-            <div>
+          <div className="containerNhoodItems userInfo">
+            <div className="userInfoSubContainer">
               {neighborhood && (
                 <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", width: "80%", alignItems: "start", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
@@ -70,7 +70,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
             </div>
           </div>
 
-          <hr></hr>
 
 
           <div className="containerNhoodItems" >
@@ -88,9 +87,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
             )}
           </div>
 
-          <hr></hr>
 
-          <div className="containerNhoodItems" >
+          <div className="sectionContainer containerNhoodItems" >
             {neighborhood && (
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                 <div className="detailsContainer">
@@ -110,29 +108,30 @@ const NeighborhoodProfile = ({ currentuser }) => {
             )}
           </div>
 
-          <hr></hr>
 
           <div className="containerNhoodItems" >
             {neighborhood && (
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-                <div>
+              <div className ="containerFood" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <div style={{display:"flex", flexDirection:"column", marginLeft: "10px",justifyContent: "center"}}>
                   <h5 className="recommendationsHeader" >Food</h5>
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png"></img>
                 </div>
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + neighborhood.neighborhood + " can be generally described as "} content={neighborhood.foodCulture
-                } objectKey="foodCulture" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${neighborhood.neighborhood} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
-                } objectKey="foodIsAuthentic" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${neighborhood.neighborhood} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.recommendedFoodTypes} objectKey="recommendedFoodTypes" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place to eat in ${neighborhood.neighborhood} it would be `, 'because ']} objectData={neighborhood.onePlaceToEat} objectKey="onePlaceToEat" />
+                <div className="foodEditableDivsContainer">
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + neighborhood.neighborhood + " can be generally described as "} content={neighborhood.foodCulture
+                  } objectKey="foodCulture" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${neighborhood.neighborhood} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
+                  } objectKey="foodIsAuthentic" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${neighborhood.neighborhood} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.recommendedFoodTypes} objectKey="recommendedFoodTypes" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place to eat in ${neighborhood.neighborhood} it would be `, 'because ']} objectData={neighborhood.onePlaceToEat} objectKey="onePlaceToEat" />
+                </div>
               </div>
             )}
           </div>
 
-          <hr></hr>
+        
 
-          <div className="containerNhoodItems">
+          <div className="sectionContainer containerNhoodItems">
             {neighborhood && (
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                 <div>
