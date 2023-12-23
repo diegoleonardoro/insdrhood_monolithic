@@ -31,17 +31,23 @@ hr{
 .containerFood{
   display:flex;
   flex-direction: row-reverse;
+  width:80%;
+}
+
+.nightLifeContainer{
+ display:flex;
+}
+.nightLifeEditableDivsContainer{
+  width:100%
 }
 
 .foodEditableDivsContainer{
   width: 100%;
 }
 
-
 .detailsContainer{
   display: flex;
 }
-
 
 /*recommendations images: */
 
@@ -51,6 +57,13 @@ hr{
 .recommendationsImage{
   height:100px;
   margin-top:15px;
+}
+
+.imageSectionContainer{
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  justify-content: center;
 }
 
 

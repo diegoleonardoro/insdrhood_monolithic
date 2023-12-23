@@ -52,7 +52,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
             ) : (<p>by anonymous.</p>)}
           </h4>
 
-         
+
 
           <div className="containerNhoodItems userInfo">
             <div className="userInfoSubContainer">
@@ -71,10 +71,9 @@ const NeighborhoodProfile = ({ currentuser }) => {
           </div>
 
 
-
           <div className="containerNhoodItems" >
             {neighborhood && (
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+              <div style={{ width: "80%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                 <NeighborhoodEditableDiv
                   neighborhoodid={neighborhoodid}
                   isEditable={isEditable}
@@ -90,9 +89,9 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
           <div className="sectionContainer containerNhoodItems" >
             {neighborhood && (
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", width: "80%" }}>
                 <div className="detailsContainer">
-                  <div className="sectionContainer">
+                  <div className="imageSectionContainer">
                     <h5 className="sectionHeader">The residents</h5>
                     <img className="imageResidents" alt="residentsimage" style={{ padding: "20px" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/socialbutterflies.png" />
                   </div>
@@ -111,8 +110,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
           <div className="containerNhoodItems" >
             {neighborhood && (
-              <div className ="containerFood" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-                <div style={{display:"flex", flexDirection:"column", marginLeft: "10px",justifyContent: "center"}}>
+              <div className="containerFood" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <div className="imageSectionContainer">
                   <h5 className="recommendationsHeader" >Food</h5>
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png"></img>
                 </div>
@@ -129,18 +128,20 @@ const NeighborhoodProfile = ({ currentuser }) => {
             )}
           </div>
 
-        
+
 
           <div className="sectionContainer containerNhoodItems">
             {neighborhood && (
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-                <div>
+              <div className="nightLifeContainer" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", width: "80%" }}>
+                <div className="imageSectionContainer">
                   <h5 className="recommendationsHeader" >Night Life</h5>
                   <img alt='nightlifeimage' className="recommendationsImage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E-2023-11-14-11.10.18---A-linear-pencil-sketch-of-a-cocktail-glass-with-a-grain-effect%2C-symbolizing-nightlife.-The-sketch-is-defined-by-clean%2C-crisp-lines-to-illustrate-the-s.png"></img>
                 </div>
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + neighborhood.neighborhood + " as "} content={neighborhood.nightLife} objectKey="nightLife" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.nightLifeRecommendations} objectKey="nightLifeRecommendations" />
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place for a fun at night, it would be `, 'because ']} objectData={neighborhood.onePlaceForNightLife} objectKey="onePlaceForNightLife" />
+                <div className="nightLifeEditableDivsContainer">
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + neighborhood.neighborhood + " as "} content={neighborhood.nightLife} objectKey="nightLife" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.nightLifeRecommendations} objectKey="nightLifeRecommendations" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place for a fun at night, it would be `, 'because ']} objectData={neighborhood.onePlaceForNightLife} objectKey="onePlaceForNightLife" />
+                </div>
               </div>
             )}
           </div>
@@ -148,8 +149,11 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
           <div className="containerNhoodItems" >
             {neighborhood && (
-              <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} neighborhood={neighborhood.neighborhood} nestedObjects={neighborhood.statements} objectKey="statements" />
+              <div style={{ width: "80%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} neighborhood={neighborhood.neighborhood} nestedObjects={neighborhood.statements} objectKey="statements" />
+              </div>
             )}
+
           </div>
 
         </div>
