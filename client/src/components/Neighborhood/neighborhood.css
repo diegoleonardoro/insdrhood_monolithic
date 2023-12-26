@@ -3,15 +3,16 @@
 hr{
   margin: 0rem 0;
 }
+
 .containerNhoodItems{
   position:relative;
   text-align: center;
-   padding:20px;
+  /* padding:20px; */
 }
 
 .userInfo {
   position: relative;
-  background-color: #f3faf2;
+  background-color: #FFFCEB ;
 }
 
 .userInfoSubContainer{
@@ -30,7 +31,7 @@ hr{
 
 .containerFood{
   display:flex;
-  flex-direction: row-reverse;
+  /* flex-direction: row-reverse; */
   width:80%;
 }
 
@@ -47,26 +48,28 @@ hr{
 
 .detailsContainer{
   display: flex;
+  align-items: center;
 }
 
 /*recommendations images: */
-
 .imageResidents{
-  width:100px;
+  /* width:70%; */
 }
+
 .recommendationsImage{
-  height:100px;
-  margin-top:15px;
+  /* height:250px;
+  margin-top:15px; */
 }
 
 .imageSectionContainer{
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  /* margin-left: 10px; */
+  width:30%;
   justify-content: center;
 }
 
 
 .sectionContainer{
-    background-color: #f3faf2;
+    background-color: #FFFCEB ;
 }

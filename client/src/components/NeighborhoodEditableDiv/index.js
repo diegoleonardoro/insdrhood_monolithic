@@ -54,7 +54,7 @@ const NeighborhoodEditableDiv = ({
 
 
   // The following state and refs will be used when the user is editing the neighborhood images:
-  const [newImages, setNewImages] = useState([])
+  const [newImages, setNewImages] = useState([]);
   const imgRefs = useRef([]);
   const addImagesInput = useRef(null);
   const galleryParentRef = useRef(null);
@@ -65,11 +65,9 @@ const NeighborhoodEditableDiv = ({
   const [recommendationsArrayOfObjectsFromTable_, setRecommendationsArrayOfObjectsFromTable_] = useState([]);
   const [recommendationsArrayOfObjectsHistory, setRecommendationsArrayOfObjectsHistory] = useState(recommendationsArrayOfObjects);
 
-
   // The following statements will be used when the use is editing nested objects such as the statements:
   const [nestedObjects_, setNestedObjects_] = useState(nestedObjects);
   const [nestedObjectsHistory, setNestedObjectsHistory] = useState(nestedObjects);
-
 
 
   // The following satate will be used to add more rows to the table that adds more recommended places:
@@ -109,6 +107,7 @@ const NeighborhoodEditableDiv = ({
       </svg>
     );
   };
+
   const NextArrowPhotos = ({ onClick }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" onClick={onClick} height="3em" viewBox="0 0 512 512"
@@ -129,6 +128,7 @@ const NeighborhoodEditableDiv = ({
       </svg>
     );
   };
+  
   // Image slider settings:
   const settings = {
     // dots: true,
@@ -491,7 +491,14 @@ const NeighborhoodEditableDiv = ({
         ) : (
 
           <div className="adjectivesDiv" style={{ border: "1px dotted black", margin: "15px", display: "flex", flexDirection: "column", alignItems: "start" }}>
-            {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+            {isEditable ? (
+
+              <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
+            
+            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+            
+            
+            ) : null}
             {content}
           </div>
 
@@ -501,11 +508,10 @@ const NeighborhoodEditableDiv = ({
     )
   };
 
-
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
     return (
-      <div style={{ padding: "15px", width: "100%" }}>
+      <div style={{ padding: "15px", width: "100%", position:"relative" }}>
         {isEditing ? (
           <div style={{ marginTop: "20px" }}>
 
@@ -651,7 +657,12 @@ const NeighborhoodEditableDiv = ({
         ) : (
 
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
-            {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+            {isEditable ? (
+            
+            <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+            
+            ) : null}
             {recommendationsArrayOfObjectsHistory.map((item, index) => {
               let text;
               if (objectKey === 'recommendedFoodTypes') {
@@ -712,7 +723,7 @@ const NeighborhoodEditableDiv = ({
   if (typeof objectData_ === "object") {
 
     return (
-      <div style={{ padding: "15px", width: "100%" }}>
+      <div style={{ padding: "15px", width: "100%", position: "relative" }}>
         {isEditing ? (
           <div>
             <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
@@ -730,7 +741,13 @@ const NeighborhoodEditableDiv = ({
           </div>
         ) : (
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
-            {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+            {isEditable ? (
+            
+              <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
+
+            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+            
+            ) : null}
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
               {complementaryText[0] + objectData_.assessment.toLowerCase()}  {objectData_.explanation !== "" ? (
                 <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
@@ -752,7 +769,7 @@ const NeighborhoodEditableDiv = ({
 
     return (
       <div className="galleryParent" ref={galleryParentRef}
-        style={{ position: "relative" }}
+        style={{ position: "relative"}}
       >
 
         {isEditing ? (
@@ -832,7 +849,13 @@ const NeighborhoodEditableDiv = ({
           </Slider>
         )
         }
-        {isEditable ? (<svg onClick={handleEditClick} className="editSvgRecommendedPlaces" cursor="pointer" fill="none" height="24" stroke="currentColor" strokeLinecap="round" zindex="3" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+        {isEditable ? (
+        
+          <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+
+        // <svg onClick={handleEditClick} className="editSvgRecommendedPlaces" cursor="pointer" fill="none" height="24" stroke="currentColor" strokeLinecap="round" zindex="3" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+        
+        ) : null}
       </div>
     )
 
@@ -842,7 +865,7 @@ const NeighborhoodEditableDiv = ({
   if (adjectives.length > 0) {
 
     return (
-      <div className="adjectivesDiv">
+      <div className="adjectivesDiv" style={{ position: "relative" }}>
         {isEditing ? (
           <div className="nhoodIntroItemList">
 
@@ -873,7 +896,12 @@ const NeighborhoodEditableDiv = ({
 
             <div className="nhoodAdjectivesDivSpanContainer">
               {
-                isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null
+                isEditable ? (
+                
+                  <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
+                // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                
+                ) : null
               }
 
               <p style={{ marginBottom: "0px", margin: isEditable ? "0px" : "0px" }} className="nhoodRecommendationText">
@@ -905,7 +933,7 @@ const NeighborhoodEditableDiv = ({
 
   /** When we only render plain text: */
   return (
-    <div style={{ padding: "15px", width: "100%" }}>
+    <div style={{ padding: "15px", width: "100%", position: "relative" }}>
 
       {isEditing ? (
 
@@ -930,14 +958,18 @@ const NeighborhoodEditableDiv = ({
 
         <div style={{ border: "1px dotted black ", padding: "15px" }}>
 
-          {isEditable ? (<svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>) : null}
+          {isEditable ? (
+          
 
+           <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
+          // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+          
+          ) : null}
 
           <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
             {complementaryText !== "" ? complementaryText : null} {text}
           </p>
-
-
+        
         </div>
 
       )}
