@@ -128,7 +128,7 @@ const NeighborhoodEditableDiv = ({
       </svg>
     );
   };
-  
+
   // Image slider settings:
   const settings = {
     // dots: true,
@@ -493,11 +493,11 @@ const NeighborhoodEditableDiv = ({
           <div className="adjectivesDiv" style={{ border: "1px dotted black", margin: "15px", display: "flex", flexDirection: "column", alignItems: "start" }}>
             {isEditable ? (
 
-              <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
-            
-            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-            
-            
+              <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+
+              // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+
+
             ) : null}
             {content}
           </div>
@@ -510,213 +510,234 @@ const NeighborhoodEditableDiv = ({
 
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
+
+
     return (
-      <div style={{ padding: "15px", width: "100%", position:"relative" }}>
-        {isEditing ? (
-          <div style={{ marginTop: "20px" }}>
 
-            {recommendationsArrayOfObjects_.map((item, index) => {
-              let text;
-              if (objectKey === 'recommendedFoodTypes') {
-                if (index === 0) {
-                  text = 'Make sure to try ';
-                } else if (index === 1) {
-                  text = 'You should also try ';
-                } else if (index === 2) {
-                  text = 'Also make sure to try ';
-                } else {
-                  text = "You'll also want to try ";
+      <div>
+        <h1 >Make sure to try:</h1>
+
+        <div style={{ padding: "15px", width: "100%", position: "relative" }}>
+
+          {isEditing ? (
+            <div style={{ marginTop: "20px" }}>
+
+              {recommendationsArrayOfObjects_.map((item, index) => {
+                let text;
+                if (objectKey === 'recommendedFoodTypes') {
+                  if (index === 0) {
+                    text = 'Make sure to try ';
+                  } else if (index === 1) {
+                    text = 'You should also try ';
+                  } else if (index === 2) {
+                    text = 'Also make sure to try ';
+                  } else {
+                    text = "You'll also want to try ";
+                  }
+                } else if (objectKey === 'nightLifeRecommendations') {
+                  if (index === 0) {
+                    text = 'I would recommend going to';
+                  } else if (index === 1) {
+                    text = 'You should also go to';
+                  } else if (index === 2) {
+                    text = 'You will also want to go to';
+                  } else {
+                    text = "Also visit";
+                  }
                 }
-              } else if (objectKey === 'nightLifeRecommendations') {
-                if (index === 0) {
-                  text = 'I would recommend going to';
-                } else if (index === 1) {
-                  text = 'You should also go to';
-                } else if (index === 2) {
-                  text = 'You will also want to go to';
-                } else {
-                  text = "Also visit";
-                }
-              }
 
 
-              return (
-                <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding: "15px" }}>
+                return (
+                  <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding: "15px" }}>
 
-                  <OverlayTrigger
+                    <OverlayTrigger
 
-                    placement="bottom"
-                    overlay={
-                      <Tooltip id="button-tooltip-2">
-                        Delete item
-                      </Tooltip>
-                    }
-                  >
-                    {({ ref, ...triggerHandler }) => (
-                      <svg
-                        ref={ref}
-                        onClick={(e) => { removeObject(index) }}
-                        {...triggerHandler}
-                        style={{
-                          position: "absolute",
-                          right: "5px",
-                          backgroundColor: "rgb(228, 228, 228)",
-                          marginTop: "10px",
-                          cursor: "pointer"
-                        }}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="25"
-                        height="25"
-                        fill="currentColor"
-                        className="bi bi-trash"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                      </svg>
-                    )}
-                  </OverlayTrigger>
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="button-tooltip-2">
+                          Delete item
+                        </Tooltip>
+                      }
+                    >
+                      {({ ref, ...triggerHandler }) => (
+                        <svg
+                          ref={ref}
+                          onClick={(e) => { removeObject(index) }}
+                          {...triggerHandler}
+                          style={{
+                            position: "absolute",
+                            right: "5px",
+                            backgroundColor: "rgb(228, 228, 228)",
+                            marginTop: "10px",
+                            cursor: "pointer"
+                          }}
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="25"
+                          height="25"
+                          fill="currentColor"
+                          className="bi bi-trash"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                        </svg>
+                      )}
+                    </OverlayTrigger>
 
-                  <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
 
-                    <div style={{ marginTop: "none" }}>{text}</div>
-                    <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} />
-                    {objectKey === 'recommendedFoodTypes' ? (<div style={{ marginLeft: "10px" }}> food. </div >) : null}
+                      <div style={{ marginTop: "none" }}>{text}</div>
+                      <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} />
+                      {objectKey === 'recommendedFoodTypes' ? (<div style={{ marginLeft: "10px" }}> food. </div >) : null}
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
+
+                      {objectKey === 'recommendedFoodTypes' ? (
+                        <div>Go to </div >
+                      ) : objectKey === 'nightLifeRecommendations' ? (
+                        <div>Because </div >
+                      ) : null}
+
+                      <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} />
+
+                      <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
+                    </div>
                   </div>
+                );
+              })}
 
-                  <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
+              <h4 style={{ marginTop: "20px" }}>Add more: </h4>
+
+              <Table style={{ margin: "5px" }} striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Food Type</th>
+                    <th>Restaurants</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <input
+                          style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
+                          value={row.assessment}
+                          name="assessment"
+                          onChange={(e) => {
+                            updateField(index, 'assessment', e.target.value); // this function will add a new row to the table 
+                            handleChange(e, index, 'table'); /// <<<----------
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          placeholder='Include comma separated words'
+                          style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
+                          value={row.recommendations}
+                          name="explanation"
+                          onChange={(e) => {
+                            updateField(index, 'recommendations', e.target.value); // this function will add a new row to the table 
+                            handleChange(e, index, 'table'); /// <<<----------
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+
+              </Table>
+              <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", border: "3px dotted rgb(120 120 120)", cursor: "pointer" }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
+                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+              </div>
+              <div className="divSaveCancelBtns">
+                <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
+                <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
+              </div>
+
+            </div>
+
+
+
+          ) : (
+
+
+
+
+            <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
+
+              {isEditable ? (
+
+                <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+                // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+
+              ) : null}
+              {recommendationsArrayOfObjectsHistory.map((item, index) => {
+                let text;
+                if (objectKey === 'recommendedFoodTypes') {
+
+                  if (index === 0) {
+                    text = 'Make sure to try ';
+                  } else if (index === 1) {
+                    text = 'You should also try ';
+                  } else if (index === 2) {
+                    text = 'Also make sure to try ';
+                  } else {
+                    text = "You'll also want to try ";
+                  }
+                  text += item.assessment;
+                } else if (objectKey === 'nightLifeRecommendations') {
+                  if (index === 0) {
+                    text = 'I would recommend going to ';
+                  } else if (index === 1) {
+                    text = 'You should also go to ';
+                  } else if (index === 2) {
+                    text = 'You will also want to go to ';
+                  } else {
+                    text = "Also visit ";
+                  }
+                }
+                return (
+
+                  <div key={index} >
 
                     {objectKey === 'recommendedFoodTypes' ? (
-                      <div>Go to </div >
+                      <div>
+                        <p className='nhoodRecommendationText'>
+                          {item.assessment} food.
+                          {item.explanation && (
+                            <span className='nhoodRecommendationText' >
+                              {` GO to ${item.explanation}.`}
+                            </span>
+                          )}</p>
+
+                      </div>
                     ) : objectKey === 'nightLifeRecommendations' ? (
-                      <div>Because </div >
+                      <div>
+                        <p className='nhoodRecommendationText'>{text + item.assessment.trimEnd()}
+                          {item.explanation && (
+                            <span className='nhoodRecommendationText'  >
+                              {`, because ${item.explanation}.`}
+                            </span>
+                          )}</p>
+                      </div>
+
                     ) : null}
-
-                    <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} />
-
-                    <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
                   </div>
-                </div>
-              );
-            })}
-
-            <h4 style={{ marginTop: "20px" }}>Add more: </h4>
-
-            <Table style={{ margin: "5px" }} striped bordered hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Food Type</th>
-                  <th>Restaurants</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <input
-                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
-                        value={row.assessment}
-                        name="assessment"
-                        onChange={(e) => {
-                          updateField(index, 'assessment', e.target.value); // this function will add a new row to the table 
-                          handleChange(e, index, 'table'); /// <<<----------
-                        }}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        placeholder='Include comma separated words'
-                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
-                        value={row.recommendations}
-                        name="explanation"
-                        onChange={(e) => {
-                          updateField(index, 'recommendations', e.target.value); // this function will add a new row to the table 
-                          handleChange(e, index, 'table'); /// <<<----------
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-
-            </Table>
-            <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", border: "3px dotted rgb(120 120 120)", cursor: "pointer" }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
-                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-              </svg>
-            </div>
-            <div className="divSaveCancelBtns">
-              <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
-              <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
+                );
+              })}
             </div>
 
-          </div>
-        ) : (
 
-          <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
-            {isEditable ? (
-            
-            <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
-            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-            
-            ) : null}
-            {recommendationsArrayOfObjectsHistory.map((item, index) => {
-              let text;
-              if (objectKey === 'recommendedFoodTypes') {
-
-                if (index === 0) {
-                  text = 'Make sure to try ';
-                } else if (index === 1) {
-                  text = 'You should also try ';
-                } else if (index === 2) {
-                  text = 'Also make sure to try ';
-                } else {
-                  text = "You'll also want to try ";
-                }
-                text += item.assessment;
-              } else if (objectKey === 'nightLifeRecommendations') {
-                if (index === 0) {
-                  text = 'I would recommend going to ';
-                } else if (index === 1) {
-                  text = 'You should also go to ';
-                } else if (index === 2) {
-                  text = 'You will also want to go to ';
-                } else {
-                  text = "Also visit ";
-                }
-              }
-              return (
-                <div key={index} >
-                  {objectKey === 'recommendedFoodTypes' ? (
-                    <div>
-                      <p className='nhoodRecommendationText'>{text} food
-                        {item.explanation && (
-                          <span className='nhoodRecommendationText' >
-                            {` at ${item.explanation}.`}
-                          </span>
-                        )}</p>
-
-                    </div>
-                  ) : objectKey === 'nightLifeRecommendations' ? (
-                    <div>
-                      <p className='nhoodRecommendationText'>{text + item.assessment.trimEnd()}
-                        {item.explanation && (
-                          <span className='nhoodRecommendationText'  >
-                            {`, because ${item.explanation}.`}
-                          </span>
-                        )}</p>
-                    </div>
-
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>)
+          )}
+        </div>
+      </div>
+    )
   }
 
   /** We are rendering information that comes in as an object: */
@@ -742,11 +763,11 @@ const NeighborhoodEditableDiv = ({
         ) : (
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
             {isEditable ? (
-            
-              <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
 
-            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-            
+              <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+
+              // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+
             ) : null}
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
               {complementaryText[0] + objectData_.assessment.toLowerCase()}  {objectData_.explanation !== "" ? (
@@ -769,7 +790,7 @@ const NeighborhoodEditableDiv = ({
 
     return (
       <div className="galleryParent" ref={galleryParentRef}
-        style={{ position: "relative"}}
+        style={{ position: "relative" }}
       >
 
         {isEditing ? (
@@ -850,11 +871,11 @@ const NeighborhoodEditableDiv = ({
         )
         }
         {isEditable ? (
-        
+
           <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
 
-        // <svg onClick={handleEditClick} className="editSvgRecommendedPlaces" cursor="pointer" fill="none" height="24" stroke="currentColor" strokeLinecap="round" zindex="3" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-        
+          // <svg onClick={handleEditClick} className="editSvgRecommendedPlaces" cursor="pointer" fill="none" height="24" stroke="currentColor" strokeLinecap="round" zindex="3" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+
         ) : null}
       </div>
     )
@@ -897,10 +918,10 @@ const NeighborhoodEditableDiv = ({
             <div className="nhoodAdjectivesDivSpanContainer">
               {
                 isEditable ? (
-                
-                  <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
-                // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-                
+
+                  <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+                  // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+
                 ) : null
               }
 
@@ -959,17 +980,17 @@ const NeighborhoodEditableDiv = ({
         <div style={{ border: "1px dotted black ", padding: "15px" }}>
 
           {isEditable ? (
-          
 
-           <Button onClick={handleEditClick} className="editSvg"  size='sm' style={{fontSize:"11px"}} >Edit</Button>
-          // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-          
+
+            <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+            // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+
           ) : null}
 
           <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
             {complementaryText !== "" ? complementaryText : null} {text}
           </p>
-        
+
         </div>
 
       )}

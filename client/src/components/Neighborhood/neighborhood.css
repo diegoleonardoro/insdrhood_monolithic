@@ -33,10 +33,14 @@ hr{
   display:flex;
   /* flex-direction: row-reverse; */
   width:80%;
+  align-items: center;
+  justify-content: center;
 }
 
 .nightLifeContainer{
  display:flex;
+ align-items: center;
+ justify-content: center;
 }
 .nightLifeEditableDivsContainer{
   width:100%
@@ -49,6 +53,7 @@ hr{
 .detailsContainer{
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 /*recommendations images: */
