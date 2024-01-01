@@ -41,6 +41,10 @@ hr{
  display:flex;
  align-items: center;
  justify-content: center;
+ width:80%;
+ position: relative;
+ left:50%;
+ transform: translate(-50%,0);
 }
 .nightLifeEditableDivsContainer{
   width:100%
@@ -48,6 +52,12 @@ hr{
 
 .foodEditableDivsContainer{
   width: 100%;
+}
+
+.foodEditableDivsContainer_{
+  width: 65%;
+   position: relative;
+    margin: auto 
 }
 
 .detailsContainer{
@@ -101,4 +111,28 @@ hr{
       width: 120%;
     }
 
+    .nightLifeEditableDivsContainer{
+      position: relative;
+      top:-100px;
+      background-color: white;
+      padding:40px;
+    }
+
+    .reisidentsSubContainer{
+       position: relative;
+      top:-100px;
+      background-color: white;
+      padding:40px;
+    }
+
+    .foodEditableDivsContainer{
+             position: relative;
+      top:-100px;
+      background-color: white;
+      padding:40px;
+    }
+
+    .foodEditableDivsContainer_{
+      width:auto
+    }
 }
