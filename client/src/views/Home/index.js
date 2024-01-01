@@ -85,10 +85,9 @@ function Home({ currentuser, updateCurrentUser }) {
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {
     return (
       <tr key={neighborhood._id}>
-        <td >{neighborhood.user ? neighborhood.user.name : null}</td>
         <td >{neighborhood.neighborhood}</td>
         <td>
-          {neighborhood.neighborhoodDescription}
+          "{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}
         </td>
         <td>
           <Link to={`/neighborhood/${neighborhood._id}`}  >
@@ -106,9 +105,8 @@ function Home({ currentuser, updateCurrentUser }) {
     <Table striped bordered hover size="sm" style={{ width: "90%", margin: "50px auto" }} >
       <thead>
         <tr>
-          <th>Resident</th>
           <th >Neighborhood</th>
-          <th >Neighborhood Description</th>
+          <th >Description</th>
           <th>Learn more</th>
         </tr>
       </thead>

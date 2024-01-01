@@ -93,10 +93,14 @@ const NeighborhoodProfile = ({ currentuser }) => {
             {neighborhood && (
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", width: "80%" }}>
                 <div className="detailsContainer">
-                  <div className="imageSectionContainer">
 
-                    <img className="imageResidents" alt="residentsimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-25%2011.53.09%20-%20A%20minimalistic%20illustration%20depicting%20different%20types%20of%20people%20living%20in%20a%20neighborhood.%20The%20people%20are%20abstract%20figures%2C%20each%20represented%20in%20a%20uniqu.png" />
-                  </div>
+                  <picture className="imageSectionContainer">
+
+                    <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_residents%20.png' />
+
+                    <img className="imageResidents" alt="residentsimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/residents%20.png" />
+
+                  </picture>
 
                   <div style={{ width: "100%" }}>
                     <div style={{ width: "65%", position: "relative", margin: "auto " }}>
@@ -111,6 +115,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
               </div>
             )}
           </div>
+
+
 
 
           <div className="containerNhoodItems" >
@@ -132,22 +138,34 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
                   </div>
                 </div>
-                <div className="imageSectionContainer">
+                <picture className="imageSectionContainer">
+
+                  <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_food.png' />
 
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-25%2012.01.38%20-%20A%20minimalistic%20illustration%20using%20the%20specified%20color%20palette%20%23efe6ab%2C%20%23848fa8%2C%20%235f582b%2C%20%232961a1%2C%20%23b3d2d1%2C%20depicting%20the%20concept%20of%20'food%20in%20a%20restaur.png"></img>
-                </div>
+
+
+                </picture>
               </div>
             )}
           </div>
 
 
 
+
+
+
+
+
           <div className="sectionContainer containerNhoodItems">
             {neighborhood && (
               <div className="nightLifeContainer" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", width: "80%" }}>
-                <div className="imageSectionContainer">
-                  <img alt='nightlifeimage' className="recommendationsImage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-25%2013.53.18%20-%20Create%20a%20minimalist%20bar%20and%20nightlife%20illustration%20with%20an%20abstract%20representation%20of%20people%20in%20a%201024x1792%20frame.%20The%20background%20should%20be%20a%20solid%20co.png"></img>
-                </div>
+
+                <picture className="imageSectionContainer">
+                  <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_nightlife.jpg' />
+                  <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/nitelife.jpg"></img>
+                </picture>
+
                 <div className="nightLifeEditableDivsContainer">
                   <div style={{ width: "65%", position: "relative", margin: "auto " }}>
                     <h1 className="recommendationsHeader" >Night Life</h1>

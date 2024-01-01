@@ -58,12 +58,13 @@ hr{
 
 /*recommendations images: */
 .imageResidents{
-  /* width:70%; */
+
 }
 
 .recommendationsImage{
   /* height:250px;
   margin-top:15px; */
+
 }
 
 .imageSectionContainer{
@@ -74,7 +75,30 @@ hr{
   justify-content: center;
 }
 
-
 .sectionContainer{
     background-color: #FFFCEB ;
+}
+
+
+@media only screen and (max-width: 700px) {
+    /* CSS rules for screens smaller than 700px */
+    .detailsContainer {
+        flex-direction: column;
+        padding:25px;
+    }
+    .containerFood{
+      flex-direction: column-reverse;
+      padding:25px;
+    }
+
+    .nightLifeContainer{
+      flex-direction: column;
+      padding:25px;
+    }
+
+    .imageSectionContainer{
+      /* position: absolute; */
+      width: 120%;
+    }
+
 }
