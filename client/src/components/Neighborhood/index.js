@@ -30,7 +30,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
   // console.log("is editable", isEditable);
 
-
+  const nhoodName = neighborhood?.neighborhood.charAt(0).toUpperCase() + neighborhood?.neighborhood.slice(1);
 
   return (
 
@@ -51,7 +51,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
               <h1 className="introHeader" style={{ textAlign: "center", position: "relative", top: "10px", display: "flex", justifyContent: "center", padding: "30px" }}>
                 <span style={{ marginRight: "5px" }}>
-                  <b>{neighborhood?.neighborhood}</b>
+                  <b>{nhoodName}</b>
                 </span>{" "}
                 {neighborhood?.user?.name ? (
                   <p> by <b>{neighborhood.user.name}</b>.</p>
@@ -60,12 +60,12 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
               {neighborhood && (
                 <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", width: "65%", alignItems: "start", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-                  <NeighborhoodEditableDiv complementaryText={"I have been living in " + neighborhood.neighborhood} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={neighborhood.neighborhood + " can be described as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
+                  <NeighborhoodEditableDiv complementaryText={"I have been living in " + nhoodName} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={ nhoodName + " can be described as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The neighborhood has a vibe that's "} adjectives={neighborhood.neighborhoodAdjectives} objectKey="neighborhoodAdjectives" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would say the most unique thing about " + neighborhood.neighborhood + " is "} content={neighborhood.mostUniqueThingAboutNeighborhood
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would say the most unique thing about " +  nhoodName + " is "} content={neighborhood.mostUniqueThingAboutNeighborhood
                   } objectKey="mostUniqueThingAboutNeighborhood" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"People should visit " + neighborhood.neighborhood + " if they want "} content={neighborhood.peopleShouldVisitNeighborhoodIfTheyWant
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"People should visit " + nhoodName + " if they want "} content={neighborhood.peopleShouldVisitNeighborhoodIfTheyWant
                   } objectKey="peopleShouldVisitNeighborhoodIfTheyWant" />
                 </div>
               )}
@@ -81,7 +81,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
                   isEditable={isEditable}
                   objectKey={'neighborhoodImages'}
                   images={neighborhood.neighborhoodImages}
-                  neighborhood={neighborhood.neighborhood}
+                  neighborhood={nhoodName}
                   imagesId={currentuser?.imagesId}
                 />
               </div>
@@ -104,8 +104,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
                   <div className="reisidentsSubContainer" style={{ width: "100%" }}>
                     <div style={{ width: "65%", position: "relative", margin: "auto " }}>
-                      <h1 className="sectionHeader">The Residents</h1>
-                      <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The typical resident of " + neighborhood.neighborhood + " tends to be "} content={neighborhood.typicalResidentDescription
+                      <h1 className="sectionHeader">The Residents of {nhoodName}</h1>
+                      <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The typical resident of " + nhoodName + " tends to be "} content={neighborhood.typicalResidentDescription
                       } objectKey="typicalResidentDescription" />
                       <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The average resident can be described as "} adjectives={neighborhood.residentAdjectives} objectKey="residentAdjectives" />
                     </div>
@@ -127,14 +127,14 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
                   <div className="foodEditableDivsContainer_">
 
-                    <h1 className="recommendationsHeader" > The Food</h1>
-                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + neighborhood.neighborhood + " can be generally described as "} content={neighborhood.foodCulture
+                    <h1 className="recommendationsHeader" > The Food of {nhoodName}</h1>
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + nhoodName + " can be generally described as "} content={neighborhood.foodCulture
                     } objectKey="foodCulture" />
-                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${neighborhood.neighborhood} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${ nhoodName} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                     } objectKey="foodIsAuthentic" />
-                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${neighborhood.neighborhood} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${ nhoodName} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.recommendedFoodTypes} objectKey="recommendedFoodTypes" />
-                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place to eat in ${neighborhood.neighborhood} it would be `, 'because ']} objectData={neighborhood.onePlaceToEat} objectKey="onePlaceToEat" />
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place to eat in ${nhoodName} it would be `, 'because ']} objectData={neighborhood.onePlaceToEat} objectKey="onePlaceToEat" />
 
                   </div>
                 </div>
@@ -170,8 +170,8 @@ const NeighborhoodProfile = ({ currentuser }) => {
 
                   <div className="nightLifeEditableDivsContainer">
                     <div style={{ position: "relative", margin: "auto " }}>
-                      <h1 className="recommendationsHeader" >Night Life</h1>
-                      <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + neighborhood.neighborhood + " as "} content={neighborhood.nightLife} objectKey="nightLife" />
+                    <h1 className="recommendationsHeader" >The Night Life of {nhoodName}</h1>
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " +  nhoodName + " as "} content={neighborhood.nightLife} objectKey="nightLife" />
                       <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.nightLifeRecommendations} objectKey="nightLifeRecommendations" />
                       <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place for a fun at night, it would be `, 'because ']} objectData={neighborhood.onePlaceForNightLife} objectKey="onePlaceForNightLife" />
                     </div>
@@ -185,7 +185,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
           <div className="containerNhoodItems" >
             {neighborhood && (
               <div style={{ width: "65%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} neighborhood={neighborhood.neighborhood} nestedObjects={neighborhood.statements} objectKey="statements" />
+                <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} neighborhood={ nhoodName} nestedObjects={neighborhood.statements} objectKey="statements" />
               </div>
             )}
 
