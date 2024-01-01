@@ -103,7 +103,7 @@ const NeighborhoodProfile = ({ currentuser }) => {
                   </picture>
 
                   <div className="reisidentsSubContainer" style={{ width: "100%" }}>
-                    <div style={{ width: "65%", position: "relative", margin: "auto " }}>
+                    <div  className ="residentesSubSubContainer">
                       <h1 className="sectionHeader">The Residents of {nhoodName}</h1>
                       <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The typical resident of " + nhoodName + " tends to be "} content={neighborhood.typicalResidentDescription
                       } objectKey="typicalResidentDescription" />

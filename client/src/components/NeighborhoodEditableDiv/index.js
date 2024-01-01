@@ -515,7 +515,7 @@ const NeighborhoodEditableDiv = ({
     return (
 
       <div>
-        <h1 >Make sure to try:</h1>
+        <h2 >Make sure to try:</h2>
 
         <div style={{ padding: "15px", width: "100%", position: "relative" }}>
 

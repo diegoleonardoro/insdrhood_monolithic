@@ -37,6 +37,11 @@ hr{
   justify-content: center;
 }
 
+.residentesSubSubContainer{
+  width: 65%;
+  position: relative;
+  margin: auto 
+}
 .nightLifeContainer{
  display:flex;
  align-items: center;
@@ -134,5 +139,11 @@ hr{
 
     .foodEditableDivsContainer_{
       width:auto
+    }
+    .residentesSubSubContainer{
+      width:auto;
+    }
+    .userInfoSubContainer{
+      padding-bottom: 50px;
     }
 }
