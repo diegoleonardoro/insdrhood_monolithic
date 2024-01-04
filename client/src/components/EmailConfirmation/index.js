@@ -32,15 +32,11 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
   const navigate = useNavigate();
 
-     
   // make request to get the user with the emailtoken
   const makeRequest = async () => {
-
     try {
-      
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
       setUser(response.data);
-
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }

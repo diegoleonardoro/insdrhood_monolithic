@@ -117,8 +117,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
           </div>
 
 
-
-
           <div className="containerNhoodItems" >
             {neighborhood && (
               <div className="containerFood" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
@@ -149,12 +147,6 @@ const NeighborhoodProfile = ({ currentuser }) => {
               </div>
             )}
           </div>
-
-
-
-
-
-
 
 
           <div className="sectionContainer containerNhoodItems">
