@@ -65,7 +65,7 @@ const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         emailToken: user.emailToken,
-        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL : ''
+        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
     });
     // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
     res.status(201).send(userInfo);
