@@ -47,7 +47,7 @@ exports.getDb = getDb;
 const app = (0, express_1.default)();
 const PORT = 4000;
 app.use((0, cors_1.default)({
-    origin: process.env.BASE_URL,
+    origin: process.env.BASE_URL?.split(" "),
     credentials: true,
 }));
 app.use((0, body_parser_1.json)());
