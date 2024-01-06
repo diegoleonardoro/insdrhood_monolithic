@@ -4,29 +4,29 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index";
 import Button from 'react-bootstrap/Button';
+import { useUser } from "../../contexts/UserContext";
 
 
-const NeighborhoodProfile = ({ currentuser }) => {
+const NeighborhoodProfile = () => {
 
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const { currentuser, updateCurrentUser } = useUser();
 
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
-
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
-
+      const currentUser__ = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       setNeighborhood(neighborhood.data);
-
-      setIsEditable(neighborhood.data.user.id === currentuser?.id);
+      setIsEditable(neighborhood.data.user.id === currentUser__?.data.id);
     } catch (error) { }
   }
 
   useEffect(() => {
     getNeighorhoodData();
-  }, [currentuser]);//currentuser
+  }, []);//currentuser
 
   // console.log("is editable", isEditable);
 

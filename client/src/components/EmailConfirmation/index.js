@@ -85,13 +85,9 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       setUnmatchingPasswords(true);
     } else {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
-
-      console.log("useruser-->>>>", user);
       const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
-
-      updateCurrentUser(response.data);
-      
-      navigate(`/neighborhood/${response.data.residentId[0]}`);
+      updateCurrentUser(response.data);      
+      navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
     }
   }
 
