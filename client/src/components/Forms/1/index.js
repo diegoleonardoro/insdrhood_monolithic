@@ -1888,7 +1888,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", width: "50%" }}>
-                    <label className="labelFavFoods" style={{ fontSize: "12px", textAlign: "center" }} htmlFor={"foodTypePlaceRecommendation " + index}>
+                    <label className="labelFavFoods" style={{  textAlign: "center" }} htmlFor={"foodTypePlaceRecommendation " + index}>
                       <span className="questionHighlight">Best {option.assessment} restaurant</span> in {neighborhood}:
                       <input
                         id={"foodTypePlaceRecommendation " + index}
