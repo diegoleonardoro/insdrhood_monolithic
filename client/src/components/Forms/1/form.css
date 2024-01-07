@@ -9,7 +9,7 @@
   align-items: center;
   border-radius: 25px;
   /* height:100vh; */
-  margin-top:50px;
+  margin-top:70px;
   margin-bottom: 50px;
   /* max-height: calc(100vh - 100px); */
   overflow-y: auto;
@@ -522,18 +522,24 @@ input:focus{
 /*Arrows*/
 .arrowsContainer {
   display: flex;
-  justify-content: space-evenly;
-  margin-top: 20px;
+  justify-content: space-between;
+  margin-top: 50px;
   margin-bottom: 30px;
   position:relative;
-  width:80%;
+  width:100%;
 }
 
 .arrowsContainer svg {
   cursor: pointer;
   fill: rgb(113 113 113);
+  border: 1px solid rgb(113 113 113);
+  border-radius: 30px;
+  padding: 10px;
 }
 
+.arrowsContainer svg path{
+  stroke-width: 10;
+}
 
 
 
