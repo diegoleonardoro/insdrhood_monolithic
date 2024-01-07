@@ -305,7 +305,6 @@ input:focus{
 .statementResponseContainer label {
   padding: 6px;
   width: 100px;
-  height: 35px;
   border: 1px solid;
   text-align: center;
   cursor: pointer;
