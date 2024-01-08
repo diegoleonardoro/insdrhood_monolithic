@@ -329,7 +329,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   "Content-Type": 'image/jpeg',
                 },
               });
-             
+
             }
           };
 
@@ -818,7 +818,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       {isLoading ? (
 
-        <Button style={{margin:"30px"}} variant="primary" disabled>
+        <Button style={{ margin: "30px" }} variant="primary" disabled>
           <Spinner
             as="span"
             animation="grow"
@@ -1366,7 +1366,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("completeSentence1")}
               ref={ref => divRefs.current[4] = ref}
             >
-              <h5 style={{ marginBottom: "15px", width: '100%' }}>Complete the sentence:</h5>
+              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
+
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", textAlign: "left" }}>
                 <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
                 <input
@@ -1389,7 +1390,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("completeSentence2")}
               ref={ref => divRefs.current[5] = ref}
             >
-              <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
               <div style={{ textAlign: "left" }}>
                 People should visit {neighborhood} <span className="questionHighlight">if they want:</span>
                 <input
@@ -1819,7 +1820,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie} ref={ref => divRefs.current[8] = ref}>
 
-              <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
               <div style={{ textAlign: "left" }}>
                 <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
                 <input
@@ -2218,7 +2219,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("oncePlaceToEat")}
               ref={ref => divRefs.current[11] = ref}
             >
-              <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
               <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
                 <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
                   <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
@@ -2261,7 +2262,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               ref={ref => divRefs.current[12] = ref}
             >
 
-              <label>Which of the following best describes the cost of food in {neighborhood}?</label>
+              <h3 style={{ marginBottom: '20px', fontWeight: 'bold' }}>Food in {neighborhood} tends to be: </h3>
 
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div className="statementResponseContainer">
@@ -2375,9 +2376,9 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("agreeOrDisagreeFood")}
               ref={ref => divRefs.current[13] = ref}
             >
-              <h4 style={{ textAlign: "center" }}>Agree or disagree: </h4>
+              <h3 style={{ textAlign: "center", marginBottom: '10px', fontWeight: 'bold' }}>Agree or disagree: </h3>
               <div>
-                <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "7px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
+                <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
                 <div style={{ height: "30px", width: "100%", borderBottom: "1px dotted black" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <div className="statementResponseContainer">
@@ -2447,7 +2448,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 <div
                   ref={foodDiversityExplanationRef}
                   className="elaborateNhoodEval"
-                  style={{ marginTop: "30px" }}
+                  style={{ marginTop: "50px" }}
                 >
                   <div>Can you explain why?</div>
                   <input
@@ -2588,13 +2589,15 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("completeTheSentenceNightLifeVenue")}
               ref={ref => divRefs.current[16] = ref}
             >
-              <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
+              {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
+
 
               <div style={{ display: "fex", alignItems: "center", position: "relative" }}>
-                <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
-                  <p style={{ display: "inline" }}>If I had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
+                <div style={{ display: "fex", alignItems: "center", textAlign: "left", lineHeight: "40px" }}>
+                  <p style={{ display: "inline" }}>If you had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
                   <input style={{
-                    width: '35%'
+                    width: '35%',
+                    height: '25px'
                   }}
                     className="completeSentenceInput"
                     onChange={
@@ -2612,7 +2615,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </input>
                   <p style={{ display: "inline" }}> because</p>
                   <input style={{
-                    width: '35%'
+                    width: '35%',
+                    height: '25px'
                   }}
                     className="completeSentenceInput"
                     onChange={
@@ -2647,7 +2651,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-22%2008.42.27%20-%20A%20black%20and%20white%2C%20highly%20minimalistic%20pencil%20sketch%2C%20focusing%20on%20the%20theme%20of%20'general%20questions.'%20This%20version%20should%20feature%20only%20a%20few%20floating%20qu.png" height="190px"></img>
               </div>
 
-              <div> True or False: </div>
+              <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
 
               <div>
                 <div className="nhoodEvalHeader">
@@ -2782,7 +2786,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[18] = ref}
             >
-              <div>True or False:</div>
+              <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
                 <div className="nhoodEvalHeader">
                   <span className="questionHighlight">
@@ -2914,7 +2918,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[19] = ref}
             >
-              <div>True or False:</div>
+              <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
                 <div className="nhoodEvalHeader">
                   <span className="questionHighlight">
@@ -3044,7 +3048,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[20] = ref}
             >
-              <div>True or False:</div>
+              <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
                 <div className="nhoodEvalHeader">
                   <span className="questionHighlight">
@@ -3215,7 +3219,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   First Name:
                 </Form.Label>
                 <Col sm={10}>
-                  <Form.Control onChange={updateNewUserData} name="name" />
+                    <Form.Control style={{ width: '100%' }} onChange={updateNewUserData} name="name" />
                 </Col>
               </Form.Group>
 
@@ -3224,7 +3228,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   Email:
                 </Form.Label>
                 <Col sm={10}>
-                  <Form.Control onChange={updateNewUserData} name="email" />
+                    <Form.Control style={{ width: '100%' }}  onChange={updateNewUserData} name="email" />
                 </Col>
               </Form.Group>
 
