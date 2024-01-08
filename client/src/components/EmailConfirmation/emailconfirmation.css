@@ -1,0 +1,19 @@
+
+.setPasswordContainer{
+   width: 20%;
+  position: relative;
+  left: 50%;
+   transform: translate(-50%, 0)
+}
+
+@media screen and (max-width: 776px) {
+  .setPasswordContainer{
+    width: 40%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .setPasswordContainer{
+    width: 70%;
+  }
+}

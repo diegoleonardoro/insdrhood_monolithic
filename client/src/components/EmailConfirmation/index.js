@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
+import "./emailconfirmation.css"
 
 
 const VerifyEmail = ({ updateCurrentUser }) => {
@@ -120,7 +121,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
       </Alert>) : null}
 
-      {showPasswordForm ? (<div style={{ width: "20%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+      {showPasswordForm ? (<div  className = "setPasswordContainer">
         <h3 style={{ display: "block" }} id="passwordHelpBlock" muted>
           Set a password for future logins
         </h3>
