@@ -17,13 +17,16 @@
 
 .form {
   position:relative;
-  width:70%;
+  width:90%;
   display: flex;
   flex-direction: column;
   align-items: center;
   /* font-size: 15px; */
   font-family: sans-serif;
-  margin:50px;
+  margin-top:50px;
+  margin-bottom:50px;
+  margin-left:10px;
+  margin-right:10px;
 }
 
 input, textarea {
@@ -141,7 +144,8 @@ input, textarea {
   border: none;
   border-bottom:px solid #b5afaf;
   outline: none;
-  width: 100%;
+  width: 50%;
+  margin-left:7px;
   background-color: transparent;
   border-color: transparent transparent rgb(222, 220, 220) transparent;
   border-style: solid;
@@ -245,10 +249,13 @@ input:focus{
 
 
 /*Neighborhood adjectives*/
+
+.scrollbarContainer{
+  -webkit-overflow-scrolling: touch;
+}
 .scrollbarContainer::-webkit-scrollbar {
   width: 10px;
 }
-
 /* Track */
 .scrollbarContainer::-webkit-scrollbar-track {
   background: #f1f1f1; 
@@ -550,4 +557,10 @@ input:focus{
     width: 90%; /* Adjust width to 90% */
     max-width: 90%;
   }
+}
+
+@media screen and (min-height: 1000px) {
+    .mainContainer{
+      height:70vh;
+    }
 }

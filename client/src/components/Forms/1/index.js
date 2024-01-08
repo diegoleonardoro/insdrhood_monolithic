@@ -978,7 +978,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
           {selectedOptions.length > 0 && (
-            <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '130%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+            <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
               {selectedOptions.map((option, index) => (
                 <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
                   {option}
@@ -1004,7 +1004,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           )}
 
 
-          <div className="scrollbarContainer" style={{ width: "100%", height: "130px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
+          <div className="scrollbarContainer" style={{ width: "100%", height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
             <div ref={nehoodAdjectivesDivRef}
               style={{
                 display: 'flex',
@@ -1421,7 +1421,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         >
 
           <label>
-            Choose no more than <span className="questionHighlight">5 adjectices to depict the typical resident</span> of
+            <span className="questionHighlight">Adjectices that depict the typical resident</span> of
             <span className="nhoodName"> {neighborhood}: </span>
           </label>
 
@@ -1451,7 +1451,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
           )}
 
-          <div className="scrollbarContainer" style={{ width: "100%", height: "130px", overflow: "scroll", marginTop: "20px", border: "1px solid #c9c9c9" }}>
+          <div className="scrollbarContainer" style={{ width: "100%", height: "200px", overflow: "scroll", marginTop: "20px", border: "1px solid #c9c9c9" }}>
 
             <div ref={residentAdjectivesDivRef}
               style={{
@@ -1845,6 +1845,10 @@ const FormComponent = ({ updateCurrentUser }) => {
         </div>
 
 
+
+
+
+
         {/** What are the must-try foods in your neighborhood?*/}
         <div
           className={
@@ -1860,49 +1864,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <span className="nhoodName"> {neighborhood}? </span>
           </label>
 
-          {foodTypesSelectedOpts.length > 0 && (
-            <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
-              {foodTypesSelectedOpts.map((option, index) => (
-
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.assessment}>
-
-                  <div ref={(e) => { foodRecommendationsRef.current['explanation'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
-                    {option.assessment}
-                    <div
-                      onClick={(e) => {
-                        handleOptionRemove(option.assessment, "foodTypes");
-                      }}
-                      style={{
-                        marginLeft: '5px',
-                        cursor: 'pointer',
-                        width: '16px', // Adjust the width to make the SVG smaller
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                    </div>
-
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", width: "50%" }}>
-                    <label className="labelFavFoods" style={{  textAlign: "center" }} htmlFor={"foodTypePlaceRecommendation " + index}>
-                      <span className="questionHighlight">Best {option.assessment} restaurant</span> in {neighborhood}:
-                      <input
-                        id={"foodTypePlaceRecommendation " + index}
-                        className="foodTypeInput"
-                        type="text"
-                        onChange={(e) => handleRecommendedRestaurant(e.target.value, index)}
-                        
-                      />
-                    </label>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="scrollbarContainer" style={{ width: "100%", height: "130px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
+          <div className="scrollbarContainer" style={{ width: "100%", height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
 
             <div ref={typesOfFoodRecommendationsRef}
               style={{
@@ -2165,7 +2127,79 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
             </div>
           </div>
+
+          {foodTypesSelectedOpts.length > 0 && (
+            <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
+              {foodTypesSelectedOpts.map((option, index) => (
+
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.assessment}>
+
+                  {/* <div ref={(e) => { foodRecommendationsRef.current['explanation'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
+                    {option.assessment}
+                    <div
+                      onClick={(e) => {
+                        handleOptionRemove(option.assessment, "foodTypes");
+                      }}
+                      style={{
+                        marginLeft: '5px',
+                        cursor: 'pointer',
+                        width: '16px', // Adjust the width to make the SVG smaller
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </div>
+                  </div> */}
+
+
+                  <div style={{ display: "flex"}}>
+                    <div
+                      onClick={(e) => {
+                        handleOptionRemove(option.assessment, "foodTypes");
+                      }}
+                      style={{
+                        marginLeft: '5px',
+                        marginRight: '5px',
+                        cursor: 'pointer',
+                        width: '16px', // Adjust the width to make the SVG smaller
+                        height:'20px'
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" height="20" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </div>
+
+                    <label className="labelFavFoods" style={{  textAlign: "start" }} htmlFor={"foodTypePlaceRecommendation " + index}>
+                      <span className="questionHighlight">Best {option.assessment} restaurant</span> in {neighborhood}:
+                      <input
+                        id={"foodTypePlaceRecommendation " + index}
+                        className="foodTypeInput"
+                        type="text"
+                        onChange={(e) => handleRecommendedRestaurant(e.target.value, index)}
+                      />
+                    </label>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
+
+
+
+
+
         </div>
+
+
+
+
+
+
 
         {/** Complete the sentence: "If I were to suggest one place to eat in {neighborhood} it would be____
            because _____________" 
@@ -2176,7 +2210,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           ref={ref => divRefs.current[11] = ref}
         >
           <h5 style={{ marginBottom: "15px", width: "100%" }}>Complete the sentence:</h5>
-          <div style={{ display: "fex", alignItems: "center", width: "120%", position: "relative" }}>
+          <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
             <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
               <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
               <input style={{width: "35%"}}
