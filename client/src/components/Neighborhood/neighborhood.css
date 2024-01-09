@@ -19,6 +19,29 @@ hr{
   /* padding:10px; */
 }
 
+
+.introContainer{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 65%;
+  align-items: start;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+ .reisidentsSubContaine{
+  width: 100%;
+ }
+
+ .subContainerNhoodItems{
+  width: 80%;
+  position:relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+ }
+
 /* Images: */
 
 .contentContainer{
@@ -91,12 +114,30 @@ hr{
 }
 
 .sectionContainer{
-    background-color: #FFFCEB ;
+  background-color: #FFFCEB ;
+}
+
+
+.assessmentsContainer{
+  position:relative;
+  width:65%;
+  left:50%;
+  transform: translate(-50%, 0);
+}
+
+@media only screen and (max-width: 1300px){
+  .introContainer{
+    width:80%;
+  }
 }
 
 
 @media only screen and (max-width: 700px) {
     /* CSS rules for screens smaller than 700px */
+
+    .introContainer{
+      width:90%;
+    }
     .detailsContainer {
         flex-direction: column;
         padding:25px;
@@ -109,6 +150,7 @@ hr{
     .nightLifeContainer{
       flex-direction: column;
       padding:25px;
+      width:90%;
     }
 
     .imageSectionContainer{
@@ -120,21 +162,35 @@ hr{
       position: relative;
       top:-100px;
       background-color: white;
-      padding:40px;
+      padding:10px;
+      padding-top:40px;
+      width:115%;
     }
 
     .reisidentsSubContainer{
-       position: relative;
+      position: relative;
       top:-100px;
       background-color: white;
-      padding:40px;
+      padding:10px;
+      padding-top:40px;
+      width:115%;
     }
 
+     .subContainerNhoodItems{
+      width:90%
+     }
+
+     .containerFood{
+      width: 90%;
+     }
+
     .foodEditableDivsContainer{
-             position: relative;
+      position: relative;
       top:-100px;
       background-color: white;
-      padding:40px;
+      padding:10px;
+      padding-top:40px;
+      width:115%;
     }
 
     .foodEditableDivsContainer_{
@@ -145,5 +201,9 @@ hr{
     }
     .userInfoSubContainer{
       padding-bottom: 50px;
+    }
+
+    .assessmentsContainer{
+      width:80%;
     }
 }

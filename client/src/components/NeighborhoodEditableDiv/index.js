@@ -439,9 +439,9 @@ const NeighborhoodEditableDiv = ({
       }
 
       return (
-        <div>
+        <div >
           <div style={{ display: "flex", margin: "10px", alignItems: "center" }}>
-            <div>{`${assessmentText}:`}</div>
+            <div >{`${assessmentText}:`}</div>
             {renderAssessmentInput(object, index, key)}{/** need to pass the 'key' and whether it is an assessment or an explanation   */}
             <div>{additionalText}</div>
           </div>
@@ -454,7 +454,7 @@ const NeighborhoodEditableDiv = ({
 
     const content = Object.keys(nestedObjects_).map((key) => {
       return (
-        <div style={{ marginTop: "10px", marginBottom: "10px" }} key={key}>
+        <div style={{ marginTop: "10px", marginBottom: "10px", textAlign:"start" }} key={key}>
           {renderObject(key, nestedObjects_[key], false)}
         </div>
       )
@@ -490,7 +490,7 @@ const NeighborhoodEditableDiv = ({
 
         ) : (
 
-          <div className="adjectivesDiv" style={{ border: "1px dotted black", margin: "15px", display: "flex", flexDirection: "column", alignItems: "start" }}>
+          <div className="adjectivesDiv" style={{ border: "1px dotted black",  display: "flex", flexDirection: "column", alignItems: "start" }}>
             {isEditable ? (
 
               <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>

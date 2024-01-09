@@ -59,7 +59,7 @@ const NeighborhoodProfile = () => {
               </h1>
 
               {neighborhood && (
-                <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", width: "65%", alignItems: "start", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+                <div className="introContainer" >
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + nhoodName} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={ nhoodName + " can be described as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The neighborhood has a vibe that's "} adjectives={neighborhood.neighborhoodAdjectives} objectKey="neighborhoodAdjectives" />
@@ -75,7 +75,7 @@ const NeighborhoodProfile = () => {
 
           <div className="containerNhoodItems" >
             {neighborhood && (
-              <div style={{ width: "80%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+              <div >
                 <NeighborhoodEditableDiv
                   neighborhoodid={neighborhoodid}
                   isEditable={isEditable}
@@ -91,7 +91,7 @@ const NeighborhoodProfile = () => {
 
           <div className="sectionContainer containerNhoodItems" >
             {neighborhood && (
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", width: "80%" }}>
+              <div className="subContainerNhoodItems"  >
                 <div className="detailsContainer">
 
                   <picture className="imageSectionContainer">
@@ -102,7 +102,7 @@ const NeighborhoodProfile = () => {
 
                   </picture>
 
-                  <div className="reisidentsSubContainer" style={{ width: "100%" }}>
+                  <div className="reisidentsSubContainer" >
                     <div  className ="residentesSubSubContainer">
                       <h1 className="sectionHeader">The Residents of {nhoodName}</h1>
                       <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The typical resident of " + nhoodName + " tends to be "} content={neighborhood.typicalResidentDescription
@@ -173,16 +173,14 @@ const NeighborhoodProfile = () => {
             )}
           </div>
 
-
           <div className="containerNhoodItems" >
             {neighborhood && (
-              <div style={{ width: "65%", position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
+              <div className="assessmentsContainer">
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} neighborhood={ nhoodName} nestedObjects={neighborhood.statements} objectKey="statements" />
               </div>
             )}
-
           </div>
-
+          
         </div>
       </div>
     </div>
