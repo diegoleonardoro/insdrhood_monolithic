@@ -61,7 +61,7 @@ const NeighborhoodProfile = () => {
               {neighborhood && (
                 <div className="introContainer" >
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + nhoodName} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={ nhoodName + " can be described as "} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={ nhoodName + " can be described as"} content={neighborhood.neighborhoodDescription + "."} objectKey="neighborhoodDescription" />
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The neighborhood has a vibe that's "} adjectives={neighborhood.neighborhoodAdjectives} objectKey="neighborhoodAdjectives" />
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would say the most unique thing about " +  nhoodName + " is "} content={neighborhood.mostUniqueThingAboutNeighborhood
                   } objectKey="mostUniqueThingAboutNeighborhood" />
@@ -107,7 +107,7 @@ const NeighborhoodProfile = () => {
                       <h1 className="sectionHeader">The Residents of {nhoodName}</h1>
                       <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The typical resident of " + nhoodName + " tends to be "} content={neighborhood.typicalResidentDescription
                       } objectKey="typicalResidentDescription" />
-                      <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The average resident can be described as "} adjectives={neighborhood.residentAdjectives} objectKey="residentAdjectives" />
+                      <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The average resident can be described as"} adjectives={neighborhood.residentAdjectives} objectKey="residentAdjectives" />
                     </div>
                   </div>
 
@@ -126,7 +126,7 @@ const NeighborhoodProfile = () => {
                   <div className="foodEditableDivsContainer_">
 
                     <h1 className="recommendationsHeader" > The Food of {nhoodName}</h1>
-                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + nhoodName + " can be generally described as "} content={neighborhood.foodCulture
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + nhoodName + " can be generally described as"} content={neighborhood.foodCulture
                     } objectKey="foodCulture" />
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${ nhoodName} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                     } objectKey="foodIsAuthentic" />
@@ -180,7 +180,7 @@ const NeighborhoodProfile = () => {
               </div>
             )}
           </div>
-          
+
         </div>
       </div>
     </div>

@@ -76,9 +76,10 @@ const NeighborhoodEditableDiv = ({
   // Function that will add more rows to the table if an input has been typed:
   const addRow = () => {
     // Check if any input is filled
-    if (rows.length === 0 || rows[rows.length - 1].assessment.trim() || rows[rows.length - 1].recommendation.trim()) {
+    if (rows.length === 0 || rows[rows.length - 1].assessment.trim() || rows[rows.length - 1].recommendations.trim()) {
       setRows([...rows, { assessment: '', recommendations: '' }]);
     };
+    
   };
 
   const updateField = (index, field, value) => {
@@ -402,7 +403,7 @@ const NeighborhoodEditableDiv = ({
 
     const renderExplanation = (object, index, key) => (
       object.hasOwnProperty('explanation') && (
-        <div style={{ display: "flex", margin: "10px", alignItems: "center" }}>
+        <div style={{ display: "flex", margin: "10px", flexDirection:"column" }}>
           <div>because:</div>
           <Form.Control
             name="explanation"
@@ -410,7 +411,7 @@ const NeighborhoodEditableDiv = ({
             onChange={(e) => handleChange(e, index)} // <<<<<<----------------------------------------------------------------------------
             type="text"
             value={object["explanation"]}
-            style={inputStyle}
+            // style={inputStyle}
           />
         </div>
       )
@@ -440,7 +441,7 @@ const NeighborhoodEditableDiv = ({
 
       return (
         <div >
-          <div style={{ display: "flex", margin: "10px", alignItems: "center" }}>
+          <div style={{ display: "flex", flexDirection:"column",  margin: "10px"}}>
             <div >{`${assessmentText}:`}</div>
             {renderAssessmentInput(object, index, key)}{/** need to pass the 'key' and whether it is an assessment or an explanation   */}
             <div>{additionalText}</div>
@@ -584,14 +585,14 @@ const NeighborhoodEditableDiv = ({
                       )}
                     </OverlayTrigger>
 
-                    <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+                    <div style={{ display: "flex", flexDirection:"column", textAlign:"start", marginTop: "10px" }}>
 
                       <div style={{ marginTop: "none" }}>{text}</div>
-                      <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment} style={{ width: "50%", marginLeft: "10px" }} />
+                      <Form.Control name="assessment" onChange={(e) => { handleChange(e, index) }} type="text" value={item.assessment}  />
                       {objectKey === 'recommendedFoodTypes' ? (<div style={{ marginLeft: "10px" }}> food. </div >) : null}
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", marginTop: "10px", marginBottom: "30px" }}>
+                    <div style={{ display: "flex", flexDirection:"column",  marginTop: "20px", textAlign:"start", marginBottom: "30px" }}>
 
                       {objectKey === 'recommendedFoodTypes' ? (
                         <div>Go to </div >
@@ -599,9 +600,8 @@ const NeighborhoodEditableDiv = ({
                         <div>Because </div >
                       ) : null}
 
-                      <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} style={{ width: "50%", marginLeft: "10px" }} />
-
-                      <div style={{ marginLeft: "10px" }} >{`for authentic ${item.assessment} food.`}</div >
+                      <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} />
+                      <div  >{`for authentic ${item.assessment} food.`}</div >
                     </div>
                   </div>
                 );
@@ -609,7 +609,7 @@ const NeighborhoodEditableDiv = ({
 
               <h4 style={{ marginTop: "20px" }}>Add more: </h4>
 
-              <Table style={{ margin: "5px" }} striped bordered hover>
+              <Table style={{ margin: "5px", position: "relative", width: "120%", left: "50%", transform: "translate(-50%, 0)" }} striped bordered hover>
                 <thead>
                   <tr>
                     <th>#</th>
@@ -634,7 +634,7 @@ const NeighborhoodEditableDiv = ({
                       </td>
                       <td>
                         <input
-                          placeholder='Include comma separated words'
+                          placeholder='comma separated'
                           style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
                           value={row.recommendations}
                           name="explanation"
@@ -747,13 +747,13 @@ const NeighborhoodEditableDiv = ({
       <div style={{ padding: "15px", width: "100%", position: "relative" }}>
         {isEditing ? (
           <div>
-            <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
+            <div style={{ display: "flex",  margin: "10px" , flexDirection:"column"}}>
               <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
-              <Form.Control id="assessment" onChange={handleChange} type="text" value={objectData_.assessment.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
+              <Form.Control id="assessment" onChange={handleChange} type="text" value={objectData_.assessment.toLowerCase()} style={{  marginLeft: "10px" }} />
             </div>
-            <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
+            <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
               <p style={{ textAlign: "start" }}> {complementaryText[1] + ":"}</p>
-              <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation.toLowerCase()} style={{ width: "50%", marginLeft: "10px" }} />
+              <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation.toLowerCase()} style={{  marginLeft: "10px" }} />
             </div>
             <div className="divSaveCancelBtns">
               <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
@@ -890,8 +890,8 @@ const NeighborhoodEditableDiv = ({
         {isEditing ? (
           <div className="nhoodIntroItemList">
 
-            <div>
-              <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput">Make sure you include a comma-separated list of words:</label>
+            <div style={{textAlign:"start"}}>
+              <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput"> The {objectKey==='neighborhoodAdjectives'?'neighborhood':'residents'} can be described as:</label>
               <input
                 type="text"
                 value={
@@ -905,6 +905,7 @@ const NeighborhoodEditableDiv = ({
                 autoFocus
                 className="inputNhoodIntro"
               />
+              <span style={{fontSize:"13px"}}>Include comma separated words</span>
             </div>
 
             <div className="divSaveCancelBtns">
