@@ -45,13 +45,19 @@ const NeighborhoodProfile = () => {
             <img alt="profileImage" style={{ width: "100%", padding: "10px" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-26%2011.59.19%20-%20A%20crisp%20and%20clear%20panoramic%20view%20of%20a%20classic%20New%20York%20City%20neighborhood%2C%20featuring%20brownstones%2C%20restaurants%2C%20and%20bodegas%2C%20all%20without%20people%20and%20with%20(3).jpg"></img>
           </div>
 
+
+
+
+
           <div className="containerNhoodItems userInfo">
             <div className="userInfoSubContainer">
 
 
+
+
               <h1 className="introHeader" style={{ textAlign: "center", position: "relative", top: "10px", display: "flex", justifyContent: "center", padding: "30px" }}>
                 <span style={{ marginRight: "5px" }}>
-                  <b>{nhoodName}</b>
+                  <b>{nhoodName ? (nhoodName):''}</b>
                 </span>{" "}
                 {neighborhood?.user?.name ? (
                   <p> by <b>{neighborhood.user.name}</b>.</p>
@@ -73,6 +79,11 @@ const NeighborhoodProfile = () => {
           </div>
 
 
+
+
+
+
+
           <div className="containerNhoodItems" >
             {neighborhood && (
               <div >
@@ -89,7 +100,7 @@ const NeighborhoodProfile = () => {
           </div>
 
 
-          <div className="sectionContainer containerNhoodItems" >
+           <div className="sectionContainer containerNhoodItems" >
             {neighborhood && (
               <div className="subContainerNhoodItems"  >
                 <div className="detailsContainer">
@@ -114,7 +125,7 @@ const NeighborhoodProfile = () => {
                 </div>
               </div>
             )}
-          </div>
+          </div> 
 
 
           <div className="containerNhoodItems" >

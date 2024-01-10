@@ -956,9 +956,7 @@ const NeighborhoodEditableDiv = ({
   /** When we only render plain text: */
   return (
     <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-
       {isEditing ? (
-
         <div>
           {complementaryText !== "" ? (<p style={{ textAlign: "start" }}>{complementaryText}:</p>) : null}
           <input
@@ -968,21 +966,14 @@ const NeighborhoodEditableDiv = ({
             autoFocus
             className="inputNhoodIntro"
           />
-
           <div className="divSaveCancelBtns">
             <Button variant='outline-primary' className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
             <Button variant='outline-danger' className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
           </div>
-
         </div>
-
       ) : (
-
         <div style={{ border: "1px dotted black ", padding: "15px" }}>
-
           {isEditable ? (
-
-
             <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
             // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
 
