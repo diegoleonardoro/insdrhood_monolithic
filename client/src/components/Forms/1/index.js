@@ -296,6 +296,12 @@ const FormComponent = ({ updateCurrentUser }) => {
           setNeighborhood(currentDiv.children[1].value);
         }
 
+
+
+
+
+
+
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
@@ -365,9 +371,16 @@ const FormComponent = ({ updateCurrentUser }) => {
           let nextIndex = activeIndex + 1;
           setActiveIndex(nextIndex);
           setDisplayKeyWord([keyWord]);
+
+
           return;
 
         };
+
+
+
+
+
 
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
         keyWord = currentDiv.className.split(" ")[1];
@@ -2502,6 +2515,9 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
 
 
+
+
+
             {/** Are there any nightlife venues (bars, restaurants, nighclubs) that youd like to  */}
             <div
               className={
@@ -2582,6 +2598,9 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
             </div>
+
+
+
 
             {/** Complete the sentence: "If I had to pick one place to enjoy the nightlife of {neighborhood}, it would be _______, because ________" */}
             <div
@@ -2774,7 +2793,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                 </div>
               </div>
             </div>
-
 
             {/** True or false statements, having pets in your neighborhood is convenient */}
             <div
@@ -3170,15 +3188,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
             </div>
 
-
-
-
-
-
-
-
-
-
             {/**PICTURES */}
             {/** Do you have any neighborhood pictures to share? */}
             <div className={
@@ -3193,15 +3202,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               </label>
               <input className="nhoodImagesInput" onChange={(e) => { setFormData({ ...formData, neighborhoodImages: Array.from(e.target.files) }) }} id="nhoodImagesInput" type="file" name="nhoodImages" multiple></input>
             </div>
-
-
-
-
-
-
-
-
-
 
             {/* if the user is not logged in here, render a question that asks for his email, name and a password  */}
             <div
