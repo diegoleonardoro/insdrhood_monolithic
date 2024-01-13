@@ -42,6 +42,8 @@ function Home({ currentuser, updateCurrentUser }) {
         } catch (error) {
           // Handle error here
         }
+
+        
       };
       logUserWithToken();
     } else {

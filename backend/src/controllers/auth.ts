@@ -80,19 +80,20 @@ export const signup = async (req: Request, res: Response) => {
   };
 
 
-  sendVerificationMail({
-    name: user.name,
-    email: user.email,
-    emailToken: user.emailToken,
-    baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
-  });
+  // if there is not email present, then do not send email verification:
+  if (user.email !== '') {
+    sendVerificationMail({
+      name: user.name,
+      email: user.email,
+      emailToken: user.emailToken,
+      baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+    });
+  }
 
   // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
-
   res.status(201).send(userInfo);
 
 }
-
 
 
 /**
@@ -177,8 +178,16 @@ export const updateUserData = async (req: Request, res: Response) => {
 
   const { id } = req.params;
   let updates = req.body;
+
+  // if there is a "password" property in the updates object, then hash the password:
   if (updates.password) {
     updates.password = await Password.toHash(updates.password);
+  }
+
+  // check if updates has email property and if so create an emailtoken which will be icluded in the updates.
+  if ("email" in updates) {
+    const emailToken = crypto.randomBytes(64).toString("hex");
+    updates.emailToken = [emailToken];
   }
 
   const db = getDb();
@@ -190,6 +199,8 @@ export const updateUserData = async (req: Request, res: Response) => {
     { returnDocument: 'after' }
   );
 
+  console.log("userrrrere", user);
+
   const userInfo = {
     id: user?._id.toString(),
     email: user?.email,
@@ -197,8 +208,8 @@ export const updateUserData = async (req: Request, res: Response) => {
     image: user?.image,
     isVerified: user?.isVerified,
     neighborhoodId: user?.neighborhoodId,
-    userImagesId: user?.userImagesId, 
-    passwordSet:user?.passwordSet
+    userImagesId: user?.userImagesId,
+    passwordSet: user?.passwordSet
   }
 
   // Generate JWT
@@ -212,7 +223,14 @@ export const updateUserData = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-
+  if (updates.emailToken) {
+    sendVerificationMail({
+      name: userInfo.name,
+      email: userInfo.email,
+      emailToken: updates.emailToken,
+      baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+    });
+  }
 
   res.status(200).send(user);
 
@@ -259,7 +277,7 @@ export const verifyemail = async (req: Request, res: Response) => {
     isVerified: updatedUser?.isVerified,
     neighborhoodId: updatedUser?.neighborhoodId,
     userImagesId: updatedUser?.userImagesId,
-    passwordSet:user?.passwordSet
+    passwordSet: user?.passwordSet
   }
 
   // Generate JWT

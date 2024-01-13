@@ -17,10 +17,12 @@ const NeighborhoodProfile = () => {
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
+
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       const currentUser__ = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       setNeighborhood(neighborhood.data);
       setIsEditable(neighborhood.data.user.id === currentUser__?.data.id);
+      
     } catch (error) { }
   }
 
@@ -151,8 +153,6 @@ const NeighborhoodProfile = () => {
 
           <div className="sectionContainer containerNhoodItems">
             {neighborhood && (
-
-
 
               <div className="nightLifeContainer">
 

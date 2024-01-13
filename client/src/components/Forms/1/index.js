@@ -260,7 +260,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           }
         } else {
           const userInput = currentDiv.querySelector("input, textarea, select");
-          if (userInput.value === '') {
+   
+          if (userInput.value === '' && userInput.name !=='nhoodImages' ) {
             setShakie("apply_shake");
             const timeout = setTimeout(() => {
               setShakie('shakieCheck');
@@ -297,11 +298,6 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
 
 
-
-
-
-
-
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 21) {
 
@@ -335,7 +331,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                   "Content-Type": 'image/jpeg',
                 },
               });
-
             }
           };
 
@@ -376,6 +371,15 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
 
         };
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2514,10 +2518,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             </div>
 
-
-
-
-
             {/** Are there any nightlife venues (bars, restaurants, nighclubs) that youd like to  */}
             <div
               className={
@@ -2598,9 +2598,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
             </div>
-
-
-
 
             {/** Complete the sentence: "If I had to pick one place to enjoy the nightlife of {neighborhood}, it would be _______, because ________" */}
             <div
