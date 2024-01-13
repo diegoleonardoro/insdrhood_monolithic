@@ -141,15 +141,19 @@ const updateUserData = async (req, res) => {
     if (updates.password) {
         updates.password = await password_1.Password.toHash(updates.password);
     }
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
     // check if updates has email property and if so create an emailtoken which will be icluded in the updates.
     if ("email" in updates) {
         const emailToken = crypto_1.default.randomBytes(64).toString("hex");
+        // check if the email is alredy registered and if so, return an error:
+        const existingUser = await users.findOne(updates.email);
+        if (existingUser) {
+            throw new bad_request_error_1.BadRequestError("Email in use");
+        }
         updates.emailToken = [emailToken];
     }
-    const db = (0, index_1.getDb)();
-    const users = db.collection("users");
     const user = await users.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: updates }, { returnDocument: 'after' });
-    console.log("userrrrere", user);
     const userInfo = {
         id: user?._id.toString(),
         email: user?.email,

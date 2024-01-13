@@ -184,14 +184,26 @@ export const updateUserData = async (req: Request, res: Response) => {
     updates.password = await Password.toHash(updates.password);
   }
 
+  const db = getDb();
+  const users = db.collection("users");
+
   // check if updates has email property and if so create an emailtoken which will be icluded in the updates.
   if ("email" in updates) {
+
     const emailToken = crypto.randomBytes(64).toString("hex");
+
+    // check if the email is alredy registered and if so, return an error:
+    const existingUser = await users.findOne(updates.email);
+    if (existingUser) {
+      throw new BadRequestError("Email in use")
+    }
+
     updates.emailToken = [emailToken];
   }
 
-  const db = getDb();
-  const users = db.collection("users");
+
+
+
 
   const user = await users.findOneAndUpdate(
     { _id: new ObjectId(id) },
@@ -199,7 +211,6 @@ export const updateUserData = async (req: Request, res: Response) => {
     { returnDocument: 'after' }
   );
 
-  console.log("userrrrere", user);
 
   const userInfo = {
     id: user?._id.toString(),
