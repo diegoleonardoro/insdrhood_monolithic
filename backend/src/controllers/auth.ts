@@ -179,13 +179,15 @@ export const updateUserData = async (req: Request, res: Response) => {
   const { id } = req.params;
   let updates = req.body;
 
+  const db = getDb();
+  const users = db.collection("users");
+
   // if there is a "password" property in the updates object, then hash the password:
   if (updates.password) {
     updates.password = await Password.toHash(updates.password);
   }
 
-  const db = getDb();
-  const users = db.collection("users");
+  let existingUser;
 
   // check if updates has email property and if so create an emailtoken which will be icluded in the updates.
   if ("email" in updates) {
@@ -193,16 +195,20 @@ export const updateUserData = async (req: Request, res: Response) => {
     const emailToken = crypto.randomBytes(64).toString("hex");
 
     // check if the email is alredy registered and if so, return an error:
-    const existingUser = await users.findOne(updates.email);
-    if (existingUser) {
-      throw new BadRequestError("Email in use")
-    }
+
+    existingUser = await users.findOne({
+      email: updates.email,
+      _id: { $ne: new ObjectId(id) } // Add this line
+    });
 
     updates.emailToken = [emailToken];
   }
 
 
-
+  if (existingUser) {
+    console.log('existing usertrtr', existingUser);
+    throw new BadRequestError("Email in use");
+  }
 
 
   const user = await users.findOneAndUpdate(

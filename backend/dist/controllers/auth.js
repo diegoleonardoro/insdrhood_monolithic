@@ -137,21 +137,26 @@ exports.signout = signout;
 const updateUserData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
+    const db = (0, index_1.getDb)();
+    const users = db.collection("users");
     // if there is a "password" property in the updates object, then hash the password:
     if (updates.password) {
         updates.password = await password_1.Password.toHash(updates.password);
     }
-    const db = (0, index_1.getDb)();
-    const users = db.collection("users");
+    let existingUser;
     // check if updates has email property and if so create an emailtoken which will be icluded in the updates.
     if ("email" in updates) {
         const emailToken = crypto_1.default.randomBytes(64).toString("hex");
         // check if the email is alredy registered and if so, return an error:
-        const existingUser = await users.findOne(updates.email);
-        if (existingUser) {
-            throw new bad_request_error_1.BadRequestError("Email in use");
-        }
+        existingUser = await users.findOne({
+            email: updates.email,
+            _id: { $ne: new mongodb_1.ObjectId(id) } // Add this line
+        });
         updates.emailToken = [emailToken];
+    }
+    if (existingUser) {
+        console.log('existing usertrtr', existingUser);
+        throw new bad_request_error_1.BadRequestError("Email in use");
     }
     const user = await users.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: updates }, { returnDocument: 'after' });
     const userInfo = {

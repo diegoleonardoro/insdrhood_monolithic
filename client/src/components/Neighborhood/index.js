@@ -7,12 +7,16 @@ import Button from 'react-bootstrap/Button';
 import { useUser } from "../../contexts/UserContext";
 
 
-const NeighborhoodProfile = () => {
+const NeighborhoodProfile = ({ currentuserProp }) => {
 
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
   const { currentuser, updateCurrentUser } = useUser();
+
+
+  console.log('neighborhoodid', neighborhoodid)
+
 
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
@@ -20,6 +24,9 @@ const NeighborhoodProfile = () => {
 
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       const currentUser__ = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+
+      console.log('currentUser__', currentUser__);
+
       setNeighborhood(neighborhood.data);
       setIsEditable(neighborhood.data.user.id === currentUser__?.data.id);
       
@@ -28,7 +35,7 @@ const NeighborhoodProfile = () => {
 
   useEffect(() => {
     getNeighorhoodData();
-  }, []);//currentuser
+  }, [currentuserProp]);//currentuser
 
   // console.log("is editable", isEditable);
 

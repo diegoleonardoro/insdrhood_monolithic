@@ -4,6 +4,7 @@ exports.CustomError = void 0;
 class CustomError extends Error {
     constructor(message) {
         // pass the message to the error
+        console.log("message", message);
         super(message);
         Object.setPrototypeOf(this, CustomError.prototype);
     }

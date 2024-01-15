@@ -41,7 +41,7 @@ router.post("/signup", asyncHandler(signup));
 router.post("/signout", asyncHandler(signout));
 router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
-router.put("/updateuserdata/:id", updateUserData);
+router.put("/updateuserdata/:id", asyncHandler (updateUserData));
 
 
 /**

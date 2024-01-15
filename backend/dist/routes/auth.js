@@ -29,7 +29,7 @@ router.post("/signup", asyncHandler(auth_1.signup));
 router.post("/signout", asyncHandler(auth_1.signout));
 router.get("/currentuser", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
-router.put("/updateuserdata/:id", auth_1.updateUserData);
+router.put("/updateuserdata/:id", asyncHandler(auth_1.updateUserData));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */

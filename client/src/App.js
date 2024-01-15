@@ -31,7 +31,7 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.has('token');
   };
-  
+
 
   const showEmailRegistration = () => {
     setShowEmailRegisterPopup(true)
@@ -95,13 +95,11 @@ function App() {
                   ) : (
                     <div>
 
-                      <Alert onClick={showEmailRegistration} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="danger">
-                        <div style={{ position: "relative", top: "-5px" }}>
-                          <div>
+                      <Button onClick={showEmailRegistration} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="primary">
+                       
                             Register for future edits
-                          </div>
-                        </div>
-                      </Alert>
+                         
+                      </Button>
                     </div>
                   )}
 
@@ -122,7 +120,7 @@ function App() {
             <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
             <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
-            <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile />} />
+            <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} />} />
           </Routes>
         </div>
       </Router>

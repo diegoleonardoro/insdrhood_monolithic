@@ -2,33 +2,56 @@
 import axios from "axios"
 import React, { useEffect, useState, useCallback } from "react";
 import Button from 'react-bootstrap/Button';
-
+import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { useNavigate } from "react-router-dom";
 
 const EmailRegisterWindow = ({ updateCurrentUser, currentuser, setShowEmailRegisterPopup }) => {
 
-  const [email, setEmail] = useState('');
 
-  // function that will handle the input change for the email input 
-  const handleEmailInputChange = (e) => {
-    const newVal = e.target.value
-    setEmail(newVal)
-  }
+  const [errors, setErrors] = useState(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: ""
+  });
+
+  const navigate = useNavigate();
 
   // function that will update the user with the email
   const onSubmitRegisterEmail = async () => {
-    const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser.id}`, { email: email })
-    setShowEmailRegisterPopup(false);
-    updateCurrentUser(response.data);
-  }
 
-  
+    try {
+
+      // make request to update the user
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser.id}`, formData, {
+        withCredentials: true
+      })
+
+
+      console.log('currentuser', currentuser)
+
+      // make request to update the neighborhood data with the user:
+      const qq = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser.neighborhoodId[0]}`, { user:formData })
+
+      console.log('qq', qq)
+
+      setShowEmailRegisterPopup(false);
+      updateCurrentUser(response.data);
+      // navigate to the neighborhood profile so that the udpated data is reflected in the profile:
+      navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
+
+    } catch (error) {
+      setErrors(error?.response?.data?.errors?.[0]?.message);
+    }
+
+  }
 
   return (
     <div style={{
       position: 'fixed',
-      top: '76%',
+      top: '50%',
       left: '10px',
       zIndex: '9000',
       backgroundColor: '#cfe2ff',
@@ -41,23 +64,33 @@ const EmailRegisterWindow = ({ updateCurrentUser, currentuser, setShowEmailRegis
         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
       </svg>
       <form>
-        <FloatingLabel controlId="floatingInput" label="Email" className="mb-3" >
+
+        <FloatingLabel controlId="floatingInput" label="Name" className="mb-3" >
           <Form.Control
-            value={email}
+            value={formData.name}
             onChange={(e) => {
-              handleEmailInputChange(e)
+              setFormData({ ...formData, name: e.target.value })
             }}
           />
         </FloatingLabel>
 
-        {/* {errors && (
+        <FloatingLabel controlId="floatingInput" label="Email" className="mb-3" >
+          <Form.Control
+            value={formData.email}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value })
+            }}
+          />
+        </FloatingLabel>
+
+        {errors && (
           <Alert style={{ marginTop: "10px" }} variant='danger'>
             {errors}
           </Alert>
-        )} */}
+        )}
 
       </form>
-      <Button className="signupSubmitButton" onClick={onSubmitRegisterEmail} variant="secondary">Submit </Button>
+      <Button className="signupSubmitButton" onClick={onSubmitRegisterEmail} variant="primary">Submit </Button>
 
     </div>
   )
