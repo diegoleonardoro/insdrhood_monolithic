@@ -186,16 +186,44 @@ const FormComponent = ({ updateCurrentUser }) => {
   }
 
 
+
+
+
+
+
+
+
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
+    /**
+     * data: 
+     * name:'',
+     * email:'',
+     * neighborhoodId:'',
+     * formsResponded:1, 
+     * userImagesId:''
+     */
+
     // request to save new user's data:
-    const newuser = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`,
-      data);
+    // make try catch block here to handle possible error of email alredy being registered.
     // request to update the neighborhood's data with the new user data:
-    await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } })
-    await updateCurrentUser(newuser.data);
-    navigate(`/neighborhood/${neighborhoodId}`);
-    return;
+    try {
+      // this request saves a new user. If the user did not send his email or name. Those fields will be SAVED AS EMPTY STRINGS.
+      const newuser = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`,
+        data);
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } });
+
+      await updateCurrentUser(newuser.data);
+      navigate(`/neighborhood/${neighborhoodId}`);
+
+      return;
+
+    } catch (error) {
+
+      console.log('errrrr',error);
+
+      
+    }
   }
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
@@ -260,8 +288,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           }
         } else {
           const userInput = currentDiv.querySelector("input, textarea, select");
-   
-          if (userInput.value === '' && userInput.name !=='nhoodImages' ) {
+
+          if (userInput.value === '' && userInput.name !== 'nhoodImages') {
             setShakie("apply_shake");
             const timeout = setTimeout(() => {
               setShakie('shakieCheck');
@@ -440,6 +468,8 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   };
 
+
+
   // The followinf jsx will be rendered if the user sends the form data without registering. It will only be shown if there is no user logged in:
   const sendInfoWithoutDataAlert = (
     <>
@@ -480,19 +510,28 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
 
 
+
+
+
+
   // The following function will make the request to save the user user in the database:
   const submitNewUserData = (event) => {
 
     event.preventDefault();
-    const emailValid = validateEmail(newUserData.email);
+    // const emailValid = validateEmail(newUserData.email);
+    // if (!emailValid) {
+    //   // if the email is not valid, then show a pop that will alert the user that they are about to send the data without credentials:
+    //   setShowUserDataAlert(true);
+    // };
 
-    if (!emailValid) {
-      // if the email is not valid, then show a pop that will alert the user that they are about to send the data without credentials:
-      setShowUserDataAlert(true);
-    };
     // make request to save user
     registerNewUser(newUserData);
   };
+
+
+  
+
+
 
   // The following functions will filter the neighborhoods when the user is responding what neighborhood they live in:
   const neighborhoodsArray = [];
@@ -511,6 +550,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       setNeighborhoods(neighborhoodsArray);
     }
   };
+
   var currentFocus = -1;
   const highlightNhoods = (e) => {
     const hoodsDivs = neighborhoodsDiv.current.children;
@@ -541,6 +581,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       currentFocus = 0;
     }
   };
+
   function addActive(x) {
     if (!x) return false;
     removeActive(x);
@@ -3212,13 +3253,13 @@ const FormComponent = ({ updateCurrentUser }) => {
             >
               {showUserDataAlert && sendInfoWithoutDataAlert}
 
-                <h3 style={{ fontWeight: 'bold', marginBottom: '40px' }}>Sign up to edit your responses anytime later.</h3>
+              <h3 style={{ fontWeight: 'bold', marginBottom: '40px' }}>Sign up to edit your responses anytime later.</h3>
               <Form.Group as={Row} className="mb-3" controlId="formHorizontalFirstName">
                 <Form.Label column sm={2}>
                   First Name:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control style={{ width: '100%' }} onChange={updateNewUserData} name="name" />
+                  <Form.Control style={{ width: '100%' }} onChange={updateNewUserData} name="name" />
                 </Col>
               </Form.Group>
 
@@ -3227,7 +3268,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   Email:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control style={{ width: '100%' }}  onChange={updateNewUserData} name="email" />
+                  <Form.Control style={{ width: '100%' }} onChange={updateNewUserData} name="email" />
                 </Col>
               </Form.Group>
 

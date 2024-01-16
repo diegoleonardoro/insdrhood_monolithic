@@ -23,6 +23,8 @@ const signup = async (req, res) => {
     const db = (0, index_1.getDb)();
     const users = db.collection("users");
     const existingUser = await users.findOne({ email });
+    // for this erorr to be thrown, there has to be a saved user with email that came in the request body. 
+    // If when a user does not send email ther email is saved as an empty string, then every time a new user without email is saved, this error will be shown. 
     if (existingUser) {
         throw new bad_request_error_1.BadRequestError("Email in use");
     }
@@ -266,7 +268,10 @@ const saveNeighborhoodData = async (req, res) => {
     const neighborhoods = db.collection("neighborhoods");
     const newNeighborhood = await neighborhoods.insertOne({
         ...req.body,
-        user: user ? { id: user._id, name: user.name, email: user.email } : undefined
+        user: user ?
+            { id: user._id, name: user.name, email: user.email }
+            :
+                { id: '', name: '', email: '' }
     });
     res.status(201).send(newNeighborhood);
 };
@@ -282,6 +287,19 @@ const updateNeighborhoodData = async (req, res) => {
     const db = (0, index_1.getDb)();
     const neighborhoods = db.collection("neighborhoods");
     let updateQuery = {};
+    //Handling updates for nested objects:
+    Object.keys(updates).forEach((key) => {
+        if (typeof updates[key] === 'object' && updates[key] !== null) {
+            // Iterate over nested object fields
+            for (const nestedKey in updates[key]) {
+                // Use dot notation for nested fields
+                updateQuery.$set = updateQuery.$set || {};
+                updateQuery.$set[`${key}.${nestedKey}`] = updates[key][nestedKey];
+            }
+            // Remove the nested object from updates after processing
+            delete updates[key];
+        }
+    });
     if (updates.neighborhoodImages) {
         // If updating neighborhoodImages, use $push to add images to the existing array
         updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };
@@ -289,7 +307,7 @@ const updateNeighborhoodData = async (req, res) => {
     }
     if (Object.keys(updates).length > 0) {
         // If there are other updates, use $set to update fields
-        updateQuery.$set = updates;
+        updateQuery.$set = { ...updateQuery.$set, ...updates };
     }
     const neighborhood = await neighborhoods.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, updateQuery, { returnDocument: "after" });
     // const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });

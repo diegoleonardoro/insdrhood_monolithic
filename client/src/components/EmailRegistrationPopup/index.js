@@ -29,13 +29,10 @@ const EmailRegisterWindow = ({ updateCurrentUser, currentuser, setShowEmailRegis
         withCredentials: true
       })
 
-
-      console.log('currentuser', currentuser)
-
       // make request to update the neighborhood data with the user:
-      const qq = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser.neighborhoodId[0]}`, { user:formData })
+       await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser.neighborhoodId[0]}`, { user:formData })
 
-      console.log('qq', qq)
+  
 
       setShowEmailRegisterPopup(false);
       updateCurrentUser(response.data);

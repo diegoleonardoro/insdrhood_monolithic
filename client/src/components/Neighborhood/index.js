@@ -27,6 +27,8 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
 
       console.log('currentUser__', currentUser__);
 
+      console.log('neighborhood', neighborhood)
+
       setNeighborhood(neighborhood.data);
       setIsEditable(neighborhood.data.user.id === currentUser__?.data.id);
       
