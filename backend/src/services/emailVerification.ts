@@ -39,7 +39,7 @@ export const sendVerificationMail = (user: User) => {
   const transporter = createMailTransporter();
 
   const mailOptions = {
-    from: 'Insider Hood <diegogoleoeo@outlook.com>',
+    from: `Insider Hood <${process.env.NODEMAILER_AUTH_USER}>`,
     to: user.email,
     subject: 'Verify your email',
     html: html,
@@ -93,13 +93,14 @@ const createMailTransporter = () => {
     console.log('process.env.private_key', process.env.private_key);
     console.log('transporterOptions.auth.accessUrl', transporterOptions.auth.accessUrl);
 
-
   } else {
     transporterOptions.service = process.env.NODEMAILER_SERVICE;
     transporterOptions.auth.pass = process.env.NODEMAILER_AUTH_PASS;
   }
 
+  console.log('transporterOptions', transporterOptions);
+  
   const transporter = nodemailer.createTransport(transporterOptions);
-
   return transporter;
+
 };

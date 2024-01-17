@@ -56,7 +56,7 @@ const sendVerificationMail = (user) => {
     const { html } = (0, mjml_1.default)(mjmlContent);
     const transporter = createMailTransporter();
     const mailOptions = {
-        from: 'Insider Hood <diegogoleoeo@outlook.com>',
+        from: `Insider Hood <${process.env.NODEMAILER_AUTH_USER}>`,
         to: user.email,
         subject: 'Verify your email',
         html: html,
@@ -95,6 +95,7 @@ const createMailTransporter = () => {
         transporterOptions.service = process.env.NODEMAILER_SERVICE;
         transporterOptions.auth.pass = process.env.NODEMAILER_AUTH_PASS;
     }
+    console.log('transporterOptions', transporterOptions);
     const transporter = nodemailer.createTransport(transporterOptions);
     return transporter;
 };
