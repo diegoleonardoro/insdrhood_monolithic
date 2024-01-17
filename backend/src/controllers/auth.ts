@@ -29,9 +29,6 @@ export const signup = async (req: Request, res: Response) => {
   const users = db.collection("users");
   const existingUser = await users.findOne({ email });
 
-
-
-
   // for this erorr to be thrown, there has to be a saved user with email that came in the request body. 
   // If when a user does not send email ther email is saved as an empty string, then every time a new user without email is saved, this error will be shown. 
 
@@ -256,7 +253,6 @@ export const updateUserData = async (req: Request, res: Response) => {
   res.status(200).send(user);
 
 }
-
 
 
 

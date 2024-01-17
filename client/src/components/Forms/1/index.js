@@ -106,6 +106,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [loggedUser, setLoggedUser] = useState(null);
 
 
+
   useEffect(() => {
 
     if (loggedUser === null) {
@@ -185,14 +186,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     navigate(`/neighborhood/${dataToUpdate.neighborhoodId[0]}`);
   }
 
-
-
-
-
-
-
-
-
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
     /**
@@ -220,9 +213,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     } catch (error) {
 
-      console.log('errrrr',error);
+      console.log('errrrr', error);
 
-      
     }
   }
 
@@ -270,9 +262,9 @@ const FormComponent = ({ updateCurrentUser }) => {
             }
           }
         } else if (currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1) {
+
           const inputs = currentDiv.querySelectorAll("input");
           let hasValue = false;
-
           for (let i = 0; i < inputs.length; i++) {
             if (inputs[i].checked) {
               hasValue = true;
@@ -286,9 +278,10 @@ const FormComponent = ({ updateCurrentUser }) => {
             }, 1000);
             return () => clearTimeout(timeout);
           }
-        } else {
-          const userInput = currentDiv.querySelector("input, textarea, select");
 
+        } else {
+
+          const userInput = currentDiv.querySelector("input, textarea, select");
           if (userInput.value === '' && userInput.name !== 'nhoodImages') {
             setShakie("apply_shake");
             const timeout = setTimeout(() => {
@@ -296,6 +289,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             }, 1000);
             return () => clearTimeout(timeout);
           }
+
         }
 
         // Check if we are about to show the food questions, so that we can change the display value of the header that annouces the upcoming food questions:
@@ -395,24 +389,9 @@ const FormComponent = ({ updateCurrentUser }) => {
           setActiveIndex(nextIndex);
           setDisplayKeyWord([keyWord]);
 
-
           return;
 
         };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
         keyWord = currentDiv.className.split(" ")[1];
@@ -443,7 +422,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   }
 
-
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
   const nhoodEvalHandler = (aspect) => {
     const element = nhoodExplanationRef.current[aspect];
@@ -467,8 +445,6 @@ const FormComponent = ({ updateCurrentUser }) => {
       return 'notDisplay';
     }
   };
-
-
 
   // The followinf jsx will be rendered if the user sends the form data without registering. It will only be shown if there is no user logged in:
   const sendInfoWithoutDataAlert = (
@@ -509,11 +485,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     return emailRegex.test(email);
   };
 
-
-
-
-
-
   // The following function will make the request to save the user user in the database:
   const submitNewUserData = (event) => {
 
@@ -527,11 +498,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     // make request to save user
     registerNewUser(newUserData);
   };
-
-
-  
-
-
 
   // The following functions will filter the neighborhoods when the user is responding what neighborhood they live in:
   const neighborhoodsArray = [];
@@ -1059,7 +1025,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
               {selectedOptions.length > 0 && (
-                <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+                <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
                   {selectedOptions.map((option, index) => (
                     <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
                       {option}
@@ -1084,8 +1050,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 </div>
               )}
 
-
-              <div className="scrollbarContainer" style={{ width: "100%", height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
+              <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
                 <div ref={nehoodAdjectivesDivRef}
                   style={{
                     display: 'flex',
@@ -1417,6 +1382,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                 </div>
               </div>
+
             </div>
 
             {/**  “Complete the sentence:  ‘The most unique thing about {neighborhood} is ________”*/}
@@ -1424,9 +1390,9 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("completeSentence1")}
               ref={ref => divRefs.current[4] = ref}
             >
-              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
 
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", textAlign: "left" }}>
+
+              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                 <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
                 <input
                   className="completeSentenceInput"
@@ -1448,8 +1414,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("completeSentence2")}
               ref={ref => divRefs.current[5] = ref}
             >
-              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
-              <div style={{ textAlign: "left" }}>
+
+              <div >
                 People should visit {neighborhood} <span className="questionHighlight">if they want:</span>
                 <input
                   className="completeSentenceInput"
@@ -1508,7 +1474,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               </label>
 
               {residentsAdjsSelectedOpts.length > 0 && (
-                <div ref={residentAdjectivesDivContainer} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+                <div ref={residentAdjectivesDivContainer} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
                   {residentsAdjsSelectedOpts.map((option, index) => (
                     <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
                       {option}
@@ -1533,7 +1499,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 </div>
               )}
 
-              <div className="scrollbarContainer" style={{ width: "100%", height: "200px", overflow: "scroll", marginTop: "20px", border: "1px solid #c9c9c9" }}>
+              <div className="scrollbarContainer" style={{ height: "200px", overflow: "scroll", marginTop: "20px", border: "1px solid #c9c9c9" }}>
 
                 <div ref={residentAdjectivesDivRef}
                   style={{
@@ -1877,9 +1843,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               className={"residentAdjectives describeFoodScene stereotypicalResident " + displayQuestion("completeTheSentenceStereoResident") +
                 " " +
                 shakie} ref={ref => divRefs.current[8] = ref}>
-
-              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
-              <div style={{ textAlign: "left" }}>
+              <div >
                 <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
                 <input
                   className="completeSentenceInput"
@@ -1906,8 +1870,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[9] = ref}
             >
-
-              <div ref={letsTalkAboutFoodRef} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
+              <div className="introHeader" ref={letsTalkAboutFoodRef}>
                 <h4> Let's talk about food </h4>
                 <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px"></img>
               </div>
@@ -1942,7 +1905,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 <span className="nhoodName"> {neighborhood}? </span>
               </label>
 
-              <div className="scrollbarContainer" style={{ width: "100%", height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
+              <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
 
                 <div ref={typesOfFoodRecommendationsRef}
                   style={{
@@ -2207,7 +2170,10 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
 
               {foodTypesSelectedOpts.length > 0 && (
-                <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', width: '100%', justifyContent: "space-evenly", height: "120px", overflow: "scroll" }}>
+                <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{
+                  display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "120px", overflow: "scroll",
+                  border: "1px solid grey"
+                }}>
                   {foodTypesSelectedOpts.map((option, index) => (
 
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.assessment}>
@@ -2277,10 +2243,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("oncePlaceToEat")}
               ref={ref => divRefs.current[11] = ref}
             >
-              <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3>
               <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
                 <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
-                  <p style={{ display: "inline" }}>If I were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
+                  <p style={{ display: "inline" }}>If you were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
                   <input style={{ width: "35%" }}
                     className="completeSentenceInput"
                     onChange={
@@ -2539,7 +2504,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[14] = ref}
             >
-              <div ref={letsTalkAboutNightLifeRef} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
+              <div className="introHeader" ref={letsTalkAboutNightLifeRef}>
                 <h4> Let's talk about the night life </h4>
                 <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-21%2018.35.59%20-%20A%20pencil%20sketch%20with%20a%20grain%20effect%2C%20emphasizing%20a%20_night_%20ambiance%20for%20a%20modern%20nightclub%20scene.%20The%20sketch%20should%20depict%20a%20contemporary%20nightclub%20at.png" height="170px"></img>
               </div>
@@ -2703,7 +2668,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[17] = ref}
             >
-              <div ref={letsTalkAboutGeneralInfo} style={{ height: "190%", position: "absolute", width: "100%", backgroundColor: "#f8f9fa", zIndex: "1", top: "-5px", textAlign: "center" }}>
+              <div ref={letsTalkAboutGeneralInfo} className="introHeader" >
                 <h4> Let's talk about some general information </h4>
                 <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-22%2008.42.27%20-%20A%20black%20and%20white%2C%20highly%20minimalistic%20pencil%20sketch%2C%20focusing%20on%20the%20theme%20of%20'general%20questions.'%20This%20version%20should%20feature%20only%20a%20few%20floating%20qu.png" height="190px"></img>
               </div>
@@ -2712,8 +2677,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
               <div>
                 <div className="nhoodEvalHeader">
-                  <span className="questionHighlight"> "Public transportation in{" "}
-                    <span className="nhoodName">{neighborhood}</span> is easily
+                  <span> "Public transportation in{" "}
+                    <span className="nhoodName questionHighlight">{neighborhood}</span> is easily
                     accessible and convenient."
                   </span>
                 </div>
@@ -2845,9 +2810,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
                 <div className="nhoodEvalHeader">
-                  <span className="questionHighlight">
-                    "Having pets is convenient in{" "}
-                    <span className="nhoodName">{neighborhood}</span>."
+                  <span>
+                    "Having pets in <span className="nhoodName questionHighlight">{neighborhood}</span> is convenient{" "}."
                   </span>
                 </div>
 
@@ -2977,8 +2941,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
                 <div className="nhoodEvalHeader">
-                  <span className="questionHighlight">
-                    <span className="nhoodName">"{neighborhood}</span> is generally
+                  <span >
+                    <span className="nhoodName questionHighlight">"{neighborhood}</span> is generally
                     a safe neighborhood."
                   </span>
                 </div>
@@ -3107,8 +3071,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
                 <div className="nhoodEvalHeader">
-                  <span className="questionHighlight">
-                    <span className="nhoodName">"{neighborhood}</span> offers good
+                  <span>
+                    <span className="nhoodName questionHighlight">"{neighborhood}</span> offers good
                     opportunities for meeting new people.
                   </span>
                 </div>

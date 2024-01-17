@@ -254,6 +254,10 @@ input:focus{
 /*Neighborhood adjectives*/
 
 .scrollbarContainer{
+  width:50%
+}
+
+.scrollbarContainer{
   -webkit-overflow-scrolling: touch;
 }
 .scrollbarContainer::-webkit-scrollbar {
@@ -277,7 +281,7 @@ input:focus{
 
 /*In general, how would you describe the neighborhood*/
 .textarea_text {
-  width: 90%;
+  width: 130%;
   height: 40px;
   border-width: 1px;
   border-style: solid;
@@ -551,14 +555,37 @@ input:focus{
   stroke-width: 10;
 }
 
-
+.introHeader{
+  position: absolute;
+  width:130%;
+  height:100%;
+  z-index: 9;
+  background-color: #f8f9fa;
+  top:-5px;
+}
 
 /* media queries: */
-
 @media screen and (max-width: 777px) {
   .mainContainer {
     width: 90%; /* Adjust width to 90% */
     max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .textarea_text {
+    width: 90%; /* Adjust width to 90% */
+  }
+  .introHeader{
+    width:100%;
+  }
+}
+
+
+
+@media screen and (max-width: 1600px) {
+  .scrollbarContainer {
+    width: 100%;;
   }
 }
 

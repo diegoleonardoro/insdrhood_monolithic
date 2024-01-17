@@ -55,13 +55,43 @@ export const sendVerificationMail = (user: User) => {
   });
 }
 
+// Define a type for transporter options
+type TransporterOptions = {
+  service?: string;
+  host?: string;
+  port?: number;
+  secure?: boolean;
+  auth: {
+    user?: string;
+    pass?: string;
+    type?: string;
+    serviceClient?: string;
+    privateKey?: string;
+    accessUrl?: string;
+  };
+};
+
 const createMailTransporter = () => {
-  const transporter = nodemailer.createTransport({
-    service: "hotmail",
+  const transporterOptions: any = {
     auth: {
-      user: "diegogoleoeo@outlook.com",
-      pass: process.env.OUTLOOK_PASS
+      user: process.env.NODEMAILER_AUTH_USER,
     }
-  });
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    transporterOptions.host = process.env.host;
+    transporterOptions.port = 465; // Default SMTP secure port
+    transporterOptions.secure = true;
+    transporterOptions.auth.type = 'OAuth2';
+    transporterOptions.auth.serviceClient = process.env.project_id;
+    transporterOptions.auth.privateKey = process.env.private_key;
+    transporterOptions.auth.accessUrl = process.env.token_uri;
+  } else {
+    transporterOptions.service = process.env.NODEMAILER_SERVICE;
+    transporterOptions.auth.pass = process.env.NODEMAILER_AUTH_PASS;
+  }
+
+  const transporter = nodemailer.createTransport(transporterOptions);
+
   return transporter;
 };
