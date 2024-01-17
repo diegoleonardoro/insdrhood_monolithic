@@ -86,6 +86,14 @@ const createMailTransporter = () => {
     transporterOptions.auth.serviceClient = process.env.project_id;
     transporterOptions.auth.privateKey = process.env.private_key;
     transporterOptions.auth.accessUrl = process.env.token_uri;
+
+
+    console.log('process.env.host', process.env.host);
+    console.log('process.env.project_id', process.env.project_id);
+    console.log('process.env.private_key', process.env.private_key);
+    console.log('transporterOptions.auth.accessUrl', transporterOptions.auth.accessUrl);
+
+
   } else {
     transporterOptions.service = process.env.NODEMAILER_SERVICE;
     transporterOptions.auth.pass = process.env.NODEMAILER_AUTH_PASS;
