@@ -86,7 +86,7 @@ const createMailTransporter = () => {
     // transporterOptions.auth.serviceClient = process.env.project_id;
     transporterOptions.auth.clientId= process.env.client_id;
     transporterOptions.auth.clientEmail= process.env.client_email;
-    transporterOptions.auth.privateKey = process.env.private_key;
+    transporterOptions.auth.privateKey = process.env.private_key?.replace(/\\n/g, '\n');
     transporterOptions.auth.accessUrl = process.env.token_uri;
     // transporterOptions.auth.tokenUri= process.env.token_uri;
     transporterOptions.auth.scope= 'https://www.googleapis.com/auth/gmail.send';
