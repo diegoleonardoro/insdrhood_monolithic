@@ -16,22 +16,19 @@ import { useLocation } from 'react-router-dom'; // Import useLocation
 import { UserProvider } from './contexts/UserContext';
 import Button from 'react-bootstrap/Button';
 import EmailRegisterWindow from './components/EmailRegistrationPopup'
-
+import PrivacyNotice from './components/Privacy'
 
 
 function App() {
 
   const HeaderMemo = React.memo(Header);
   const [currentuser, setCurrentUser] = useState(null);
-
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
-
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.has('token');
   };
-
 
   const showEmailRegistration = () => {
     setShowEmailRegisterPopup(true)
@@ -76,10 +73,8 @@ function App() {
     <UserProvider>
       <Router>
         <div className="App">
-
           <div>
             {showEmailRegisterPopup && <EmailRegisterWindow updateCurrentUser={updateCurrentUser} currentuser={currentuser} setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
-
             <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
             {
               currentuser && currentuser.isVerified === false ? (
@@ -91,36 +86,28 @@ function App() {
                         Verify Email {currentuser.email}
                       </div>
                     </Alert>
-
                   ) : (
                     <div>
-
                       <Button onClick={showEmailRegistration} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="primary">
-                       
                             Register for future edits
-                         
                       </Button>
                     </div>
                   )}
-
                 </div>
               ) : null
             }
-
-
           </div>
 
 
           <Routes>
             <Route path="/" element={<Home currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
             <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
-
             <Route path="/registeremail" element={<EmailRegister updateCurrentUser={updateCurrentUser} />} />
-
             <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
             <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
             <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} />} />
+            <Route path="/privacy" element={<PrivacyNotice/>}></Route>
           </Routes>
         </div>
       </Router>
