@@ -11,6 +11,8 @@ import { getDb } from "../index";
 import { ObjectId } from 'mongodb';
 import { sendVerificationMail } from "../services/emailVerification";
 
+
+
 interface updateQuery {
   $set?: any,
   $push?: any
@@ -22,6 +24,7 @@ interface updateQuery {
  * @access public
 */
 export const signup = async (req: Request, res: Response) => {
+
 
   const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
 
@@ -57,7 +60,6 @@ export const signup = async (req: Request, res: Response) => {
 
   const newUser = await users.insertOne(user);
 
-
   const userInfo = {
     id: newUser.insertedId.toString(),
     email: user.email,
@@ -79,7 +81,6 @@ export const signup = async (req: Request, res: Response) => {
   req.session = {
     jwt: userJwt,
   };
-
 
   // if there is not email present, then do not send email verification:
   if (user.email !== '') {
