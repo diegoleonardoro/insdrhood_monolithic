@@ -26,16 +26,17 @@ const sendEmail = async (emailOptions: SendEmailOptions) => {
   console.log("process.env.NODEMAILER_AUTH_USER", process.env.NODEMAILER_AUTH_USER);
   console.log("process.env.client_id", process.env.client_id);
   console.log("process.env.private_key", process.env.private_key);
+  console.log("process.env.host", process.env.hosty);
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: process.env.host,
     port: 465,
     secure: true,
     auth: {
       type: 'OAuth2',
       user: process.env.NODEMAILER_AUTH_USER,
       serviceClient: process.env.client_id,
-      privateKey: process.env.private_key?.replace(/\\n/g, '\n'),
+      privateKey: process.env.private_key,
       accessUrl: 'https://oauth2.googleapis.com/token'
     }
 
