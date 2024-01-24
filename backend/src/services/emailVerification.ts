@@ -16,32 +16,56 @@ type SendEmailOptions = {
 
 const sendEmail = async (emailOptions: SendEmailOptions) => {
 
-  console.log("process.env.NODEMAILER_AUTH_USER", process.env.NODEMAILER_AUTH_USER);
-  console.log("process.env.client_id", process.env.client_id);
-  console.log("process.env.private_key", process.env.private_key);
-  console.log("process.env.host", process.env.host);
+  const isProduction = process.env.NODE_ENV === "production";
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.host,
-    port: 465,
-    secure: true,
-    auth: {
-      type: 'OAuth2',
-      user: process.env.NODEMAILER_AUTH_USER,
-      serviceClient: process.env.client_id,
-      privateKey: process.env.private_key?.replace(/\\n/g, '\n'),
-      accessUrl: 'https://oauth2.googleapis.com/token'
+  let transporter;
+
+  if (isProduction) {
+    transporter = nodemailer.createTransport({
+      host: process.env.host,
+      port: 465,
+      secure: true,
+      auth: {
+        type: 'OAuth2',
+        user: process.env.NODEMAILER_AUTH_USER,
+        serviceClient: process.env.client_id,
+        privateKey: process.env.private_key?.replace(/\\n/g, '\n'),
+        accessUrl: 'https://oauth2.googleapis.com/token'
+      }
+    });
+    try {
+      await transporter?.verify();
+      const emailinfo = await transporter?.sendMail(emailOptions);
+      console.log("emailinfo", emailinfo);
+    } catch (error) {
+      console.log("erratas", error)
     }
 
-  });
+  } else {
 
-  try {
-    await transporter.verify();
-    const emailinfo =  await transporter.sendMail(emailOptions);
-    console.log("emailinfo", emailinfo);
-  } catch (error) {
-    console.log("erratas", error)
+    transporter = nodemailer.createTransport({
+      host: 'smtp-mail.outlook.com', // Example host for development
+      port: 587,
+      secure: false, // Use TLS
+      auth: {
+        user: process.env.Email,
+        pass: process.env.NODEMAILER_AUTH_PASS,
+      }
+    });
+
+    try {
+      
+      await transporter?.sendMail(emailOptions);
+
+    } catch (error) {
+      console.log("erratas", error)
+    }
+
   }
+
+
+
+
 
 };
 
@@ -80,10 +104,9 @@ export const sendVerificationMail = (user: User) => {
   `;
 
   // Compile MJML to HTML
-
   const { html } = mjml(mjmlContent);
   const mailOptions = {
-    from: `Insider Hood <${process.env.NODEMAILER_AUTH_USER}>`,
+    from: `Insider Hood <${process.env.Email}>`,
     to: user.email,
     subject: 'Verify your email',
     html: html,

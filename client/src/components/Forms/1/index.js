@@ -238,6 +238,9 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   };
 
+
+
+
   // The following function will be in charge of changing the quesitons:
   const changeQuestion = async (direction, flag, errs) => {
 
@@ -251,18 +254,52 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         // check if the user has not responded a question that required to be responded:
         if (currentDiv.className.indexOf("shakieCheck") > -1) {
+
           if (currentDiv.className.indexOf("nhoodAdjectivesFlag") > -1) {
+
             const adjsContainer = currentDiv.querySelector(".adjsNhoodContainer") || currentDiv.querySelector(".adjsResContainer");
             if (!adjsContainer) {
+
               setShakie("apply_shake");
               const timeout = setTimeout(() => {
                 setShakie('shakieCheck');
-              }, 1000);
+              }, 200);
               return () => clearTimeout(timeout);
             }
           }
-        } else if (currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1) {
 
+          const userInput = currentDiv.querySelector("input, textarea, select");
+
+          if (userInput) {
+
+            if (userInput.value === '' && userInput.name !== 'nhoodImages' && userInput.className !== "foodTypeInput") {
+              setShakie("apply_shake");
+              const timeout = setTimeout(() => {
+                setShakie('shakieCheck');
+              }, 200);
+              return () => clearTimeout(timeout);
+            }
+            else if (userInput.className.indexOf("statementResponseContainerInput") > -1) {
+              const inputs = currentDiv.querySelectorAll("input");
+              let isInputChecked = false;
+              for (let i = 0; i < inputs.length - 1; i++) {
+                if (inputs[i].checked) {
+                  isInputChecked = true;
+                  break;
+                }
+              }
+
+              if (!isInputChecked) {
+                setShakie("apply_shake");
+                const timeout = setTimeout(() => {
+                  setShakie('shakieCheck');
+                }, 200);
+                return () => clearTimeout(timeout);
+              }
+            }
+          };
+
+        } else if (currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 || currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1) {
           const inputs = currentDiv.querySelectorAll("input");
           let hasValue = false;
           for (let i = 0; i < inputs.length; i++) {
@@ -272,17 +309,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             }
           }
           if (!hasValue) {
-            setShakie("apply_shake");
-            const timeout = setTimeout(() => {
-              setShakie('shakieCheck');
-            }, 1000);
-            return () => clearTimeout(timeout);
-          }
 
-        } else {
-
-          const userInput = currentDiv.querySelector("input, textarea, select");
-          if (userInput.value === '' && userInput.name !== 'nhoodImages') {
             setShakie("apply_shake");
             const timeout = setTimeout(() => {
               setShakie('shakieCheck');
@@ -291,6 +318,18 @@ const FormComponent = ({ updateCurrentUser }) => {
           }
 
         }
+
+        // else {
+        //   const userInput = currentDiv.querySelector("input, textarea, select");
+        //   if (userInput.value === '' && userInput.name !== 'nhoodImages') {
+        //     setShakie("apply_shake");
+        //     const timeout = setTimeout(() => {
+        //       setShakie('shakieCheck');
+        //     }, 1000);
+        //     return () => clearTimeout(timeout);
+        //   }
+        // }
+
 
         // Check if we are about to show the food questions, so that we can change the display value of the header that annouces the upcoming food questions:
         if (currentDiv.className.indexOf("stereotypicalResident") > -1) {
@@ -399,6 +438,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         setActiveIndex(nextIndex);
 
       }
+
     } else if (direction === "prev") {
       if (currentDiv) {
         keyWord = currentDiv.className.split(" ")[0];
@@ -421,6 +461,11 @@ const FormComponent = ({ updateCurrentUser }) => {
     setDisplayKeyWord([keyWord]);
 
   }
+
+
+
+
+
 
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
   const nhoodEvalHandler = (aspect) => {
@@ -916,7 +961,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             {/** What neighborhood do you live in? */}
             <div
               className={
-                "liveInNY yearsInNeighborhood neighborhoodInput " +
+                "liveInNY yearsInNeighborhood neighborhoodInput  " +
                 displayQuestion("neighborhood") +
                 " " +
                 shakie
@@ -1387,11 +1432,11 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             {/**  “Complete the sentence:  ‘The most unique thing about {neighborhood} is ________”*/}
             <div className={"nhoodAdjectives completeSentence2 " +
-              displayQuestion("completeSentence1")}
+              displayQuestion("completeSentence1") +
+              " " +
+              shakie}
               ref={ref => divRefs.current[4] = ref}
             >
-
-
               <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
                 <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
                 <input
@@ -1404,14 +1449,17 @@ const FormComponent = ({ updateCurrentUser }) => {
                       })
                     }
                   }
+                  placeholder="Only one word"
                 ></input>
               </div>
-            </div>
 
+            </div>
 
             {/**  “Complete the sentence:  ‘People should visit {neighborhood} if they want ________”*/}
             <div className={"completeSentence1 describeNeighborhood " +
-              displayQuestion("completeSentence2")}
+              displayQuestion("completeSentence2") +
+              " " +
+              shakie}
               ref={ref => divRefs.current[5] = ref}
             >
 
@@ -1426,22 +1474,25 @@ const FormComponent = ({ updateCurrentUser }) => {
                       })
                     }
                   }
+                  placeholder="Only one word"
                 ></input>
               </div>
 
             </div>
 
-            {/** In general, how would you describe {neighborhood}? */}
+            {/** In general, how would you describe {neighborhood}? as a neighborhood */}
             <div
               className={
                 "completeSentence2 residentAdjectives nhoodDescript " +
-                displayQuestion("describeNeighborhood")
+                displayQuestion("describeNeighborhood") +
+                " " +
+                shakie
               }
               ref={ref => divRefs.current[6] = ref}
             >
               <label>
                 In general, how would you describe
-                <span className="questionHighlight nhoodName">{neighborhood}</span>?
+                <span className="questionHighlight nhoodName">{neighborhood}</span> as a neighborhood?
               </label>
               <textarea
                 className="textarea_text"
@@ -1453,6 +1504,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     neighborhoodDescription: e.target.value,
                   });
                 }}
+
+                placeholder="Write freely here"
               ></textarea>
             </div>
 
@@ -1837,27 +1890,28 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             </div>
 
-
-            {/** Complete the sentence: The typical reisdent of __ can be described as: "____" */}
+            {/** In general, the typical reisdent of __ can be described as: "____" */}
             <div
               className={"residentAdjectives describeFoodScene stereotypicalResident " + displayQuestion("completeTheSentenceStereoResident") +
                 " " +
                 shakie} ref={ref => divRefs.current[8] = ref}>
-              <div >
-                <span className="questionHighlight">The typical resident</span> of {neighborhood} can be described as:
-                <input
-                  className="completeSentenceInput"
-                  onChange={(e) => {
-                    setFormData({
-                      ...formData,
-                      typicalResidentDescription: e.target.value
-                    })
-                  }}
-                ></input>
-              </div>
+
+              <label>
+                In general, the typical resident of <span className="questionHighlight"> {neighborhood} </span> can be described as:
+              </label>
+              <textarea
+                className="textarea_text"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    typicalResidentDescription: e.target.value
+                  })
+                }}
+                placeholder="Write freely here"
+              ></textarea>
+
 
             </div>
-
 
             {/** THE FOOD */}
             {/** What makes food in {neighborhood} special? */}
@@ -1876,7 +1930,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
 
               <label>
-                What makes <span className="questionHighlight"> food in  <span className="nhoodName">{neighborhood}</span></span> special?
+                In your opinion, what makes <span className="questionHighlight"> food in  <span className="nhoodName">{neighborhood}</span></span> special?
               </label>
               <textarea
                 className="textarea_text"
@@ -1886,9 +1940,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                     foodCulture: e.target.value,
                   });
                 }}
+                placeholder="Write freely here"
               ></textarea>
             </div>
-
 
             {/** What are the must-try foods in your neighborhood?*/}
             <div
@@ -1901,8 +1955,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               ref={ref => divRefs.current[10] = ref}
             >
               <label>
-                What are the <span className="questionHighlight">must-try foods</span> in
-                <span className="nhoodName"> {neighborhood}? </span>
+                What food and restaurants should people try in <span className="nhoodName"> {neighborhood}? </span>
               </label>
 
               <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
@@ -2240,11 +2293,13 @@ const FormComponent = ({ updateCurrentUser }) => {
            */}
             <div
               className={"mustTryFood foodPrice " +
-                displayQuestion("oncePlaceToEat")}
+                displayQuestion("oncePlaceToEat") +
+                " " +
+                shakie}
               ref={ref => divRefs.current[11] = ref}
             >
               <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
-                <div style={{ display: "fex", alignItems: "center", textAlign: "left" }}>
+                <div style={{ display: "fex", alignItems: "center", lineHeight: "35px" }}>
                   <p style={{ display: "inline" }}>If you were to suggest <span className="questionHighlight">one place to eat</span> in {neighborhood} it would be </p>
                   <input style={{ width: "35%" }}
                     className="completeSentenceInput"
@@ -2259,6 +2314,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                         })
                       }
                     }
+                    placeholder="One word only"
                   >
                   </input>
                   <p style={{ display: "inline" }}> because</p>
@@ -2279,9 +2335,11 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
             </div>
 
-            {/** Which of the following best describes the cost of food in {neighborhood}? */}
+            {/**Food in {neighborhood} tends to be expensive, affordable or both */}
             <div className={"oncePlaceToEat agreeOrDisagreeFood foodPricesQuestion " +
-              displayQuestion("foodPrice")}
+              displayQuestion("foodPrice") +
+              " " +
+              shakie}
               ref={ref => divRefs.current[12] = ref}
             >
 
@@ -2391,7 +2449,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
             </div>
 
-
             {/** Do you agree or disagree withe the following statements: 
            * "food in {neighborhood} is authentic"
           */}
@@ -2492,7 +2549,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
             </div>
 
-
             {/** NIGHTLIFE */}
             {/** How do you descrie the nighlife of {neighborhood}*/}
             <div
@@ -2509,7 +2565,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-21%2018.35.59%20-%20A%20pencil%20sketch%20with%20a%20grain%20effect%2C%20emphasizing%20a%20_night_%20ambiance%20for%20a%20modern%20nightclub%20scene.%20The%20sketch%20should%20depict%20a%20contemporary%20nightclub%20at.png" height="170px"></img>
               </div>
               <label>
-                How do you describe the <span className="questionHighlight">night life</span> of {" "}
+                How would you describe the <span className="questionHighlight">night life</span> of {" "}
                 <span className="nhoodName">{neighborhood}</span>?
               </label>
               <textarea
@@ -2520,6 +2576,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     nightLife: e.target.value,
                   });
                 }}
+                placeholder="Write freely here"
               ></textarea>
 
             </div>
@@ -2608,15 +2665,17 @@ const FormComponent = ({ updateCurrentUser }) => {
             {/** Complete the sentence: "If I had to pick one place to enjoy the nightlife of {neighborhood}, it would be _______, because ________" */}
             <div
               className={"nightLifePlacesRecommendations neighborhoodEvaluationFirstQuestion pickOneNightLifePlace " +
-                displayQuestion("completeTheSentenceNightLifeVenue")}
+                  displayQuestion("completeTheSentenceNightLifeVenue") +
+                  " " +
+                  shakie}
               ref={ref => divRefs.current[16] = ref}
             >
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
 
 
               <div style={{ display: "fex", alignItems: "center", position: "relative" }}>
-                <div style={{ display: "fex", alignItems: "center", textAlign: "left", lineHeight: "40px" }}>
-                  <p style={{ display: "inline" }}>If you had to pick <span className="questionHighlight">one place to enjoy night life </span> in {neighborhood} it would be </p>
+                <div style={{ display: "fex", alignItems: "center", lineHeight: "40px" }}>
+                  <p style={{ display: "inline" }}>If you had to pick <span className="questionHighlight"> one place to enjoy night life </span> in {neighborhood} it would be </p>
                   <input style={{
                     width: '35%',
                     height: '25px'
@@ -2633,6 +2692,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                         })
                       }
                     }
+                    placeholder="One word only"
                   >
                   </input>
                   <p style={{ display: "inline" }}> because</p>
@@ -3291,7 +3351,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                 <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
               </svg>
             </div>
-
 
           </form>
         </div>

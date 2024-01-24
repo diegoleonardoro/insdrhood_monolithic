@@ -38,6 +38,19 @@ input, textarea {
     -webkit-text-size-adjust: none; /* Disable automatic font resizing */
 }
 
+input::placeholder{
+  color: grey;
+  font-style: italic;
+  font-size: small;
+}
+
+textarea::placeholder{
+  color: grey;
+  font-style: italic;
+  font-size: small;
+}
+
+
 .display {
   display: flex;
   flex-direction: column;
@@ -281,7 +294,7 @@ input:focus{
 
 /*In general, how would you describe the neighborhood*/
 .textarea_text {
-  width: 130%;
+  width: 110%;
   height: 40px;
   border-width: 1px;
   border-style: solid;
