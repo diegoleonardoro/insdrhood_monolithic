@@ -449,7 +449,7 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
  */
 export const getNeighborhood = async (req: Request, res: Response) => {
   const { neighborhoodid } = req.params;
-  const db = await getDb();
+  const db = await getDb(); //
   const neighbohoods = db.collection("neighborhoods");
   const neighborhood = await neighbohoods.findOne({ _id: new ObjectId(neighborhoodid) })
   res.status(200).send(neighborhood);

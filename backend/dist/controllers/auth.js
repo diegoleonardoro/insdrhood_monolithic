@@ -334,7 +334,7 @@ exports.getAllNeighborhoods = getAllNeighborhoods;
  */
 const getNeighborhood = async (req, res) => {
     const { neighborhoodid } = req.params;
-    const db = await (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)(); //
     const neighbohoods = db.collection("neighborhoods");
     const neighborhood = await neighbohoods.findOne({ _id: new mongodb_1.ObjectId(neighborhoodid) });
     res.status(200).send(neighborhood);
