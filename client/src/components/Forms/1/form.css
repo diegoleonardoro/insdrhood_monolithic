@@ -32,6 +32,33 @@
   transform: translate(-50%, 0);
 }
 
+.tooltip_ {
+  position: relative;
+  display: none;
+  bottom: -20px; 
+  left: 0;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+
+}
+
+.tooltip_::after {
+  content: "";
+  position: absolute;
+  top: -10px; /* Adjust as needed, should be outside of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+
 input, textarea {
    /* font-size: 16px;  Set a base font size */
     max-height: 100px; /* Set a maximum height for input elements */
@@ -150,7 +177,7 @@ textarea::placeholder{
   visibility: hidden;
 }
 
-.form > div input:not(.inputCheck):not(.foodTypeInput):not(.completeSentenceInput){
+.form > div input:not(.inputCheck):not(.foodTypeInput):not(.completeSentenceInput):not(.textInput){
   position:relative;
   top:10px;
   width:70%;
@@ -605,5 +632,15 @@ input:focus{
 @media screen and (min-height: 1000px) {
     .mainContainer{
       height:70vh;
+    }
+}
+
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
     }
 }

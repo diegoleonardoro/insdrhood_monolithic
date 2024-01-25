@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip'
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
 
@@ -104,6 +106,8 @@ const FormComponent = ({ updateCurrentUser }) => {
   const showFormToResident = liveinNYC === "yes" ? "visible" : "hidden";
   const onlyNYCResidentsSign = liveinNYCSign === "no" ? "block" : "none";
   const [loggedUser, setLoggedUser] = useState(null);
+
+  const [tooltipDisplay, setToolTipDisplay] = useState("none");
 
 
 
@@ -247,6 +251,7 @@ const FormComponent = ({ updateCurrentUser }) => {
     let keyWord;
 
     const currentDiv = divRefs.current[activeIndex];
+    const tooltip = currentDiv.querySelector(".tooltip_");
 
     if (direction === "next") {
 
@@ -260,11 +265,16 @@ const FormComponent = ({ updateCurrentUser }) => {
             const adjsContainer = currentDiv.querySelector(".adjsNhoodContainer") || currentDiv.querySelector(".adjsResContainer");
             if (!adjsContainer) {
 
-              setShakie("apply_shake");
-              const timeout = setTimeout(() => {
-                setShakie('shakieCheck');
-              }, 200);
-              return () => clearTimeout(timeout);
+              console.log("1")
+
+              tooltip.style.display = "inline-block";
+              return;
+
+              // setShakie("apply_shake");
+              // const timeout = setTimeout(() => {
+              //   setShakie('shakieCheck');
+              // }, 200);
+              // return () => clearTimeout(timeout);
             }
           }
 
@@ -273,11 +283,10 @@ const FormComponent = ({ updateCurrentUser }) => {
           if (userInput) {
 
             if (userInput.value === '' && userInput.name !== 'nhoodImages' && userInput.className !== "foodTypeInput") {
-              setShakie("apply_shake");
-              const timeout = setTimeout(() => {
-                setShakie('shakieCheck');
-              }, 200);
-              return () => clearTimeout(timeout);
+
+              tooltip.style.display = "inline-block";
+              return;
+
             }
             else if (userInput.className.indexOf("statementResponseContainerInput") > -1) {
               const inputs = currentDiv.querySelectorAll("input");
@@ -290,12 +299,20 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
 
               if (!isInputChecked) {
-                setShakie("apply_shake");
-                const timeout = setTimeout(() => {
-                  setShakie('shakieCheck');
-                }, 200);
-                return () => clearTimeout(timeout);
+
+                tooltip.style.display = "inline-block";
+                return;
+                // setShakie("apply_shake");
+                // const timeout = setTimeout(() => {
+                //   setShakie('shakieCheck');
+                // }, 200);
+                // return () => clearTimeout(timeout);
+
+
+
               }
+
+
             }
           };
 
@@ -310,11 +327,16 @@ const FormComponent = ({ updateCurrentUser }) => {
           }
           if (!hasValue) {
 
-            setShakie("apply_shake");
-            const timeout = setTimeout(() => {
-              setShakie('shakieCheck');
-            }, 1000);
-            return () => clearTimeout(timeout);
+
+            tooltip.style.display = "inline-block";
+            return;
+
+
+            // setShakie("apply_shake");
+            // const timeout = setTimeout(() => {
+            //   setShakie('shakieCheck');
+            // }, 1000);
+            // return () => clearTimeout(timeout);
           }
 
         }
@@ -799,6 +821,35 @@ const FormComponent = ({ updateCurrentUser }) => {
     setFoodTypesInput("");
   };
 
+
+
+
+
+
+  const changeTooltipDisplay = (e, value) => {
+
+
+    let tooltip = e.target.nextElementSibling;
+
+
+    // If tooltip is undefined, select the nextElementSibling of the parent element
+    if (tooltip.className.indexOf("tooltip_") === -1) {
+      const parent = e.target.parentElement;
+      const grandpa = parent.parentElement;
+      tooltip = grandpa.nextElementSibling;
+    }
+
+    if (tooltip && tooltip.classList.contains('tooltip_')) {
+      tooltip.style.display = value;
+    }
+
+
+  }
+
+
+
+
+
   // this function will add new rows when the user wants to recommend more places
   //  NOT SURE THIS FUNCTION IS DOING ANYTHING OTHER THAN ADDING NEW ROWS 
   const addNewPlace = (list) => {
@@ -978,6 +1029,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   setFormData({ ...formData, neighborhood: e.target.value });
                   localStorage.setItem("neighborhood", JSON.stringify(e.target.value))
                   selectNeighborhoods(e);
+                  changeTooltipDisplay(e, "none");
                 }}
                 onKeyDown={(e) => {
                   highlightNhoods(e);
@@ -988,6 +1040,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                 className={"textInput inputCheck"}
                 ref={neighborhoodInput}
               ></input>
+
+              <div className="tooltip_">This information is relevant </div>
 
               <div
                 ref={neighborhoodsDiv}
@@ -1003,6 +1057,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 })}
               </div>
             </div>
+
 
             {/** How long have you been living in you neighborhood? */}
             <div
@@ -1027,6 +1082,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     timeLivingInNeighborhood: e.target.value,
                   });
+                  changeTooltipDisplay(e, "none");
                 }}
               >
                 <option value="">Choose an option</option>
@@ -1050,6 +1106,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   I do not live in this neighborhood
                 </option>
               </select>
+
+              <div className="tooltip_">This information is relevant </div>
+
             </div>
 
             {/**  THE NEIGHBORHOOD */}
@@ -1106,6 +1165,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                   <div onClick={(e) => {
                     handleOptionSelect('Vibrant', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1122,6 +1182,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Tranquil', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1138,6 +1199,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Safe', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1154,6 +1216,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Cosmopolitan', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1170,6 +1233,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Picturesque', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1186,6 +1250,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Historic', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1202,6 +1267,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Lively', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1218,6 +1284,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Charming', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1234,6 +1301,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Diverse', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1250,6 +1318,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Peaceful', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1266,6 +1335,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Bustling', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1282,6 +1352,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Eclectic', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1298,6 +1369,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Welcoming', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1314,6 +1386,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Serene', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1330,6 +1403,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Quaint', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1346,6 +1420,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Thriving', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1362,6 +1437,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Family-oriented', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1378,6 +1454,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Trendy', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1394,6 +1471,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Gritty', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1410,6 +1488,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Up-and-coming', 'nhood', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1428,6 +1507,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                 </div>
               </div>
 
+              <div className="tooltip_">Your opinion on this is important. </div>
+
             </div>
 
             {/**  “Complete the sentence:  ‘The most unique thing about {neighborhood} is ________”*/}
@@ -1437,21 +1518,30 @@ const FormComponent = ({ updateCurrentUser }) => {
               shakie}
               ref={ref => divRefs.current[4] = ref}
             >
-              <div style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)" }}>
-                <span className="questionHighlight">The most unique thing</span> about {neighborhood} is:
-                <input
-                  className="completeSentenceInput"
-                  onChange={
-                    (e) => {
-                      setFormData({
-                        ...formData,
-                        mostUniqueThingAboutNeighborhood: e.target.value
-                      })
-                    }
-                  }
-                  placeholder="Only one word"
-                ></input>
+
+
+              <div>
+                The most unique thing about {neighborhood} is:
               </div>
+
+              <input
+                className="textInput"
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData,
+                      mostUniqueThingAboutNeighborhood: e.target.value
+                    })
+                    changeTooltipDisplay(e, "none");
+                  }
+
+
+                }
+                placeholder="Only one word"
+              ></input>
+              <div className="tooltip_">This information is relevant </div>
+
+
 
             </div>
 
@@ -1462,22 +1552,23 @@ const FormComponent = ({ updateCurrentUser }) => {
               shakie}
               ref={ref => divRefs.current[5] = ref}
             >
-
-              <div >
-                People should visit {neighborhood} <span className="questionHighlight">if they want:</span>
-                <input
-                  className="completeSentenceInput"
-                  onChange={
-                    (e) => {
-                      setFormData({
-                        ...formData, peopleShouldVisitNeighborhoodIfTheyWant: e.target.value
-                      })
-                    }
-                  }
-                  placeholder="Only one word"
-                ></input>
+              <div>
+                People should visit {neighborhood} if they want:
               </div>
 
+              <input
+                className="textInput"
+                onChange={
+                  (e) => {
+                    setFormData({
+                      ...formData, peopleShouldVisitNeighborhoodIfTheyWant: e.target.value
+                    })
+                    changeTooltipDisplay(e, "none");
+                  }
+                }
+                placeholder="Only one word"
+              ></input>
+              <div className="tooltip_">This information is relevant </div>
             </div>
 
             {/** In general, how would you describe {neighborhood}? as a neighborhood */}
@@ -1503,11 +1594,16 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     neighborhoodDescription: e.target.value,
                   });
+                  changeTooltipDisplay(e, "none");
                 }}
 
                 placeholder="Write freely here"
               ></textarea>
+
+              <div className="tooltip_"> Your opinion on this is important. </div>
             </div>
+
+
 
             {/**  THE RESIDENTS */}
             {/** Adjectives to describe the typical resident of the neighborhood */}
@@ -1564,6 +1660,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                   <div onClick={(e) => {
                     handleOptionSelect('Friendly', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1580,6 +1677,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Welcoming', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1596,6 +1694,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Harmonious', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1612,6 +1711,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Inclusive', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1628,6 +1728,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Active', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1644,6 +1745,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Caring', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1660,6 +1762,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Hospitable', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1676,6 +1779,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Collaborative', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1692,6 +1796,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Supportive', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1708,6 +1813,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Community-oriented', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1724,6 +1830,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Lively', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1740,6 +1847,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Neighborly', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1756,6 +1864,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Respectful', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1772,6 +1881,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Progressive', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1788,6 +1898,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Traditional', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1804,6 +1915,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('United', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1820,6 +1932,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Empowered', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1836,6 +1949,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Empathetic', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1852,6 +1966,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Cohesive', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1868,6 +1983,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                   <div onClick={(e) => {
                     handleOptionSelect('Involved', 'resident', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1888,7 +2004,11 @@ const FormComponent = ({ updateCurrentUser }) => {
 
               </div>
 
+              <div className="tooltip_">Your opinion on this is important. </div>
+
             </div>
+
+
 
             {/** In general, the typical reisdent of __ can be described as: "____" */}
             <div
@@ -1906,10 +2026,11 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     typicalResidentDescription: e.target.value
                   })
+                  changeTooltipDisplay(e, "none");
                 }}
                 placeholder="Write freely here"
               ></textarea>
-
+              <div className="tooltip_"> Your opinion on this is important. </div>
 
             </div>
 
@@ -1939,10 +2060,13 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     foodCulture: e.target.value,
                   });
+                  changeTooltipDisplay(e, "none");
                 }}
                 placeholder="Write freely here"
               ></textarea>
+              <div className="tooltip_"> Your opinion on this is important. </div>
             </div>
+
 
             {/** What are the must-try foods in your neighborhood?*/}
             <div
@@ -1970,6 +2094,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                   <div onClick={(e) => {
                     handleOptionSelect('Italian', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -1984,9 +2109,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Italian
                   </div>
-
                   <div onClick={(e) => {
                     handleOptionSelect('Mexican', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2001,10 +2126,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Mexican
                   </div>
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('Chinese', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2019,11 +2143,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Chinese
                   </div>
-
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('Indian', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2038,10 +2160,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Indian
                   </div>
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('Japanese', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2056,11 +2177,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Japanese
                   </div>
-
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('Mediterranean', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2075,11 +2194,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Mediterranean
                   </div>
-
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('Thai', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2094,11 +2211,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Thai
                   </div>
-
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('French', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2113,10 +2228,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     French
                   </div>
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('American', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2131,10 +2245,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     American
                   </div>
-
-
                   <div onClick={(e) => {
                     handleOptionSelect('Middle Eastern', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2149,9 +2262,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Middle Eastern
                   </div>
-
                   <div onClick={(e) => {
                     handleOptionSelect('Greek', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2166,9 +2279,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Greek
                   </div>
-
                   <div onClick={(e) => {
                     handleOptionSelect('Vietnamese', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2183,9 +2296,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Vietnamese
                   </div>
-
                   <div onClick={(e) => {
                     handleOptionSelect('Korean', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
                   }}
                     style={{
                       margin: "4px",
@@ -2200,9 +2313,10 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Korean
                   </div>
-
-
-                  <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }}>
+                  <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }} onChange={(e) => {
+                    handleOptionSelect('Korean', 'foodType', e);
+                    changeTooltipDisplay(e, "none");
+                  }} >
                     {/* Input field for user to type an option */}
                     <input
                       className="foodTypeInput"
@@ -2221,6 +2335,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
                 </div>
               </div>
+
+              <div className="tooltip_">Your opinion on this is important. </div>
 
               {foodTypesSelectedOpts.length > 0 && (
                 <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{
@@ -2312,11 +2428,13 @@ const FormComponent = ({ updateCurrentUser }) => {
                             assessment: e.target.value
                           }
                         })
+                        changeTooltipDisplay(e, "none");
                       }
                     }
                     placeholder="One word only"
                   >
                   </input>
+
                   <p style={{ display: "inline" }}> because</p>
                   <input style={{ width: "35%" }}
                     className="completeSentenceInput"
@@ -2332,7 +2450,10 @@ const FormComponent = ({ updateCurrentUser }) => {
                       }}
                   ></input>
                 </div>
+
               </div>
+              <div style={{ marginTop: "30px" }} className="tooltip_">Your opinion on this is relevant </div>
+
             </div>
 
             {/**Food in {neighborhood} tends to be expensive, affordable or both */}
@@ -2361,6 +2482,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           assessment: e.target.value
                         }
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2388,6 +2510,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           assessment: e.target.value
                         }
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2415,6 +2538,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           assessment: e.target.value
                         }
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2427,6 +2551,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </label>
                 </div>
               </div>
+
+              <div className="tooltip_">Your opinion on this is relevant </div>
 
               <div
                 ref={foodPriceExplanationRef}
@@ -2459,6 +2585,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               <h3 style={{ textAlign: "center", marginBottom: '10px', fontWeight: 'bold' }}>Agree or disagree: </h3>
               <div>
                 <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
+
                 <div style={{ height: "30px", width: "100%", borderBottom: "1px dotted black" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <div className="statementResponseContainer">
@@ -2477,7 +2604,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                                 assessment: e.target.value
                               }
                             })
+                            changeTooltipDisplay(e, "none");
                           }
+
                         }
                       ></input>
                       <label
@@ -2508,6 +2637,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                                 assessment: e.target.value
                               }
                             })
+                            changeTooltipDisplay(e, "none");
                           }
                         }
                       ></input>
@@ -2522,8 +2652,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                     </div>
 
                   </div>
-
+                  <div className="tooltip_">Your opinion is important</div>
                 </div>
+
 
                 <div
                   ref={foodDiversityExplanationRef}
@@ -2546,11 +2677,14 @@ const FormComponent = ({ updateCurrentUser }) => {
                       }}
                   ></input>
                 </div>
+
               </div>
             </div>
 
+
+
             {/** NIGHTLIFE */}
-            {/** How do you descrie the nighlife of {neighborhood}*/}
+            {/** How do you describe the nighlife of {neighborhood}*/}
             <div
               className={
                 "agreeOrDisagreeFood nightLifePlacesRecommendations nightLifeRecommendations nightlifeQuestions " +
@@ -2575,11 +2709,15 @@ const FormComponent = ({ updateCurrentUser }) => {
                     ...formData,
                     nightLife: e.target.value,
                   });
+
+                  changeTooltipDisplay(e, "none"); changeTooltipDisplay(e, "none"); changeTooltipDisplay(e, "none");
                 }}
                 placeholder="Write freely here"
               ></textarea>
-
+              <div className="tooltip_">Your opinion is important</div>
             </div>
+
+
 
             {/** Are there any nightlife venues (bars, restaurants, nighclubs) that youd like to  */}
             <div
@@ -2665,9 +2803,9 @@ const FormComponent = ({ updateCurrentUser }) => {
             {/** Complete the sentence: "If I had to pick one place to enjoy the nightlife of {neighborhood}, it would be _______, because ________" */}
             <div
               className={"nightLifePlacesRecommendations neighborhoodEvaluationFirstQuestion pickOneNightLifePlace " +
-                  displayQuestion("completeTheSentenceNightLifeVenue") +
-                  " " +
-                  shakie}
+                displayQuestion("completeTheSentenceNightLifeVenue") +
+                " " +
+                shakie}
               ref={ref => divRefs.current[16] = ref}
             >
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
@@ -2690,11 +2828,13 @@ const FormComponent = ({ updateCurrentUser }) => {
                             assessment: e.target.value
                           }
                         })
+                        changeTooltipDisplay(e, "none");
                       }
                     }
                     placeholder="One word only"
                   >
                   </input>
+
                   <p style={{ display: "inline" }}> because</p>
                   <input style={{
                     width: '35%',
@@ -2715,6 +2855,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   ></input>
                 </div>
               </div>
+              <div className="tooltip_">Your opinion is important</div>
             </div>
 
             {/** GENERAL QUESTIONS */}
@@ -2761,6 +2902,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2790,6 +2932,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2819,6 +2962,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2855,6 +2999,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                   ></input>
                 </div>
               </div>
+
+              <div className="tooltip_">This information is important</div>
+
             </div>
 
             {/** True or false statements, having pets in your neighborhood is convenient */}
@@ -2874,7 +3021,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                     "Having pets in <span className="nhoodName questionHighlight">{neighborhood}</span> is convenient{" "}."
                   </span>
                 </div>
-
                 <div className="statementResponseContainer">
                   <input
                     type="radio"
@@ -2893,6 +3039,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2903,7 +3050,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                     True
                   </label>
                 </div>
-
                 <div className="statementResponseContainer">
                   <input
                     type="radio"
@@ -2922,6 +3068,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2932,7 +3079,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                     Unsure
                   </label>
                 </div>
-
                 <div className="statementResponseContainer">
                   <input
                     type="radio"
@@ -2951,6 +3097,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -2961,7 +3108,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                     False
                   </label>
                 </div>
-
                 <div
                   ref={(el) => (nhoodExplanationRef.current["pets"] = el)}
                   className="elaborateNhoodEval"
@@ -2984,8 +3130,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     }}
                   ></input>
                 </div>
-
               </div>
+              <div className="tooltip_">This information is important</div>
             </div>
 
             {/** True or false statements, your neighborhood is safe */}
@@ -3024,6 +3170,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -3053,6 +3200,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -3082,6 +3230,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -3115,7 +3264,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                     }}
                   ></input>
                 </div>
+
               </div>
+              <div className="tooltip_">Your opinion is important</div>
             </div>
 
             {/** True or false statements, your neighborhood offer opportunities for meeting new people */}
@@ -3154,6 +3305,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -3183,6 +3335,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -3212,6 +3365,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                           },
                         },
                       });
+                      changeTooltipDisplay(e, "none");
                     }}
                   ></input>
                   <label
@@ -3248,6 +3402,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   ></input>
                 </div>
               </div>
+              <div className="tooltip_">Your opinion is important</div>
             </div>
 
             {/**PICTURES */}
