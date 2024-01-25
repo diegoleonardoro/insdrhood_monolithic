@@ -29,20 +29,33 @@ const client = new mongodb_1.MongoClient(uri, {
         deprecationErrors: true,
     }
 });
+// let dbConnection: Db;
 let dbConnection;
 const connectToServer = async () => {
     try {
         await client.connect();
-        dbConnection = client.db("insiderhood");
         console.log("Connected to MongoDB");
+        return client.db("insiderhood");
     }
     catch (error) {
         console.error(error);
+        throw error; // Rethrow the error to be handled by the caller
     }
 };
-connectToServer();
+dbConnection = connectToServer();
 const getDb = () => dbConnection;
 exports.getDb = getDb;
+// const connectToServer = async () => {
+//   try {
+//     await client.connect();
+//     dbConnection = client.db("insiderhood")
+//     console.log("Connected to MongoDB")
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
+// connectToServer();
+// export const getDb = (): Db => dbConnection;
 /** -------- -------- ---------- -------- -------- -------- */
 const app = (0, express_1.default)();
 const PORT = 4000;

@@ -28,7 +28,7 @@ export const signup = async (req: Request, res: Response) => {
 
   const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
 
-  const db = getDb();
+  const db = await getDb();
   const users = db.collection("users");
   const existingUser = await users.findOne({ email });
 
@@ -107,7 +107,7 @@ export const login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
 
-  const db = getDb();
+  const db = await getDb();
   const users = db.collection("users");
   const existingUser = await users.findOne({ email });
 
@@ -181,7 +181,7 @@ export const updateUserData = async (req: Request, res: Response) => {
   const { id } = req.params;
   let updates = req.body;
 
-  const db = getDb();
+  const db = await getDb();
   const users = db.collection("users");
 
   // if there is a "password" property in the updates object, then hash the password:
@@ -265,7 +265,7 @@ export const updateUserData = async (req: Request, res: Response) => {
 export const verifyemail = async (req: Request, res: Response) => {
 
   const emailtoken = req.params.emailtoken;
-  const db = getDb();
+  const db = await getDb();
   const users = db.collection("users");
 
 
@@ -334,8 +334,6 @@ export const uploadFile = async (req: Request, res: Response) => {
     : randomUUID
     }/${neighborhood}/${randomUUID_imageIdentifier}.${imageType}`;
 
-
-
   s3.getSignedUrlPromise(
     "putObject",
     {
@@ -358,7 +356,7 @@ export const uploadFile = async (req: Request, res: Response) => {
  */
 export const saveNeighborhoodData = async (req: Request, res: Response) => {
 
-  const db = getDb();
+  const db = await getDb();
   const users = db.collection("users");
 
   let user
@@ -391,7 +389,7 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
 
   const { id } = req.params;
   let updates = req.body;
-  const db = getDb();
+  const db = await getDb();
   const neighborhoods = db.collection("neighborhoods");
   let updateQuery: updateQuery = {};
 
@@ -438,7 +436,7 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
   // const allNeighborhoods = await Neighborhood.find({});
-  const db = getDb();
+  const db = await getDb();
   const neighborhoodsCollection = db.collection("neighborhoods")
   const neighborhoods = await neighborhoodsCollection.find({}).toArray();
   res.status(200).send(neighborhoods);
@@ -451,7 +449,7 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
  */
 export const getNeighborhood = async (req: Request, res: Response) => {
   const { neighborhoodid } = req.params;
-  const db = getDb();
+  const db = await getDb();
   const neighbohoods = db.collection("neighborhoods");
   const neighborhood = await neighbohoods.findOne({ _id: new ObjectId(neighborhoodid) })
   res.status(200).send(neighborhood);

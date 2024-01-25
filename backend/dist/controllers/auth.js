@@ -20,7 +20,7 @@ const emailVerification_1 = require("../services/emailVerification");
 */
 const signup = async (req, res) => {
     const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const users = db.collection("users");
     const existingUser = await users.findOne({ email });
     // for this erorr to be thrown, there has to be a saved user with email that came in the request body. 
@@ -83,7 +83,7 @@ exports.signup = signup;
  */
 const login = async (req, res) => {
     const { email, password } = req.body;
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const users = db.collection("users");
     const existingUser = await users.findOne({ email });
     if (!existingUser) {
@@ -139,7 +139,7 @@ exports.signout = signout;
 const updateUserData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const users = db.collection("users");
     // if there is a "password" property in the updates object, then hash the password:
     if (updates.password) {
@@ -195,7 +195,7 @@ exports.updateUserData = updateUserData;
  */
 const verifyemail = async (req, res) => {
     const emailtoken = req.params.emailtoken;
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const users = db.collection("users");
     // find the user with the email token:
     const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
@@ -258,7 +258,7 @@ exports.uploadFile = uploadFile;
  * @access public
  */
 const saveNeighborhoodData = async (req, res) => {
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const users = db.collection("users");
     let user;
     if (req.currentUser) {
@@ -284,7 +284,7 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateNeighborhoodData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const neighborhoods = db.collection("neighborhoods");
     let updateQuery = {};
     //Handling updates for nested objects:
@@ -321,7 +321,7 @@ exports.updateNeighborhoodData = updateNeighborhoodData;
  */
 const getAllNeighborhoods = async (req, res) => {
     // const allNeighborhoods = await Neighborhood.find({});
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const neighborhoodsCollection = db.collection("neighborhoods");
     const neighborhoods = await neighborhoodsCollection.find({}).toArray();
     res.status(200).send(neighborhoods);
@@ -334,7 +334,7 @@ exports.getAllNeighborhoods = getAllNeighborhoods;
  */
 const getNeighborhood = async (req, res) => {
     const { neighborhoodid } = req.params;
-    const db = (0, index_1.getDb)();
+    const db = await (0, index_1.getDb)();
     const neighbohoods = db.collection("neighborhoods");
     const neighborhood = await neighbohoods.findOne({ _id: new mongodb_1.ObjectId(neighborhoodid) });
     res.status(200).send(neighborhood);

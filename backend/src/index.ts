@@ -23,6 +23,8 @@ dotenv.config({ path: envPath });
 
 /** -------- -------- MongoDB Connection -------- -------- */
 const uri = "mongodb+srv://diegoleoro:r85i3VAYY6k8UVDs@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority";
+
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -31,18 +33,38 @@ const client = new MongoClient(uri, {
   }
 });
 
-let dbConnection: Db;
+// let dbConnection: Db;
+
+let dbConnection: Promise<Db>;
+
 const connectToServer = async () => {
   try {
     await client.connect();
-    dbConnection = client.db("insiderhood")
-    console.log("Connected to MongoDB")
+    console.log("Connected to MongoDB");
+    return client.db("insiderhood");
   } catch (error) {
-    console.error(error)
+    console.error(error);
+    throw error; // Rethrow the error to be handled by the caller
   }
-}
-connectToServer();
-export const getDb = (): Db => dbConnection;
+};
+
+dbConnection = connectToServer();
+
+export const getDb = () => dbConnection;
+
+// const connectToServer = async () => {
+//   try {
+//     await client.connect();
+//     dbConnection = client.db("insiderhood")
+//     console.log("Connected to MongoDB")
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
+// connectToServer();
+// export const getDb = (): Db => dbConnection;
+
+
 /** -------- -------- ---------- -------- -------- -------- */
 
 

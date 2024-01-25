@@ -265,8 +265,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             const adjsContainer = currentDiv.querySelector(".adjsNhoodContainer") || currentDiv.querySelector(".adjsResContainer");
             if (!adjsContainer) {
 
-              console.log("1")
-
               tooltip.style.display = "inline-block";
               return;
 
@@ -275,6 +273,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               //   setShakie('shakieCheck');
               // }, 200);
               // return () => clearTimeout(timeout);
+
             }
           }
 
@@ -382,7 +381,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
         // The following if statement will check if the user has clicked the last question
-        if (activeIndex === 21) {
+        if (activeIndex === 20) {
 
           // make request to save the images:
           const imagesUrls = [];
@@ -1058,7 +1057,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               </div>
             </div>
 
-
             {/** How long have you been living in you neighborhood? */}
             <div
               className={
@@ -1535,9 +1533,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     changeTooltipDisplay(e, "none");
                   }
 
-
                 }
-                placeholder="Only one word"
+
               ></input>
               <div className="tooltip_">This information is relevant </div>
 
@@ -1566,7 +1563,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                     changeTooltipDisplay(e, "none");
                   }
                 }
-                placeholder="Only one word"
+
               ></input>
               <div className="tooltip_">This information is relevant </div>
             </div>
@@ -1603,13 +1600,11 @@ const FormComponent = ({ updateCurrentUser }) => {
               <div className="tooltip_"> Your opinion on this is important. </div>
             </div>
 
-
-
             {/**  THE RESIDENTS */}
             {/** Adjectives to describe the typical resident of the neighborhood */}
             <div
               className={
-                "describeNeighborhood completeTheSentenceStereoResident nhoodAdjectivesFlag " +
+                "describeNeighborhood describeFoodScene nhoodAdjectivesFlag stereotypicalResident " +
                 displayQuestion("residentAdjectives") +
                 " " +
                 shakie
@@ -2011,7 +2006,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
             {/** In general, the typical reisdent of __ can be described as: "____" */}
-            <div
+            {/* <div
               className={"residentAdjectives describeFoodScene stereotypicalResident " + displayQuestion("completeTheSentenceStereoResident") +
                 " " +
                 shakie} ref={ref => divRefs.current[8] = ref}>
@@ -2032,18 +2027,21 @@ const FormComponent = ({ updateCurrentUser }) => {
               ></textarea>
               <div className="tooltip_"> Your opinion on this is important. </div>
 
-            </div>
+            </div> */}
+
+
+
 
             {/** THE FOOD */}
             {/** What makes food in {neighborhood} special? */}
             <div
               className={
-                "completeTheSentenceStereoResident mustTryFood foodRecommendations foodQuestion " +
+                "residentAdjectives mustTryFood foodRecommendations foodQuestion " +
                 displayQuestion("describeFoodScene") +
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[9] = ref}
+              ref={ref => divRefs.current[8] = ref}
             >
               <div className="introHeader" ref={letsTalkAboutFoodRef}>
                 <h4> Let's talk about food </h4>
@@ -2067,7 +2065,6 @@ const FormComponent = ({ updateCurrentUser }) => {
               <div className="tooltip_"> Your opinion on this is important. </div>
             </div>
 
-
             {/** What are the must-try foods in your neighborhood?*/}
             <div
               className={
@@ -2076,8 +2073,14 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[10] = ref}
+              ref={ref => divRefs.current[9] = ref}
             >
+
+              <div className="introHeader" ref={letsTalkAboutFoodRef}>
+                <h4> Let's talk about food </h4>
+                <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px"></img>
+              </div>
+              
               <label>
                 What food and restaurants should people try in <span className="nhoodName"> {neighborhood}? </span>
               </label>
@@ -2412,7 +2415,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("oncePlaceToEat") +
                 " " +
                 shakie}
-              ref={ref => divRefs.current[11] = ref}
+              ref={ref => divRefs.current[10] = ref}
             >
               <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
                 <div style={{ display: "fex", alignItems: "center", lineHeight: "35px" }}>
@@ -2461,7 +2464,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("foodPrice") +
               " " +
               shakie}
-              ref={ref => divRefs.current[12] = ref}
+              ref={ref => divRefs.current[11] = ref}
             >
 
               <h3 style={{ marginBottom: '20px', fontWeight: 'bold' }}>Food in {neighborhood} tends to be: </h3>
@@ -2580,7 +2583,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           */}
             <div className={"foodPrice describeNighLife agreeOrDisagreeFoodQuestions " +
               displayQuestion("agreeOrDisagreeFood")}
-              ref={ref => divRefs.current[13] = ref}
+              ref={ref => divRefs.current[12] = ref}
             >
               <h3 style={{ textAlign: "center", marginBottom: '10px', fontWeight: 'bold' }}>Agree or disagree: </h3>
               <div>
@@ -2692,7 +2695,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[14] = ref}
+              ref={ref => divRefs.current[13] = ref}
             >
               <div className="introHeader" ref={letsTalkAboutNightLifeRef}>
                 <h4> Let's talk about the night life </h4>
@@ -2725,7 +2728,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 "describeNighLife completeTheSentenceNightLifeVenue nightLifeRecommendedPlaces " +
                 displayQuestion("nightLifePlacesRecommendations")
               }
-              ref={ref => divRefs.current[15] = ref}
+              ref={ref => divRefs.current[14] = ref}
             >
 
               <label>
@@ -2806,7 +2809,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("completeTheSentenceNightLifeVenue") +
                 " " +
                 shakie}
-              ref={ref => divRefs.current[16] = ref}
+              ref={ref => divRefs.current[15] = ref}
             >
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
 
@@ -2867,7 +2870,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[17] = ref}
+              ref={ref => divRefs.current[16] = ref}
             >
               <div ref={letsTalkAboutGeneralInfo} className="introHeader" >
                 <h4> Let's talk about some general information </h4>
@@ -3012,7 +3015,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[18] = ref}
+              ref={ref => divRefs.current[17] = ref}
             >
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
@@ -3142,7 +3145,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[19] = ref}
+              ref={ref => divRefs.current[18] = ref}
             >
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
@@ -3277,7 +3280,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[20] = ref}
+              ref={ref => divRefs.current[19] = ref}
             >
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
@@ -3412,7 +3415,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               // +  (loggedUser ? "submit " : "personalInfo ")
               + displayQuestion("neighborhoodPictures")
             }
-              ref={ref => divRefs.current[21] = ref}
+              ref={ref => divRefs.current[20] = ref}
             >
               <label htmlFor="nhoodImagesInput">
                 Do you have any <span className="questionHighlight">pictures of <span className="nhoodName"> {neighborhood}</span></span> to share?
@@ -3428,7 +3431,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " contactInfo " +
                 shakie
               }
-              ref={ref => divRefs.current[22] = ref}
+              ref={ref => divRefs.current[21] = ref}
             >
               {showUserDataAlert && sendInfoWithoutDataAlert}
 
