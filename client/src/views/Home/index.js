@@ -5,14 +5,16 @@ import Table from 'react-bootstrap/Table';
 import axios from "axios";
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
+import Spinner from 'react-bootstrap/Spinner';
+
 
 function Home({ currentuser, updateCurrentUser }) {
 
   const navigate = useNavigate();
-
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
-
   const [user, setUser] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
 
@@ -43,7 +45,7 @@ function Home({ currentuser, updateCurrentUser }) {
           // Handle error here
         }
 
-        
+
       };
       logUserWithToken();
     } else {
@@ -66,22 +68,13 @@ function Home({ currentuser, updateCurrentUser }) {
       } catch (error) {
         console.error("Failed to fetch neighborhoods", error);
         // Handle the error state appropriately here
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     })();
 
   }, []);
 
-
-  // useEffect(() => {
-  //   if (user !== null) {
-  //     // DIRECT THE USER TO RESPOND THE FORM 
-  //     updateCurrentUser(user);
-  //     // setTimeout(() => {
-  //     //   navigate(`/`);
-  //     // }, 2000);
-  //   } else {
-  //   }
-  // }, [])//user
 
 
   const neighborhoodsList = neighborhoodsData.map((neighborhood) => {
@@ -102,6 +95,15 @@ function Home({ currentuser, updateCurrentUser }) {
 
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error}</div>;
+
+  if (isLoading) {
+    return (
+      
+        <Spinner style={{position:"relative", height:"100px", width:"100px", top:"50px"}} animation="grow" />
+      
+    )
+
+  }
 
   return (
     <Table striped bordered hover size="sm" style={{ width: "90%", margin: "50px auto" }} >
