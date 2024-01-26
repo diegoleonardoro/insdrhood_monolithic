@@ -74,11 +74,24 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
               {neighborhood && (
                 <div className="introContainer" >
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + nhoodName} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={nhoodName + " can be described as follows: "} content={removeTrailingPeriod(neighborhood.neighborhoodDescription.toLowerCase()) + "."} objectKey="neighborhoodDescription" />
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={nhoodName + " can be described as follows: "} content={
+
+                    <p style={{ display: 'inline', fontStyle:'italic' }}>
+                      {removeTrailingPeriod(neighborhood.neighborhoodDescription.toLowerCase()) + "."}
+                    </p>
+
+                  } objectKey="neighborhoodDescription" />
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The neighborhood has a vibe that's "} adjectives={neighborhood.neighborhoodAdjectives} objectKey="neighborhoodAdjectives" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would say the most unique thing about " + nhoodName + " is "} content={removeTrailingPeriod(neighborhood.mostUniqueThingAboutNeighborhood.toLowerCase()) + "."
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would say the most unique thing about " + nhoodName + " is "} content={
+                    <strong style={{ fontWeight: "bold", backgroundColor: "yellow", padding: "4px" }}>
+                      {removeTrailingPeriod(neighborhood.mostUniqueThingAboutNeighborhood.toLowerCase()) + "."}
+                    </strong>
+
                   } objectKey="mostUniqueThingAboutNeighborhood" />
-                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"People should visit " + nhoodName + " if they want "} content={removeTrailingPeriod(neighborhood.peopleShouldVisitNeighborhoodIfTheyWant.toLowerCase()) + "."
+                  <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"People should visit " + nhoodName + " if they want "} content={
+                    <strong style={{ fontWeight: "bold", backgroundColor: "yellow", padding: "4px" }}>
+                      {removeTrailingPeriod(neighborhood.peopleShouldVisitNeighborhoodIfTheyWant.toLowerCase()) + "."}
+                    </strong>
                   } objectKey="peopleShouldVisitNeighborhoodIfTheyWant" />
                 </div>
               )}
@@ -201,6 +214,8 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
             )}
           </div>
 
+
+          {/** STATEMENTS */}
           <div className="containerNhoodItems" >
             {neighborhood && (
               <div className="assessmentsContainer">

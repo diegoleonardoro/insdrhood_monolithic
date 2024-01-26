@@ -401,7 +401,7 @@ const NeighborhoodEditableDiv = ({
       <Form.Control
         name="assessment"
         id={key}
-        onChange={(e) => handleChange(e, index)} // <<<<<<----------------------------------------------------------------------------
+        onChange={(e) => handleChange(e, index)}
         type="text"
         value={object["assessment"]}
         style={inputStyle}
@@ -415,7 +415,7 @@ const NeighborhoodEditableDiv = ({
           <Form.Control
             name="explanation"
             id={key}
-            onChange={(e) => handleChange(e, index)} // <<<<<<----------------------------------------------------------------------------
+            onChange={(e) => handleChange(e, index)}
             type="text"
             value={object["explanation"]}
           // style={inputStyle}
@@ -424,21 +424,25 @@ const NeighborhoodEditableDiv = ({
       )
     );
 
-
-
-
     const renderNonEditableContent = (key, object, assessmentsTexts) => {
       const explanation = object.hasOwnProperty('explanation') ? `, because ${object['explanation']}` : "";
       return (
         <div>
-          {`${assessmentsTexts[key][0]}${object["assessment"]}${assessmentsTexts[key][1] || ''}${explanation }.`}
+          <p style={{display:"inline", backgroundColor:"yellow", fontWeight:"bold", padding:"3px"}}>
+            {
+              `${assessmentsTexts[key][0]}${" "}${object["assessment"]}${assessmentsTexts[key][1] || ''}`
+            }
+          </p>
+
+          {
+            `${explanation}.`
+          }
         </div>
       );
     };
 
 
     const renderObject = (key, object, editing, index, handleChange) => {
-
 
       const assessmentText = assessmentsTexts[key] ? assessmentsTexts[key][0] : '';
       const additionalText = assessmentsTexts[key] && assessmentsTexts[key][1] ? assessmentsTexts[key][1] : '';
@@ -670,10 +674,7 @@ const NeighborhoodEditableDiv = ({
             </div>
 
 
-
           ) : (
-
-
 
 
             <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
@@ -711,11 +712,6 @@ const NeighborhoodEditableDiv = ({
                   }
                 }
 
-                // console.log("recommendationsArrayOfObjectsHistory", recommendationsArrayOfObjectsHistory)
-                // console.log("item.assessment", item.assessment)
-                // console.log("item.explanation", item.explanation)
-
-
                 return (
                   <div key={index} >
                     {objectKey === 'recommendedFoodTypes' ? (
@@ -727,11 +723,9 @@ const NeighborhoodEditableDiv = ({
                               {` GO to ${removeTrailingPeriod(item.explanation)}.`}
                             </span>
                           )}</p>
-
-                        
                       </div>
                     ) : objectKey === 'nightLifeRecommendations' ? (
-                      <div style={{textAlign:"start"}}>
+                      <div style={{ textAlign: "start" }}>
                         <p className='nhoodRecommendationText_'>{text + item.assessment.trimEnd()}
                           {item.explanation && (
                             <span className='nhoodRecommendationText'  >
@@ -745,7 +739,6 @@ const NeighborhoodEditableDiv = ({
                 );
               })}
             </div>
-
 
           )}
         </div>
@@ -783,9 +776,16 @@ const NeighborhoodEditableDiv = ({
 
             ) : null}
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-              {complementaryText[0] + objectData_.assessment.toLowerCase()}  {objectData_.explanation !== "" ? (
+              {<>
+                {complementaryText[0]}
+                <p style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
+                  {objectData_.assessment.toLowerCase()}
+                </p>
+              </>
+              }
+              {objectData_.explanation !== "" ? (
                 <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                  {complementaryText[1] + objectData_.explanation.toLowerCase()+"."}
+                  {", " + complementaryText[1] + objectData_.explanation.toLowerCase() + "."}
                 </span>
               ) : (
                 null
