@@ -382,6 +382,24 @@ input:focus{
   background-color: #f1948a;
 }
 
+
+.nightLifeDescription{
+  background-color: #f8f9fa;
+}
+
+.nightLifeDescription:checked + .nightLifeDescription {
+  background-color: #7dcea0;
+}
+
+.elaborateNightLifeEval{
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  position: relative;
+  animation: fallFromTop 0.6s ease-in-out;
+}
+
 .elaborateNhoodEval {
   display: none;
   align-items: center;

@@ -101,6 +101,7 @@ const FormComponent = ({ updateCurrentUser }) => {
   const nhoodExplanationRef = useRef([]);
   const foodPriceExplanationRef = useRef(null);
   const foodDiversityExplanationRef = useRef(null);
+  const nightLifeExplanationRef = useRef(null);
   const neighborhoodInput = useRef();
   const favoritePlacesContainerRef = useRef();
   const showFormToResident = liveinNYC === "yes" ? "visible" : "hidden";
@@ -380,8 +381,30 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
 
 
+        if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
+
+          const placeName = nightLifeRecommendationsRef.current.placeName.value;
+          const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
+
+          if (placeName === "" && placeDescription === "") {
+            return;
+          }
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            nightLifeRecommendations: [
+              ...prevFormData.nightLifeRecommendations,
+              {
+                assessment: nightLifeRecommendationsRef.current.placeName.value,
+                explanation: nightLifeRecommendationsRef.current.placeDescription.value,
+              },
+            ],
+          }));
+        }
+
+
+
         // The following if statement will check if the user has clicked the last question
-        if (activeIndex === 20) {
+        if (activeIndex === 19) {
 
           // make request to save the images:
           const imagesUrls = [];
@@ -436,6 +459,8 @@ const FormComponent = ({ updateCurrentUser }) => {
             return;
           };
 
+
+
           // this state needs to be updated to save a new user in the database:
           setNewUserData(prevData => ({
             ...prevData,
@@ -452,6 +477,9 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
 
         };
+
+
+
 
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
         keyWord = currentDiv.className.split(" ")[1];
@@ -499,10 +527,17 @@ const FormComponent = ({ updateCurrentUser }) => {
     foodPriceExplanationRef.current.style.display = "flex"
   }
 
+
   // This event hanlder will be triggered when the user is responding the questions about how authentic and diverse food is in their neighborhood. It will show an input asking users to expand on the option that they selected. 
   const foodAuthenticityandDiversityHandler = () => {
     foodDiversityExplanationRef.current.style.display = "flex"
+  };
+
+  // This event handler will be trigered when the user is responding the question about how they would describe the night life of their neighborhood 
+  const nightLifeDescriptionHandler = () => {
+    nightLifeExplanationRef.current.style.display = 'flex'
   }
+
 
   const displayQuestion = (keyWord) => {
     if (displayKeyWord.indexOf(keyWord) > -1) {
@@ -822,9 +857,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
 
-
-
-
   const changeTooltipDisplay = (e, value) => {
 
 
@@ -844,10 +876,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
   }
-
-
-
-
 
   // this function will add new rows when the user wants to recommend more places
   //  NOT SURE THIS FUNCTION IS DOING ANYTHING OTHER THAN ADDING NEW ROWS 
@@ -1535,6 +1563,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                 }
 
+                style={{ textTransform: "lowercase" }}
+
               ></input>
               <div className="tooltip_">This information is relevant </div>
 
@@ -1563,6 +1593,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                     changeTooltipDisplay(e, "none");
                   }
                 }
+
+                style={{ textTransform: "lowercase" }}
 
               ></input>
               <div className="tooltip_">This information is relevant </div>
@@ -1594,6 +1626,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                   changeTooltipDisplay(e, "none");
                 }}
 
+                style={{ textTransform: "lowercase" }}
+
                 placeholder="Write freely here"
               ></textarea>
 
@@ -1604,7 +1638,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             {/** Adjectives to describe the typical resident of the neighborhood */}
             <div
               className={
-                "describeNeighborhood describeFoodScene nhoodAdjectivesFlag stereotypicalResident " +
+                "describeNeighborhood mustTryFood nhoodAdjectivesFlag stereotypicalResident " +
                 displayQuestion("residentAdjectives") +
                 " " +
                 shakie
@@ -2003,8 +2037,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             </div>
 
-
-
             {/** In general, the typical reisdent of __ can be described as: "____" */}
             {/* <div
               className={"residentAdjectives describeFoodScene stereotypicalResident " + displayQuestion("completeTheSentenceStereoResident") +
@@ -2029,12 +2061,9 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             </div> */}
 
-
-
-
             {/** THE FOOD */}
             {/** What makes food in {neighborhood} special? */}
-            <div
+            {/* <div
               className={
                 "residentAdjectives mustTryFood foodRecommendations foodQuestion " +
                 displayQuestion("describeFoodScene") +
@@ -2063,24 +2092,24 @@ const FormComponent = ({ updateCurrentUser }) => {
                 placeholder="Write freely here"
               ></textarea>
               <div className="tooltip_"> Your opinion on this is important. </div>
-            </div>
+            </div> */}
 
             {/** What are the must-try foods in your neighborhood?*/}
             <div
               className={
-                "describeFoodScene oncePlaceToEat nhoodAdjectivesFlag mustTryFoods " +
+                "residentAdjectives oncePlaceToEat nhoodAdjectivesFlag foodRecommendtions foodQuestion mustTryFoods " +
                 displayQuestion("mustTryFood") +
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[9] = ref}
+              ref={ref => divRefs.current[8] = ref}
             >
 
               <div className="introHeader" ref={letsTalkAboutFoodRef}>
                 <h4> Let's talk about food </h4>
                 <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px"></img>
               </div>
-              
+
               <label>
                 What food and restaurants should people try in <span className="nhoodName"> {neighborhood}? </span>
               </label>
@@ -2415,7 +2444,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("oncePlaceToEat") +
                 " " +
                 shakie}
-              ref={ref => divRefs.current[10] = ref}
+              ref={ref => divRefs.current[9] = ref}
             >
               <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
                 <div style={{ display: "fex", alignItems: "center", lineHeight: "35px" }}>
@@ -2439,7 +2468,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </input>
 
                   <p style={{ display: "inline" }}> because</p>
-                  <input style={{ width: "35%" }}
+                  <input style={{ width: "35%", textTransform: "lowercase" }}
                     className="completeSentenceInput"
                     onChange={
                       (e) => {
@@ -2464,7 +2493,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               displayQuestion("foodPrice") +
               " " +
               shakie}
-              ref={ref => divRefs.current[11] = ref}
+              ref={ref => divRefs.current[10] = ref}
             >
 
               <h3 style={{ marginBottom: '20px', fontWeight: 'bold' }}>Food in {neighborhood} tends to be: </h3>
@@ -2583,8 +2612,9 @@ const FormComponent = ({ updateCurrentUser }) => {
           */}
             <div className={"foodPrice describeNighLife agreeOrDisagreeFoodQuestions " +
               displayQuestion("agreeOrDisagreeFood")}
-              ref={ref => divRefs.current[12] = ref}
+              ref={ref => divRefs.current[11] = ref}
             >
+
               <h3 style={{ textAlign: "center", marginBottom: '10px', fontWeight: 'bold' }}>Agree or disagree: </h3>
               <div>
                 <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
@@ -2658,7 +2688,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                   <div className="tooltip_">Your opinion is important</div>
                 </div>
 
-
                 <div
                   ref={foodDiversityExplanationRef}
                   className="elaborateNhoodEval"
@@ -2680,11 +2709,9 @@ const FormComponent = ({ updateCurrentUser }) => {
                       }}
                   ></input>
                 </div>
-
               </div>
+
             </div>
-
-
 
             {/** NIGHTLIFE */}
             {/** How do you describe the nighlife of {neighborhood}*/}
@@ -2695,18 +2722,150 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[13] = ref}
+              ref={ref => divRefs.current[12] = ref}
             >
               <div className="introHeader" ref={letsTalkAboutNightLifeRef}>
                 <h4> Let's talk about the night life </h4>
                 <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-21%2018.35.59%20-%20A%20pencil%20sketch%20with%20a%20grain%20effect%2C%20emphasizing%20a%20_night_%20ambiance%20for%20a%20modern%20nightclub%20scene.%20The%20sketch%20should%20depict%20a%20contemporary%20nightclub%20at.png" height="170px"></img>
               </div>
-              <label>
-                How would you describe the <span className="questionHighlight">night life</span> of {" "}
+
+
+
+              <div>
+                <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>How would you describe the night life of {neighborhood}:</label>
+
+                <div style={{ height: "30px", width: "110%", borderBottom: "1px dotted black", position: "relative", left: "50%", transform: "translate(-50%,0)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+
+
+                    <div className="statementResponseContainer">
+                      <input
+                        type="radio"
+                        className="nightLifeDescription"
+                        name="diverseAndAuthenticFood"
+                        value="vibrant"
+                        id="vibrantNightLife"
+                        onChange={
+                          (e) => {
+                            setFormData({
+                              ...formData,
+                              nightLife: {
+                                ...formData.nightLife,
+                                assessment: e.target.value
+                              }
+                            })
+                            changeTooltipDisplay(e, "none");
+                          }
+
+                        }
+                      ></input>
+                      <label
+                        onClick={() => nightLifeDescriptionHandler()}
+                        htmlFor="vibrantNightLife"
+                        className="nightLifeDescription"
+                        style={{ fontWeight: "normal", height: "auto", left: "-2px" }}
+                      // className="nhoodEvalLabelTrue"
+                      // style={{fontWeight:"normal", width:"100%", height:"auto"}}
+                      >
+                        Vibrant
+                      </label>
+                    </div>
+
+                    <div className="statementResponseContainer">
+                      <input
+                        type="radio"
+                        className="nightLifeDescription"
+                        name="diverseAndAuthenticFood"
+                        value="moderate"
+                        id="nightLifeModerate"
+                        onChange={
+                          (e) => {
+                            setFormData({
+                              ...formData,
+                              nightLife: {
+                                ...formData.nightLife,
+                                assessment: e.target.value
+                              }
+                            })
+                            changeTooltipDisplay(e, "none");
+                          }
+                        }
+                      ></input>
+                      <label
+                        onClick={() => nightLifeDescriptionHandler()}
+                        htmlFor="nightLifeModerate"
+                        className="nightLifeDescription"
+                        style={{ fontWeight: "normal", height: "auto", right: "-2px", position: "relative" }}
+                      >
+                        Moderate
+                      </label>
+                    </div>
+
+                    <div className="statementResponseContainer">
+                      <input
+                        type="radio"
+                        className="nightLifeDescription"
+                        name="diverseAndAuthenticFood"
+                        value="quiet"
+                        id="quietNightLife"
+                        onChange={
+                          (e) => {
+                            setFormData({
+                              ...formData,
+                              nightLife: {
+                                ...formData.nightLife,
+                                assessment: e.target.value
+                              }
+                            })
+                            changeTooltipDisplay(e, "none");
+                          }
+                        }
+                      ></input>
+                      <label
+                        onClick={() => nightLifeDescriptionHandler()}
+                        htmlFor="quietNightLife"
+                        className="nightLifeDescription"
+                        style={{ fontWeight: "normal", height: "auto", right: "-2px", position: "relative" }}
+                      >
+                        Quiet
+                      </label>
+                    </div>
+
+                  </div>
+                  <div className="tooltip_">Your opinion is important</div>
+                </div>
+
+                <div
+                  ref={nightLifeExplanationRef}
+                  className="elaborateNightLifeEval"
+                  style={{ marginTop: "50px" }}
+                >
+                  <div>Can you explain why?</div>
+                  <input
+
+                    className="inputElaborateNhoodEval"
+                    onChange={
+                      (e) => {
+                        setFormData({
+                          ...formData,
+                          nightLife: {
+                            ...formData.nightLife,
+                            explanation: e.target.value
+                          }
+                        })
+                      }}
+                  ></input>
+                </div>
+
+
+              </div>
+
+              {/* <label>
+                How would you describe the <span className="questionHighlight">night life</span> of 
                 <span className="nhoodName">{neighborhood}</span>?
               </label>
               <textarea
-                className="textarea_text" /** inputCheck */
+                className="textarea_text" 
                 onChange={(e) => {
                   setFormData({
                     ...formData,
@@ -2716,11 +2875,10 @@ const FormComponent = ({ updateCurrentUser }) => {
                   changeTooltipDisplay(e, "none"); changeTooltipDisplay(e, "none"); changeTooltipDisplay(e, "none");
                 }}
                 placeholder="Write freely here"
-              ></textarea>
+              ></textarea> */}
+
               <div className="tooltip_">Your opinion is important</div>
             </div>
-
-
 
             {/** Are there any nightlife venues (bars, restaurants, nighclubs) that youd like to  */}
             <div
@@ -2728,7 +2886,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 "describeNighLife completeTheSentenceNightLifeVenue nightLifeRecommendedPlaces " +
                 displayQuestion("nightLifePlacesRecommendations")
               }
-              ref={ref => divRefs.current[14] = ref}
+              ref={ref => divRefs.current[13] = ref}
             >
 
               <label>
@@ -2809,7 +2967,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 displayQuestion("completeTheSentenceNightLifeVenue") +
                 " " +
                 shakie}
-              ref={ref => divRefs.current[15] = ref}
+              ref={ref => divRefs.current[14] = ref}
             >
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
 
@@ -2841,7 +2999,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                   <p style={{ display: "inline" }}> because</p>
                   <input style={{
                     width: '35%',
-                    height: '25px'
+                    height: '25px',
+                    textTransform:"lowercase"
                   }}
                     className="completeSentenceInput"
                     onChange={
@@ -2870,7 +3029,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[16] = ref}
+              ref={ref => divRefs.current[15] = ref}
             >
               <div ref={letsTalkAboutGeneralInfo} className="introHeader" >
                 <h4> Let's talk about some general information </h4>
@@ -3015,7 +3174,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[17] = ref}
+              ref={ref => divRefs.current[16] = ref}
             >
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
@@ -3145,7 +3304,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[18] = ref}
+              ref={ref => divRefs.current[17] = ref}
             >
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
@@ -3280,7 +3439,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " " +
                 shakie
               }
-              ref={ref => divRefs.current[19] = ref}
+              ref={ref => divRefs.current[18] = ref}
             >
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
               <div>
@@ -3415,7 +3574,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               // +  (loggedUser ? "submit " : "personalInfo ")
               + displayQuestion("neighborhoodPictures")
             }
-              ref={ref => divRefs.current[20] = ref}
+              ref={ref => divRefs.current[19] = ref}
             >
               <label htmlFor="nhoodImagesInput">
                 Do you have any <span className="questionHighlight">pictures of <span className="nhoodName"> {neighborhood}</span></span> to share?
@@ -3431,7 +3590,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 " contactInfo " +
                 shakie
               }
-              ref={ref => divRefs.current[21] = ref}
+              ref={ref => divRefs.current[20] = ref}
             >
               {showUserDataAlert && sendInfoWithoutDataAlert}
 
@@ -3473,7 +3632,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                 "neighborhoodEvaluationFourthQuestion end " +
                 displayQuestion("submit")
               }
-              ref={ref => divRefs.current[23] = ref}
+              ref={ref => divRefs.current[21] = ref}
             >
               <input
                 className="submitValuesInput"
@@ -3511,14 +3670,14 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
 
           </form>
-        </div>
+        </div >
       )}
 
 
 
 
 
-    </div>
+    </div >
   )
 
 

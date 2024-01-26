@@ -69,9 +69,16 @@ const NeighborhoodEditableDiv = ({
   const [nestedObjects_, setNestedObjects_] = useState(nestedObjects);
   const [nestedObjectsHistory, setNestedObjectsHistory] = useState(nestedObjects);
 
-
   // The following satate will be used to add more rows to the table that adds more recommended places:
   const [rows, setRows] = useState([{ assessment: '', recommendations: '' }]);
+
+  // Function that will check if the last character of a string is a period and if so it will remove it:
+  function removeTrailingPeriod(str) {
+    if (str && typeof str === 'string') {
+      return str.replace(/\.\s*$/, '');
+    }
+    return str;
+  }
 
   // Function that will add more rows to the table if an input has been typed:
   const addRow = () => {
@@ -424,7 +431,7 @@ const NeighborhoodEditableDiv = ({
       const explanation = object.hasOwnProperty('explanation') ? `, because ${object['explanation']}` : "";
       return (
         <div>
-          {`${assessmentsTexts[key][0]}${object["assessment"]}${assessmentsTexts[key][1] || ''}${explanation}.`}
+          {`${assessmentsTexts[key][0]}${object["assessment"]}${assessmentsTexts[key][1] || ''}${explanation }.`}
         </div>
       );
     };
@@ -717,7 +724,7 @@ const NeighborhoodEditableDiv = ({
                           {item.assessment} food.
                           {item.explanation && (
                             <span className='nhoodRecommendationText' >
-                              {` GO to ${item.explanation}.`}
+                              {` GO to ${removeTrailingPeriod(item.explanation)}.`}
                             </span>
                           )}</p>
 
@@ -778,7 +785,7 @@ const NeighborhoodEditableDiv = ({
             <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
               {complementaryText[0] + objectData_.assessment.toLowerCase()}  {objectData_.explanation !== "" ? (
                 <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                  {complementaryText[1] + objectData_.explanation.toLowerCase()}
+                  {complementaryText[1] + objectData_.explanation.toLowerCase()+"."}
                 </span>
               ) : (
                 null
