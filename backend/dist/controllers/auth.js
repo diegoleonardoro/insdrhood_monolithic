@@ -34,10 +34,11 @@ const signup = async (req, res) => {
     const remainingName = name.slice(1);
     const nameCapitalized = nameFirstLetterCapitalized + remainingName;
     const emailToken = crypto_1.default.randomBytes(64).toString("hex");
+    const hashedPassword = await password_1.Password.toHash(password);
     const user = {
         name: nameCapitalized,
         email,
-        password: password ? password : '',
+        password: password ? hashedPassword : '',
         image: image ? image : null,
         isVerified: false,
         emailToken: [emailToken],
@@ -94,7 +95,7 @@ const login = async (req, res) => {
         throw new bad_request_error_1.BadRequestError("Incorrect password");
     }
     const userInfo = {
-        id: existingUser.id.toString(),
+        id: existingUser._id.toString(),
         email: existingUser.email,
         name: existingUser.name,
         image: existingUser.image,

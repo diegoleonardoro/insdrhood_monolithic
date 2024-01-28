@@ -90,7 +90,6 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
       updateCurrentUser(response.data);      
       
-      
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
     }
   }

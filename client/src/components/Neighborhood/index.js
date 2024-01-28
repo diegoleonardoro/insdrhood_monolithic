@@ -41,10 +41,7 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
     getNeighorhoodData();
   }, [currentuserProp]);//currentuser
 
-  console.log("is neighborhood.neighborhoodDescription", removeTrailingPeriod(neighborhood?.neighborhoodDescription));
-
-  console.log(neighborhood?.neighborhoodDescription.endsWith("."))
-
+ 
   const nhoodName = neighborhood?.neighborhood.charAt(0).toUpperCase() + neighborhood?.neighborhood.slice(1);
 
   return (

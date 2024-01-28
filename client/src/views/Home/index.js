@@ -98,11 +98,8 @@ function Home({ currentuser, updateCurrentUser }) {
 
   if (isLoading) {
     return (
-      
-        <Spinner style={{position:"relative", height:"100px", width:"100px", top:"50px"}} animation="grow" />
-      
+        <Spinner style={{position:"relative", height:"100px", width:"100px", top:"50px"}} animation="grow" /> 
     )
-
   }
 
   return (

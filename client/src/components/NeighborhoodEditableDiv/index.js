@@ -428,7 +428,7 @@ const NeighborhoodEditableDiv = ({
       const explanation = object.hasOwnProperty('explanation') ? `, because ${object['explanation']}` : "";
       return (
         <div>
-          <p style={{display:"inline", backgroundColor:"yellow", fontWeight:"bold", padding:"3px"}}>
+          <p style={{ display: "inline", backgroundColor: "yellow", fontWeight: "bold", padding: "3px" }}>
             {
               `${assessmentsTexts[key][0]}${" "}${object["assessment"]}${assessmentsTexts[key][1] || ''}`
             }
@@ -775,12 +775,12 @@ const NeighborhoodEditableDiv = ({
               // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
 
             ) : null}
-            <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+            <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
               {<>
                 {complementaryText[0]}
-                <p style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
+                <div style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
                   {objectData_.assessment.toLowerCase()}
-                </p>
+                </div>
               </>
               }
               {objectData_.explanation !== "" ? (
@@ -790,7 +790,7 @@ const NeighborhoodEditableDiv = ({
               ) : (
                 null
               )}
-            </p>
+            </div>
           </div>
         )}
 
@@ -992,9 +992,9 @@ const NeighborhoodEditableDiv = ({
 
           ) : null}
 
-          <p style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+          <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
             {complementaryText !== "" ? complementaryText : null} {text}
-          </p>
+          </div>
 
         </div>
 

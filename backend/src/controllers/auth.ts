@@ -18,6 +18,10 @@ interface updateQuery {
   $push?: any
 }
 
+
+
+
+
 /**
  * @description registers a new user
  * @route POST /api/signup
@@ -44,11 +48,12 @@ export const signup = async (req: Request, res: Response) => {
   const remainingName = name.slice(1);
   const nameCapitalized = nameFirstLetterCapitalized + remainingName;
   const emailToken = crypto.randomBytes(64).toString("hex");
+  const hashedPassword = await Password.toHash(password);
 
   const user = {
     name: nameCapitalized,
     email,
-    password: password ? password : '',
+    password: password ? hashedPassword : '',
     image: image ? image : null,
     isVerified: false,
     emailToken: [emailToken],
@@ -98,6 +103,9 @@ export const signup = async (req: Request, res: Response) => {
 }
 
 
+
+
+
 /**
  * @description logs users in
  * @route POST /api/signin
@@ -124,9 +132,8 @@ export const login = async (req: Request, res: Response) => {
     throw new BadRequestError("Incorrect password");
   }
 
-
   const userInfo = {
-    id: existingUser.id.toString(),
+    id: existingUser._id.toString(),
     email: existingUser.email,
     name: existingUser.name,
     image: existingUser.image,
@@ -373,7 +380,7 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
       { id: user!._id, name: user!.name, email: user!.email }
       :
       { id: '', name: '', email: '' }
-      
+
   })
 
 
@@ -435,11 +442,13 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
+
   // const allNeighborhoods = await Neighborhood.find({});
   const db = await getDb();
   const neighborhoodsCollection = db.collection("neighborhoods")
   const neighborhoods = await neighborhoodsCollection.find({}).toArray();
   res.status(200).send(neighborhoods);
+
 }
 
 /**
