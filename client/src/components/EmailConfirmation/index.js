@@ -125,7 +125,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
       {showPasswordForm ? (<div  className = "setPasswordContainer">
         <h3 style={{ display: "block" }} id="passwordHelpBlock" muted>
-          Set a password for future logins
+          Set a password:
         </h3>
         <Form.Label style={{ marginTop: "5%" }} htmlFor="inputPassword5">Password: </Form.Label>
 
@@ -153,6 +153,8 @@ const VerifyEmail = ({ updateCurrentUser }) => {
             setUnmatchingPasswords(false);
           }}
         />
+        <div className="tooltip_password">Your password is encrypted and hashed, ensuring it remains inaccessible to others. </div>
+
         <Button style={{ width: "100%", marginTop: "15px" }} variant="primary" size="lg" onClick={() => { checkPasswordsMatch(password1, password2) }}>
           Submit
         </Button>

@@ -303,13 +303,10 @@ const updateNeighborhoodData = async (req, res) => {
             }
         });
     }
-    console.log("updatessss", updates);
     if (updates.removeImages) {
-        console.log("updetaasss", updates);
         updateQuery.$set = { neighborhoodImages: updates.removeImages };
         delete updates.removeImages;
     }
-    console.log("udpateeeequeryyy", updateQuery);
     if (updates.neighborhoodImages) {
         // If updating neighborhoodImages, use $push to add images to the existing array
         updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };

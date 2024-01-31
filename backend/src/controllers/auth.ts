@@ -106,9 +106,6 @@ export const signup = async (req: Request, res: Response) => {
 }
 
 
-
-
-
 /**
  * @description logs users in
  * @route POST /api/signin
@@ -216,12 +213,10 @@ export const updateUserData = async (req: Request, res: Response) => {
     updates.emailToken = [emailToken];
   }
 
-
   if (existingUser) {
     console.log('existing usertrtr', existingUser);
     throw new BadRequestError("Email in use");
   }
-
 
   const user = await users.findOneAndUpdate(
     { _id: new ObjectId(id) },
@@ -421,25 +416,15 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
         delete updates[key];
       }
     });
-
   }
-  console.log("updatessss", updates);
-
+  
   if (updates.removeImages) {
-
-    console.log("updetaasss", updates)
-
     updateQuery.$set = { neighborhoodImages: updates.removeImages };
-
     delete updates.removeImages
   }
 
 
-  console.log("udpateeeequeryyy", updateQuery);
-
-
   if (updates.neighborhoodImages) {
-
     // If updating neighborhoodImages, use $push to add images to the existing array
     updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };
     delete updates.neighborhoodImages; // Remove the property after adding to $push

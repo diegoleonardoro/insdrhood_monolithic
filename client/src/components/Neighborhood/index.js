@@ -187,6 +187,9 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
                     {/* <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + nhoodName + " as "} content={neighborhood.nightLife} objectKey="nightLife" /> */}
 
 
+                    <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Night life in ${nhoodName} can be `, 'because ']} objectData={neighborhood.nightLife} objectKey="nightLife" />
+
+
                     {
                       ((neighborhood.nightLifeRecommendations && neighborhood.nightLifeRecommendations.length > 0) || isEditable) &&
                       <NeighborhoodEditableDiv

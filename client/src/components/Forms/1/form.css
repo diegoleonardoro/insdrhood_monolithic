@@ -65,6 +65,15 @@ input, textarea {
     -webkit-text-size-adjust: none; /* Disable automatic font resizing */
 }
 
+.addButton{
+  margin: 4px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid black;
+  background-color: "rgb(190, 190, 190)";
+  cursor: pointer
+}
+
 input::placeholder{
   color: grey;
   font-style: italic;

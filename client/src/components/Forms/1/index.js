@@ -43,6 +43,8 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [residentsAdjsSelectedOpts, setResidentsAdjsSelectedOpts] = useState([]);
   const [foodTypesSelectedOpts, setFoodTypesSelectedOpts] = useState([]);
   const [foodTypesInput, setFoodTypesInput] = useState("");
+  const [nhoodAdjective, setNhoodAjective] = useState("");
+  const [residentAdjective, setResidentAdjective] = useState("");
   const [userUIID, setUserUUID] = useState();
   const [showUserDataAlert, setShowUserDataAlert] = useState(false);
   const [neighborhoodId, setNeighborhoodId] = useState();
@@ -246,6 +248,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
 
+
+
   // The following function will be in charge of changing the quesitons:
   const changeQuestion = async (direction, flag, errs) => {
 
@@ -261,6 +265,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         // check if the user has not responded a question that required to be responded:
         if (currentDiv.className.indexOf("shakieCheck") > -1) {
 
+
           if (currentDiv.className.indexOf("nhoodAdjectivesFlag") > -1) {
 
             const adjsContainer = currentDiv.querySelector(".adjsNhoodContainer") || currentDiv.querySelector(".adjsResContainer");
@@ -268,13 +273,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
               tooltip.style.display = "inline-block";
               return;
-
-              // setShakie("apply_shake");
-              // const timeout = setTimeout(() => {
-              //   setShakie('shakieCheck');
-              // }, 200);
-              // return () => clearTimeout(timeout);
-
             }
           }
 
@@ -302,21 +300,18 @@ const FormComponent = ({ updateCurrentUser }) => {
 
                 tooltip.style.display = "inline-block";
                 return;
-                // setShakie("apply_shake");
-                // const timeout = setTimeout(() => {
-                //   setShakie('shakieCheck');
-                // }, 200);
-                // return () => clearTimeout(timeout);
-
-
 
               }
-
-
             }
           };
 
-        } else if (currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 || currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1) {
+        } else if (
+          currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 ||
+          currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1 ||
+          currentDiv.className.indexOf("nightlifeQuestions") > -1
+        ) {
+
+          console.log("holiisssss")
           const inputs = currentDiv.querySelectorAll("input");
           let hasValue = false;
           for (let i = 0; i < inputs.length; i++) {
@@ -326,32 +321,10 @@ const FormComponent = ({ updateCurrentUser }) => {
             }
           }
           if (!hasValue) {
-
-
             tooltip.style.display = "inline-block";
             return;
-
-
-            // setShakie("apply_shake");
-            // const timeout = setTimeout(() => {
-            //   setShakie('shakieCheck');
-            // }, 1000);
-            // return () => clearTimeout(timeout);
           }
-
         }
-
-        // else {
-        //   const userInput = currentDiv.querySelector("input, textarea, select");
-        //   if (userInput.value === '' && userInput.name !== 'nhoodImages') {
-        //     setShakie("apply_shake");
-        //     const timeout = setTimeout(() => {
-        //       setShakie('shakieCheck');
-        //     }, 1000);
-        //     return () => clearTimeout(timeout);
-        //   }
-        // }
-
 
         // Check if we are about to show the food questions, so that we can change the display value of the header that annouces the upcoming food questions:
         if (currentDiv.className.indexOf("stereotypicalResident") > -1) {
@@ -459,8 +432,6 @@ const FormComponent = ({ updateCurrentUser }) => {
             return;
           };
 
-
-
           // this state needs to be updated to save a new user in the database:
           setNewUserData(prevData => ({
             ...prevData,
@@ -477,9 +448,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
 
         };
-
-
-
 
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
         keyWord = currentDiv.className.split(" ")[1];
@@ -669,7 +637,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
   // ------- -------- --------- ---------- --------- ---------- ----------
 
-
   // THIS FUNCTION WILL BE ACTIVATED EVERY TIME ANY OF THE OPTION BUTTONS IN THE FORM ARE CLICKED.
   // IT WILL UPATE THE FORM WITH THE RESPECTIVE VALUE.
 
@@ -694,6 +661,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         }, 0);
       }
 
+
       // }
     } else if (description === "resident") {
 
@@ -709,18 +677,11 @@ const FormComponent = ({ updateCurrentUser }) => {
       }
       setFormData(formData => ({ ...formData, residentAdjectives: updatedOptions }));
 
-
-
       if (residentAdjectivesDivContainer.current) {
         setTimeout(() => {
           residentAdjectivesDivContainer.current.scrollTop = residentAdjectivesDivContainer.current.scrollHeight
         }, 0);
       }
-
-
-
-      //residentAdjectivesDivContainer
-
 
 
       // }
@@ -739,9 +700,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         if (!containsSpecificWord) {
 
           setFoodTypesSelectedOpts(prevOptions => {
-
             updatedOptions = [...prevOptions, { "assessment": option }];
-
             return updatedOptions;
           })
 
@@ -842,7 +801,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   };
 
-
   const handleInputChange = (value) => {
     setFoodTypesInput(value);
   };
@@ -855,13 +813,16 @@ const FormComponent = ({ updateCurrentUser }) => {
     setFoodTypesInput("");
   };
 
-
-
   const changeTooltipDisplay = (e, value) => {
-
 
     let tooltip = e.target.nextElementSibling;
 
+    if (tooltip.className.indexOf("tooltip_") === -1) {
+      const parent = e.target.parentElement;
+      const grandpa = parent.parentElement;
+      const grandpagranpa = grandpa.parentElement;
+      tooltip = grandpagranpa.nextElementSibling;
+    }
 
     // If tooltip is undefined, select the nextElementSibling of the parent element
     if (tooltip.className.indexOf("tooltip_") === -1) {
@@ -870,10 +831,10 @@ const FormComponent = ({ updateCurrentUser }) => {
       tooltip = grandpa.nextElementSibling;
     }
 
+
     if (tooltip && tooltip.classList.contains('tooltip_')) {
       tooltip.style.display = value;
     }
-
 
   }
 
@@ -958,7 +919,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     }
   };
-
 
   return (
     <div className="mainContainer">
@@ -1152,8 +1112,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                 What <span className="questionHighlight"> adjectives</span> describe
                 <span style={{ textDecoration: "underline" }} className="nhoodName"> {neighborhood}: </span>
               </label>
-
-
               {selectedOptions.length > 0 && (
                 <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
                   {selectedOptions.map((option, index) => (
@@ -1181,14 +1139,49 @@ const FormComponent = ({ updateCurrentUser }) => {
               )}
 
               <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
+
                 <div ref={nehoodAdjectivesDivRef}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     flexWrap: 'wrap',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+
                   }} >
 
+                  {/** Type your own adjective */}
+                  <div style={{
+                    display: "flex",
+                    border: "1px solid #dcd7d7",
+                    padding: "5px",
+                    marginTop: "15px",
+                    margin: '10px',
+                    borderRadius: '15px',
+                    justifyContent: 'center'
+                  }} >
+                    {/* Input field for user to type an option */}
+                    <input
+                      className="foodTypeInput"
+                      type="text"
+                      placeholder="Type your own"
+                      onChange={(e) => {
+                        setNhoodAjective(e.target.value);
+                        changeTooltipDisplay(e, "none");
+                      }}
+                      value={nhoodAdjective}
+                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
+
+                    />
+                    <button onClick={(e) => {
+                      e.preventDefault();
+                      handleOptionSelect(nhoodAdjective, 'nhood', e);
+                      setNhoodAjective('')
+                    }} className="addButton">
+                      Add
+                    </button>
+                  </div>
+
+                  {/** Adjectives: */}
                   <div onClick={(e) => {
                     handleOptionSelect('Vibrant', 'nhood', e);
                     changeTooltipDisplay(e, "none");
@@ -1530,11 +1523,14 @@ const FormComponent = ({ updateCurrentUser }) => {
                     Up-and-coming
                   </div>
 
+
+
                 </div>
+
               </div>
 
-              <div className="tooltip_">Your opinion on this is important. </div>
 
+              <div className="tooltip_">Your opinion on this is important. </div>
             </div>
 
             {/**  “Complete the sentence:  ‘The most unique thing about {neighborhood} is ________”*/}
@@ -1686,6 +1682,37 @@ const FormComponent = ({ updateCurrentUser }) => {
                     flexWrap: 'wrap',
                     justifyContent: 'center'
                   }} >
+
+                  {/** Type your own adjective */}
+                  <div style={{
+                    display: "flex",
+                    border: "1px solid #dcd7d7",
+                    padding: "5px",
+                    marginTop: "15px",
+                    margin: '10px',
+                    borderRadius: '15px',
+                    justifyContent: 'center'
+                  }} >
+                    {/* Input field for user to type an option */}
+                    <input
+                      className="foodTypeInput"
+                      type="text"
+                      placeholder="Type your own"
+                      onChange={(e) => {
+                        setResidentAdjective(e.target.value);
+                        changeTooltipDisplay(e, "none");
+                      }}
+                      value={residentAdjective}
+                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
+                    />
+                    <button onClick={(e) => {
+                      e.preventDefault();
+                      handleOptionSelect(residentAdjective, 'resident', e);
+                      setResidentAdjective('')
+                    }} className="addButton">
+                      Add
+                    </button>
+                  </div>
 
                   <div onClick={(e) => {
                     handleOptionSelect('Friendly', 'resident', e);
@@ -2029,8 +2056,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                   </div>
 
                 </div>
-
-
               </div>
 
               <div className="tooltip_">Your opinion on this is important. </div>
@@ -2038,62 +2063,8 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
 
             {/** In general, the typical reisdent of __ can be described as: "____" */}
-            {/* <div
-              className={"residentAdjectives describeFoodScene stereotypicalResident " + displayQuestion("completeTheSentenceStereoResident") +
-                " " +
-                shakie} ref={ref => divRefs.current[8] = ref}>
-
-              <label>
-                In general, the typical resident of <span className="questionHighlight"> {neighborhood} </span> can be described as:
-              </label>
-              <textarea
-                className="textarea_text"
-                onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    typicalResidentDescription: e.target.value
-                  })
-                  changeTooltipDisplay(e, "none");
-                }}
-                placeholder="Write freely here"
-              ></textarea>
-              <div className="tooltip_"> Your opinion on this is important. </div>
-
-            </div> */}
 
             {/** THE FOOD */}
-            {/** What makes food in {neighborhood} special? */}
-            {/* <div
-              className={
-                "residentAdjectives mustTryFood foodRecommendations foodQuestion " +
-                displayQuestion("describeFoodScene") +
-                " " +
-                shakie
-              }
-              ref={ref => divRefs.current[8] = ref}
-            >
-              <div className="introHeader" ref={letsTalkAboutFoodRef}>
-                <h4> Let's talk about food </h4>
-                <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px"></img>
-              </div>
-
-              <label>
-                In your opinion, what makes <span className="questionHighlight"> food in  <span className="nhoodName">{neighborhood}</span></span> special?
-              </label>
-              <textarea
-                className="textarea_text"
-                onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    foodCulture: e.target.value,
-                  });
-                  changeTooltipDisplay(e, "none");
-                }}
-                placeholder="Write freely here"
-              ></textarea>
-              <div className="tooltip_"> Your opinion on this is important. </div>
-            </div> */}
-
             {/** What are the must-try foods in your neighborhood?*/}
             <div
               className={
@@ -2345,6 +2316,8 @@ const FormComponent = ({ updateCurrentUser }) => {
                   >
                     Korean
                   </div>
+
+
                   <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }} onChange={(e) => {
                     handleOptionSelect('Korean', 'foodType', e);
                     changeTooltipDisplay(e, "none");
@@ -2358,13 +2331,14 @@ const FormComponent = ({ updateCurrentUser }) => {
                       value={foodTypesInput}
                       style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
                     />
-
                     {/* Button to add the typed option */}
-                    <button onClick={handleAddButton} style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black", backgroundColor: "rgb(190, 190, 190)", cursor: "pointer" }}>
+                    <button className="addButton" onClick={handleAddButton}>
                       Add
                     </button>
 
                   </div>
+
+
                 </div>
               </div>
 
@@ -2718,9 +2692,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "agreeOrDisagreeFood nightLifePlacesRecommendations nightLifeRecommendations nightlifeQuestions " +
-                displayQuestion("describeNighLife") +
-                " " +
-                shakie
+                displayQuestion("describeNighLife")
               }
               ref={ref => divRefs.current[12] = ref}
             >
@@ -2728,8 +2700,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                 <h4> Let's talk about the night life </h4>
                 <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-21%2018.35.59%20-%20A%20pencil%20sketch%20with%20a%20grain%20effect%2C%20emphasizing%20a%20_night_%20ambiance%20for%20a%20modern%20nightclub%20scene.%20The%20sketch%20should%20depict%20a%20contemporary%20nightclub%20at.png" height="170px"></img>
               </div>
-
-
 
               <div>
                 <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>How would you describe the night life of {neighborhood}:</label>
@@ -3000,7 +2970,7 @@ const FormComponent = ({ updateCurrentUser }) => {
                   <input style={{
                     width: '35%',
                     height: '25px',
-                    textTransform:"lowercase"
+                    textTransform: "lowercase"
                   }}
                     className="completeSentenceInput"
                     onChange={
@@ -3672,9 +3642,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           </form>
         </div >
       )}
-
-
-
 
 
     </div >
