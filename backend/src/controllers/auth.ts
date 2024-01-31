@@ -15,7 +15,8 @@ import { sendVerificationMail } from "../services/emailVerification";
 
 interface updateQuery {
   $set?: any,
-  $push?: any
+  $push?: any,
+  $pull?:any
 }
 
 
@@ -48,12 +49,14 @@ export const signup = async (req: Request, res: Response) => {
   const remainingName = name.slice(1);
   const nameCapitalized = nameFirstLetterCapitalized + remainingName;
   const emailToken = crypto.randomBytes(64).toString("hex");
-  const hashedPassword = await Password.toHash(password);
+
+
+  const hashedPassword = password ? await Password.toHash(password) : '';
 
   const user = {
     name: nameCapitalized,
     email,
-    password: password ? hashedPassword : '',
+    password: hashedPassword,
     image: image ? image : null,
     isVerified: false,
     emailToken: [emailToken],
@@ -400,36 +403,62 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
   const neighborhoods = db.collection("neighborhoods");
   let updateQuery: updateQuery = {};
 
+
   //Handling updates for nested objects:
-  Object.keys(updates).forEach((key) => {
-    if (typeof updates[key] === 'object' && updates[key] !== null) {
-      // Iterate over nested object fields
-      for (const nestedKey in updates[key]) {
-        // Use dot notation for nested fields
-        updateQuery.$set = updateQuery.$set || {};
-        updateQuery.$set[`${key}.${nestedKey}`] = updates[key][nestedKey];
+
+  if (!updates.neighborhoodImages && !updates.removeImages) {
+
+    Object.keys(updates).forEach((key) => {
+      if (typeof updates[key] === 'object' && updates[key] !== null) {
+
+        // Iterate over nested object fields
+        for (const nestedKey in updates[key]) {
+          // Use dot notation for nested fields
+          updateQuery.$set = updateQuery.$set || {};
+          updateQuery.$set[`${key}.${nestedKey}`] = updates[key][nestedKey];
+        }
+        // Remove the nested object from updates after processing
+        delete updates[key];
       }
-      // Remove the nested object from updates after processing
-      delete updates[key];
-    }
-  });
+    });
+
+  }
+  console.log("updatessss", updates);
+
+  if (updates.removeImages) {
+
+    console.log("updetaasss", updates)
+
+    updateQuery.$set = { neighborhoodImages: updates.removeImages };
+
+    delete updates.removeImages
+  }
+
+
+  console.log("udpateeeequeryyy", updateQuery);
+
 
   if (updates.neighborhoodImages) {
+
     // If updating neighborhoodImages, use $push to add images to the existing array
     updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };
     delete updates.neighborhoodImages; // Remove the property after adding to $push
   }
+
 
   if (Object.keys(updates).length > 0) {
     // If there are other updates, use $set to update fields
     updateQuery.$set = { ...updateQuery.$set, ...updates };
   }
 
+
   const neighborhood = await neighborhoods.findOneAndUpdate(
     { _id: new ObjectId(id) },
     updateQuery,
     { returnDocument: "after" }
   );
+
+
 
   // const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
   res.status(200).send(neighborhood);

@@ -176,19 +176,21 @@ const NeighborhoodEditableDiv = ({
 
   // function that will update the neighborhood data
   const updateNeighborhoodData = useCallback(async (dataToUpdate) => {
+
+
+    console.log("datatoudpate", dataToUpdate)
+
     await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
   }, [neighborhoodid]);
 
-  const removePhoto = (index) => {
 
+  const removePhoto = (index) => {
     const url = imgRefs.current[index].src;
-    const prefix = "https://populace.s3.amazonaws.com/";
-    const extractedPart = url.substring(url.indexOf(prefix) + prefix.length);
-    const cleanedString = extractedPart.replace(/%20/g, " ");
+    const cleanedString = decodeURIComponent(url.replace("https://insiderhood.s3.amazonaws.com/", ""));
     const filteredUrls = nhoodImages.filter((item) => item.image !== cleanedString);
     setNhoodImages(filteredUrls);
+  };
 
-  }
 
   // the following function will enable editing functionality:
   const handleEditClick = () => {
@@ -316,9 +318,16 @@ const NeighborhoodEditableDiv = ({
       })
     }
 
+
+
     // user is editing the images of the neighborhood:
     if (images.length > 0) {
+
+
       if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
+
+        console.log("holaaaa")
+
         const newImages = Array.from(addImagesInput.current.files);
 
         const uploadPromises = newImages.map(async imageFile => {
@@ -347,11 +356,35 @@ const NeighborhoodEditableDiv = ({
           return newImages
         });
 
-        updateNeighborhoodData({ [objectKey]: imagesUrls })
+        updateNeighborhoodData({ [objectKey]: imagesUrls });
+
         setIsEditing(false);
         return;
       };
+
+
+      if (imgRefs.current.length !== nhoodImages.length) {
+
+        // THIS MEANS THAT THE USER REMOVED A PHOTO AND CLICKED SAVE.
+        console.log('imgRefs', imgRefs);
+        console.log('nhoodImages', nhoodImages);
+
+        // MAKE A REQUEST TO UPDATE NEIGHBORHOOD DATA WITH A SPECIFIC KEYNAME SO THAT IN THE BACK END WE KNOW THAT WE NEED TO 
+        updateNeighborhoodData({ ['removeImages']: nhoodImages });
+      }
+
+
+
+
+
+
+
+
+
+
     }
+
+
 
     // user is editing the list of neighborhood adjectives 
     if (adjectives.length > 0) {
@@ -377,11 +410,21 @@ const NeighborhoodEditableDiv = ({
 
   };
 
+
+
+
+
+
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
     setText(textHistory);
+    setNhoodImages(nhoodImagesHistory);
     setIsEditing(false);
   };
+
+
+
+
 
   // RETURN OBJECTS:
   /** We are rendering an object of nested objects, such as the statements  */
@@ -391,7 +434,7 @@ const NeighborhoodEditableDiv = ({
     owningPets: ['I ', `having pets in ${neighborhood}`],
     safety: [`I think safety in ${neighborhood} is `],
     socializing: [`I think ${neighborhood} is `, 'for meeting new people']
-  }
+  };
 
   if (hasNestedObjects(nestedObjects)) {
 
@@ -523,17 +566,12 @@ const NeighborhoodEditableDiv = ({
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
-
     return (
-
       <div>
         <h2 >Make sure to try:</h2>
-
         <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-
           {isEditing ? (
             <div style={{ marginTop: "20px" }}>
-
               {recommendationsArrayOfObjects_.map((item, index) => {
                 let text;
                 if (objectKey === 'recommendedFoodTypes') {
@@ -801,11 +839,12 @@ const NeighborhoodEditableDiv = ({
   /** When we render the neighboorhood images: */
   if (images.length > 0) {
 
+    // {console.log('imagessss', images)}
+
     return (
       <div className="galleryParent" ref={galleryParentRef}
         style={{ position: "relative" }}
       >
-
         {isEditing ? (
 
           <div>
@@ -897,12 +936,10 @@ const NeighborhoodEditableDiv = ({
 
   /** If we are going to render list of adjectives: */
   if (adjectives.length > 0) {
-
     return (
       <div className="adjectivesDiv" style={{ position: "relative" }}>
         {isEditing ? (
           <div className="nhoodIntroItemList">
-
             <div style={{ textAlign: "start" }}>
               <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput"> The {objectKey === 'neighborhoodAdjectives' ? 'neighborhood' : 'residents'} can be described as:</label>
               <input
@@ -993,7 +1030,9 @@ const NeighborhoodEditableDiv = ({
           ) : null}
 
           <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-            {complementaryText !== "" ? complementaryText : null} {text}
+            {complementaryText !== "" ? complementaryText : null} {
+              <p style={{ fontWeight: "bold", backgroundColor: "yellow", padding: "4px", display: "inline" }}>{text}</p>
+            }
           </div>
 
         </div>
