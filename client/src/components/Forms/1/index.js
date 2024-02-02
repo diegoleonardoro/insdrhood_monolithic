@@ -246,10 +246,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
 
 
-
-
-
-
   // The following function will be in charge of changing the quesitons:
   const changeQuestion = async (direction, flag, errs) => {
 
@@ -264,7 +260,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         // check if the user has not responded a question that required to be responded:
         if (currentDiv.className.indexOf("shakieCheck") > -1) {
-
 
           if (currentDiv.className.indexOf("nhoodAdjectivesFlag") > -1) {
 
@@ -353,28 +348,25 @@ const FormComponent = ({ updateCurrentUser }) => {
           setNeighborhood(currentDiv.children[1].value);
         }
 
+        // this block will check if there are inputs in the night life recommeded places 
+        // if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
+        //   const placeName = nightLifeRecommendationsRef.current.placeName.value;
+        //   const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
 
-        if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
-
-          const placeName = nightLifeRecommendationsRef.current.placeName.value;
-          const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
-
-          if (placeName === "" && placeDescription === "") {
-            return;
-          }
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            nightLifeRecommendations: [
-              ...prevFormData.nightLifeRecommendations,
-              {
-                assessment: nightLifeRecommendationsRef.current.placeName.value,
-                explanation: nightLifeRecommendationsRef.current.placeDescription.value,
-              },
-            ],
-          }));
-        }
-
-
+        //   if (placeName === "" && placeDescription === "") {
+        //     return;
+        //   }
+        //   setFormData((prevFormData) => ({
+        //     ...prevFormData,
+        //     nightLifeRecommendations: [
+        //       ...prevFormData.nightLifeRecommendations,
+        //       {
+        //         assessment: nightLifeRecommendationsRef.current.placeName.value,
+        //         explanation: nightLifeRecommendationsRef.current.placeDescription.value,
+        //       },
+        //     ],
+        //   }));
+        // }
 
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 19) {
@@ -475,13 +467,10 @@ const FormComponent = ({ updateCurrentUser }) => {
       setActiveIndex(nextIndex);
 
     }
+
     setDisplayKeyWord([keyWord]);
 
   }
-
-
-
-
 
 
   //This event handler will be triggered when the user is responding the "true of flase"questions. It will show an input asking users to expand on the answer that they selected. 
@@ -2319,7 +2308,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
 
                   <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }} onChange={(e) => {
-                    handleOptionSelect('Korean', 'foodType', e);
                     changeTooltipDisplay(e, "none");
                   }} >
                     {/* Input field for user to type an option */}
@@ -2704,7 +2692,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               <div>
                 <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>How would you describe the night life of {neighborhood}:</label>
 
-                <div style={{ height: "30px", width: "110%", borderBottom: "1px dotted black", position: "relative", left: "50%", transform: "translate(-50%,0)" }}>
+                <div style={{ height: "30px", borderBottom: "1px dotted black", position: "relative", left: "50%", transform: "translate(-50%,0)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
 
 
@@ -2942,7 +2930,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
 
 
-              <div style={{ display: "fex", alignItems: "center", position: "relative" }}>
+              <div style={{ display: "fex", textAlign:'start', position: "relative" }}>
                 <div style={{ display: "fex", alignItems: "center", lineHeight: "40px" }}>
                   <p style={{ display: "inline" }}>If you had to pick <span className="questionHighlight"> one place to enjoy night life </span> in {neighborhood} it would be </p>
                   <input style={{

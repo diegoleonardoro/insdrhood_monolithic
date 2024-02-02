@@ -9,9 +9,6 @@ import 'slick-carousel/slick/slick.css';
 import Table from 'react-bootstrap/Table';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-
-
-
 import "./neighborhoodEditableDiv.css";
 
 
@@ -95,6 +92,14 @@ const NeighborhoodEditableDiv = ({
     setRows(newRows);
   };
 
+  // Function that will check if the last character of a string is a period and if so it will remove it:
+  function removeTrailingPeriod(str) {
+    if (str && typeof str === 'string') {
+      return str.replace(/\.\s*$/, '');
+    }
+    return str;
+  }
+
   /** Images slider */
   const PrevArrowPhotos = ({ onClick }) => {
     return (
@@ -176,10 +181,6 @@ const NeighborhoodEditableDiv = ({
 
   // function that will update the neighborhood data
   const updateNeighborhoodData = useCallback(async (dataToUpdate) => {
-
-
-    console.log("datatoudpate", dataToUpdate)
-
     await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${neighborhoodid}`, dataToUpdate);
   }, [neighborhoodid]);
 
@@ -213,7 +214,6 @@ const NeighborhoodEditableDiv = ({
         }
       }))
     }
-
 
     // user is trying to update the data that came in as an array of obects:
     if (Array.isArray(recommendationsArrayOfObjects)) {
@@ -258,6 +258,7 @@ const NeighborhoodEditableDiv = ({
       setAdjectivesText(event.target.value.split(", "));
       return
     };
+
     setText(event.target.value);
 
   };
@@ -268,6 +269,51 @@ const NeighborhoodEditableDiv = ({
     array.splice(index, 1);
     setRecommendationsArrayOfObjects_(array);
   };
+
+
+
+  /** Function that will save the images */
+  async function uploadImagesAndUpdateState(addImagesInput, neighborhood, imagesId, objectKey) {
+    // Convert file list to array
+    const newImages = Array.from(addImagesInput.current.files);
+
+    // Map each file to an upload promise
+    const uploadPromises = newImages.map(async (imageFile) => {
+      const imageType = imageFile.type.split('/')[1];
+      // Fetch upload configuration from backend
+      const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
+
+      // Upload image file to the provided URL
+      await axios.put(imageUploadConfig.data.url, imageFile, {
+        headers: {
+          "Content-Type": imageType,
+        }
+      });
+
+      // Return the image key and a default description
+      return { image: imageUploadConfig.data.key, description: "" };
+    });
+
+    // Wait for all uploads to complete
+    const imagesUrls = await Promise.all(uploadPromises);
+
+    // Update neighborhood images history state
+    setNhoodImagesHistory(prevNhoodImagesArray => {
+      const updatedImages = [...prevNhoodImagesArray, ...imagesUrls];
+      setNewImages(updatedImages); // Assuming this triggers a save to the backend
+      return updatedImages;
+    });
+
+    // Update neighborhood images state
+    setNhoodImages(prevNhoodImagesArray => [...prevNhoodImagesArray, ...imagesUrls]);
+
+    // Update neighborhood data with new images
+    updateNeighborhoodData({ [objectKey]: imagesUrls });
+
+  };
+
+
+
 
   // function to save edited data:
   const handleSaveClick = async () => {
@@ -321,68 +367,43 @@ const NeighborhoodEditableDiv = ({
 
 
     // user is editing the images of the neighborhood:
-    if (images.length > 0) {
+    //images.length > 0
+    if (objectKey === 'neighborhoodImages') {
 
 
       if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
-
-        console.log("holaaaa")
-
-        const newImages = Array.from(addImagesInput.current.files);
-
-        const uploadPromises = newImages.map(async imageFile => {
-          const imageType = imageFile.type.split('/')[1];
-          const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${imagesId}/${imageType}`);
-
-          await axios.put(imageUploadConfig.data.url, imageFile, {
-            headers: {
-              "Content-Type": imageType,
-            }
-          });
-          return { image: imageUploadConfig.data.key, description: "" };
-        });
-
-        const imagesUrls = await Promise.all(uploadPromises);
-
-        setNhoodImagesHistory(prevNhoodImagesArray => {
-          const newImages = [...prevNhoodImagesArray, ...imagesUrls];
-          // updating the newImages state will trigger the server request to save the new images
-          setNewImages(newImages);
-          return newImages;
-        });
-
-        setNhoodImages(prevNhoodImagesArray => {
-          const newImages = [...prevNhoodImagesArray, ...imagesUrls]
-          return newImages
-        });
-
-        updateNeighborhoodData({ [objectKey]: imagesUrls });
+        await uploadImagesAndUpdateState(addImagesInput, neighborhood, imagesId, objectKey);
 
         setIsEditing(false);
-        return;
       };
-
 
       if (imgRefs.current.length !== nhoodImages.length) {
 
         // THIS MEANS THAT THE USER REMOVED A PHOTO AND CLICKED SAVE.
-        console.log('imgRefs', imgRefs);
-        console.log('nhoodImages', nhoodImages);
-
         // MAKE A REQUEST TO UPDATE NEIGHBORHOOD DATA WITH A SPECIFIC KEYNAME SO THAT IN THE BACK END WE KNOW THAT WE NEED TO 
         updateNeighborhoodData({ ['removeImages']: nhoodImages });
       }
 
 
 
-
-
-
-
-
-
-
     }
+
+    // else { // this else statement will take place when the user did not submit any pictures but is now trying to save pictures from this profile 
+    //   // Check if the user actually uploaded images 
+    //   if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
+    //     console.log(addImagesInput.current.files.length);
+    //   } else {
+    //     // choose a banner asking users to upload images
+    //   }
+    // }
+
+
+
+
+
+
+
+
 
 
 
@@ -410,21 +431,12 @@ const NeighborhoodEditableDiv = ({
 
   };
 
-
-
-
-
-
   const handleCancelClick = () => {
     setAdjectivesText(adjectivesTextHistory);
     setText(textHistory);
     setNhoodImages(nhoodImagesHistory);
     setIsEditing(false);
   };
-
-
-
-
 
   // RETURN OBJECTS:
   /** We are rendering an object of nested objects, such as the statements  */
@@ -438,7 +450,7 @@ const NeighborhoodEditableDiv = ({
 
   if (hasNestedObjects(nestedObjects)) {
 
-    const inputStyle = { width: "50%", marginLeft: "10px" };
+    const inputStyle = { marginLeft: "10px" };
 
     const renderAssessmentInput = (object, index, key) => (
       <Form.Control
@@ -452,19 +464,19 @@ const NeighborhoodEditableDiv = ({
     );
 
     const renderExplanation = (object, index, key) => (
-      object.hasOwnProperty('explanation') && (
-        <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
-          <div>because:</div>
-          <Form.Control
-            name="explanation"
-            id={key}
-            onChange={(e) => handleChange(e, index)}
-            type="text"
-            value={object["explanation"]}
-          // style={inputStyle}
-          />
-        </div>
-      )
+      // object.hasOwnProperty('explanation') && (
+      <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
+        <div style={{ fontWeight: 'bold' }}>because:</div>
+        <Form.Control
+          name="explanation"
+          id={key}
+          onChange={(e) => handleChange(e, index)}
+          type="text"
+          value={object["explanation"]}
+        // style={inputStyle}
+        />
+      </div>
+      // )
     );
 
     const renderNonEditableContent = (key, object, assessmentsTexts) => {
@@ -484,7 +496,6 @@ const NeighborhoodEditableDiv = ({
       );
     };
 
-
     const renderObject = (key, object, editing, index, handleChange) => {
 
       const assessmentText = assessmentsTexts[key] ? assessmentsTexts[key][0] : '';
@@ -494,22 +505,22 @@ const NeighborhoodEditableDiv = ({
       }
 
       return (
-        <div >
-          <div style={{ display: "flex", flexDirection: "column", margin: "10px" }}>
-            <div >{`${assessmentText}:`}</div>
+        <div>
+          <div style={{ display: "flex", flexDirection: "column", margintop: "10px" }}>
+            <div style={{ margin: '10px', fontWeight: 'bold' }} >{`${assessmentText}:`}</div>
             {renderAssessmentInput(object, index, key)}{/** need to pass the 'key' and whether it is an assessment or an explanation   */}
-            <div>{additionalText}</div>
+            <div style={{ margin: '10px', fontWeight: 'bold' }}>{additionalText}</div>
           </div>
           {renderExplanation(object, index, key)} {/** need to pass the 'key' and whether it is an assessment or an explanation   */}
+          <hr style={{ height: '2px', backgroundColor: 'black', marginTop: '30px' }}></hr>
         </div>
       );
 
     };
 
-
     const content = Object.keys(nestedObjects_).map((key) => {
       return (
-        <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "start" }} key={key}>
+        <div style={{ marginTop: "30px", marginBottom: "30px", textAlign: "start" }} key={key}>
           {renderObject(key, nestedObjects_[key], false)}
         </div>
       )
@@ -523,8 +534,6 @@ const NeighborhoodEditableDiv = ({
         </div>
       )
     });
-
-
 
 
 
@@ -568,7 +577,7 @@ const NeighborhoodEditableDiv = ({
 
     return (
       <div>
-        <h2 >Make sure to try:</h2>
+        {objectKey === 'recommendedFoodTypes' ? <h2 >Make sure to try:</h2> : <h2 >Make sure to visit:</h2>}
         <div style={{ padding: "15px", width: "100%", position: "relative" }}>
           {isEditing ? (
             <div style={{ marginTop: "20px" }}>
@@ -751,16 +760,24 @@ const NeighborhoodEditableDiv = ({
                 }
 
                 return (
-                  <div key={index} >
+                  <div key={index} style={{ textAlign: 'start' }} >
                     {objectKey === 'recommendedFoodTypes' ? (
                       <div>
-                        <p className='nhoodRecommendationText'>
-                          {item.assessment} food.
+
+                        <div className='nhoodRecommendationText'>
+                          <span>
+                            {index + 1 + "."}
+                          </span>
+
+                          <div style={{ display: 'inline', backgroundColor: 'yellow', padding: '4px' }}>
+                            {item.assessment} food.
+                          </div>
                           {item.explanation && (
                             <span className='nhoodRecommendationText' >
                               {` GO to ${removeTrailingPeriod(item.explanation)}.`}
                             </span>
-                          )}</p>
+                          )}</div>
+                        <hr></hr>
                       </div>
                     ) : objectKey === 'nightLifeRecommendations' ? (
                       <div style={{ textAlign: "start" }}>
@@ -783,6 +800,8 @@ const NeighborhoodEditableDiv = ({
       </div>
     )
   }
+
+
 
   /** We are rendering information that comes in as an object: */
   if (typeof objectData_ === "object") {
@@ -807,23 +826,19 @@ const NeighborhoodEditableDiv = ({
         ) : (
           <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
             {isEditable ? (
-
               <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
-
-              // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-
             ) : null}
             <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
               {<>
                 {complementaryText[0]}
                 <div style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
-                  {objectData_.assessment.toLowerCase()}
+                  {removeTrailingPeriod(objectData_.assessment.toLowerCase())}
                 </div>
               </>
               }
               {objectData_.explanation !== "" ? (
                 <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                  {", " + complementaryText[1] + objectData_.explanation.toLowerCase() + "."}
+                  {", " + complementaryText[1] + removeTrailingPeriod(objectData_.explanation.toLowerCase()) + "."}
                 </span>
               ) : (
                 null
@@ -836,10 +851,88 @@ const NeighborhoodEditableDiv = ({
     )
   };
 
-  /** When we render the neighboorhood images: */
-  if (images.length > 0) {
 
-    // {console.log('imagessss', images)}
+  /** When we render the neighboorhood images: */
+  if (objectKey === 'neighborhoodImages') {
+
+    // This if statement will take place when the user did not submit picutres. It will render the form to submit pictures. 
+    if (nhoodImages.length === 0) {
+      return (
+        <div className="galleryParent" ref={galleryParentRef}
+          style={{ position: "relative" }}
+        >
+          {isEditable ? (
+            <div>
+              <Slider {...settings} style={{ background: "transparent" }} >
+                {nhoodImages.map((image, index) => (
+                  <div
+                    className={`placeImageEditContainer ${index === 0 ? "firstDiv" : ''}`}
+                    key={index} >
+                    <InputGroup style={{ marginBottom: "10px" }}>
+                      <InputGroup.Text style={{ marginLeft: "5px", marginTop: "5px", fontSize: "10px" }}>Describe picture:</InputGroup.Text>
+                      <Form.Control id={`photoDescriptionInput-${index}`} style={{ marginRight: "5px", marginTop: "5px", fontSize: "10px", width: "18%" }} onChange={handleChange} defaultValue={image.description} as="textarea" aria-label="With textarea" />
+                    </InputGroup>
+                    <img alt="neighborhoodimage"
+                      ref={(el) => { imgRefs.current[index] = el }}
+                      style={{ width: "100%", height: "300px", objectFit: "cover" }} src={"https://insiderhood.s3.amazonaws.com/" + image.image}
+                    />
+                    <Button
+                      style={{
+                        position: "relative",
+                        fontSize: "10px",
+                        marginTop: "5px"
+                      }}
+                      onClick={(e) => { removePhoto(index) }}
+                      variant="danger">Delete photo
+                    </Button>
+                  </div>
+                ))}
+
+              </Slider>
+
+              <Form.Group style={{
+                marginTop: "10px",
+                marginBottom: "10px"
+              }}
+                controlId="formFileMultiple" className="mb-3">
+                <Form.Label style={{ fontSize: "15px" }} className="text-primary">Add neighborhood pictures:</Form.Label>
+                <Form.Control
+                  ref={addImagesInput}
+                  type="file"
+                  multiple
+                  style={{
+                    width: '30%',
+                    position: 'relative',
+                    left: "50%",
+                    transform: "translate(-50%, 0)",
+                    fontSize: "10px"
+                  }}
+                />
+              </Form.Group>
+              <div className="divSaveCancelBtns">
+                <Button onClick={handleSaveClick} style={{ fontSize: "10px" }} variant="primary">Save</Button>
+                <Button onClick={handleCancelClick} style={{ fontSize: "10px", marginLeft: "3px" }} variant="secondary">Cancel</Button>
+                {/* {
+                  addImagesInput.current.files.length > 0 ? (
+                    <>
+                    </>
+                  ) : null
+                } */}
+
+
+
+
+
+              </div>
+
+
+            </div>
+
+          ) : null}
+        </div>
+      )
+    }
+
 
     return (
       <div className="galleryParent" ref={galleryParentRef}
@@ -880,7 +973,7 @@ const NeighborhoodEditableDiv = ({
               marginBottom: "10px"
             }}
               controlId="formFileMultiple" className="mb-3">
-              <Form.Label style={{ fontSize: "15px" }} className="text-primary">Add more pictures:</Form.Label>
+              <Form.Label style={{ fontSize: "15px" }} className="text-primary">Add neighborhood pictures:</Form.Label>
               <Form.Control
                 ref={addImagesInput}
                 type="file"
@@ -902,10 +995,10 @@ const NeighborhoodEditableDiv = ({
 
           </div>
 
+
+
         ) : (
-
           <Slider  {...settings}>
-
             {nhoodImages.map((image, index) => (
               <Card key={index} style={{ width: '18rem', margin: '5px', background: "transparent" }}>
                 <Card.Img style={{ width: "100%", height: "300px", objectFit: "cover", background: "#e4e4e4" }} variant="top" src={"https://insiderhood.s3.amazonaws.com/" + image.image} />
@@ -918,7 +1011,6 @@ const NeighborhoodEditableDiv = ({
                   : null}
               </Card>
             ))}
-
           </Slider>
         )
         }

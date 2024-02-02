@@ -90,7 +90,6 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
           </div>
 
           {/** IMAGES */}
-
           <div className="containerNhoodItems" >
             {neighborhood && (
               <div >
@@ -145,14 +144,11 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
                   <div className="foodEditableDivsContainer_">
 
                     <h1 className="recommendationsHeader" > The Food of {nhoodName}</h1>
-                    {/* <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The food scene of " + nhoodName + " can be generally described as"} content={neighborhood.foodCulture
-                    } objectKey="foodCulture" /> */}
+                
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${nhoodName} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                     } objectKey="foodIsAuthentic" />
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${nhoodName} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />
-
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} recommendationsArrayOfObjects={neighborhood.recommendedFoodTypes} objectKey="recommendedFoodTypes" />
-
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place to eat in ${nhoodName} it would be `, 'because ']} objectData={neighborhood.onePlaceToEat} objectKey="onePlaceToEat" />
 
                   </div>
@@ -173,9 +169,7 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
           {/** NIGHTLIFE */}
           <div className="sectionContainer containerNhoodItems">
             {neighborhood && (
-
               <div className="nightLifeContainer">
-
                 <picture className="imageSectionContainer">
                   <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_nightlife.jpg' />
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/nitelife.jpg"></img>
@@ -184,12 +178,7 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
                 <div className="nightLifeEditableDivsContainer">
                   <div style={{ position: "relative", margin: "auto " }}>
                     <h1 className="recommendationsHeader" >The Night Life of {nhoodName}</h1>
-                    {/* <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would describe the nighlife of " + nhoodName + " as "} content={neighborhood.nightLife} objectKey="nightLife" /> */}
-
-
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Night life in ${nhoodName} can be `, 'because ']} objectData={neighborhood.nightLife} objectKey="nightLife" />
-
-
                     {
                       ((neighborhood.nightLifeRecommendations && neighborhood.nightLifeRecommendations.length > 0) || isEditable) &&
                       <NeighborhoodEditableDiv
@@ -199,7 +188,6 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
                         objectKey="nightLifeRecommendations"
                       />
                     }
-
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`If I were to suggest ONE place for a fun at night, it would be `, 'because ']} objectData={neighborhood.onePlaceForNightLife} objectKey="onePlaceForNightLife" />
                   </div>
                 </div>
