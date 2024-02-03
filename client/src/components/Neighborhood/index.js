@@ -41,7 +41,6 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
     getNeighorhoodData();
   }, [currentuserProp]);//currentuser
 
-
   const nhoodName = neighborhood?.neighborhood.charAt(0).toUpperCase() + neighborhood?.neighborhood.slice(1);
 
   return (

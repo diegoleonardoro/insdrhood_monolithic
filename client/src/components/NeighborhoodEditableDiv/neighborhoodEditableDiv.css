@@ -43,7 +43,7 @@
 
 }
 
-.tableRecommendedPlaces, th, td{
+.tableHeaderRecommededPlaces, .tableCellRecommededPlaces{
   border: 1px solid black;
   padding: 10px; /* Increase space above the cell content */
 

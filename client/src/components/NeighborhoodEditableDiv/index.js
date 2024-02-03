@@ -270,8 +270,6 @@ const NeighborhoodEditableDiv = ({
     setRecommendationsArrayOfObjects_(array);
   };
 
-
-
   /** Function that will save the images */
   async function uploadImagesAndUpdateState(addImagesInput, neighborhood, imagesId, objectKey) {
     // Convert file list to array
@@ -311,9 +309,6 @@ const NeighborhoodEditableDiv = ({
     updateNeighborhoodData({ [objectKey]: imagesUrls });
 
   };
-
-
-
 
   // function to save edited data:
   const handleSaveClick = async () => {
@@ -364,12 +359,9 @@ const NeighborhoodEditableDiv = ({
       })
     }
 
-
-
     // user is editing the images of the neighborhood:
     //images.length > 0
     if (objectKey === 'neighborhoodImages') {
-
 
       if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
         await uploadImagesAndUpdateState(addImagesInput, neighborhood, imagesId, objectKey);
@@ -384,29 +376,7 @@ const NeighborhoodEditableDiv = ({
         updateNeighborhoodData({ ['removeImages']: nhoodImages });
       }
 
-
-
     }
-
-    // else { // this else statement will take place when the user did not submit any pictures but is now trying to save pictures from this profile 
-    //   // Check if the user actually uploaded images 
-    //   if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
-    //     console.log(addImagesInput.current.files.length);
-    //   } else {
-    //     // choose a banner asking users to upload images
-    //   }
-    // }
-
-
-
-
-
-
-
-
-
-
-
     // user is editing the list of neighborhood adjectives 
     if (adjectives.length > 0) {
       setAdjectivesTextHistory(prevAdjectivesText => {
@@ -574,14 +544,11 @@ const NeighborhoodEditableDiv = ({
 
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
-
-    console.log("recommendationsArrayOfObjectsHistoryrecommendationsArrayOfObjectsHistory", recommendationsArrayOfObjectsHistory)
     return (
       <div>
 
         {objectKey === 'recommendedFoodTypes' ? <h2 >Make sure to try:</h2> : <h2 >Make sure to visit:</h2>}
         <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-
 
           {isEditing || (isEditable && recommendationsArrayOfObjectsHistory.length === 0) ? (
             <div style={{ marginTop: "20px" }}>
@@ -670,26 +637,24 @@ const NeighborhoodEditableDiv = ({
                 );
               })}
 
-
               {objectKey === 'recommendedFoodTypes' ?
                 <h4 style={{ marginTop: "20px" }}>Add recommended restaurants: </h4> :
                 <h4 style={{ marginTop: "20px" }}>Add recommended night life venues: </h4>
               }
 
-
               <table className="tableRecommendedPlaces" style={{ margin: "5px", position: "relative", left: "50%", transform: "translate(-50%, 0)" }} >
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>{objectKey === 'recommendedFoodTypes' ? 'Food type' : 'Venue name'}</th>
-                    <th>{objectKey === 'recommendedFoodTypes' ? 'Restaurant name' : 'Description'}</th>
+                    <th className='tableHeaderRecommededPlaces'>#</th>
+                    <th className='tableHeaderRecommededPlaces'>{objectKey === 'recommendedFoodTypes' ? 'Food type' : 'Venue name'}</th>
+                    <th className='tableHeaderRecommededPlaces'>{objectKey === 'recommendedFoodTypes' ? 'Restaurant name' : 'Description'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map((row, index) => (
                     <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
+                      <td className='tableCellRecommededPlaces'>{index + 1}</td>
+                      <td className='tableCellRecommededPlaces'>
                         <input
                           style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
                           value={row.assessment}
@@ -700,14 +665,14 @@ const NeighborhoodEditableDiv = ({
                           }}
                         />
                       </td>
-                      <td>
+                      <td className='tableCellRecommededPlaces'>
                         <input
                           style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
                           value={row.recommendations}
                           name="explanation"
                           onChange={(e) => {
                             updateField(index, 'recommendations', e.target.value); // this function will add a new row to the table 
-                            handleChange(e, index, 'table'); /// <<<----------
+                            handleChange(e, index, 'table'); 
                           }}
                         />
                       </td>
@@ -726,9 +691,7 @@ const NeighborhoodEditableDiv = ({
                 <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
                 <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
               </div>
-
             </div>
-
 
           ) : (
             <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
@@ -798,8 +761,6 @@ const NeighborhoodEditableDiv = ({
               })}
             </div>
           )}
-
-
         </div>
       </div>
     )
@@ -1166,7 +1127,6 @@ function hasNestedObjects(obj) {
   // If no nested objects are found, return false
   return false;
 }
-//-------------------------------------------------------------------------------------------------------------------
 
 function areArraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) {
