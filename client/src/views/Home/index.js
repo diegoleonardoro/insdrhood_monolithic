@@ -13,18 +13,41 @@ function Home({ currentuser, updateCurrentUser }) {
   const navigate = useNavigate();
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
   const [user, setUser] = useState(null);
-
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  // Handle change in search input
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
+  // Filter neighborhoodsData based on searchTerm
+  const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) =>
+    neighborhood.neighborhood.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Map the filtered neighborhoods to table rows
+  const neighborhoodsList = filteredNeighborhoods.map((neighborhood) => {
+    return (
+      <tr key={neighborhood._id}>
+        <td>{neighborhood.neighborhood}</td>
+        <td>
+          "{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}
+        </td>
+        <td>
+          <Link to={`/neighborhood/${neighborhood._id}`}>
+            Learn more
+          </Link>
+        </td>
+      </tr>
+    );
+  });
+
+  useEffect(() => {
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
-
     const token = urlParams.get('token');
-
     if (token) {
-
       const logUserWithToken = async () => {
 
         try {
@@ -44,8 +67,6 @@ function Home({ currentuser, updateCurrentUser }) {
         } catch (error) {
           // Handle error here
         }
-
-
       };
       logUserWithToken();
     } else {
@@ -75,44 +96,37 @@ function Home({ currentuser, updateCurrentUser }) {
 
   }, []);
 
-
-
-  const neighborhoodsList = neighborhoodsData.map((neighborhood) => {
-    return (
-      <tr key={neighborhood._id}>
-        <td >{neighborhood.neighborhood}</td>
-        <td>
-          "{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}
-        </td>
-        <td>
-          <Link to={`/neighborhood/${neighborhood._id}`}  >
-            Learn more
-          </Link>
-        </td>
-      </tr>
-    );
-  });
-
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
-
   if (isLoading) {
     return (
-        <Spinner style={{position:"relative", height:"100px", width:"100px", top:"50px"}} animation="grow" /> 
+      <div>
+        <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+        Loading...
+      </div>
     )
   }
 
   return (
-    <Table striped bordered hover size="sm" style={{ width: "90%", margin: "50px auto" }} >
-      <thead>
-        <tr>
-          <th >Neighborhood</th>
-          <th >Description</th>
-          <th>Learn more</th>
-        </tr>
-      </thead>
-      {<tbody>{neighborhoodsList}</tbody>}
-    </Table>
+    <div style={{display:'flex', flexDirection:'column', alignItems:'center', width:'90%', margin:'60px auto auto auto', }}>
+
+      <input
+        type="text"
+        placeholder="Search by neighborhood..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+      
+        className='searchByNhoodInput'
+      />
+      <Table striped bordered hover size="sm" style={{ marginTop: "0"}} >
+        <thead>
+          <tr>
+            <th >Neighborhood</th>
+            <th >Description</th>
+            <th>Learn more</th>
+          </tr>
+        </thead>
+        {<tbody>{neighborhoodsList}</tbody>}
+      </Table>
+    </div>
   );
 
 }

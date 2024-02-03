@@ -66,15 +66,7 @@ function Header({ updateCurrentUser, currentuser }) {
             <Nav className="me-auto">
               {links}
             </Nav>
-            <Form className="d-flex">
-              <Form.Control
-                type="search"
-                placeholder="Search neighborhood"
-                className="me-2"
-                aria-label="Search neighborhood"
-              />
-              <Button variant="outline-warning">Search</Button>
-            </Form>
+        
           </Container>
         </Navbar>
       ) : null}

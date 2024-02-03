@@ -1,0 +1,14 @@
+
+.searchByNhoodInput{
+  width:40%;
+  margin-bottom: 20px;
+  align-self: flex-start;
+  height:40px;
+}
+
+@media (max-width: 749px) {
+
+  .searchByNhoodInput{
+    width:100%;
+  }
+}

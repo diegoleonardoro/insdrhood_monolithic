@@ -23,7 +23,6 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
     return str;
   }
 
-
   // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
