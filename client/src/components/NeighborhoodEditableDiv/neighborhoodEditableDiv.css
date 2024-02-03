@@ -35,6 +35,20 @@
   justify-content: center;
 }
 
+.tableRecommendedPlaces{
+
+  background-color: #ffffffab;
+  border-collapse: collapse;
+  width:80%;
+
+}
+
+.tableRecommendedPlaces, th, td{
+  border: 1px solid black;
+  padding: 10px; /* Increase space above the cell content */
+
+}
+
 .nhoodRecommendationText{
   text-align:start;
   margin-top: 20px;

@@ -665,14 +665,14 @@ const NeighborhoodEditableDiv = ({
                 );
               })}
 
-              <h4 style={{ marginTop: "20px" }}>Add more: </h4>
+              <h4 style={{ marginTop: "20px" }}>Add recommended night life venues: </h4>
 
-              <Table style={{ margin: "5px", position: "relative", width: "120%", left: "50%", transform: "translate(-50%, 0)" }} striped bordered hover>
+              <table className="tableRecommendedPlaces" style={{ margin: "5px", position: "relative", left: "50%", transform: "translate(-50%, 0)"}} >
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Food Type</th>
-                    <th>Restaurants</th>
+                    <th>{objectKey === 'recommendedFoodTypes' ? 'Food type' : 'Venue name'}</th>
+                    <th>{objectKey === 'recommendedFoodTypes' ? 'Restaurant name' : 'Description'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -686,13 +686,12 @@ const NeighborhoodEditableDiv = ({
                           name="assessment"
                           onChange={(e) => {
                             updateField(index, 'assessment', e.target.value); // this function will add a new row to the table 
-                            handleChange(e, index, 'table'); /// <<<----------
+                            handleChange(e, index, 'table'); ///
                           }}
                         />
                       </td>
                       <td>
                         <input
-                          placeholder='comma separated'
                           style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', width: '100%' }}
                           value={row.recommendations}
                           name="explanation"
@@ -706,8 +705,8 @@ const NeighborhoodEditableDiv = ({
                   ))}
                 </tbody>
 
-              </Table>
-              <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", border: "3px dotted rgb(120 120 120)", cursor: "pointer" }}>
+              </table>
+              <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", cursor: "pointer" }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
                   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
                   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
