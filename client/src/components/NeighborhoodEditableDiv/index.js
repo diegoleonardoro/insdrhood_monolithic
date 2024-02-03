@@ -575,11 +575,15 @@ const NeighborhoodEditableDiv = ({
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
+    console.log("recommendationsArrayOfObjectsHistoryrecommendationsArrayOfObjectsHistory", recommendationsArrayOfObjectsHistory)
     return (
       <div>
+
         {objectKey === 'recommendedFoodTypes' ? <h2 >Make sure to try:</h2> : <h2 >Make sure to visit:</h2>}
         <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-          {isEditing ? (
+
+
+          {isEditing || (isEditable && recommendationsArrayOfObjectsHistory.length === 0) ? (
             <div style={{ marginTop: "20px" }}>
               {recommendationsArrayOfObjects_.map((item, index) => {
                 let text;
@@ -604,7 +608,6 @@ const NeighborhoodEditableDiv = ({
                     text = "Also visit";
                   }
                 }
-
 
                 return (
                   <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding: "15px" }}>
@@ -659,15 +662,22 @@ const NeighborhoodEditableDiv = ({
                       ) : null}
 
                       <Form.Control name="explanation" onChange={(e) => { handleChange(e, index) }} type="text" value={item.explanation} />
-                      <div  >{`for authentic ${item.assessment} food.`}</div >
+
+                      {objectKey === 'recommendedFoodTypes' ? <div>{`for authentic ${item.assessment} food.`}</div > : null}
+
                     </div>
                   </div>
                 );
               })}
 
-              <h4 style={{ marginTop: "20px" }}>Add recommended night life venues: </h4>
 
-              <table className="tableRecommendedPlaces" style={{ margin: "5px", position: "relative", left: "50%", transform: "translate(-50%, 0)"}} >
+              {objectKey === 'recommendedFoodTypes' ?
+                <h4 style={{ marginTop: "20px" }}>Add recommended restaurants: </h4> :
+                <h4 style={{ marginTop: "20px" }}>Add recommended night life venues: </h4>
+              }
+
+
+              <table className="tableRecommendedPlaces" style={{ margin: "5px", position: "relative", left: "50%", transform: "translate(-50%, 0)" }} >
                 <thead>
                   <tr>
                     <th>#</th>
@@ -721,15 +731,9 @@ const NeighborhoodEditableDiv = ({
 
 
           ) : (
-
-
             <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
-
               {isEditable ? (
-
                 <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
-                // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-
               ) : null}
               {recommendationsArrayOfObjectsHistory.map((item, index) => {
 
@@ -793,13 +797,13 @@ const NeighborhoodEditableDiv = ({
                 );
               })}
             </div>
-
           )}
+
+
         </div>
       </div>
     )
   }
-
 
 
   /** We are rendering information that comes in as an object: */

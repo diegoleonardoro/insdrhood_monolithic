@@ -16,7 +16,7 @@ import { sendVerificationMail } from "../services/emailVerification";
 interface updateQuery {
   $set?: any,
   $push?: any,
-  $pull?:any
+  $pull?: any
 }
 
 
@@ -398,10 +398,8 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
   const neighborhoods = db.collection("neighborhoods");
   let updateQuery: updateQuery = {};
 
-
   //Handling updates for nested objects:
-
-  if (!updates.neighborhoodImages && !updates.removeImages) {
+  if (!updates.neighborhoodImages && !updates.removeImages && !updates.nightLifeRecommendations && !updates.recommendedFoodTypes) {
 
     Object.keys(updates).forEach((key) => {
       if (typeof updates[key] === 'object' && updates[key] !== null) {
@@ -417,7 +415,7 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
       }
     });
   }
-  
+
   if (updates.removeImages) {
     updateQuery.$set = { neighborhoodImages: updates.removeImages };
     delete updates.removeImages

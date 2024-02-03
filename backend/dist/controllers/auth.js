@@ -289,7 +289,7 @@ const updateNeighborhoodData = async (req, res) => {
     const neighborhoods = db.collection("neighborhoods");
     let updateQuery = {};
     //Handling updates for nested objects:
-    if (!updates.neighborhoodImages && !updates.removeImages) {
+    if (!updates.neighborhoodImages && !updates.removeImages && !updates.nightLifeRecommendations && !updates.recommendedFoodTypes) {
         Object.keys(updates).forEach((key) => {
             if (typeof updates[key] === 'object' && updates[key] !== null) {
                 // Iterate over nested object fields
