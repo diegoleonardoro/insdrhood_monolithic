@@ -800,7 +800,7 @@ const NeighborhoodEditableDiv = ({
                 </div>
               </>
               }
-              {objectData_.explanation !== "" ? (
+                {objectData_.explanation && objectData_.explanation !== "" ? (
                 <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
                   {", " + complementaryText[1] + removeTrailingPeriod(objectData_.explanation.toLowerCase()) + "."}
                 </span>

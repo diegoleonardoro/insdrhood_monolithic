@@ -15,26 +15,36 @@ function Home({ currentuser, updateCurrentUser }) {
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedBorough, setSelectedBorough] = useState('All');
+
 
   // Handle change in search input
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+  // Handle change in borough selection
+  const handleBoroughChange = (event) => {
+    setSelectedBorough(event.target.value);
+  };
 
-  // Filter neighborhoodsData based on searchTerm
-  const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) =>
-    neighborhood.neighborhood.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter neighborhoodsData based on searchTerm and selectedBorough
+  const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) => {
+    return (
+      neighborhood.neighborhood.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedBorough === 'All' || neighborhood.borough === selectedBorough)
+    );
+  });
+
+
 
   // Map the filtered neighborhoods to table rows
   const neighborhoodsList = filteredNeighborhoods.map((neighborhood) => {
     return (
       <tr key={neighborhood._id}>
-        <td>{neighborhood.neighborhood}</td>
-        <td>
-          "{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}
-        </td>
-        <td>
+        <td data-label="Neighborhood">{neighborhood.neighborhood}</td>
+        <td data-label="Borough">{neighborhood.borough}</td>
+        <td data-label="Description">"{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}</td>
+        <td data-label="Learn more">
           <Link to={`/neighborhood/${neighborhood._id}`}>
             Learn more
           </Link>
@@ -105,21 +115,37 @@ function Home({ currentuser, updateCurrentUser }) {
     )
   }
 
-  return (
-    <div style={{display:'flex', flexDirection:'column', alignItems:'center', width:'90%', margin:'60px auto auto auto', }}>
 
-      <input
-        type="text"
-        placeholder="Search by neighborhood..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-      
-        className='searchByNhoodInput'
-      />
-      <Table striped bordered hover size="sm" style={{ marginTop: "0"}} >
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '60px auto auto auto', }}>
+
+
+      <div className='filterInputsContainer'>
+        <input
+          type="text"
+          placeholder="Search by neighborhood..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+
+          className='searchByNhoodInput'
+        />
+        <div className="dropdownFilterByBorough">
+
+          <select value={selectedBorough} onChange={handleBoroughChange} className='boroughSelect' id="boroughSelect">
+            <option value="All">All Boroughs</option>
+            <option value="Manhattan">Manhattan</option>
+            <option value="Brooklyn">Brooklyn</option>
+            <option value="Queens">Queens</option>
+            <option value="The Bronx">The Bronx</option>
+            <option value="Staten Island">Staten Island</option>
+          </select>
+        </div>
+      </div>
+      <Table striped bordered hover size="sm" className="nhoodsTable" style={{ marginTop: "0" }} >
         <thead>
           <tr>
             <th >Neighborhood</th>
+            <th >Borough</th>
             <th >Description</th>
             <th>Learn more</th>
           </tr>

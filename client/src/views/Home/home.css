@@ -1,14 +1,84 @@
 
+
+
+.nhoodsTable{
+ border-collapse: collapse;
+}
+
+.filterInputsContainer{
+  display: flex;
+  width:100%;
+  justify-content: start;
+}
+
 .searchByNhoodInput{
-  width:40%;
+  width:20%;
   margin-bottom: 20px;
   align-self: flex-start;
   height:40px;
 }
 
-@media (max-width: 749px) {
+.boroughSelect{
+  height:40px;
+  margin-left: 20px;
+}
 
+
+.dropdownFilterByBorough{
+  width:20%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  height:40px;
+}
+
+@media (max-width: 749px) {
   .searchByNhoodInput{
-    width:100%;
+    width:50%;
   }
+
+  .dropdownFilterByBorough{
+     width:50%;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .nhoodsTable, .nhoodsTable thead, .nhoodsTable tbody, .nhoodsTable th, .nhoodsTable td, .nhoodsTable tr {
+    display: block;
+  }
+
+  .nhoodsTable thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .nhoodsTable tr {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+  }
+
+  .nhoodsTable td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+  }
+
+  .nhoodsTable td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  /* Label the data */
+  .nhoodsTable td:before { content: attr(data-label); }
 }

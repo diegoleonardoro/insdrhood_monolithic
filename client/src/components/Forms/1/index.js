@@ -13,9 +13,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
 
 
-// import { setTimeout } from "timers";
-
-
 let addLastPlace = false;
 let addPlaceFromForm = true;
 let addPlaceFromFormNightLife = true;
@@ -215,13 +212,9 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       await updateCurrentUser(newuser.data);
       navigate(`/neighborhood/${neighborhoodId}`);
-
       return;
-
     } catch (error) {
-
       console.log('errrrr', error);
-
     }
   }
 
@@ -262,10 +255,19 @@ const FormComponent = ({ updateCurrentUser }) => {
         if (currentDiv.className.indexOf("shakieCheck") > -1) {
 
           if (currentDiv.className.indexOf("nhoodAdjectivesFlag") > -1) {
-
             const adjsContainer = currentDiv.querySelector(".adjsNhoodContainer") || currentDiv.querySelector(".adjsResContainer");
             if (!adjsContainer) {
+              tooltip.style.display = "inline-block";
+              return;
+            };
+          }
 
+          // check if the current question is the neighborhood question
+          if (currentDiv.className.indexOf("neighborhoodInput") > -1) {
+            //select the borough input 
+            const allInputs = currentDiv.querySelectorAll("input, textarea, select");
+            // check that both the neighborhood and the borough inputs have values
+            if (allInputs[0].value === '' || allInputs[1].value === '') {
               tooltip.style.display = "inline-block";
               return;
             }
@@ -276,10 +278,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           if (userInput) {
 
             if (userInput.value === '' && userInput.name !== 'nhoodImages' && userInput.className !== "foodTypeInput") {
-
               tooltip.style.display = "inline-block";
               return;
-
             }
             else if (userInput.className.indexOf("statementResponseContainerInput") > -1) {
               const inputs = currentDiv.querySelectorAll("input");
@@ -306,7 +306,6 @@ const FormComponent = ({ updateCurrentUser }) => {
           currentDiv.className.indexOf("nightlifeQuestions") > -1
         ) {
 
-          console.log("holiisssss")
           const inputs = currentDiv.querySelectorAll("input");
           let hasValue = false;
           for (let i = 0; i < inputs.length; i++) {
@@ -345,7 +344,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         // This if statement sets the value the state "neighborhood", when the "next" arrow is clicked on the neighborhood input.
         if (currentDiv.className.indexOf("neighborhoodInput") > -1) {
-          setNeighborhood(currentDiv.children[1].value);
+          setNeighborhood(currentDiv.children[1].children[0].value);
         }
 
         // this block will check if there are inputs in the night life recommeded places 
@@ -808,13 +807,18 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     if (tooltip.className.indexOf("tooltip_") === -1) {
       const parent = e.target.parentElement;
+      tooltip = parent.nextElementSibling;    
+    }
+
+    if (!tooltip || tooltip.className.indexOf("tooltip_") === -1 ) {
+      const parent = e.target.parentElement;
       const grandpa = parent.parentElement;
       const grandpagranpa = grandpa.parentElement;
       tooltip = grandpagranpa.nextElementSibling;
     }
 
     // If tooltip is undefined, select the nextElementSibling of the parent element
-    if (tooltip.className.indexOf("tooltip_") === -1) {
+    if (!tooltip || tooltip.className.indexOf("tooltip_") === -1  ) {
       const parent = e.target.parentElement;
       const grandpa = parent.parentElement;
       tooltip = grandpa.nextElementSibling;
@@ -995,29 +999,50 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[1] = ref}
             >
+
               <label htmlFor="neighborhood">
                 What <span className="questionHighlight">neighborhood</span> do you live in?
               </label>
+              <div>
+                <input
+                  value={formData.neighborhood}
+                  onChange={(e) => {
+                    setFormData({ ...formData, neighborhood: e.target.value });
+                    localStorage.setItem("neighborhood", JSON.stringify(e.target.value))
+                    selectNeighborhoods(e);
+                    changeTooltipDisplay(e, "none");
+                  }}
+                  onKeyDown={(e) => {
+                    highlightNhoods(e);
+                  }}
+                  name="neighborhood"
+                  id="neighborhood"
+                  placeholder=" "
+                  className={"textInput inputCheck"}
+                  ref={neighborhoodInput}
+                ></input>
+                <select
+                  id="borough"
+                  onChange={(e) => {
+                    setFormData({ ...formData, borough: e.target.value });
 
-              <input
-                value={formData.neighborhood}
-                onChange={(e) => {
-                  setFormData({ ...formData, neighborhood: e.target.value });
-                  localStorage.setItem("neighborhood", JSON.stringify(e.target.value))
-                  selectNeighborhoods(e);
-                  changeTooltipDisplay(e, "none");
-                }}
-                onKeyDown={(e) => {
-                  highlightNhoods(e);
-                }}
-                name="neighborhood"
-                id="neighborhood"
-                placeholder=" "
-                className={"textInput inputCheck"}
-                ref={neighborhoodInput}
-              ></input>
+                  }}
+                  style={{ width: '100%', borderRadius: '20px' }}
+                  className={"selectOptions inputCheck"} // Add your CSS classes as needed
+                >
+                  <option value="">Borough</option>
+                  <option value="Brooklyn">Brooklyn</option>
+                  <option value="Manhattan">Manhattan</option>
+                  <option value="Queens">Queens</option>
+                  <option value="Bronx">The Bronx</option>
+                  <option value="Staten Island">Staten Island</option>
+                </select>
+
+              </div>
+
 
               <div className="tooltip_">This information is relevant </div>
+
 
               <div
                 ref={neighborhoodsDiv}
@@ -1032,6 +1057,17 @@ const FormComponent = ({ updateCurrentUser }) => {
                   );
                 })}
               </div>
+
+
+
+
+
+
+
+
+
+
+
             </div>
 
             {/** How long have you been living in you neighborhood? */}
@@ -2930,7 +2966,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
 
 
-              <div style={{ display: "fex", textAlign:'start', position: "relative" }}>
+              <div style={{ display: "fex", textAlign: 'start', position: "relative" }}>
                 <div style={{ display: "fex", alignItems: "center", lineHeight: "40px" }}>
                   <p style={{ display: "inline" }}>If you had to pick <span className="questionHighlight"> one place to enjoy night life </span> in {neighborhood} it would be </p>
                   <input style={{
