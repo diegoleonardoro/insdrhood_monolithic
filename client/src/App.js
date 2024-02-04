@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom'; // Import useLocation
 import { UserProvider } from './contexts/UserContext';
 import Button from 'react-bootstrap/Button';
 import EmailRegisterWindow from './components/EmailRegistrationPopup'
+import PasswordSetPopup from './components/PasswordSetPopup'
 import PrivacyNotice from './components/Privacy'
 
 
@@ -24,6 +25,7 @@ function App() {
   const HeaderMemo = React.memo(Header);
   const [currentuser, setCurrentUser] = useState(null);
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
+  const [showPasswordForm, setShowPasswordForm]= useState( false);
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -32,6 +34,10 @@ function App() {
 
   const showEmailRegistration = () => {
     setShowEmailRegisterPopup(true)
+  }
+
+  const showPassWordForm = ()=>{
+    setShowPasswordForm(true)
   }
 
   const updateCurrentUser = useCallback((data) => {
@@ -69,17 +75,25 @@ function App() {
     }
   }, []); // checkCurrentUser  is now a stable function reference
 
+  console.log("currentusercurrentuser", currentuser)
+
   return (
     <UserProvider>
       <Router>
         <div className="App">
           <div>
             {showEmailRegisterPopup && <EmailRegisterWindow updateCurrentUser={updateCurrentUser} currentuser={currentuser} setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
-            <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
-            {
-              currentuser && currentuser.isVerified === false ? (
-                <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
 
+            {showPasswordForm && < PasswordSetPopup 
+            updateCurrentUser={updateCurrentUser} 
+            currentuser={currentuser} setShowPasswordForm ={setShowPasswordForm}>
+              
+            </PasswordSetPopup >}
+
+            <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
+            {currentuser && (
+              currentuser.isVerified === false ? (
+                <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
                   {currentuser.email !== "" ? (
                     <Alert style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px" }} variant="primary">
                       <div style={{ position: "relative", top: "-9px" }}>
@@ -89,13 +103,20 @@ function App() {
                   ) : (
                     <div>
                       <Button onClick={showEmailRegistration} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="primary">
-                            Register for future edits
+                        Register for future edits
                       </Button>
                     </div>
                   )}
                 </div>
+              ) : currentuser.passwordSet === false ? (
+                // Something else to render if passwordSer is false
+                <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
+                    <Button onClick={showPassWordForm} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="primary">
+                    Set password
+                  </Button>
+                </div>
               ) : null
-            }
+            )}
           </div>
 
 
@@ -107,7 +128,7 @@ function App() {
             <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
             <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} />} />
-            <Route path="/privacy" element={<PrivacyNotice/>}></Route>
+            <Route path="/privacy" element={<PrivacyNotice />}></Route>
           </Routes>
         </div>
       </Router>

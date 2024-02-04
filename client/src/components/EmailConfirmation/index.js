@@ -50,9 +50,11 @@ const VerifyEmail = ({ updateCurrentUser }) => {
     if (user !== null) {
 
       // if the user has not set their password, show a form for them to set their passwords:
-      if (user.passwordSet === false) {
-        setShowPasswordForm(true);
-      } else if (user.formsResponded === 0) {
+      // if (user.passwordSet === false) {
+      //   setShowPasswordForm(true);
+      // } else 
+
+      if (user.formsResponded === 0) {
 
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
@@ -66,13 +68,16 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
       } else {
 
+        console.log("useruser", user);
+
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
 
         // DIRECT THE USER TO THE MAIN PAGE (EVENTUALLY DIRECT THEM TO THEIR PROFILE)
         const queryString = `token=${emailtoken}`
         setTimeout(() => {
-          navigate(`/?${queryString}`);
+          // navigate(`/?${queryString}`);
+          navigate(`/neighborhood/${user.neighborhoodId[0]}`)
         }, 2000);
       }
     }
@@ -93,6 +98,8 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
     }
   }
+
+
 
   // the following three states are meant to be used when the user has not set their password.
   // const [showRedirecting, setShowRedirecting] = useState(false);
@@ -123,7 +130,10 @@ const VerifyEmail = ({ updateCurrentUser }) => {
 
       </Alert>) : null}
 
-      {showPasswordForm ? (<div  className = "setPasswordContainer">
+
+
+
+      {/* {showPasswordForm ? (<div  className = "setPasswordContainer">
         <h3 style={{ display: "block" }} id="passwordHelpBlock" muted>
           Set a password:
         </h3>
@@ -166,7 +176,12 @@ const VerifyEmail = ({ updateCurrentUser }) => {
           ) : null
         }
       </div>) : null
-      }
+      } */}
+
+
+
+
+
     </div>
   )
 
