@@ -37,7 +37,7 @@ const signup = async (req, res) => {
     const hashedPassword = password ? await password_1.Password.toHash(password) : '';
     const user = {
         name: nameCapitalized,
-        email,
+        email: email === '' ? null : email,
         password: hashedPassword,
         image: image ? image : null,
         isVerified: false,

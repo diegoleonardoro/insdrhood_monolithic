@@ -17,6 +17,7 @@ const PasswordSetPopup = ({ updateCurrentUser, currentuser, setShowPasswordForm 
 
   const [formData, setFormData] = useState({
     password: "",
+    passwordSet:true
   });
 
   const navigate = useNavigate();

@@ -94,7 +94,7 @@ function App() {
             {currentuser && (
               currentuser.isVerified === false ? (
                 <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
-                  {currentuser.email !== "" ? (
+                  {currentuser.email !== null ? (
                     <Alert style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px" }} variant="primary">
                       <div style={{ position: "relative", top: "-9px" }}>
                         Verify Email {currentuser.email}
@@ -112,7 +112,13 @@ function App() {
                 // Something else to render if passwordSer is false
                 <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
                     <Button onClick={showPassWordForm} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="primary">
+                     <div> 
                     Set password
+                      </div>
+                      <hr></hr>
+                      <div style={{fontSize:'10px'}}>
+                        Passwords are hashed and encrypted.
+                      </div>
                   </Button>
                 </div>
               ) : null

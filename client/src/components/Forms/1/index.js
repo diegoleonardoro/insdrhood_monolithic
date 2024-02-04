@@ -1632,8 +1632,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               ref={ref => divRefs.current[6] = ref}
             >
               <label>
-                In general, how would you describe
-                <span className="questionHighlight nhoodName">{neighborhood}</span> as a neighborhood?
+                How would you describe
+                <span className="questionHighlight nhoodName">{neighborhood}</span> to someone who has never visited before?
               </label>
               <textarea
                 className="textarea_text"
@@ -1668,7 +1668,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             >
 
               <label>
-                <span className="questionHighlight">Adjectices that depict the typical resident</span> of
+                <span className="questionHighlight">Adjectives that depict the typical resident</span> of
                 <span className="nhoodName"> {neighborhood}: </span>
               </label>
 
