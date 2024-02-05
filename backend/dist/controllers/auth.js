@@ -158,7 +158,6 @@ const updateUserData = async (req, res) => {
         updates.emailToken = [emailToken];
     }
     if (existingUser) {
-        console.log('existing usertrtr', existingUser);
         throw new bad_request_error_1.BadRequestError("Email in use");
     }
     const user = await users.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: updates }, { returnDocument: 'after' });
@@ -178,7 +177,7 @@ const updateUserData = async (req, res) => {
     req.session = {
         jwt: userJwt,
     };
-    if (updates.emailToken) {
+    if (updates.emailToken && updates.email !== '') {
         (0, emailVerification_1.sendVerificationMail)({
             name: userInfo.name,
             email: userInfo.email,

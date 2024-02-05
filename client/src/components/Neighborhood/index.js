@@ -3,17 +3,16 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index";
+
 import Button from 'react-bootstrap/Button';
 import { useUser } from "../../contexts/UserContext";
+import { useNavigate } from 'react-router-dom';
 
-
-const NeighborhoodProfile = ({ currentuserProp }) => {
+const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
 
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
-  const { currentuser, updateCurrentUser } = useUser();
-
 
   // Function that will check if the last character of a string is a period and if so it will remove it:
   function removeTrailingPeriod(str) {
@@ -23,13 +22,11 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
     return str;
   }
 
-  // make requequest to get the neeighborhood data with id of neighborhoodid
   const getNeighorhoodData = async () => {
     try {
 
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       const currentUser__ = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-
       setNeighborhood(neighborhood.data);
       setIsEditable(neighborhood.data.user.id === currentUser__?.data.id);
 
@@ -38,7 +35,7 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
 
   useEffect(() => {
     getNeighorhoodData();
-  }, [currentuserProp]);//currentuser
+  }, []);//currentuser
 
   const nhoodName = neighborhood?.neighborhood.charAt(0).toUpperCase() + neighborhood?.neighborhood.slice(1);
 
@@ -97,7 +94,7 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
                   objectKey={'neighborhoodImages'}
                   images={neighborhood.neighborhoodImages}
                   neighborhood={nhoodName}
-                  imagesId={currentuser?.imagesId}
+                  imagesId={currentuserProp?.imagesId}
                 />
               </div>
             )}
@@ -142,7 +139,7 @@ const NeighborhoodProfile = ({ currentuserProp }) => {
                   <div className="foodEditableDivsContainer_">
 
                     <h1 className="recommendationsHeader" > The Food of {nhoodName}</h1>
-                
+
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`I would say the food in ${nhoodName} is `, 'because ']} objectData={neighborhood.foodIsAuthentic
                     } objectKey="foodIsAuthentic" />
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Food prices in ${nhoodName} can be `, 'because ']} objectData={neighborhood.foodPrices} objectKey="foodPrices" />

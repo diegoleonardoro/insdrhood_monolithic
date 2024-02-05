@@ -8,13 +8,13 @@ export const useUser = () => useContext(UserContext); // This is a custom hook t
 
 export const UserProvider = ({ children }) => { // This is a component that allows consuming components to subscribe to context changes.
 
-  const [currentuser, setCurrentUser] = useState(null); // This will be updated later when the user data is fetched.
+  const [currentuser_, setCurrentUser_] = useState(null); // This will be updated later when the user data is fetched.
 
-  const updateCurrentUser = useCallback(async () => {
+  const updateCurrentUser_ = useCallback(async () => {
 
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      setCurrentUser(response.data);
+      setCurrentUser_(response.data);
     } catch (error) {
       console.error('Failed to fetch current user:', error);
     }
@@ -23,13 +23,14 @@ export const UserProvider = ({ children }) => { // This is a component that allo
 
   // Fetch user on mount
   React.useEffect(() => {//  React's Effect Hook is used here to perform the updateCurrentUser operation when the component mounts.
-    updateCurrentUser();
-  }, [updateCurrentUser]);
+    updateCurrentUser_();
+  }, [updateCurrentUser_]);
 
   // The value passed to the provider is an object containing currentuser and updateCurrentUser, which any consumer of this context can access.
   return (
-    <UserContext.Provider value={{ currentuser, updateCurrentUser }}> 
+    <UserContext.Provider value={{ currentuser_, updateCurrentUser_ }}> 
       {children}
     </UserContext.Provider>
   );
+
 };

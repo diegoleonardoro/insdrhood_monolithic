@@ -29,13 +29,13 @@ router.post("/signup", asyncHandler(auth_1.signup));
 router.post("/signout", asyncHandler(auth_1.signout));
 router.get("/currentuser", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
-router.put("/updateuserdata/:id", asyncHandler(auth_1.updateUserData));
+router.put("/updateuserdata/:id", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.updateUserData));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */
 router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imageType", auth_1.uploadFile);
 router.post("/neighborhood/savedata", authentication_validator_1.authenticationValidator, auth_1.saveNeighborhoodData);
-router.put("/updateneighborhood/:id", auth_1.updateNeighborhoodData);
+router.put("/updateneighborhood/:id", authentication_validator_1.authenticationValidator, auth_1.updateNeighborhoodData);
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
 router.get("/neighborhood/:neighborhoodid", auth_1.getNeighborhood);
 //# sourceMappingURL=auth.js.map

@@ -32,14 +32,12 @@ const SignUp = ({ updateCurrentUser }) => {
   async function saveUserData() {
 
     try {
-      // const response = 
       
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
         {
           withCredentials: true
         });
         
-
       // await updateCurrentUser(response.data);
 
       navigate('/');

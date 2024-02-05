@@ -34,6 +34,7 @@ const PasswordSetPopup = ({ updateCurrentUser, currentuser, setShowPasswordForm 
 
     try {
 
+  
       // make request to update the user
       const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser.id}`, formData, {
         withCredentials: true
@@ -41,6 +42,8 @@ const PasswordSetPopup = ({ updateCurrentUser, currentuser, setShowPasswordForm 
 
       // make request to update the neighborhood data with the user:
       await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser.neighborhoodId[0]}`, { user: formData })
+
+
 
       setShowPasswordForm(false);
       updateCurrentUser(response.data);

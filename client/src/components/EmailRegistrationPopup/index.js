@@ -18,6 +18,8 @@ const EmailRegisterWindow = ({ updateCurrentUser, currentuser, setShowEmailRegis
 
   const navigate = useNavigate();
 
+
+
   // function that will update the user with the email
   const onSubmitRegisterEmail = async () => {
 

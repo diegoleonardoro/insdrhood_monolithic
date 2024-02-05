@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { User } from "../models/user";
-import { Neighborhood } from "../models/neighborhood";
 import { BadRequestError } from "../errors/bad-request-error";
 import { Password } from "../services/password";
 import jwt from "jsonwebtoken";
@@ -10,7 +8,8 @@ const AWS = require("aws-sdk");
 import { getDb } from "../index";
 import { ObjectId } from 'mongodb';
 import { sendVerificationMail } from "../services/emailVerification";
-
+import { User } from "../models/user";
+import { Neighborhood } from "../models/neighborhood";
 
 
 interface updateQuery {
@@ -20,9 +19,6 @@ interface updateQuery {
 }
 
 
-
-
-
 /**
  * @description registers a new user
  * @route POST /api/signup
@@ -30,9 +26,7 @@ interface updateQuery {
 */
 export const signup = async (req: Request, res: Response) => {
 
-
   const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
-
   const db = await getDb();
   const users = db.collection("users");
   const existingUser = await users.findOne({ email });
@@ -187,7 +181,6 @@ export const updateUserData = async (req: Request, res: Response) => {
 
   const { id } = req.params;
   let updates = req.body;
-
   const db = await getDb();
   const users = db.collection("users");
 
@@ -214,7 +207,6 @@ export const updateUserData = async (req: Request, res: Response) => {
   }
 
   if (existingUser) {
-    console.log('existing usertrtr', existingUser);
     throw new BadRequestError("Email in use");
   }
 
@@ -247,7 +239,7 @@ export const updateUserData = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  if (updates.emailToken) {
+  if (updates.emailToken && updates.email!=='') {
     sendVerificationMail({
       name: userInfo.name,
       email: userInfo.email,
@@ -272,7 +264,6 @@ export const verifyemail = async (req: Request, res: Response) => {
   const emailtoken = req.params.emailtoken;
   const db = await getDb();
   const users = db.collection("users");
-
 
   // find the user with the email token:
   const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
@@ -440,7 +431,6 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
     updateQuery,
     { returnDocument: "after" }
   );
-
 
 
   // const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });

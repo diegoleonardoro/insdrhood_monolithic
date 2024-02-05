@@ -18,7 +18,7 @@ import Button from 'react-bootstrap/Button';
 import EmailRegisterWindow from './components/EmailRegistrationPopup'
 import PasswordSetPopup from './components/PasswordSetPopup'
 import PrivacyNotice from './components/Privacy'
-
+import { useUser } from "../src/contexts/UserContext";
 
 function App() {
 
@@ -26,6 +26,7 @@ function App() {
   const [currentuser, setCurrentUser] = useState(null);
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
   const [showPasswordForm, setShowPasswordForm]= useState( false);
+
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +42,7 @@ function App() {
   }
 
   const updateCurrentUser = useCallback((data) => {
+
     return new Promise((resolve, reject) => {
       if (data !== undefined) {
         setCurrentUser(data);
@@ -49,14 +51,14 @@ function App() {
         reject(new Error('No user data provided.'));
       }
     });
-  }, []);
+  }, [currentuser]);
 
   // Memoize checkCurrentUser so it's not recreated on every render
   const checkCurrentUser = useCallback(async () => {
     try {
+
       // I want to make the following request only when there is not a token in the url:
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-
       updateCurrentUser(response.data);
 
     } catch (error) {
@@ -66,7 +68,7 @@ function App() {
 
   }, [updateCurrentUser]); // updateCurrentUser is a dependency
 
-  useEffect(() => {
+  useEffect(() => { 
     if (!hasTokenInUrl() && currentuser === null) {
       const timer = setTimeout(() => {
         checkCurrentUser();
@@ -74,8 +76,6 @@ function App() {
       return () => clearTimeout(timer);
     }
   }, []); // checkCurrentUser  is now a stable function reference
-
-  console.log("currentusercurrentuser", currentuser)
 
   return (
     <UserProvider>
@@ -87,7 +87,6 @@ function App() {
             {showPasswordForm && < PasswordSetPopup 
             updateCurrentUser={updateCurrentUser} 
             currentuser={currentuser} setShowPasswordForm ={setShowPasswordForm}>
-              
             </PasswordSetPopup >}
 
             <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
@@ -133,7 +132,7 @@ function App() {
             <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
             <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
-            <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} />} />
+            <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} updateCurrentUser={updateCurrentUser} />} />
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
           </Routes>
         </div>
