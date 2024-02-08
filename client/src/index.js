@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import ProductsContextProvider from './contexts/products-context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App />
+    <ProductsContextProvider>
+        <App />
+    </ProductsContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

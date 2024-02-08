@@ -12,13 +12,16 @@ import FormComponent from './components/Forms/1';
 import NeighborhoodProfile from './components/Neighborhood';
 import EmailRegister from './components/EmailConfirmation';
 import Alert from 'react-bootstrap/Alert';
-import { useLocation } from 'react-router-dom'; // Import useLocation
 import { UserProvider } from './contexts/UserContext';
 import Button from 'react-bootstrap/Button';
-import EmailRegisterWindow from './components/EmailRegistrationPopup'
-import PasswordSetPopup from './components/PasswordSetPopup'
-import PrivacyNotice from './components/Privacy'
+import EmailRegisterWindow from './components/EmailRegistrationPopup';
+import PasswordSetPopup from './components/PasswordSetPopup';
+import PrivacyNotice from './components/Privacy';
+// import Shop from '../src/components/pages/shop'
+
+
 import { useUser } from "../src/contexts/UserContext";
+import { useLocation } from 'react-router-dom'; // Import useLocation
 
 function App() {
 
@@ -123,8 +126,6 @@ function App() {
               ) : null
             )}
           </div>
-
-
           <Routes>
             <Route path="/" element={<Home currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
             <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
@@ -132,6 +133,7 @@ function App() {
             <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
             <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
+            {/* <Route path='/shop' component={Shop}></Route> */}
             <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} updateCurrentUser={updateCurrentUser} />} />
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
           </Routes>

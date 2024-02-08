@@ -348,24 +348,25 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
 
         // this block will check if there are inputs in the night life recommeded places 
-        // if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
-        //   const placeName = nightLifeRecommendationsRef.current.placeName.value;
-        //   const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
+        if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
+          const placeName = nightLifeRecommendationsRef.current.placeName.value;
+          const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
 
-        //   if (placeName === "" && placeDescription === "") {
-        //     return;
-        //   }
-        //   setFormData((prevFormData) => ({
-        //     ...prevFormData,
-        //     nightLifeRecommendations: [
-        //       ...prevFormData.nightLifeRecommendations,
-        //       {
-        //         assessment: nightLifeRecommendationsRef.current.placeName.value,
-        //         explanation: nightLifeRecommendationsRef.current.placeDescription.value,
-        //       },
-        //     ],
-        //   }));
-        // }
+          if (placeName === "" && placeDescription === "") {
+            return;
+          }
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            nightLifeRecommendations: [
+              ...prevFormData.nightLifeRecommendations,
+              {
+                assessment: nightLifeRecommendationsRef.current.placeName.value,
+                explanation: nightLifeRecommendationsRef.current.placeDescription.value,
+              },
+            ],
+          }));
+        }
+
 
         // The following if statement will check if the user has clicked the last question
         if (activeIndex === 19) {
@@ -807,10 +808,10 @@ const FormComponent = ({ updateCurrentUser }) => {
 
     if (tooltip.className.indexOf("tooltip_") === -1) {
       const parent = e.target.parentElement;
-      tooltip = parent.nextElementSibling;    
+      tooltip = parent.nextElementSibling;
     }
 
-    if (!tooltip || tooltip.className.indexOf("tooltip_") === -1 ) {
+    if (!tooltip || tooltip.className.indexOf("tooltip_") === -1) {
       const parent = e.target.parentElement;
       const grandpa = parent.parentElement;
       const grandpagranpa = grandpa.parentElement;
@@ -818,7 +819,7 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
 
     // If tooltip is undefined, select the nextElementSibling of the parent element
-    if (!tooltip || tooltip.className.indexOf("tooltip_") === -1  ) {
+    if (!tooltip || tooltip.className.indexOf("tooltip_") === -1) {
       const parent = e.target.parentElement;
       const grandpa = parent.parentElement;
       tooltip = grandpa.nextElementSibling;
@@ -1017,9 +1018,10 @@ const FormComponent = ({ updateCurrentUser }) => {
                   }}
                   name="neighborhood"
                   id="neighborhood"
-                  placeholder=" "
-                  className={"textInput inputCheck"}
+                  placeholder="Type your neighborhood"
+                  className={"neighborhoodInputElement inputCheck"}
                   ref={neighborhoodInput}
+
                 ></input>
                 <select
                   id="borough"
@@ -1027,10 +1029,10 @@ const FormComponent = ({ updateCurrentUser }) => {
                     setFormData({ ...formData, borough: e.target.value });
 
                   }}
-                  style={{ width: '100%', borderRadius: '20px' }}
+                  style={{ width: '100%' }}
                   className={"selectOptions inputCheck"} // Add your CSS classes as needed
                 >
-                  <option value="">Borough</option>
+                  <option value="">Select Borough</option>
                   <option value="Brooklyn">Brooklyn</option>
                   <option value="Manhattan">Manhattan</option>
                   <option value="Queens">Queens</option>
