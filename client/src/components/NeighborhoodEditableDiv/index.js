@@ -981,9 +981,6 @@ const NeighborhoodEditableDiv = ({
         {isEditable ? (
 
           <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
-
-          // <svg onClick={handleEditClick} className="editSvgRecommendedPlaces" cursor="pointer" fill="none" height="24" stroke="currentColor" strokeLinecap="round" zindex="3" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-
         ) : null}
       </div>
     )
@@ -1127,7 +1124,6 @@ function hasNestedObjects(obj) {
   // If no nested objects are found, return false
   return false;
 }
-
 function areArraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) {
     return false;
@@ -1141,7 +1137,6 @@ function areArraysEqual(arr1, arr2) {
 
   return true;
 }
-
 function areObjectsDifferent(obj1, obj2) {
   // Assuming the two keys are known and called 'key1' and 'key2'
   const key1 = 'assessment';
@@ -1160,7 +1155,6 @@ function areObjectsDifferent(obj1, obj2) {
   // If none of the above conditions are true, return false
   return false;
 }
-
 function objectsAreEqual(obj1, obj2) {
   // Get the keys of both objects
   const keys1 = Object.keys(obj1);
@@ -1181,8 +1175,5 @@ function objectsAreEqual(obj1, obj2) {
   // If no differences were found, the objects are equal
   return true;
 }
-
-
-
 
 export default NeighborhoodEditableDiv;

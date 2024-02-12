@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import FeaturedProduct from '../../shared/FeaturedProduct';
-import { ProductsContext } from '../../../contexts/products-context'
+import FeaturedProduct from '../../components/shared/FeaturedProduct';
+import { ProductsContext } from '../../contexts/products-context'
 
 import "./shop.css";
 

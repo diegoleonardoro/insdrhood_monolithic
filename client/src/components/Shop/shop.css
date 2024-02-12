@@ -1,0 +1,38 @@
+.product-list-container {
+  margin: 3rem 0;
+}
+
+
+.product-list{
+  display: flex;
+  flex-flow: wrap;
+  justify-content: center;
+  height: 100%;
+  align-items: stretch;
+}
+
+ .product-list div{
+  background-color: #f5f5f5;
+ }
+
+
+/* .product-list > div:nth-child(odd) {
+    background-color: rgba(214, 243, 255, 0.314); 
+}
+
+.product-list > div:nth-child(even) {
+    background-color: rgba(255, 199, 199, 0.283); 
+} */
+
+
+.product-list-title {
+  margin-top: 5rem;
+  text-align: center;
+}
+ 
+.product-list div{
+  /* margin: 1rem;
+  cursor: pointer;     */
+  position: relative;
+
+}

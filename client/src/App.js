@@ -17,19 +17,19 @@ import Button from 'react-bootstrap/Button';
 import EmailRegisterWindow from './components/EmailRegistrationPopup';
 import PasswordSetPopup from './components/PasswordSetPopup';
 import PrivacyNotice from './components/Privacy';
-// import Shop from '../src/components/pages/shop'
-
-
+import Shop from './components/Shop/shop';
+import SingleProduct from './components/SingleProduct/SingleProduct';
+import CartPage from './components/CartPage/CartPage';
 import { useUser } from "../src/contexts/UserContext";
-import { useLocation } from 'react-router-dom'; // Import useLocation
+import { useLocation } from 'react-router-dom'; 
+
 
 function App() {
-
+  
   const HeaderMemo = React.memo(Header);
   const [currentuser, setCurrentUser] = useState(null);
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
   const [showPasswordForm, setShowPasswordForm]= useState( false);
-
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -133,9 +133,11 @@ function App() {
             <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
             <Route path="/questionnaire" element={<FormComponent updateCurrentUser={updateCurrentUser} />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail updateCurrentUser={updateCurrentUser} />} />
-            {/* <Route path='/shop' component={Shop}></Route> */}
             <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile currentuserProp={currentuser} updateCurrentUser={updateCurrentUser} />} />
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
+            <Route path='/shop' element={<Shop/>}></Route>
+            <Route path='/product/:id' element={<SingleProduct/>}></Route>
+            <Route path='/cart' element={<CartPage />}></Route>
           </Routes>
         </div>
       </Router>

@@ -1,0 +1,27 @@
+
+.cart-item-container{
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-around;
+}
+
+
+.cart-item{
+  background-color: #f5f5f5;
+  width:40%;
+}
+
+.galleryParent_cart{
+  margin: auto;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.btns-container{
+  padding-bottom: 20px;
+}
+
+.imageprodCart{
+  height: 400px;
+  width: auto !important;;
+}

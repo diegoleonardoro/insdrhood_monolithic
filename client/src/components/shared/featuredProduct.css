@@ -1,0 +1,29 @@
+.featured-product{
+  width:30%;
+}
+
+.galleryParent {
+    height:fit-content;
+    margin: auto;
+    width:40%;
+    margin:20px;
+}
+
+.galleryParent .slick-slide { 
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.imageprod{
+  height: 400px; 
+  object-fit: cover;
+  margin:20px;
+}
+
+
+@media only screen and (max-width: 649px) {
+  .featured-product{
+    width:100%;
+  }
+}

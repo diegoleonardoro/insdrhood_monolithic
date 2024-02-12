@@ -1,22 +1,13 @@
-import "./featuredProduct.css"
-import React, { useContext } from 'react';
-import { isInCart } from "../../helpers";
-import { CartContext } from "../../contexts/cart-context"
-import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
+import React from 'react';
+import { PlusCircleIcon, MinusCircleIcon, TrashIcon } from '../Icons/index';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 
 
-import Card from 'react-bootstrap/Card';
+const CartItem = (props) => {
 
-const FeaturedProduct = (props) => {
-
-  const { title, imageUrl, price, id, description } = props;
-  const product = { title, imageUrl, price, id, description };
-  const { addProduct, cartItems, increase } = useContext(CartContext);
-  const itemInCart = isInCart(product, cartItems);
-  const navigate = useNavigate();
+  const { title, imageUrl, price, quantity, id, description, increase, decrease, removeProduct } = props;
+  const product = { title, imageUrl, price, quantity, id, description };
 
   /** Images slider */
   const PrevArrowPhotos = ({ onClick }) => {
@@ -99,38 +90,51 @@ const FeaturedProduct = (props) => {
   };
 
   return (
-    <div className="galleryParent" style={{ position: "relative" }}>
-      <Slider {...settings}>
-        {imageUrl.map((image, index) => (
-          <img key={index} className="imageprod" src={image}></img>
-        ))}
-      </Slider>
-      <div className='name-price'>
-        <h3>{title}</h3>
-        <p>$ {price}</p>
-        <p style={{ margin: '30px', textAlign: "start" }}>{description}</p>
-        {
-          !itemInCart &&
-          <Button style={{margin:"20px"}} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
-        }
-        {
-          itemInCart &&
-          <Button style={{ margin: "20px" }}  onClick={() => increase(product)} variant="primary">ADD MORE</Button>
-        }
+    <div className='cart-item'>
 
+
+      <div className='galleryParent_cart'>
+        <Slider {...settings}>
+          {imageUrl.map((image, index) => (
+            <img key={index} className="imageprodCart" src={image}></img>
+          ))}
+        </Slider>
       </div>
+
+      
+      <div className='name-price'>
+        <h4>{title}</h4>
+        <p>${price}</p>
+      </div>
+      <div className='quantity'>
+        <p>{`Quantity: ${quantity}`}</p>
+      </div>
+      <div className='btns-container'>
+        <button
+          style={{ backgroundColor: 'transparent' , marginRight:'5px'}}
+          className='btn-increase' onClick={() => increase(product)}>
+          <PlusCircleIcon width='20px' />
+        </button>
+        {
+          quantity === 1 &&
+          <button 
+              style={{backgroundColor:'transparent'}}
+              className='btn-trash' onClick={() => removeProduct(product)}>
+            <TrashIcon width='20px' />
+          </button>
+        }
+        {
+          quantity > 1 &&
+          <button
+            className='btn-decrease' onClick={() => decrease(product)}>
+            <MinusCircleIcon width='20px' />
+          </button>
+        }
+      </div>
+
+      
     </div>
   );
-
 }
 
-
-export default FeaturedProduct;
-// export default withRouter(FeaturedProduct);
-
-
-
-/**
- * 
- *  
- */
+export default CartItem;

@@ -9,7 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
+import CartIcon from "../CartIcon/CartIcon";
 
 // import Col from 'react-bootstrap/Col';
 // import Image from 'react-bootstrap/Image';
@@ -42,8 +42,9 @@ function Header({ updateCurrentUser, currentuser }) {
   const links = [
     !currentuser && { label: "Sign Up", to: "/signup" },
     !currentuser && { label: "Sign In", to: "/signin" },
-    { label: "questionnaire", to: "/questionnaire" },
+    { label: "Questionnaire", to: "/questionnaire" },
     currentuser && { label: "Sign Out", onClick: handleSignOut },
+    { label: "Shop", to: "/shop" },
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, to, onClick }, index) => {
@@ -66,6 +67,8 @@ function Header({ updateCurrentUser, currentuser }) {
             <Nav className="me-auto">
               {links}
             </Nav>
+
+            <CartIcon/>
         
           </Container>
         </Navbar>
