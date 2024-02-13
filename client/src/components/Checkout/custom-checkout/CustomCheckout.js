@@ -162,8 +162,9 @@ const CustomCheckout = ({ shipping, cartItems }) => {
   };
 
 
-  
+
   let cardOption;
+  // IF THERE ARE CARDS SAVED THEY WILL SHOWN TO THE USER. 
   if (cards) {
     cardOption = cards.map(card => {
       const { card: { brand, last4, exp_month, exp_year } } = card;
@@ -177,6 +178,78 @@ const CustomCheckout = ({ shipping, cartItems }) => {
       <option key='Select a card' value=''>Select A Card</option>
     );
   }
+
+
+  return (
+    <div>
+
+      {/** IF THE USER HAS  */}
+      {
+        user && (cards && cards.length > 0) &&
+        <div>
+          <h4>Pay with saved card</h4>
+          <select value={payment} onChange={e => setPaymentCard(e.target.value)}>
+            {cardOption}
+          </select>
+          <button
+            type='submit'
+            disabled={processing || !payment}
+            className='button is-black nomad-btn submit saved-card-btn'
+            onClick={() => savedCardCheckout()}
+          >
+            {processing ? 'PROCESSING' : 'PAY WITH SAVED CARD'}
+          </button>
+        </div>
+      }
+      <h4>Enter Payment Details</h4>
+      <div className='stripe-card'>
+        <CardNumberElement
+          className='card-element'
+          options={cardStyle}
+          onChange={cardHandleChange}
+        />
+      </div>
+      <div className='stripe-card'>
+        <CardExpiryElement
+          className='card-element'
+          options={cardStyle}
+          onChange={cardHandleChange}
+        />
+      </div>
+      <div className='stripe-card'>
+        <CardCvcElement
+          className='card-element'
+          options={cardStyle}
+          onChange={cardHandleChange}
+        />
+      </div>
+      {
+        user &&
+        <div className='save-card'>
+          <label>Save Card</label>
+          <input
+            type='checkbox'
+            checked={saveCard}
+            onChange={e => setSavedCard(e.target.checked)}
+          />
+        </div>
+      }
+      <div className='submit-btn'>
+        <button
+          disabled={processing}
+          className='button is-black nomad-btn submit'
+          onClick={() => handleCheckout()}
+        >
+          {processing ? 'PROCESSING' : 'PAY'}
+        </button>
+      </div>
+      {
+        error && (<p className='error-message'>{error}</p>)
+      }
+    </div>
+  );
+
+
 
 
 }

@@ -99,7 +99,7 @@ const FeaturedProduct = (props) => {
   };
 
   return (
-    <div className="galleryParent" style={{ position: "relative" }}>
+    <div className="galleryParent__" style={{ position: "relative" }}>
       <Slider {...settings}>
         {imageUrl.map((image, index) => (
           <img key={index} className="imageprod" src={image}></img>
