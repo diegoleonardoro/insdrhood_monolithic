@@ -4,7 +4,7 @@ import axios from 'axios';
 const UserContext = createContext(); //The createContext function creates a Context object. When React renders a component that subscribes to this Context object, it will read the current context value from the nearest matching Provider above it in the tree. 
 
 
-export const useUser = () => useContext(UserContext); // This is a custom hook that simplifies the consumption of UserContext. Any component that wants to access the UserContext can simply call useUser() instead of using useContext(UserContext).
+export const useUserContext = () => useContext(UserContext); // This is a custom hook that simplifies the consumption of UserContext. Any component that wants to access the UserContext can simply call useUserContext() instead of using useContext(UserContext).
 
 export const UserProvider = ({ children }) => { // This is a component that allows consuming components to subscribe to context changes.
 

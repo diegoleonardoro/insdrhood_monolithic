@@ -107,8 +107,14 @@ const FormComponent = ({ updateCurrentUser }) => {
   const onlyNYCResidentsSign = liveinNYCSign === "no" ? "block" : "none";
   const [loggedUser, setLoggedUser] = useState(null);
 
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 19;
+
   const [tooltipDisplay, setToolTipDisplay] = useState("none");
 
+
+
+  const progressPercentage = (currentStep / totalSteps) * 100;
 
 
   useEffect(() => {
@@ -441,6 +447,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
         };
 
+        setCurrentStep(currentStep + 1)
+
         // check if we are on the questiont that asks users for their data, and if so update the userData state.
         keyWord = currentDiv.className.split(" ")[1];
         let nextIndex = activeIndex + 1;
@@ -463,6 +471,8 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
         }
       }
+
+      setCurrentStep(currentStep - 1);
       let nextIndex = activeIndex - 1;
       setActiveIndex(nextIndex);
 
@@ -3637,6 +3647,8 @@ const FormComponent = ({ updateCurrentUser }) => {
               />
             </div>
 
+           
+
             {/** Arrows */}
             <div
               className="arrowsContainer"
@@ -3666,6 +3678,9 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
 
           </form>
+            <div style={{position:"absolute", bottom:"15px", left:"50%", transform:"translate(-50%, 0)"}}>
+              {Math.floor(progressPercentage)}% completed
+            </div>
         </div >
       )}
 

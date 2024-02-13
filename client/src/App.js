@@ -20,6 +20,7 @@ import PrivacyNotice from './components/Privacy';
 import Shop from './components/Shop/shop';
 import SingleProduct from './components/SingleProduct/SingleProduct';
 import CartPage from './components/CartPage/CartPage';
+import Checkout from './components/Checkout/Checkout';
 import { useUser } from "../src/contexts/UserContext";
 import { useLocation } from 'react-router-dom'; 
 
@@ -138,6 +139,7 @@ function App() {
             <Route path='/shop' element={<Shop/>}></Route>
             <Route path='/product/:id' element={<SingleProduct/>}></Route>
             <Route path='/cart' element={<CartPage />}></Route>
+            <Route path='/checkout' element={<Checkout />}></Route>
           </Routes>
         </div>
       </Router>
