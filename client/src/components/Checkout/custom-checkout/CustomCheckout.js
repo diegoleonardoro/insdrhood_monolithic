@@ -7,14 +7,14 @@ import {
   useElements
 } from '@stripe/react-stripe-js';
 
+import axios from 'axios';
+
 import { useUserContext } from "../../../contexts/UserContext";
+
 
 const CustomCheckout = ({ shipping, cartItems }) => {
 
-
-  const { currentuser_ } = useUser();
-
-
+  const { currentuser_ } = useUserContext();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [clientSecret, setClienSecret] = useState(null);
@@ -27,10 +27,12 @@ const CustomCheckout = ({ shipping, cartItems }) => {
 
 
   // THIS USEEFFECT WILL CREATE THE PAYMENT INTENT AND THE CLIENTSECRET
+
+
+  console.log("cartitems", cartItems)
   useEffect(() => {
+
     const items = cartItems.map(item => ({ price: item.price, quantity: item.quantity }));
-    
-    
     // if (currentuser_) {
     //   const savedCards = async () => {
     //     try {
@@ -45,12 +47,10 @@ const CustomCheckout = ({ shipping, cartItems }) => {
     //   savedCards();
     // }
 
-
     // MAKE A REQUEST TO THE BACK END TO CREATE THE PAYMENT INTENT 
-
     if (shipping) {
       const body = {
-        cartItems: items,
+        line_items: items,
         shipping: {
           name: shipping.name,
           address: {
@@ -58,22 +58,25 @@ const CustomCheckout = ({ shipping, cartItems }) => {
           }
         },
         description: 'payment intent for nomad shop',
-        receipt_email: shipping.email,
+        customer_email: shipping.email,
       }
 
       const customCheckout = async () => {
-        // CREATE THIS BACK END ROUTE:
-        // const { clientSecret, id } = await fetchFromAPI('create-payment-intent', {
-        //   body
-        // });
 
-        setClienSecret(clientSecret)
-        setPaymentIntentId(id);
+
+        // BACKEND ROUTE THAT WILL CREATE THE sessionId
+        const { clientSecret, id } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/payments/create-payment-intent`, body  );
+
+        console.log("clientSecret", clientSecret)
+        console.log("id", id)
+
+        // setClienSecret(clientSecret);
+        // setPaymentIntentId(id);
 
       }
       customCheckout();
     }
-  }, [shipping, cartItems, user]);
+  }, [shipping, cartItems, currentuser_]);
 
 
 
@@ -88,6 +91,8 @@ const CustomCheckout = ({ shipping, cartItems }) => {
       // CREATE THIS ROUTE IN THE BACK END:
       // si = await fetchFromAPI('save-payment-method');
     }
+
+
     const payload = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: elements.getElement(CardNumberElement)
@@ -105,11 +110,22 @@ const CustomCheckout = ({ shipping, cartItems }) => {
           }
         });
 
+
+
         // CREATE THIS ROUTE
         // push('/success'); 
+
+
       } else {
+
+
+
         // CREATE THIS ROUTE
         // push('/success');
+
+
+
+
       }
     }
   };
@@ -122,7 +138,9 @@ const CustomCheckout = ({ shipping, cartItems }) => {
     // update the payment intent to incude the customer parameter
 
 
-    const { clientSecret } = await fetchFromAPI('update-payment-intent', {
+    // CREATE THIS ROUTE
+    // IS PUT THE RIGHT METHOD?
+    const { clientSecret } = await axios.put('update-payment-intent', {
       body: { paymentIntentId }, method: 'PUT',
     });
 
@@ -134,7 +152,7 @@ const CustomCheckout = ({ shipping, cartItems }) => {
       setError(`Payment Failed: ${payload.error.message}`);
       setProcessing(false);
     } else {
-      push('/success');
+      // push('/success');
     }
   }
 
@@ -183,9 +201,9 @@ const CustomCheckout = ({ shipping, cartItems }) => {
   return (
     <div>
 
-      {/** IF THE USER HAS  */}
+      {/** IF THE USER HAS CARDS SAVED */}
       {
-        user && (cards && cards.length > 0) &&
+        currentuser_ && (cards && cards.length > 0) &&
         <div>
           <h4>Pay with saved card</h4>
           <select value={payment} onChange={e => setPaymentCard(e.target.value)}>
@@ -224,7 +242,7 @@ const CustomCheckout = ({ shipping, cartItems }) => {
         />
       </div>
       {
-        user &&
+        currentuser_ &&
         <div className='save-card'>
           <label>Save Card</label>
           <input
@@ -249,7 +267,6 @@ const CustomCheckout = ({ shipping, cartItems }) => {
     </div>
   );
 
-
-
-
 }
+
+export default CustomCheckout;

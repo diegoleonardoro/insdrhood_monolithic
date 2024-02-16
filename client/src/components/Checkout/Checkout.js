@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
-import {CartContext} from "../../contexts/cart-context";
+import { CartContext } from "../../contexts/cart-context";
+import CustomCheckout from "./custom-checkout/CustomCheckout"
+import ShippingAddress from './custom-checkout/ShippingAdress';
+import StripeCheckout from "./stripe-checkout/stripe-checkout"
 
 // import ShippingAddress from './custom-checkout/shipping-address';
 // import CustomCheckout from './custom-checkout/custom-checkout';
@@ -18,19 +21,20 @@ const Checkout = () => {
   }
 
   return (
-   
-      <div className='checkout'>
-        <h2>Checkout Summary</h2>
-        <h3>{`Total Items: ${itemCount}`}</h3>
-        <h4>{`Amount to Pay: $${total}`}</h4>
-        <div style={addressShown}>
-          {/* <ShippingAddress setShipping={setShipping} /> */}
-        </div>
-        <div style={cardShown}>
-          {/* <CustomCheckout {...{ shipping, cartItems }} /> */}
-        </div>
-      </div>
-    
+
+    <div style={{position:"relative", top:"30px"}}className='checkout'>
+      <h2>Checkout Summary</h2>
+      <h3>{`Total Items: ${itemCount}`}</h3>
+      <h4>{`Amount to Pay: $${total}`}</h4>
+      {/* <div style={addressShown}>
+        <ShippingAddress setShipping={setShipping} />
+      </div> */}
+      {/* <div style={cardShown}> */}
+      <StripeCheckout />
+      {/* <CustomCheckout {...{ shipping, cartItems }} /> */}
+      {/* </div> */}
+    </div>
+
   );
 
 

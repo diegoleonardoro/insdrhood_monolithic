@@ -60,17 +60,8 @@ const sendEmail = async (emailOptions: SendEmailOptions) => {
     } catch (error) {
       console.log("erratas", error)
     }
-
   }
-
-
-
-
-
 };
-
-
-
 
 interface User {
   name: string;

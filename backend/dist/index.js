@@ -9,13 +9,15 @@ const cookie_session_1 = __importDefault(require("cookie-session"));
 const body_parser_1 = require("body-parser");
 const cors_1 = __importDefault(require("cors"));
 const error_handler_1 = require("./middlewares/error-handler");
+const dotenv_1 = __importDefault(require("dotenv"));
+const auth_1 = require("./routes/auth");
+const payments_1 = require("./routes/payments");
+const mongodb_1 = require("mongodb");
+const path_1 = __importDefault(require("path"));
+// import mongoose from 'mongoose';
 // import { config } from 'dotenv';
 // config();
 // import routes:
-const dotenv_1 = __importDefault(require("dotenv"));
-const auth_1 = require("./routes/auth");
-const mongodb_1 = require("mongodb");
-const path_1 = __importDefault(require("path"));
 // Determine the path based on NODE_ENV
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path_1.default.resolve(__dirname, '..', dotenvPath);
@@ -45,17 +47,6 @@ const connectToServer = async () => {
 dbConnection = connectToServer();
 const getDb = () => dbConnection;
 exports.getDb = getDb;
-// const connectToServer = async () => {
-//   try {
-//     await client.connect();
-//     dbConnection = client.db("insiderhood")
-//     console.log("Connected to MongoDB")
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-// connectToServer();
-// export const getDb = (): Db => dbConnection;
 /** -------- -------- ---------- -------- -------- -------- */
 const app = (0, express_1.default)();
 const PORT = 4000;
@@ -73,6 +64,7 @@ app.use((0, cookie_session_1.default)({
     // maxAge: 24 * 60 * 60 * 1000,
 }));
 app.use("/api", auth_1.auth);
+app.use("/api/payments", payments_1.payments);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {
     return res.status(200).json({

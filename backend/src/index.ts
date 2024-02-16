@@ -1,29 +1,27 @@
 import express from 'express';
-// import path from 'path';
-import mongoose from 'mongoose';
+
 import cookieSession from "cookie-session";
 import { json } from "body-parser";
 import cors from "cors";
 import { errorHandler } from './middlewares/error-handler';
-// import { config } from 'dotenv';
-// config();
-// import routes:
 import dotenv from "dotenv";
 import { auth } from "./routes/auth";
+import { payments } from "./routes/payments" 
 import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
 import path from 'path';
 
-
+// import mongoose from 'mongoose';
+// import { config } from 'dotenv';
+// config();
+// import routes:
 // Determine the path based on NODE_ENV
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
 
 
-
 /** -------- -------- MongoDB Connection -------- -------- */
 const uri = "mongodb+srv://diegoleoro:r85i3VAYY6k8UVDs@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority";
-
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -52,22 +50,7 @@ dbConnection = connectToServer();
 
 export const getDb = () => dbConnection;
 
-// const connectToServer = async () => {
-//   try {
-//     await client.connect();
-//     dbConnection = client.db("insiderhood")
-//     console.log("Connected to MongoDB")
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-// connectToServer();
-// export const getDb = (): Db => dbConnection;
-
-
 /** -------- -------- ---------- -------- -------- -------- */
-
-
 
 
 const app = express();
@@ -91,9 +74,8 @@ app.use(
   })
 );
 
-
-
 app.use("/api", auth);
+app.use("/api/payments", payments);
 
 app.use(errorHandler);
 

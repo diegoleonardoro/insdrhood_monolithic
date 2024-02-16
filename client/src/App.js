@@ -23,7 +23,8 @@ import CartPage from './components/CartPage/CartPage';
 import Checkout from './components/Checkout/Checkout';
 import { useUser } from "../src/contexts/UserContext";
 import { useLocation } from 'react-router-dom'; 
-
+import  Canceled  from "./components/Checkout/stripe-checkout/canceled"
+import Success from "./components/Checkout/stripe-checkout/success"
 
 function App() {
   
@@ -140,6 +141,8 @@ function App() {
             <Route path='/product/:id' element={<SingleProduct/>}></Route>
             <Route path='/cart' element={<CartPage />}></Route>
             <Route path='/checkout' element={<Checkout />}></Route>
+            <Route path='/canceled' element={<Canceled />}></Route>
+            <Route path='/success' element={<Success />}></Route>
           </Routes>
         </div>
       </Router>
