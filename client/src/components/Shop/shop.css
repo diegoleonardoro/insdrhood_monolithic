@@ -36,3 +36,10 @@
   position: relative;
 
 }
+
+@media (max-width: 1299px) {
+ 
+  .product-list{
+    flex-direction: column;
+  }
+}

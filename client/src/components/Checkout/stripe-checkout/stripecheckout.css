@@ -1,0 +1,14 @@
+
+.stripeCheckOutForm{
+  width:30%;
+  position: relative;
+  left:50%;
+  transform: translate(-50%, 0);
+}
+
+
+@media only screen and (max-width: 1300px) {
+  .stripeCheckOutForm{
+    width:90%
+  }
+}

@@ -4,6 +4,8 @@ import { CartContext } from '../../../contexts/cart-context';
 import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import "./stripecheckout.css";
+
 
 const StripeCheckout = () => {
 
@@ -46,7 +48,7 @@ const StripeCheckout = () => {
   }
 
   return (
-    <Form style={{width:"30%", position:"relative", left:"50%",transform:"translate(-50%,0)", marginTop:"30px"}}onSubmit = { handleGuestCheckout }>
+    <Form  className="stripeCheckOutForm"onSubmit = { handleGuestCheckout }>
       <Form.Group  className="mb-3" controlId="formBasicEmail">
      
         <Form.Control onChange={e => setEmail(e.target.value)} type="email" placeholder="Enter email" />

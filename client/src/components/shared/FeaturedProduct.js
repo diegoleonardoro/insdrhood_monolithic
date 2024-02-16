@@ -111,11 +111,11 @@ const FeaturedProduct = (props) => {
         <p style={{ margin: '30px', textAlign: "start" }}>{description}</p>
         {
           !itemInCart &&
-          <Button style={{margin:"20px"}} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
+          <Button style={{ margin: "20px", width: "80%" }} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
         }
         {
           itemInCart &&
-          <Button style={{ margin: "20px" }}  onClick={() => increase(product)} variant="primary">ADD MORE</Button>
+          <Button style={{ margin: "20px", width: "80%" }} variant="primary"  onClick={() => increase(product)} >ADD MORE</Button>
         }
 
       </div>
