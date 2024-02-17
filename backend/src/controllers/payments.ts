@@ -16,8 +16,6 @@ import Stripe from 'stripe';
 
 export const createCheckoutSession = async (req: Request, res: Response)=>{
 
-  console.log("reqbody", req.body)
-
   const stripeAPI = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   const domainUrl = process.env.BASE_URL;
@@ -42,7 +40,6 @@ export const createCheckoutSession = async (req: Request, res: Response)=>{
       shipping_address_collection: { allowed_countries: ['GB', 'US'] }
     });
 
-    console.log("sessssion", session)
     res.status(200).json({ sessionId: session.id, });
   } catch (error) {
     console.log(error);

@@ -14,7 +14,6 @@ const stripe_1 = __importDefault(require("stripe"));
  * @access public
 */
 const createCheckoutSession = async (req, res) => {
-    console.log("reqbody", req.body);
     const stripeAPI = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
     const domainUrl = process.env.BASE_URL;
     const { line_items, customer_email } = req.body;
@@ -34,7 +33,6 @@ const createCheckoutSession = async (req, res) => {
             cancel_url: `${domainUrl}/canceled`,
             shipping_address_collection: { allowed_countries: ['GB', 'US'] }
         });
-        console.log("sessssion", session);
         res.status(200).json({ sessionId: session.id, });
     }
     catch (error) {
