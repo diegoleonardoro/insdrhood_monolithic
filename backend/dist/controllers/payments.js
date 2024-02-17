@@ -17,7 +17,7 @@ const createCheckoutSession = async (req, res) => {
     console.log("create-checkout-session ROUTE HIT");
     const stripeAPI = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
     console.log("STRIPE API", stripeAPI);
-    const domainUrl = process.env.BASE_URL;
+    const domainUrl = process.env.BASE_URL?.split(' ')[0];
     console.log("DOMAIN URL", domainUrl);
     const { line_items, customer_email } = req.body;
     // check req body has line items and emai

@@ -22,7 +22,7 @@ export const createCheckoutSession = async (req: Request, res: Response)=>{
 
   console.log("STRIPE API", stripeAPI)
 
-  const domainUrl = process.env.BASE_URL;
+  const domainUrl = process.env.BASE_URL?.split(' ')[0];
 
   console.log("DOMAIN URL", domainUrl);
 
