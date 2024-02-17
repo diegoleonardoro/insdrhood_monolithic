@@ -10,15 +10,21 @@ import Stripe from 'stripe';
 
 /**
  * @description registers a new user
- * @route POST /api/payments/create-payment-intent
+ * @route POST /api/payments/create-checkout-session
  * @access public
 */
 
 export const createCheckoutSession = async (req: Request, res: Response)=>{
 
+  console.log("create-checkout-session ROUTE HIT")
+
   const stripeAPI = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
+  console.log("STRIPE API", stripeAPI)
+
   const domainUrl = process.env.BASE_URL;
+
+  console.log("DOMAIN URL", domainUrl);
 
   const { line_items, customer_email } = req.body;
 

@@ -10,12 +10,15 @@ const stripe_1 = __importDefault(require("stripe"));
 // console.log('process.env.STRIPE_SECRET_KEY', process.env.STRIPE_SECRET_KEY)
 /**
  * @description registers a new user
- * @route POST /api/payments/create-payment-intent
+ * @route POST /api/payments/create-checkout-session
  * @access public
 */
 const createCheckoutSession = async (req, res) => {
+    console.log("create-checkout-session ROUTE HIT");
     const stripeAPI = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
+    console.log("STRIPE API", stripeAPI);
     const domainUrl = process.env.BASE_URL;
+    console.log("DOMAIN URL", domainUrl);
     const { line_items, customer_email } = req.body;
     // check req body has line items and emai
     if (!line_items || !customer_email) {

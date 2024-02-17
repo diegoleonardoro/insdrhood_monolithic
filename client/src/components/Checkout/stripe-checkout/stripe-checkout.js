@@ -35,7 +35,9 @@ const StripeCheckout = () => {
 
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/payments/create-checkout-session`,
       { line_items, customer_email: email },
-    );
+      {
+        withCredentials: true
+      });
 
     const { sessionId } = response.data;
     const { error } = await stripe.redirectToCheckout({
@@ -48,15 +50,15 @@ const StripeCheckout = () => {
   }
 
   return (
-    <Form  className="stripeCheckOutForm"onSubmit = { handleGuestCheckout }>
-      <Form.Group  className="mb-3" controlId="formBasicEmail">
-     
+    <Form className="stripeCheckOutForm" onSubmit={handleGuestCheckout}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+
         <Form.Control onChange={e => setEmail(e.target.value)} type="email" placeholder="Enter email" />
         <Form.Text className="text-muted">
           We'll never share your email with anyone else.
         </Form.Text>
       </Form.Group>
-      <Button style={{width:"100%", borderRadius:"0"}}type='submit' variant="dark" >
+      <Button style={{ width: "100%", borderRadius: "0" }} type='submit' variant="dark" >
         Checkout
       </Button>
     </Form>
