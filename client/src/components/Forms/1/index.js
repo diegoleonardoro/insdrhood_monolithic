@@ -3964,7 +3964,7 @@ var arr = [
   "Old Astoria",
   "Park Slope",
   "Gowanus",
-  "DUMBO---",
+  "DUMBO",
   "Vinegar Hill",
   "Downtown Brooklyn",
   "Boerum Hill",
