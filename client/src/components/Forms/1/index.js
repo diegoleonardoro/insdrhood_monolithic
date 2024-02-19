@@ -2114,8 +2114,8 @@ const FormComponent = ({ updateCurrentUser }) => {
             >
 
               <div className="introHeader" ref={letsTalkAboutFoodRef}>
-                <h4> Let's talk about food </h4>
-                <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px"></img>
+                <h4> Let's talk about the food </h4>
+                <img alt="food" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/food.png" height="100px" width="100;x"></img>
               </div>
 
               <label>
@@ -2446,6 +2446,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             </div>
 
+
             {/** Complete the sentence: "If I were to suggest one place to eat in {neighborhood} it would be____
            because _____________" 
            */}
@@ -2732,7 +2733,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
               ref={ref => divRefs.current[12] = ref}
             >
-              <div className="introHeader" ref={letsTalkAboutNightLifeRef}>
+              <div className="introHeaderNightlife" ref={letsTalkAboutNightLifeRef}>
                 <h4> Let's talk about the night life </h4>
                 <img alt="nightlife" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-21%2018.35.59%20-%20A%20pencil%20sketch%20with%20a%20grain%20effect%2C%20emphasizing%20a%20_night_%20ambiance%20for%20a%20modern%20nightclub%20scene.%20The%20sketch%20should%20depict%20a%20contemporary%20nightclub%20at.png" height="170px"></img>
               </div>
@@ -3039,7 +3040,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             >
               <div ref={letsTalkAboutGeneralInfo} className="introHeader" >
                 <h4> Let's talk about some general information </h4>
-                <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-22%2008.42.27%20-%20A%20black%20and%20white%2C%20highly%20minimalistic%20pencil%20sketch%2C%20focusing%20on%20the%20theme%20of%20'general%20questions.'%20This%20version%20should%20feature%20only%20a%20few%20floating%20qu.png" height="190px"></img>
+                <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202024-02-19%2016.56.15%20-%20A%20refined%20pencil%20sketch%20of%20a%20thinking%20emoji%2C%20centered%20on%20a%20white%20background.%20The%20emoji%20should%20display%20a%20subtle%2C%20intelligent%20expression%2C%20with%20a%20slight%2C.webp" height="190px"></img>
               </div>
 
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
@@ -3647,7 +3648,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               />
             </div>
 
-           
+
 
             {/** Arrows */}
             <div
@@ -3678,9 +3679,9 @@ const FormComponent = ({ updateCurrentUser }) => {
             </div>
 
           </form>
-            <div style={{position:"absolute", bottom:"15px", left:"50%", transform:"translate(-50%, 0)"}}>
-              {Math.floor(progressPercentage)}% completed
-            </div>
+          <div style={{ position: "absolute", bottom: "15px", left: "50%", transform: "translate(-50%, 0)" }}>
+            {Math.floor(progressPercentage)}% completed
+          </div>
         </div >
       )}
 
