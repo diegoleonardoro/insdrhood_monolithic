@@ -6,6 +6,10 @@ import axios from "axios";
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner';
+import Card from "react-bootstrap/Card";
+import Button from 'react-bootstrap/Button';
+
+
 
 
 function Home({ currentuser, updateCurrentUser }) {
@@ -35,23 +39,32 @@ function Home({ currentuser, updateCurrentUser }) {
     );
   });
 
+  const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
+    { console.log(neighborhood) }
 
-
-  // Map the filtered neighborhoods to table rows
-  const neighborhoodsList = filteredNeighborhoods.map((neighborhood) => {
     return (
-      <tr key={neighborhood._id}>
-        <td data-label="Neighborhood">{neighborhood.neighborhood}</td>
-        <td data-label="Borough">{neighborhood.borough}</td>
-        <td data-label="Description">"{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}</td>
-        <td data-label="Learn more">
-          <Link to={`/neighborhood/${neighborhood._id}`}>
-            Learn more
-          </Link>
-        </td>
-      </tr>
+      <Card className ="neighborhoodCard"  key={neighborhood._id}>
+        <Card.Header as="h5">{neighborhood.neighborhood}{", "} {neighborhood.borough}</Card.Header>
+        <Card.Body>
+          <blockquote className="blockquote mb-0">
+            <p>
+              {' '}
+              {neighborhood.neighborhoodDescription}
+              {' '}
+            </p>
+            <footer className="blockquote-footer">
+              {neighborhood.user.name != "" ? neighborhood.user.name : "Anonymous"}
+            </footer>
+          </blockquote>
+        </Card.Body>
+
+        <Link to={`/neighborhood/${neighborhood._id}`} style={{ textDecoration: 'none' }}>
+          <Button style={{ margin: "20px", borderRadius: "0" }} variant="primary">Learn More</Button>
+        </Link>
+      </Card>
     );
-  });
+
+  })
 
   useEffect(() => {
     // Extract the token from the URL
@@ -111,22 +124,18 @@ function Home({ currentuser, updateCurrentUser }) {
     )
   }
 
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '60px auto auto auto', }}>
-
-
+    <div style={{ width: '90%', margin: '60px auto auto auto' }}>
+      { /**  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '60px auto auto auto', }} */}
       <div className='filterInputsContainer'>
         <input
           type="text"
           placeholder="Search by neighborhood..."
           value={searchTerm}
           onChange={handleSearchChange}
-
           className='searchByNhoodInput'
         />
         <div className="dropdownFilterByBorough">
-
           <select value={selectedBorough} onChange={handleBoroughChange} className='boroughSelect' id="boroughSelect">
             <option value="All">All Boroughs</option>
             <option value="Manhattan">Manhattan</option>
@@ -137,7 +146,36 @@ function Home({ currentuser, updateCurrentUser }) {
           </select>
         </div>
       </div>
-      <Table striped bordered hover size="sm" className="nhoodsTable" style={{ marginTop: "0" }} >
+
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+        {neighborhoodCards}
+      </div>
+    </div>
+  );
+
+}
+
+export default Home;
+
+{/* 
+
+  // Map the filtered neighborhoods to table rows
+  const neighborhoodsList = filteredNeighborhoods.map((neighborhood) => {
+    return (
+      <tr key={neighborhood._id}>
+        <td data-label="Neighborhood">{neighborhood.neighborhood}</td>
+        <td data-label="Borough">{neighborhood.borough}</td>
+        <td data-label="Description">"{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}</td>
+        <td data-label="Learn more">
+          <Link to={`/neighborhood/${neighborhood._id}`}>
+            Learn more
+          </Link>
+        </td>
+      </tr>
+    );
+  });
+
+<Table striped bordered hover size="sm" className="nhoodsTable" style={{ marginTop: "0" }} >
         <thead>
           <tr>
             <th >Neighborhood</th>
@@ -147,10 +185,4 @@ function Home({ currentuser, updateCurrentUser }) {
           </tr>
         </thead>
         {<tbody>{neighborhoodsList}</tbody>}
-      </Table>
-    </div>
-  );
-
-}
-
-export default Home;
+</Table> */}
