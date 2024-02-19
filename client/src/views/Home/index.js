@@ -21,7 +21,6 @@ function Home({ currentuser, updateCurrentUser }) {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
 
-
   // Handle change in search input
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -117,9 +116,9 @@ function Home({ currentuser, updateCurrentUser }) {
 
   if (isLoading) {
     return (
-      <div>
+      <div style ={{position:"relative", left:"45%", transform:"translate(-50%, 0)", display:"inline"}}>
         <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-        Loading...
+        <div style={{display:"inline", position:"absolute", bottom:"-10px", left:"15px", color:"white"}}>Loading...</div>
       </div>
     )
   }
