@@ -28,8 +28,6 @@ const CustomCheckout = ({ shipping, cartItems }) => {
 
   // THIS USEEFFECT WILL CREATE THE PAYMENT INTENT AND THE CLIENTSECRET
 
-
-  console.log("cartitems", cartItems)
   useEffect(() => {
 
     const items = cartItems.map(item => ({ price: item.price, quantity: item.quantity }));

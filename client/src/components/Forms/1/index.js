@@ -355,6 +355,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           setNeighborhood(currentDiv.children[1].children[0].value);
         }
 
+        
         // this block will check if there are inputs in the night life recommeded places 
         // if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
         //   const placeName = nightLifeRecommendationsRef.current.placeName.value;

@@ -9,13 +9,13 @@ const CartPage = () => {
   const funcs = { increase, decrease, removeProduct }
   return (
 
-    <>
-      <h1>Cart</h1>
+    <div >
+      <h1 style={{textAlign:'center', margin:'20px'}}>Cart</h1>
       {
         cartItems.length === 0 ? <div className='empty-cart'>Your Cart is empty</div>
           :
           <>
-            <div className='cart-page'>
+            <div  className='cart-page'>
 
               <Total itemCount={itemCount} total={total} clearCart={clearCart} />
               <div className='cart-item-container'>
@@ -29,7 +29,7 @@ const CartPage = () => {
             </div>
           </>
       }
-    </>
+    </div>
 
   );
 }

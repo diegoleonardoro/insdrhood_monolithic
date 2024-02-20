@@ -9,6 +9,8 @@
     margin:20px;
 }
 
+
+
 .galleryParent .slick-slide { 
   display: flex;
   justify-content: center; 
@@ -17,8 +19,12 @@
 
 .imageprod{
   height: 400px; 
-  object-fit: cover;
+  object-fit: contain;
   margin:20px;
+  width:80% !important;
+  position: relative;
+  left:45.7%;
+  transform: translate(-50%,0);
 }
 
 @media only screen and (max-width: 1300px) {

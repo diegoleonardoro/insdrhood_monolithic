@@ -22,7 +22,7 @@ const Checkout = () => {
 
   return (
 
-    <div style={{position:"relative", top:"30px"}}className='checkout'>
+    <div style={{position:"relative", left:'50%', transform:'translate(-50%, 0)', top:"30px", display:'inline'}}className='checkout'>
       <h2>Checkout Summary</h2>
       <h3>{`Total Items: ${itemCount}`}</h3>
       <h4>{`Amount to Pay: $${total}`}</h4>

@@ -102,13 +102,13 @@ const FeaturedProduct = (props) => {
     <div className="galleryParent__" style={{ position: "relative" }}>
       <Slider {...settings}>
         {imageUrl.map((image, index) => (
-          <img key={index} className="imageprod" src={image}></img>
+          <img key={index}  className="imageprod" src={image}></img>
         ))}
       </Slider>
-      <div className='name-price'>
+      <div style={{ margin: '30px', textAlign: "start" }}  className='name-price'>
         <h3>{title}</h3>
         <p>$ {price}</p>
-        <p style={{ margin: '30px', textAlign: "start" }}>{description}</p>
+        <p >{description}</p>
         {
           !itemInCart &&
           <Button style={{ margin: "20px", width: "80%" }} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
