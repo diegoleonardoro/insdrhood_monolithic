@@ -257,6 +257,8 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       if (currentDiv) {
 
+      
+
         // check if the user has not responded a question that required to be responded:
         if (currentDiv.className.indexOf("shakieCheck") > -1) {
 
@@ -354,24 +356,23 @@ const FormComponent = ({ updateCurrentUser }) => {
         }
 
         // this block will check if there are inputs in the night life recommeded places 
-        if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
-          const placeName = nightLifeRecommendationsRef.current.placeName.value;
-          const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
-
-          if (placeName === "" && placeDescription === "") {
-            return;
-          }
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            nightLifeRecommendations: [
-              ...prevFormData.nightLifeRecommendations,
-              {
-                assessment: nightLifeRecommendationsRef.current.placeName.value,
-                explanation: nightLifeRecommendationsRef.current.placeDescription.value,
-              },
-            ],
-          }));
-        }
+        // if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
+        //   const placeName = nightLifeRecommendationsRef.current.placeName.value;
+        //   const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
+        //   if (placeName === "" && placeDescription === "") {
+        //     return;
+        //   }
+        //   setFormData((prevFormData) => ({
+        //     ...prevFormData,
+        //     nightLifeRecommendations: [
+        //       ...prevFormData.nightLifeRecommendations,
+        //       {
+        //         assessment: nightLifeRecommendationsRef.current.placeName.value,
+        //         explanation: nightLifeRecommendationsRef.current.placeDescription.value,
+        //       },
+        //     ],
+        //   }));
+        // }
 
 
         // The following if statement will check if the user has clicked the last question
