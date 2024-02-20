@@ -59,7 +59,7 @@ const StripeCheckout = () => {
         </Form.Text>
       </Form.Group>
       <Button style={{ width: "100%", borderRadius: "0" }} type='submit' variant="dark" >
-        Checkout
+        Secure Checkout with Stripe
       </Button>
     </Form>
 

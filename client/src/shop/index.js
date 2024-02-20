@@ -2,7 +2,7 @@ const SHOP_DATA = [
   {
     id: 1,
     title: 'South Williamsburg Architecture',
-    description: 'Photograph captured from a rooftop in South Williamsburg, Brooklyn, dated September 2022. This image highlights the enduring presence of classic pre-war architecture that predominantly characterizes South Williamsburg, distinguishing it from the rest of the neighborhood.',
+    description: 'Photograph captured from a rooftop in South Williamsburg, Brooklyn, dated September 2022. This image highlights the enduring presence of classic pre-war architecture that predominantly characterizes South Williamsburg, distinguishing it from the rest of the neighborhood. 8 in. x 10 in./11 in. x 14 in.',
     imageUrl: [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design%20brooklyn%20roof.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design%20brooklyn%20roof%202.jpg',
@@ -14,7 +14,7 @@ const SHOP_DATA = [
   {
     id: 2,
     title: 'Manhattan Glow',
-    description: 'Photo taken from the Domino Park waterfront in Williamsburg, Brooklyn, depicting the brightly lit skyline of midtown Manhattan. Captured in September 2022.',
+    description: 'Photo taken from the Domino Park waterfront in Williamsburg, Brooklyn, depicting the brightly lit skyline of midtown Manhattan. Captured in September 2022. 8 in. x 10 in./11 in. x 14 in. ',
     imageUrl: [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design%20copy.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design.jpg',
@@ -25,7 +25,7 @@ const SHOP_DATA = [
   {
     id: 3,
     title: 'Sugar Crystals Reimagined: One South First',
-    description: "One South First emerged as a landmark structure along the Williamsburg waterfront upon its completion in 2019. The designing architects, Cookfox, stated, 'The modern façade's design draws inspiration from the crystalline structure of sugar, linking the new edifice to the site's industrial past.' The photograph was captured in September of 2022.",
+    description: "One South First emerged as a landmark structure along the Williamsburg waterfront upon its completion in 2019. The designing architects, Cookfox, stated, 'The modern façade's design draws inspiration from the crystalline structure of sugar, linking the new edifice to the site's industrial past.' The photograph was captured in September of 2022. 8 in. x 10 in./11 in. x 14 in.",
     imageUrl: [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1s1_.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1s1__.png',

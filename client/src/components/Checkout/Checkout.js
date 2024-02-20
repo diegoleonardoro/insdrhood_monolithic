@@ -22,10 +22,10 @@ const Checkout = () => {
 
   return (
 
-    <div style={{position:"relative", left:'50%', transform:'translate(-50%, 0)', top:"30px", display:'inline'}}className='checkout'>
-      <h2>Checkout Summary</h2>
-      <h3>{`Total Items: ${itemCount}`}</h3>
-      <h4>{`Amount to Pay: $${total}`}</h4>
+    <div style={{position:"relative", marginTop:"30px"}}className='checkout'>
+      <h2 style={{textAlign:"center"}}>Checkout Summary</h2>
+      <h3 style={{ textAlign: "center" }}>{`Total Items: ${itemCount}`}</h3>
+      <h4 style={{ textAlign: "center" }}>{`Amount to Pay: $${total}`}</h4>
       {/* <div style={addressShown}>
         <ShippingAddress setShipping={setShipping} />
       </div> */}

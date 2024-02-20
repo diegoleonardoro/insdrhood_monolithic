@@ -2,6 +2,7 @@ import React from 'react';
 import { PlusCircleIcon, MinusCircleIcon, TrashIcon } from '../Icons/index';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
+import "./cartpage.css"
 
 
 const CartItem = (props) => {
@@ -93,7 +94,7 @@ const CartItem = (props) => {
     <div className='cart-item'>
 
 
-      <div className='galleryParent_cart'>
+      <div className='galleryParent_Cart'>
         <Slider {...settings}>
           {imageUrl.map((image, index) => (
             <img key={index} className="imageprodCart" src={image}></img>
@@ -101,38 +102,39 @@ const CartItem = (props) => {
         </Slider>
       </div>
 
-      
-      <div className='name-price'>
-        <h4>{title}</h4>
-        <p>${price}</p>
-      </div>
-      <div className='quantity'>
-        <p>{`Quantity: ${quantity}`}</p>
-      </div>
-      <div className='btns-container'>
-        <button
-          style={{ backgroundColor: 'transparent' , marginRight:'5px'}}
-          className='btn-increase' onClick={() => increase(product)}>
-          <PlusCircleIcon width='20px' />
-        </button>
-        {
-          quantity === 1 &&
-          <button 
-              style={{backgroundColor:'transparent'}}
-              className='btn-trash' onClick={() => removeProduct(product)}>
-            <TrashIcon width='20px' />
-          </button>
-        }
-        {
-          quantity > 1 &&
+      <div style ={{marginLeft:"40px"}}>
+        <div className='name-price'>
+          <h4>{title}</h4>
+          <p>${price}</p>
+        </div>
+        <div className='quantity'>
+          <p>{`Quantity: ${quantity}`}</p>
+        </div>
+        <div className='btns-container'>
           <button
-            className='btn-decrease' onClick={() => decrease(product)}>
-            <MinusCircleIcon width='20px' />
+            style={{ backgroundColor: 'transparent', marginRight: '5px' }}
+            className='btn-increase' onClick={() => increase(product)}>
+            <PlusCircleIcon width='20px' />
           </button>
-        }
+          {
+            quantity === 1 &&
+            <button
+              style={{ backgroundColor: 'transparent' }}
+              className='btn-trash' onClick={() => removeProduct(product)}>
+              <TrashIcon width='20px' />
+            </button>
+          }
+          {
+            quantity > 1 &&
+            <button
+              className='btn-decrease' onClick={() => decrease(product)}>
+              <MinusCircleIcon width='20px' />
+            </button>
+          }
+        </div>
       </div>
 
-      
+
     </div>
   );
 }

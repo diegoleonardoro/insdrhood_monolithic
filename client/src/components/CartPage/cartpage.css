@@ -16,22 +16,32 @@
 .cart-item{
   background-color: #f5f5f5;
   width:40%;
+  margin:20px;
 }
 
-.galleryParent_cart{
+.galleryParent_Cart{
   margin: auto;
   margin-top: 20px;
   padding: 20px;
+  width:auto
+}
+
+.imageprodCart{
+  position: relative;
+  left:50%;
+  transform: translate(-50%, 0);
+  height:400px;
+  object-fit: contain;
+  width: 80% !important;
+
+
 }
 
 .btns-container{
   padding-bottom: 20px;
 }
 
-.imageprodCart{
-  height: 400px;
-  width: auto !important;;
-}
+
 
 @media only screen and (max-width: 1300px) {
   .cart-item{

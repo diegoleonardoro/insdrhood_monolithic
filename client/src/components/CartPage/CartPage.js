@@ -12,7 +12,7 @@ const CartPage = () => {
     <div >
       <h1 style={{textAlign:'center', margin:'20px'}}>Cart</h1>
       {
-        cartItems.length === 0 ? <div className='empty-cart'>Your Cart is empty</div>
+        cartItems.length === 0 ? <div style={{ textAlign: 'center', margin: '20px' }} className='empty-cart'>Your Cart is empty</div>
           :
           <>
             <div  className='cart-page'>
