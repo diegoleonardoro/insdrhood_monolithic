@@ -224,6 +224,8 @@ const FormComponent = ({ updateCurrentUser }) => {
     }
   }
 
+
+
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
   const nycResidentChecker = (value) => {
     // const form = document.getElementsByClassName("Form_form__Buw7X")[0];
@@ -232,15 +234,17 @@ const FormComponent = ({ updateCurrentUser }) => {
       setLiveinNYC("yes");
       setDisplayKeyWord(["neighborhood"]);
 
-
     } else if (value === "no") {
       setLiveinNYCSign("no");
       form.style.display = "none";
+
+
       setTimeout(() => {
         setLiveinNYCSign("yes");
         // make request to send user to the home page:
+        navigate("/shop")
+      }, 1000);
 
-      }, 3000);
     }
   };
 
@@ -257,7 +261,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
       if (currentDiv) {
 
-      
 
         // check if the user has not responded a question that required to be responded:
         if (currentDiv.className.indexOf("shakieCheck") > -1) {
@@ -946,7 +949,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       ) : (
         <div>
           <div
-            style={{ display: onlyNYCResidentsSign }}
+            style={{ display: onlyNYCResidentsSign , position:"relative", zIndex:"10"}}
             className="onlyNYCResident"
           >
             <Alert style={{ textAlign: "center", marginTop: "15px" }} variant="danger">
