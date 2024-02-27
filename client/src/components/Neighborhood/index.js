@@ -27,6 +27,9 @@ const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
 
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       const currentUser__ = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+
+      console.log("nhood data", neighborhood.data);
+
       setNeighborhood(neighborhood.data);
       setIsEditable(neighborhood.data.user.id === currentUser__?.data.id);
 
@@ -38,6 +41,8 @@ const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
   }, []);//currentuser
 
   const nhoodName = neighborhood?.neighborhood.charAt(0).toUpperCase() + neighborhood?.neighborhood.slice(1);
+
+
 
   return (
 
@@ -74,10 +79,10 @@ const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"The neighborhood has a vibe that's "} adjectives={neighborhood.neighborhoodAdjectives} objectKey="neighborhoodAdjectives" />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"I would say the most unique thing about " + nhoodName + " is "} content={
-                    removeTrailingPeriod(neighborhood.mostUniqueThingAboutNeighborhood.toLowerCase()) + "."} objectKey="mostUniqueThingAboutNeighborhood" />
+                    removeTrailingPeriod(neighborhood.mostUniqueThingAboutNeighborhood.toLowerCase()) } objectKey="mostUniqueThingAboutNeighborhood" />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={"People should visit " + nhoodName + " if they want "} content={
-                    removeTrailingPeriod(neighborhood.peopleShouldVisitNeighborhoodIfTheyWant.toLowerCase()) + "."
+                    removeTrailingPeriod(neighborhood.peopleShouldVisitNeighborhoodIfTheyWant.toLowerCase()) 
                   } objectKey="peopleShouldVisitNeighborhoodIfTheyWant" />
                 </div>
               )}
@@ -173,7 +178,9 @@ const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
                 <div className="nightLifeEditableDivsContainer">
                   <div style={{ position: "relative", margin: "auto " }}>
                     <h1 className="recommendationsHeader" >The Night Life of {nhoodName}</h1>
+
                     <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={[`Night life in ${nhoodName} can be `, 'because ']} objectData={neighborhood.nightLife} objectKey="nightLife" />
+                    
                     {
                       ((neighborhood.nightLifeRecommendations && neighborhood.nightLifeRecommendations.length > 0) || isEditable) &&
                       <NeighborhoodEditableDiv

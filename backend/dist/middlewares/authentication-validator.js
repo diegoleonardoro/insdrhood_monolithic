@@ -63,7 +63,6 @@ function compareKeyValuePairs(payloadd, currentUser) {
         let payloaddValue = Array.isArray(payloadd[key]) ? payloadd[key].toString() : payloadd[key];
         let ddddValue = Array.isArray(ddddComparable[key]) ? ddddComparable[key].toString() : ddddComparable[key];
         if (payloaddValue !== ddddValue) {
-            console.log(`Values differ for key ${key}.`);
             return false;
         }
     }

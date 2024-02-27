@@ -11,7 +11,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip'
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
-import {useNavigationHistory} from "../../../contexts/navigation-history-context"
+import { useNavigationHistory } from "../../../contexts/navigation-history-context"
 
 let addLastPlace = false;
 let addPlaceFromForm = true;
@@ -86,7 +86,7 @@ const FormComponent = ({ updateCurrentUser }) => {
     onePlaceToEat: { assessment: "", explanation: "" },
     foodPrices: { assessment: "", explanation: "" },
     foodIsAuthentic: { assessment: "", explanation: "" },
-    nightLife: "",
+    nightLife: {},
     nightLifeRecommendations: [],
     onePlaceForNightLife: { assessment: "", explanation: "" },
     statements: {},
@@ -169,7 +169,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   const handleGoBack = () => {
 
-   if (pathsVisited > 1) {
+    if (pathsVisited > 1) {
       navigate(-1);
     } else {
       // Handle the case when there's no previous intra-app route
@@ -319,26 +319,27 @@ const FormComponent = ({ updateCurrentUser }) => {
               }
             }
           };
-
-        } else if (
-          currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 ||
-          currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1 ||
-          currentDiv.className.indexOf("nightlifeQuestions") > -1
-        ) {
-
-          const inputs = currentDiv.querySelectorAll("input");
-          let hasValue = false;
-          for (let i = 0; i < inputs.length; i++) {
-            if (inputs[i].checked) {
-              hasValue = true;
-              break;
-            }
-          }
-          if (!hasValue) {
-            tooltip.style.display = "inline-block";
-            return;
-          }
         }
+        
+        // else if (
+        //   currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 ||
+        //   currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1 ||
+        //   currentDiv.className.indexOf("nightlifeQuestions") > -1
+        // ) {
+
+        //   const inputs = currentDiv.querySelectorAll("input");
+        //   let hasValue = false;
+        //   for (let i = 0; i < inputs.length; i++) {
+        //     if (inputs[i].checked) {
+        //       hasValue = true;
+        //       break;
+        //     }
+        //   }
+        //   if (!hasValue) {
+        //     tooltip.style.display = "inline-block";
+        //     return;
+        //   }
+        // }
 
         // Check if we are about to show the food questions, so that we can change the display value of the header that annouces the upcoming food questions:
         if (currentDiv.className.indexOf("stereotypicalResident") > -1) {
@@ -367,7 +368,7 @@ const FormComponent = ({ updateCurrentUser }) => {
           setNeighborhood(currentDiv.children[1].children[0].value);
         }
 
-        
+
         // this block will check if there are inputs in the night life recommeded places 
         // if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
         //   const placeName = nightLifeRecommendationsRef.current.placeName.value;
@@ -485,15 +486,11 @@ const FormComponent = ({ updateCurrentUser }) => {
           return;
         }
       }
-
       setCurrentStep(currentStep - 1);
       let nextIndex = activeIndex - 1;
       setActiveIndex(nextIndex);
-
     }
-
     setDisplayKeyWord([keyWord]);
-
   }
 
 
@@ -958,7 +955,7 @@ const FormComponent = ({ updateCurrentUser }) => {
       ) : (
         <div>
           <div
-            style={{ display: onlyNYCResidentsSign , position:"relative", zIndex:"10"}}
+            style={{ display: onlyNYCResidentsSign, position: "relative", zIndex: "10" }}
             className="onlyNYCResident"
           >
             <Alert style={{ textAlign: "center", marginTop: "15px" }} variant="danger">
@@ -966,7 +963,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             </Alert>
           </div>
 
-          <div style={{ position: "absolute", top: "10px", right: "10px", cursor:"pointer" }} onClick={handleGoBack}>
+          <div style={{ position: "absolute", top: "10px", right: "10px", cursor: "pointer" }} onClick={handleGoBack}>
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
             </svg>
@@ -1153,9 +1150,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "yearsInNeighborhood completeSentence1 nhoodAdjectivesFlag " +
-                displayQuestion("nhoodAdjectives") +
-                " " +
-                shakie
+                displayQuestion("nhoodAdjectives")
               }
               ref={ref => divRefs.current[3] = ref}
             >
@@ -1586,9 +1581,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             {/**  “Complete the sentence:  ‘The most unique thing about {neighborhood} is ________”*/}
             <div className={"nhoodAdjectives completeSentence2 " +
-              displayQuestion("completeSentence1") +
-              " " +
-              shakie}
+              displayQuestion("completeSentence1")}
               ref={ref => divRefs.current[4] = ref}
             >
 
@@ -1621,9 +1614,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             {/**  “Complete the sentence:  ‘People should visit {neighborhood} if they want ________”*/}
             <div className={"completeSentence1 describeNeighborhood " +
-              displayQuestion("completeSentence2") +
-              " " +
-              shakie}
+              displayQuestion("completeSentence2")}
               ref={ref => divRefs.current[5] = ref}
             >
               <div>
@@ -1686,9 +1677,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "describeNeighborhood mustTryFood nhoodAdjectivesFlag stereotypicalResident " +
-                displayQuestion("residentAdjectives") +
-                " " +
-                shakie
+                displayQuestion("residentAdjectives")
               }
               ref={ref => divRefs.current[7] = ref}
             >
@@ -2120,9 +2109,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "residentAdjectives oncePlaceToEat nhoodAdjectivesFlag foodRecommendtions foodQuestion mustTryFoods " +
-                displayQuestion("mustTryFood") +
-                " " +
-                shakie
+                displayQuestion("mustTryFood")
               }
               ref={ref => divRefs.current[8] = ref}
             >
@@ -2466,9 +2453,7 @@ const FormComponent = ({ updateCurrentUser }) => {
            */}
             <div
               className={"mustTryFood foodPrice " +
-                displayQuestion("oncePlaceToEat") +
-                " " +
-                shakie}
+                displayQuestion("oncePlaceToEat")}
               ref={ref => divRefs.current[9] = ref}
             >
               <div style={{ display: "fex", alignItems: "center", width: "100%", position: "relative" }}>
@@ -2515,9 +2500,7 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             {/**Food in {neighborhood} tends to be expensive, affordable or both */}
             <div className={"oncePlaceToEat agreeOrDisagreeFood foodPricesQuestion " +
-              displayQuestion("foodPrice") +
-              " " +
-              shakie}
+              displayQuestion("foodPrice")}
               ref={ref => divRefs.current[10] = ref}
             >
 
@@ -2985,9 +2968,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             {/** Complete the sentence: "If I had to pick one place to enjoy the nightlife of {neighborhood}, it would be _______, because ________" */}
             <div
               className={"nightLifePlacesRecommendations neighborhoodEvaluationFirstQuestion pickOneNightLifePlace " +
-                displayQuestion("completeTheSentenceNightLifeVenue") +
-                " " +
-                shakie}
+                displayQuestion("completeTheSentenceNightLifeVenue")}
               ref={ref => divRefs.current[14] = ref}
             >
               {/* <h3 style={{ marginBottom: "30px", width: "100%", fontWeight: 'bold' }}>Complete the sentence:</h3> */}
@@ -3046,9 +3027,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "completeTheSentenceNightLifeVenue neighborhoodEvaluationSecondQuestion neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationFirstQuestion") +
-                " " +
-                shakie
+                displayQuestion("neighborhoodEvaluationFirstQuestion") 
               }
               ref={ref => divRefs.current[15] = ref}
             >
@@ -3191,9 +3170,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "neighborhoodEvaluationFirstQuestion neighborhoodEvaluationThirdQuestion neighborhoodEvaluation neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationSecondQuestion") +
-                " " +
-                shakie
+                displayQuestion("neighborhoodEvaluationSecondQuestion")
               }
               ref={ref => divRefs.current[16] = ref}
             >
@@ -3321,9 +3298,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "neighborhoodEvaluationSecondQuestion neighborhoodEvaluationFourthQuestion neighborhoodEvaluation neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationThirdQuestion") +
-                " " +
-                shakie
+                displayQuestion("neighborhoodEvaluationThirdQuestion") 
               }
               ref={ref => divRefs.current[17] = ref}
             >
@@ -3456,9 +3431,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "neighborhoodEvaluationThirdQuestion neighborhoodPictures neighborhoodEvaluation neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationFourthQuestion") +
-                " " +
-                shakie
+                displayQuestion("neighborhoodEvaluationFourthQuestion") 
               }
               ref={ref => divRefs.current[18] = ref}
             >
@@ -3608,8 +3581,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               className={
                 "neighborhoodPictures submit " +
                 displayQuestion("personalInfo") +
-                " contactInfo " +
-                shakie
+                " contactInfo " 
               }
               ref={ref => divRefs.current[20] = ref}
             >

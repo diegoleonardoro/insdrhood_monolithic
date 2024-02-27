@@ -199,8 +199,16 @@ const NeighborhoodEditableDiv = ({
     setIsEditing(true);
   };
 
+
+
+
+
+
+
+
   const handleChange = (event, index, flag) => {
 
+    // event.preventDefault();
 
     // user is trying to update the data that came as an object of objects:
     if (hasNestedObjects(nestedObjects)) {
@@ -248,13 +256,19 @@ const NeighborhoodEditableDiv = ({
 
     // If user is trying to edit any of the data came as an  object:
     if (typeof objectData === "object") {
+
       setObjectData_(prevState => {
         return { ...prevState, [event.target.id]: event.target.value }
       })
+
+      return
     };
 
+
+
     // If the user is adding or removing neighborhood adjectives:
-    if (adjectivesText.length > 0) {
+    if (objectKey === 'neighborhoodAdjectives' || objectKey === 'residentAdjectives') {
+
       setAdjectivesText(event.target.value.split(", "));
       return
     };
@@ -262,6 +276,12 @@ const NeighborhoodEditableDiv = ({
     setText(event.target.value);
 
   };
+
+
+
+
+
+
 
   // function that will remove objects from an array of recommendations
   const removeObject = (index) => {
@@ -364,6 +384,7 @@ const NeighborhoodEditableDiv = ({
     if (objectKey === 'neighborhoodImages') {
 
       if (addImagesInput.current !== null && addImagesInput.current.files.length > 0) {
+
         await uploadImagesAndUpdateState(addImagesInput, neighborhood, imagesId, objectKey);
 
         setIsEditing(false);
@@ -377,8 +398,10 @@ const NeighborhoodEditableDiv = ({
       }
 
     }
+
+
     // user is editing the list of neighborhood adjectives 
-    if (adjectives.length > 0) {
+    if (objectKey === 'neighborhoodAdjectives' || objectKey === 'residentAdjectives') {
       setAdjectivesTextHistory(prevAdjectivesText => {
         if (!areArraysEqual(prevAdjectivesText, adjectivesText)) {
           updateNeighborhoodData({ [objectKey]: adjectivesText })
@@ -387,8 +410,16 @@ const NeighborhoodEditableDiv = ({
       });
     }
 
+
+
+
     // user is editing a text-based section of the neighborhood profile:
-    if (content) {
+    if (objectKey === 'timeLivingInNeighborhood' ||
+      objectKey === 'neighborhoodDescription' ||
+      objectKey === 'mostUniqueThingAboutNeighborhood' ||
+      objectKey === 'peopleShouldVisitNeighborhoodIfTheyWant') {
+
+      // content 
       setTextHistory(prevText => {
         if (prevText !== text) {
           updateNeighborhoodData({ [objectKey]: text })
@@ -410,7 +441,6 @@ const NeighborhoodEditableDiv = ({
 
   // RETURN OBJECTS:
   /** We are rendering an object of nested objects, such as the statements  */
-
   const assessmentsTexts = {
     publicTransportation: [`Public transportation in ${neighborhood} is `],
     owningPets: ['I ', `having pets in ${neighborhood}`],
@@ -544,6 +574,7 @@ const NeighborhoodEditableDiv = ({
 
   /** We are rendering an object that contains information of recommended restaurants or nightlife venues */
   if (Array.isArray(recommendationsArrayOfObjects)) {
+
     return (
       <div>
 
@@ -672,7 +703,7 @@ const NeighborhoodEditableDiv = ({
                           name="explanation"
                           onChange={(e) => {
                             updateField(index, 'recommendations', e.target.value); // this function will add a new row to the table 
-                            handleChange(e, index, 'table'); 
+                            handleChange(e, index, 'table');
                           }}
                         />
                       </td>
@@ -772,49 +803,50 @@ const NeighborhoodEditableDiv = ({
 
     return (
       <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-        {isEditing ? (
-          <div>
-            <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
-              <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
-              <Form.Control id="assessment" onChange={handleChange} type="text" value={objectData_.assessment.toLowerCase()} style={{ marginLeft: "10px" }} />
+        {
+
+          (isEditing || areValuesEmptyStrings(objectDataHistory)) ? (
+            <div>
+              <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
+                <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
+                <Form.Control id="assessment" onChange={handleChange} type="text" value={objectData_.assessment} style={{ marginLeft: "10px" }} />
+              </div>
+              <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
+                <p style={{ textAlign: "start" }}> {complementaryText[1] + ":"}</p>
+                <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation} style={{ marginLeft: "10px" }} />
+              </div>
+              <div className="divSaveCancelBtns">
+                <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
+                <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
+              </div>
             </div>
-            <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
-              <p style={{ textAlign: "start" }}> {complementaryText[1] + ":"}</p>
-              <Form.Control id="explanation" onChange={handleChange} type="text" value={objectData_.explanation.toLowerCase()} style={{ marginLeft: "10px" }} />
-            </div>
-            <div className="divSaveCancelBtns">
-              <Button variant='outline-primary' style={{ width: "30%" }} className="buttonDataSave" onClick={handleSaveClick}>Save</Button>
-              <Button variant='outline-danger' style={{ width: "30%" }} className="buttonDataSave" onClick={handleCancelClick}>Cancel</Button>
-            </div>
-          </div>
-        ) : (
-          <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
-            {isEditable ? (
-              <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
-            ) : null}
-            <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-              {<>
-                {complementaryText[0]}
-                <div style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
-                  {removeTrailingPeriod(objectData_.assessment.toLowerCase())}
-                </div>
-              </>
-              }
+          ) : (
+            <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
+              {isEditable ? (
+                <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
+              ) : null}
+              <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+                {<>
+                  {complementaryText[0]}
+                  <div style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
+                    {removeTrailingPeriod(objectData_.assessment.toLowerCase())}
+                  </div>
+                </>
+                }
                 {objectData_.explanation && objectData_.explanation !== "" ? (
-                <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
-                  {", " + complementaryText[1] + removeTrailingPeriod(objectData_.explanation.toLowerCase()) + "."}
-                </span>
-              ) : (
-                null
-              )}
+                  <span style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+                    {", " + complementaryText[1] + removeTrailingPeriod(objectData_.explanation.toLowerCase()) + "."}
+                  </span>
+                ) : (
+                  null
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
       </div>
     )
   };
-
 
   /** When we render the neighboorhood images: */
   if (objectKey === 'neighborhoodImages') {
@@ -988,17 +1020,17 @@ const NeighborhoodEditableDiv = ({
   };
 
   /** If we are going to render list of adjectives: */
-  if (adjectives.length > 0) {
+  if (objectKey === 'neighborhoodAdjectives' || objectKey === 'residentAdjectives') {
+    /** objectKey === 'neighborhoodAdjectives' ||  objectKey === 'residentAdjectives' adjectives.length > 0 */
     return (
       <div className="adjectivesDiv" style={{ position: "relative" }}>
-        {isEditing ? (
+        {isEditing || isArrayEmpty(adjectivesTextHistory) ? (
           <div className="nhoodIntroItemList">
             <div style={{ textAlign: "start" }}>
               <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput"> The {objectKey === 'neighborhoodAdjectives' ? 'neighborhood' : 'residents'} can be described as:</label>
               <input
                 type="text"
                 value={
-
                   adjectivesText.map((adjective, index) => {
                     return (index === 0 ? "" : " ") + adjective.toLowerCase();
                   })
@@ -1022,18 +1054,15 @@ const NeighborhoodEditableDiv = ({
             <div className="nhoodAdjectivesDivSpanContainer">
               {
                 isEditable ? (
-
                   <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
                   // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
 
                 ) : null
               }
-
               <p style={{ marginBottom: "0px", margin: isEditable ? "0px" : "0px" }} className="nhoodRecommendationText">
                 {complementaryText !== "" ? complementaryText : null}
-
                 {
-                  adjectivesText.map((adjective, index) => {
+                  adjectivesTextHistory.map((adjective, index) => {
                     // const isLastItem = index === adjectivesText.length - 1;
                     return (
                       <span className="nhoodAdjectivesSpan" key={index}>
@@ -1042,12 +1071,7 @@ const NeighborhoodEditableDiv = ({
                     )
                   })
                 }
-
-
               </p>
-
-
-
             </div>
           </div>
         )}
@@ -1059,7 +1083,7 @@ const NeighborhoodEditableDiv = ({
   /** When we only render plain text: */
   return (
     <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-      {isEditing ? (
+      {isEditing || textHistory === "" ? (
         <div>
           {complementaryText !== "" ? (<p style={{ textAlign: "start" }}>{complementaryText}:</p>) : null}
           <input
@@ -1175,5 +1199,21 @@ function objectsAreEqual(obj1, obj2) {
   // If no differences were found, the objects are equal
   return true;
 }
+// function that will be used to check if the values of an object are all empty strings:
+function areValuesEmptyStrings(obj) {
 
+
+  // Extract the values of the object
+  const values = Object.values(obj);
+  // Check if every value is an empty string
+  return values.every(value => value === '');
+}
+// function that will check if an array is empty:
+function isArrayEmpty(arr) {
+
+  const filteredArr = arr.filter(item => item !== '');
+  // Check if the filtered array is empty
+  return filteredArr.length === 0;
+
+}
 export default NeighborhoodEditableDiv;

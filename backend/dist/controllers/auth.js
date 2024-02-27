@@ -65,7 +65,7 @@ const signup = async (req, res) => {
         jwt: userJwt,
     };
     // if there is not email present, then do not send email verification:
-    if (user.email !== '') {
+    if (user.email !== '' && user.email) {
         (0, emailVerification_1.sendVerificationMail)({
             name: user.name,
             email: user.email,
@@ -177,7 +177,7 @@ const updateUserData = async (req, res) => {
     req.session = {
         jwt: userJwt,
     };
-    if (updates.emailToken && updates.email !== '') {
+    if (updates.emailToken && updates.email !== '' && updates.email) {
         (0, emailVerification_1.sendVerificationMail)({
             name: userInfo.name,
             email: userInfo.email,

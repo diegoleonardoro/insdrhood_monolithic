@@ -25,6 +25,7 @@ import { useUser } from "../src/contexts/UserContext";
 import { useLocation } from 'react-router-dom';
 import Canceled from "./components/Checkout/stripe-checkout/canceled"
 import Success from "./components/Checkout/stripe-checkout/success"
+import BlogEditor from "./components/BlogEditor/BlogEditor";
 import { NavigationHistoryProvider } from "./contexts/navigation-history-context"
 
 function App() {
@@ -145,6 +146,7 @@ function App() {
               <Route path='/checkout' element={<Checkout />}></Route>
               <Route path='/canceled' element={<Canceled />}></Route>
               <Route path='/success' element={<Success />}></Route>
+              <Route path='/post' element={<BlogEditor />}></Route>
             </Routes>
           </div>
         </NavigationHistoryProvider>

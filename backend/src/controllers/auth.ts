@@ -44,7 +44,6 @@ export const signup = async (req: Request, res: Response) => {
   const nameCapitalized = nameFirstLetterCapitalized + remainingName;
   const emailToken = crypto.randomBytes(64).toString("hex");
 
-
   const hashedPassword = password ? await Password.toHash(password) : '';
 
   const user = {
@@ -85,7 +84,7 @@ export const signup = async (req: Request, res: Response) => {
   };
 
   // if there is not email present, then do not send email verification:
-  if (user.email !== '') {
+  if (user.email !== '' && user.email) {
     sendVerificationMail({
       name: user.name,
       email: user.email,
@@ -239,7 +238,7 @@ export const updateUserData = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
 
-  if (updates.emailToken && updates.email!=='') {
+  if (updates.emailToken && updates.email !== '' && updates.email) {
     sendVerificationMail({
       name: userInfo.name,
       email: userInfo.email,
