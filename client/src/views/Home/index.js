@@ -39,8 +39,7 @@ function Home({ currentuser, updateCurrentUser }) {
   });
 
   const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
-    { console.log(neighborhood) }
-
+   
     return (
       <Card className ="neighborhoodCard"  key={neighborhood._id}>
         <Card.Header as="h5">{neighborhood.neighborhood}{", "} {neighborhood.borough}</Card.Header>

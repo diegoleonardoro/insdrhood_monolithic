@@ -1,19 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import "./blogeditor.css";
+import { useUserContext } from "../../contexts/UserContext"; 
 
 let savedRange = null;
 
 const BlogEditor = () => {
 
   const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
-  const [uploads, setUploads] = useState([]);
   const editorRef = useRef(null);
   const uploadButtonRef = useRef(null);
   const titleRef = useRef(null);
-  const [content, setContent] = useState([]);
 
+
+  const [content, setContent] = useState([]);
+  const [text, setText] = useState('');
+  const [uploads, setUploads] = useState([]);
+  
+  const { currentuser_ } = useUserContext();
+
+  console.log("current userrr", currentuser_);
 
 
   const saveSelection = () => {
@@ -28,15 +34,6 @@ const BlogEditor = () => {
     selection.removeAllRanges();
     selection.addRange(savedRange);
   };
-
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
-  // const handleEditorChange = (e) => {
-  //   setText(e.currentTarget.textContent);
-  // };
-
 
   const handleEditorInput = (e) => {
 
@@ -74,10 +71,17 @@ const BlogEditor = () => {
 
   };
 
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+
+    // check if currentuser_ is defined and if so use the id of that user to save the images
+
     uploadFile(file).then((url) => {
       // restoreSelection();
       insertImageAtCaret(url);
@@ -95,7 +99,7 @@ const BlogEditor = () => {
     divContainer.style.display = 'block';
     divContainer.style.marginBottom = '1em';
     divContainer.style.display = 'flex';
-    divContainer.style.justifyContent = 'space-around';
+  
     divContainer.className = "imageContainer"
 
     imgUrls.forEach((imgUrl) => {
@@ -106,33 +110,26 @@ const BlogEditor = () => {
       img.alt = 'Uploaded image';
       img.style.display = 'block';
       img.style.marginBottom = '1em';
+      img.style.marginLeft = '20px';
 
       // Append each image to the div container
       divContainer.appendChild(img);
     });
 
     editor.appendChild(divContainer);
-    // Create a line break element
-    const lineBreak = document.createElement('br');
 
+    // Create a line break element
+    // const lineBreak = document.createElement('br');
     // Append the line break after the div container
-    editor.appendChild(lineBreak);
-    setText(editor.innerHTML);
+    // editor.appendChild(lineBreak);
+    // setText(editor.innerHTML);
 
   };
 
 
-
-
   // Submit the data:
   const handleSubmit = () => {
-
-
-    console.log("cc", editorRef.current.innerHTML)
-
     const editorRefInnerHtml = editorRef.current.innerHTML
-
-
     const parser = new DOMParser();
     const doc = parser.parseFromString(editorRefInnerHtml, 'text/html');
 
@@ -179,8 +176,6 @@ const BlogEditor = () => {
       <div
         ref={editorRef}
         contentEditable
-        // onInput={handleEditorInput}
-        // onKeyDown={handleEditorInput}
         style={{ minHeight: '200px', border: '1px solid black', padding: '10px', whiteSpace: 'pre-line' }}
       />
 
@@ -189,9 +184,6 @@ const BlogEditor = () => {
         className="upload-button"
       >
 
-        { /**  
-         *  onClick={() => saveSelection()}
-         */}
         <label className='labelUploadImage'>
           Upload Image(s)
           <input type="file" onChange={handleFileUpload} multiple />

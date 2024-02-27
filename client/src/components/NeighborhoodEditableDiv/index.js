@@ -192,19 +192,11 @@ const NeighborhoodEditableDiv = ({
     setNhoodImages(filteredUrls);
   };
 
-
   // the following function will enable editing functionality:
   const handleEditClick = () => {
     // galleryParentRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     setIsEditing(true);
   };
-
-
-
-
-
-
-
 
   const handleChange = (event, index, flag) => {
 
@@ -276,12 +268,6 @@ const NeighborhoodEditableDiv = ({
     setText(event.target.value);
 
   };
-
-
-
-
-
-
 
   // function that will remove objects from an array of recommendations
   const removeObject = (index) => {
@@ -805,7 +791,7 @@ const NeighborhoodEditableDiv = ({
       <div style={{ padding: "15px", width: "100%", position: "relative" }}>
         {
 
-          (isEditing || areValuesEmptyStrings(objectDataHistory)) ? (
+          (isEditing || (areValuesEmptyStrings(objectDataHistory) && isEditable) ) ? (
             <div>
               <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
                 <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
@@ -829,7 +815,7 @@ const NeighborhoodEditableDiv = ({
                 {<>
                   {complementaryText[0]}
                   <div style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
-                    {removeTrailingPeriod(objectData_.assessment.toLowerCase())}
+                    {removeTrailingPeriod(objectData_.assessment)}
                   </div>
                 </>
                 }
@@ -1024,7 +1010,7 @@ const NeighborhoodEditableDiv = ({
     /** objectKey === 'neighborhoodAdjectives' ||  objectKey === 'residentAdjectives' adjectives.length > 0 */
     return (
       <div className="adjectivesDiv" style={{ position: "relative" }}>
-        {isEditing || isArrayEmpty(adjectivesTextHistory) ? (
+        {isEditing || (isArrayEmpty(adjectivesTextHistory) && isEditable) ? (
           <div className="nhoodIntroItemList">
             <div style={{ textAlign: "start" }}>
               <label className="labelCommaSeparatedAdjs" htmlFor="wordListInput"> The {objectKey === 'neighborhoodAdjectives' ? 'neighborhood' : 'residents'} can be described as:</label>
@@ -1083,7 +1069,7 @@ const NeighborhoodEditableDiv = ({
   /** When we only render plain text: */
   return (
     <div style={{ padding: "15px", width: "100%", position: "relative" }}>
-      {isEditing || textHistory === "" ? (
+      {isEditing || (textHistory === "" && isEditable) ? (
         <div>
           {complementaryText !== "" ? (<p style={{ textAlign: "start" }}>{complementaryText}:</p>) : null}
           <input
