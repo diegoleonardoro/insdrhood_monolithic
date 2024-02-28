@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -252,6 +252,29 @@ const uploadFile = async (req, res) => {
     });
 };
 exports.uploadFile = uploadFile;
+/**
+ * @description makes request to aws S3 to get signed url for blog images
+ * @route GET /api/blog/:randomUUID
+ * @access public
+ */
+const uploadBlogFiles = async (req, res) => {
+    const s3 = new AWS.S3({
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+        signatureVersion: "v4",
+        region: "us-east-1",
+    });
+    const { randomUUID } = req.params;
+    const randomUUID_imageIdentifier = (0, uuid_1.v4)();
+    const key = `blog/${randomUUID}/${randomUUID_imageIdentifier}`;
+    s3.getSignedUrlPromise("putObject", {
+        Bucket: "insiderhood",
+        Key: key,
+    }, (err, url) => {
+        res.send({ key, url });
+    });
+};
+exports.uploadBlogFiles = uploadBlogFiles;
 /**
  * @description saves form data
  * @route POST /neighborhood/savedata

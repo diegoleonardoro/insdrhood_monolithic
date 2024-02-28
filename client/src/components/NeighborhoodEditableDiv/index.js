@@ -783,7 +783,6 @@ const NeighborhoodEditableDiv = ({
     )
   }
 
-
   /** We are rendering information that comes in as an object: */
   if (typeof objectData_ === "object") {
 

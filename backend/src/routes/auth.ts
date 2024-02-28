@@ -13,7 +13,8 @@ import {
   updateUserData,
   getAllNeighborhoods,
   updateNeighborhoodData,
-  getNeighborhood
+  getNeighborhood,
+  uploadBlogFiles
 } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
@@ -48,6 +49,7 @@ router.put("/updateuserdata/:id", authenticationValidator, asyncHandler(updateUs
  * NEIGHBORHOOD DATA ROUTES:
 */
 router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imageType", uploadFile);
+router.get("/blog/:randomUUID", uploadBlogFiles);
 router.post("/neighborhood/savedata", authenticationValidator, saveNeighborhoodData);
 router.put("/updateneighborhood/:id", authenticationValidator, updateNeighborhoodData)
 router.get("/neighborhoods", getAllNeighborhoods);

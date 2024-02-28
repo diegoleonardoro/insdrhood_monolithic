@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import "./blogeditor.css";
-import { useUserContext } from "../../contexts/UserContext"; 
+import { useUserContext } from "../../contexts/UserContext";
+import { v4 as uuidv4 } from 'uuid';
+import axios from "axios"
 
 let savedRange = null;
 
@@ -12,15 +14,13 @@ const BlogEditor = () => {
   const uploadButtonRef = useRef(null);
   const titleRef = useRef(null);
 
+  // This randomUUID will be used to save the images
+  const randomUUID = uuidv4();
 
   const [content, setContent] = useState([]);
   const [text, setText] = useState('');
   const [uploads, setUploads] = useState([]);
-  
   const { currentuser_ } = useUserContext();
-
-  console.log("current userrr", currentuser_);
-
 
   const saveSelection = () => {
     const selection = window.getSelection();
@@ -75,17 +75,37 @@ const BlogEditor = () => {
     setTitle(e.target.value);
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleFileUpload = async (e) => {
 
+    const files = e.target.files;
+    if (!files) return;
 
-    // check if currentuser_ is defined and if so use the id of that user to save the images
+    let imgUrls = []
 
-    uploadFile(file).then((url) => {
-      // restoreSelection();
-      insertImageAtCaret(url);
-    });
+    for (var i = 0; i < files.length; i++) {
+
+      const imageFile = files[i];
+
+      const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/${randomUUID}`);
+
+      console.log(" imageUploadConfig.data.key", imageUploadConfig.data.key);
+
+      //`https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`
+
+      imgUrls.push(`https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`)
+
+      await axios.put(imageUploadConfig.data.url, imageFile, {
+        headers: {
+          "Content-Type": 'image/jpeg',
+        },
+      });
+    }
+    insertImageAtCaret(imgUrls);
+    
+    // uploadFile(files).then((imgUrls) => {
+    //   // restoreSelection();
+    // });
+
   };
 
   const insertImageAtCaret = (imgUrls) => {
@@ -99,7 +119,7 @@ const BlogEditor = () => {
     divContainer.style.display = 'block';
     divContainer.style.marginBottom = '1em';
     divContainer.style.display = 'flex';
-  
+
     divContainer.className = "imageContainer"
 
     imgUrls.forEach((imgUrl) => {
@@ -129,15 +149,30 @@ const BlogEditor = () => {
 
   // Submit the data:
   const handleSubmit = () => {
+
     const editorRefInnerHtml = editorRef.current.innerHTML
     const parser = new DOMParser();
     const doc = parser.parseFromString(editorRefInnerHtml, 'text/html');
 
-    console.log("doccc", doc)
+
+    if (currentuser_) {
+      // ..... //
+      // make a request to save the blog inner text with and include the user id
+      // save the blog post with the  currentuser_.id 
+    } else {
+      // if there is no currently logged-in user show a pop up asking users to register ot to sign
+
+      // if the user decides not to sign up, save with out any user associated to it
+
+
+    }
+
+
+
+
 
     // // Array to hold the organized content
     // let contentArray = [];
-
     // const handleNode = (node) => {
     //   // Check if the node is a text node and not just whitespace
     //   if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {

@@ -107,16 +107,11 @@ const FormComponent = ({ updateCurrentUser }) => {
   const showFormToResident = liveinNYC === "yes" ? "visible" : "hidden";
   const onlyNYCResidentsSign = liveinNYCSign === "no" ? "block" : "none";
   const [loggedUser, setLoggedUser] = useState(null);
-
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 19;
-
   const [tooltipDisplay, setToolTipDisplay] = useState("none");
 
-
-
   const progressPercentage = (currentStep / totalSteps) * 100;
-
 
   useEffect(() => {
 
@@ -320,7 +315,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             }
           };
         }
-        
+
         // else if (
         //   currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 ||
         //   currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1 ||
@@ -399,10 +394,9 @@ const FormComponent = ({ updateCurrentUser }) => {
 
           // get url images from aws s3:
           if (formData.neighborhoodImages.length > 0) {
-
             setIsLoading(true);
-
             for (var i = 0; i < formData.neighborhoodImages.length; i++) {
+
               const imageFile = formData.neighborhoodImages[i];
               const imageType = imageFile.type.split('/')[1];
 
@@ -2447,7 +2441,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
             </div>
 
-
             {/** Complete the sentence: "If I were to suggest one place to eat in {neighborhood} it would be____
            because _____________" 
            */}
@@ -3027,7 +3020,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "completeTheSentenceNightLifeVenue neighborhoodEvaluationSecondQuestion neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationFirstQuestion") 
+                displayQuestion("neighborhoodEvaluationFirstQuestion")
               }
               ref={ref => divRefs.current[15] = ref}
             >
@@ -3298,7 +3291,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "neighborhoodEvaluationSecondQuestion neighborhoodEvaluationFourthQuestion neighborhoodEvaluation neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationThirdQuestion") 
+                displayQuestion("neighborhoodEvaluationThirdQuestion")
               }
               ref={ref => divRefs.current[17] = ref}
             >
@@ -3431,7 +3424,7 @@ const FormComponent = ({ updateCurrentUser }) => {
             <div
               className={
                 "neighborhoodEvaluationThirdQuestion neighborhoodPictures neighborhoodEvaluation neighborhoodEvaluationFlag " +
-                displayQuestion("neighborhoodEvaluationFourthQuestion") 
+                displayQuestion("neighborhoodEvaluationFourthQuestion")
               }
               ref={ref => divRefs.current[18] = ref}
             >
@@ -3581,7 +3574,7 @@ const FormComponent = ({ updateCurrentUser }) => {
               className={
                 "neighborhoodPictures submit " +
                 displayQuestion("personalInfo") +
-                " contactInfo " 
+                " contactInfo "
               }
               ref={ref => divRefs.current[20] = ref}
             >
@@ -3633,8 +3626,6 @@ const FormComponent = ({ updateCurrentUser }) => {
                 value="Submit"
               />
             </div>
-
-
 
             {/** Arrows */}
             <div

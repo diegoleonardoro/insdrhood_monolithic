@@ -324,6 +324,7 @@ export const uploadFile = async (req: Request, res: Response) => {
   });
 
   const { neighborhood, randomUUID, imageType } = req.params;
+
   const randomUUID_imageIdentifier = uuidv4();
   const key = `places/${req.currentUser ? req.currentUser!.id
     : randomUUID
@@ -334,6 +335,37 @@ export const uploadFile = async (req: Request, res: Response) => {
     {
       Bucket: "insiderhood",
       ContentType: imageType,
+      Key: key,
+    },
+    (err: object, url: string) => {
+      res.send({ key, url });
+    }
+  );
+}
+
+
+/**
+ * @description makes request to aws S3 to get signed url for blog images
+ * @route GET /api/blog/:randomUUID
+ * @access public
+ */
+
+export const uploadBlogFiles = async (req: Request, res: Response) => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    signatureVersion: "v4",
+    region: "us-east-1",
+  });
+
+  const { randomUUID } = req.params;
+  const randomUUID_imageIdentifier = uuidv4();
+
+  const key = `blog/${randomUUID}/${randomUUID_imageIdentifier}`;
+  s3.getSignedUrlPromise(
+    "putObject",
+    {
+      Bucket: "insiderhood",
       Key: key,
     },
     (err: object, url: string) => {
