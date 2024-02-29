@@ -16,6 +16,7 @@ const VerifyEmail = ({ updateCurrentUser }) => {
   const { emailtoken } = useParams();
   const [errors, setErrors] = useState(null);
   const [user, setUser] = useState(null);
+  
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
