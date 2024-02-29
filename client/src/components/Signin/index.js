@@ -19,16 +19,11 @@ const Signin = ({ updateCurrentUser }) => {
 
   async function sendUserCredentials() {
     try {
-      
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
         { email, password });
       await updateCurrentUser(response.data);
-
-      // console.log("responseeee", response);
-      // navigate('/');
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
       return;
-
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }
@@ -42,10 +37,8 @@ const Signin = ({ updateCurrentUser }) => {
 
   return (
     <div className="signinFormContainer">
-      {/* <img style={{position:'relative', width:'50%'}}src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-08-12%2021.40.56%20-%20linear%20image%20of%20historic%20nyc%20townhouse____.png"></img> */}
 
       <form className="signinform" >
-
         <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3" >
           <Form.Control
             type="email"

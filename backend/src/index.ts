@@ -6,7 +6,8 @@ import cors from "cors";
 import { errorHandler } from './middlewares/error-handler';
 import dotenv from "dotenv";
 import { auth } from "./routes/auth";
-import { payments } from "./routes/payments" 
+import { payments } from "./routes/payments";
+import {blog} from "./routes/blog" 
 import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
 import path from 'path';
 
@@ -76,6 +77,7 @@ app.use(
 
 app.use("/api", auth);
 app.use("/api/payments", payments);
+app.use("/api/blog", blog)
 
 app.use(errorHandler);
 

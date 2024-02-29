@@ -12,6 +12,7 @@ const error_handler_1 = require("./middlewares/error-handler");
 const dotenv_1 = __importDefault(require("dotenv"));
 const auth_1 = require("./routes/auth");
 const payments_1 = require("./routes/payments");
+const blog_1 = require("./routes/blog");
 const mongodb_1 = require("mongodb");
 const path_1 = __importDefault(require("path"));
 // import mongoose from 'mongoose';
@@ -65,6 +66,7 @@ app.use((0, cookie_session_1.default)({
 }));
 app.use("/api", auth_1.auth);
 app.use("/api/payments", payments_1.payments);
+app.use("/api/blog", blog_1.blog);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {
     return res.status(200).json({

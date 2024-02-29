@@ -24,14 +24,51 @@ const BlogEditor = () => {
   const [errors, setErrors] = useState(null);
   const navigate = useNavigate();
 
+  let blogBody = {}// this object will be used for the blog data. 
+
+
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent the default Enter behavior
+
+        // Create a new div with default or no specific styling
+        const newDiv = document.createElement('div');
+        newDiv.innerHTML = '<br>'; // Insert a break line for visual space, or customize as needed
+
+        editor.appendChild(newDiv);
+
+        // Move the cursor into the new div
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.setStart(newDiv, 0);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    };
+
+    editor.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      editor.removeEventListener('keydown', handleKeyDown); // Clean up
+    };
+  }, []);
+
+
+
+
+
+
+
 
 
   // This randomUUID will be used to save the images
   const randomUUID = uuidv4();
-
-  const [content, setContent] = useState([]);
-  const [text, setText] = useState('');
-  const [uploads, setUploads] = useState([]);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [isValidEmail, setIsValidEmail] = useState(true);
 
@@ -96,24 +133,14 @@ const BlogEditor = () => {
   };
 
   const handleFileUpload = async (e) => {
-
     const files = e.target.files;
     if (!files) return;
-
     let imgUrls = []
-
     for (var i = 0; i < files.length; i++) {
-
       const imageFile = files[i];
-
       const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/${randomUUID}`);
-
       console.log(" imageUploadConfig.data.key", imageUploadConfig.data.key);
-
-      //`https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`
-
       imgUrls.push(`https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`)
-
       await axios.put(imageUploadConfig.data.url, imageFile, {
         headers: {
           "Content-Type": 'image/jpeg',
@@ -121,11 +148,6 @@ const BlogEditor = () => {
       });
     }
     insertImageAtCaret(imgUrls);
-
-    // uploadFile(files).then((imgUrls) => {
-    //   // restoreSelection();
-    // });
-
   };
 
   const insertImageAtCaret = (imgUrls) => {
@@ -137,7 +159,8 @@ const BlogEditor = () => {
     // Create a div element to hold all images
     const divContainer = document.createElement('div');
     divContainer.style.display = 'block';
-    divContainer.style.marginBottom = '1em';
+    divContainer.style.marginTop = '5px';
+    divContainer.style.marginBotton = '5px';
     divContainer.style.display = 'flex';
 
     divContainer.className = "imageContainer"
@@ -149,30 +172,19 @@ const BlogEditor = () => {
       img.style.maxWidth = '100px';
       img.alt = 'Uploaded image';
       img.style.display = 'block';
-      img.style.marginBottom = '1em';
-      img.style.marginLeft = '20px';
+     
 
       // Append each image to the div container
       divContainer.appendChild(img);
+
     });
 
     editor.appendChild(divContainer);
-
-    // Create a line break element
-    // const lineBreak = document.createElement('br');
-    // Append the line break after the div container
-    // editor.appendChild(lineBreak);
-    // setText(editor.innerHTML);
-
   };
 
   const closeAuthForm = () => {
     setDisplayAuthForm(false)
   }
-
-
-
-
 
   const registerNewUser = () => {
     const emailValid = validateEmail(signUpData.email);
@@ -188,22 +200,25 @@ const BlogEditor = () => {
 
   };
 
-
-
-
   const signInUser = async () => {
 
     // make request to sign user in
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
         signInData);
-
       await setCurrentUserDirectly(response.data);
 
+      // update the blogBody object with the user id
+      blogBody.userId = response.data.id;
 
-      // make request to save blog post
+      // make request to save blog post.
 
-      navigate('/');
+
+
+
+
+      // direct the user to their blog post. 
+      // navigate('/');
 
     } catch (error) {
 
@@ -211,10 +226,6 @@ const BlogEditor = () => {
       setErrors(error.response.data.errors[0].message)
     }
   };
-
-
-
-
 
   const handleSignInInputChange = (event) => {
     const { name, value } = event.target;
@@ -232,8 +243,6 @@ const BlogEditor = () => {
     })
   };
 
-
-
   const submitWithoutAuthentication = () => {
 
     // make request to save the blog data. 
@@ -243,41 +252,34 @@ const BlogEditor = () => {
 
 
   // Submit the data:
-  const handleSubmit = () => {
-
+  const handleSubmit = async () => {
     const editorRefInnerHtml = editorRef.current.innerHTML
     const parser = new DOMParser();
     const doc = parser.parseFromString(editorRefInnerHtml, 'text/html');
-
     // create the object that will be sent to the server. It should have the title as plain text and the doc body of the editable div
-
-    const blogBody = {
+    blogBody = {
       title,
       body: doc.body.innerHTML
-    }
-
-
-
+    };
     if (currentuser_.data) {
-
-      console.log('holaa')
-      console.log('currentuser_', currentuser_)
-
       // ..... //
       // make a request to save the blog inner text with and include the user id
       // save the blog post with the  currentuser_.id 
-      blogBody.userId = currentuser_.id;
-
+      blogBody.userId = currentuser_.data.id;
       // make the request to save the blog:
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
+          { blogBody: blogBody });
+        // make request to the blog using the insertedId
+        navigate(`/post/${response.data.insertedId}`);
+      } catch (error) {
 
+      }
     } else {
-
       setDisplayAuthForm(true);
       // if there is no currently logged-in user show a pop up asking users to register ot to sign
       // if the user decides not to sign up, save with out any user associated to it
-
     }
-
   };
 
   const displaySignInForm = () => (
@@ -369,7 +371,6 @@ const BlogEditor = () => {
               <Button style={{ width: "50%" }} variant={isSignIn ? "dark" : "outline-dark"} onClick={() => setIsSignIn(true)}>Sign In</Button>
               <Button variant={!isSignIn ? "dark" : "outline-dark"} onClick={() => setIsSignIn(false)} style={{ marginLeft: '10px', width: "50%" }}>Sign Up</Button>
             </div>
-
             {isSignIn ? displaySignInForm() : displaySignUpForm()}
             <div style={{ position: "absolute", top: "0px", right: "10px", cursor: "pointer" }} onClick={closeAuthForm}>
               <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
@@ -389,43 +390,3 @@ export default BlogEditor
 
 
 
-
-
-
-
-// const updateUploadButtonPosition = () => {
-//   const selection = document.getSelection();
-//   // if (!selection.rangeCount) return; // Early return if there's no selection
-//   const range = selection.getRangeAt(0);
-//   const rect = range.getBoundingClientRect();
-//   if (uploadButtonRef.current && editorRef.current) {
-//     const editorRect = editorRef.current.getBoundingClientRect();
-//     // Adjust the top position to move the button below the typed characters.
-//     // You may need to adjust the '20' value depending on your font size and line height.
-//     const additionalOffset = 20; // This value might need adjustment based on your styling.
-//     uploadButtonRef.current.style.left = `${rect.left - editorRect.left}px`;
-//     uploadButtonRef.current.style.top = `${rect.bottom - editorRect.top + window.scrollY + additionalOffset}px`; // Adjust this line
-//   }
-// };
-
-    // // Array to hold the organized content
-    // let contentArray = [];
-    // const handleNode = (node) => {
-    //   // Check if the node is a text node and not just whitespace
-    //   if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
-    //     contentArray.push({ type: 'text', content: node.textContent.trim() });
-    //   }
-    //   // Check if the node is a div
-    //   else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'DIV') {
-    //     // Check if it's an image container
-    //     if (node.classList.contains('imageContainer')) {
-    //       contentArray.push({ type: 'imageContainer', content: node.innerHTML.trim() });
-    //     } else { // Other divs
-    //       contentArray.push({ type: 'divText', content: node.innerHTML.trim() });
-    //     }
-    //   }
-    // };
-
-    // Array.from(doc.body.childNodes).forEach(handleNode);
-    // setContent(contentArray);
-    // setText('')
