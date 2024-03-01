@@ -14,6 +14,7 @@ let savedRange = null;
 const BlogEditor = () => {
 
   const [title, setTitle] = useState('');
+
   const editorRef = useRef(null);
   const uploadButtonRef = useRef(null);
   const titleRef = useRef(null);
@@ -25,8 +26,6 @@ const BlogEditor = () => {
   const navigate = useNavigate();
 
   let blogBody = {}// this object will be used for the blog data. 
-
-
 
   useEffect(() => {
     const editor = editorRef.current;
@@ -59,25 +58,17 @@ const BlogEditor = () => {
     };
   }, []);
 
-
-
-
-
-
-
-
-
   // This randomUUID will be used to save the images
   const randomUUID = uuidv4();
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [showTypeTitle, setShowTypeTitle] = useState(false)
 
   const validateEmail = (email) => {
     // Regular expression to test the email format
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return re.test(email);
   };
-
 
   const saveSelection = () => {
     const selection = window.getSelection();
@@ -129,6 +120,7 @@ const BlogEditor = () => {
   };
 
   const handleTitleChange = (e) => {
+    setShowTypeTitle(false);
     setTitle(e.target.value);
   };
 
@@ -253,7 +245,19 @@ const BlogEditor = () => {
 
   // Submit the data:
   const handleSubmit = async () => {
-    const editorRefInnerHtml = editorRef.current.innerHTML
+
+
+    if(title===''){
+      setShowTypeTitle(true)
+      return
+    }
+
+    const editorRefInnerHtml = editorRef.current.innerHTML;
+
+    if (editorRefInnerHtml ===''){
+      return 
+    }
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(editorRefInnerHtml, 'text/html');
     // create the object that will be sent to the server. It should have the title as plain text and the doc body of the editable div
@@ -347,6 +351,7 @@ const BlogEditor = () => {
           placeholder="Blog Title"
           style={{ display: 'block', width: '100%', marginBottom: '10px' }}
         />
+        {showTypeTitle && <p style={{ color: 'red' }}>Please provide a title to your post.</p>}
         <div
           ref={editorRef}
           contentEditable
