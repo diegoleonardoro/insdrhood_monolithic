@@ -12,10 +12,12 @@ const Blog = () => {
   const { currentuser_ } = useUserContext();
 
   const [blogHtml, setBlogHtml] = useState('');
+  const [title, setTitle]= useState('');
 
   const getBlog = async () => {
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`);
     console.log("blog", response);
+    setTitle(response.data.title);
     const cleanHTML = DOMPurify.sanitize(response.data.body);
     setBlogHtml(cleanHTML)
   }
@@ -27,8 +29,10 @@ const Blog = () => {
 
 
   return (
+    <div className="blogMainContainer">
+      <h1 className="article-title">{title}</h1>
     <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
-
+    </div>
   )
 
 }
