@@ -7,7 +7,9 @@ import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner';
 import Card from "react-bootstrap/Card";
+import CardGroup from "react-bootstrap/CardGroup";
 import Button from 'react-bootstrap/Button';
+import CardBody from 'react-bootstrap/esm/CardBody';
 
 
 
@@ -15,6 +17,7 @@ function Home({ currentuser, updateCurrentUser }) {
 
   const navigate = useNavigate();
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -38,9 +41,9 @@ function Home({ currentuser, updateCurrentUser }) {
   });
 
   const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
-   
+
     return (
-      <Card className ="neighborhoodCard"  key={neighborhood._id}>
+      <Card className="neighborhoodCard" key={neighborhood._id}>
         <Card.Header as="h5">{neighborhood.neighborhood}{", "} {neighborhood.borough}</Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
@@ -56,12 +59,38 @@ function Home({ currentuser, updateCurrentUser }) {
         </Card.Body>
 
         <Link to={`/neighborhood/${neighborhood._id}`} style={{ textDecoration: 'none' }}>
-          <Button style={{ margin: "20px", borderRadius: "0" }} variant="primary">Learn More</Button>
+          <Button style={{ margin: "20px", borderRadius: "0" }} variant="dark">Learn More</Button>
         </Link>
       </Card>
     );
 
+  });
+
+
+  const blogCards = blogs.map((blog) => {
+    return (
+      <Card className ="blogsCard" key={blog._id}>
+        <Card.Img variant="top" src={blog.coverImage} />
+        <CardBody>
+          <Card.Title>{blog.title}</Card.Title>
+        </CardBody>
+
+        <Card.Footer >
+
+          <Link to={`/post/${blog._id}`} style={{ textDecoration: 'none'}}>
+            <Button style={{ margin: "20px", borderRadius: "0", width:"90%"  }} variant="dark">Read Article</Button>
+          </Link>
+
+        </Card.Footer>
+
+      </Card>
+    )
   })
+
+
+
+
+
 
   useEffect(() => {
     // Extract the token from the URL
@@ -99,14 +128,9 @@ function Home({ currentuser, updateCurrentUser }) {
     (async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
-        
         setNeighborhoodsData(response.data);
-
         const blogs = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
-
-        console.log('blogs', blogs);
-
-
+        setBlogs(blogs.data);
 
       } catch (error) {
         console.error("Failed to fetch neighborhoods", error);
@@ -120,16 +144,20 @@ function Home({ currentuser, updateCurrentUser }) {
 
   if (isLoading) {
     return (
-      <div style ={{position:"relative", left:"45%", transform:"translate(-50%, 0)", display:"inline"}}>
+      <div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline" }}>
         <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-        <div style={{display:"inline", position:"absolute", bottom:"-10px", left:"15px", color:"white"}}>Loading...</div>
+        <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
       </div>
     )
   }
 
   return (
-    <div style={{ width: '90%', margin: '60px auto auto auto' }}>
-      { /**  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '60px auto auto auto', }} */}
+    <div style={{ width: '100%', margin: '60px auto auto auto' }}>
+
+      <div className='articlesContainer'>
+        {blogCards}
+      </div>
+
       <div className='filterInputsContainer'>
         <input
           type="text"
@@ -153,6 +181,7 @@ function Home({ currentuser, updateCurrentUser }) {
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
         {neighborhoodCards}
       </div>
+
     </div>
   );
 

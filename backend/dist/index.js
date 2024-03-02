@@ -64,9 +64,9 @@ app.use((0, cookie_session_1.default)({
     httpOnly: process.env.NODE_ENV === "production",
     // maxAge: 24 * 60 * 60 * 1000,
 }));
-app.use("/api", auth_1.auth);
-app.use("/api/payments", payments_1.payments);
 app.use("/api/blog", blog_1.blog);
+app.use("/api/payments", payments_1.payments);
+app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {
     return res.status(200).json({

@@ -22,6 +22,19 @@
   border: 1px solid black;
   border-radius: 10px;
 }
+
+.upload-main-image{
+  padding: 4px 8px;
+  background-color: black;
+  color:white;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top:10px;
+  margin-bottom:10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  width:30%;
+}
 .labelUploadImage{
   position: relative;
   width:100%;
@@ -31,6 +44,9 @@
 }
 .upload-button label {
   cursor: pointer;
+}
+.upload-main-image label{
+    cursor: pointer;
 }
 
 
@@ -53,6 +69,10 @@
 }
 
 .upload-button input[type="file"] {
+  display: none;
+}
+
+.upload-main-image input[type="file"] {
   display: none;
 }
 

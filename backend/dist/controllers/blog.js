@@ -37,7 +37,8 @@ exports.getBlog = getBlog;
 const getAllBlogs = async (req, res) => {
     const db = await (0, index_1.getDb)();
     const blogsCollection = db.collection("blogs");
-    const blogs = await blogsCollection.find({}).toArray();
+    const projection = { title: 1, coverImage: 1 };
+    const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
     res.status(200).send(blogs);
 };
 exports.getAllBlogs = getAllBlogs;

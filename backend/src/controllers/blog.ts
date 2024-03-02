@@ -22,7 +22,6 @@ export const saveBlogPost = async (req: Request, res: Response) => {
  * @access public
 */
 export const getBlog = async (req: Request, res: Response) => {
-
   const { blogid } = req.params;
   const db = await getDb();
   const blogs = db.collection("blogs");
@@ -39,10 +38,9 @@ export const getBlog = async (req: Request, res: Response) => {
 */
 
 export const getAllBlogs = async (req: Request, res: Response) => {
-
   const db = await getDb();
   const blogsCollection = db.collection("blogs");
-  const blogs = await blogsCollection.find({}).toArray();
+  const projection = { title: 1, coverImage :1}
+  const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
   res.status(200).send(blogs);
-
 }

@@ -62,7 +62,8 @@ const BlogEditor = () => {
   const randomUUID = uuidv4();
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const [showTypeTitle, setShowTypeTitle] = useState(false)
+  const [showTypeTitle, setShowTypeTitle] = useState(false);
+  const[converImageUrl, setCoverImageUrl]= useState("");
 
   const validateEmail = (email) => {
     // Regular expression to test the email format
@@ -131,7 +132,7 @@ const BlogEditor = () => {
     for (var i = 0; i < files.length; i++) {
       const imageFile = files[i];
       const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/${randomUUID}`);
-      console.log(" imageUploadConfig.data.key", imageUploadConfig.data.key);
+
       imgUrls.push(`https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`)
       await axios.put(imageUploadConfig.data.url, imageFile, {
         headers: {
@@ -139,7 +140,16 @@ const BlogEditor = () => {
         },
       });
     }
-    insertImageAtCaret(imgUrls);
+
+    if(e.target.name==="coverImage"){
+      //update state of cover image
+
+      console.log('main image', imgUrls)
+      setCoverImageUrl(imgUrls[0]);
+    }else{
+      insertImageAtCaret(imgUrls);
+    }
+    
   };
 
   const insertImageAtCaret = (imgUrls) => {
@@ -242,10 +252,8 @@ const BlogEditor = () => {
 
   }
 
-
   // Submit the data:
   const handleSubmit = async () => {
-
 
     if(title===''){
       setShowTypeTitle(true)
@@ -263,6 +271,7 @@ const BlogEditor = () => {
     // create the object that will be sent to the server. It should have the title as plain text and the doc body of the editable div
     blogBody = {
       title,
+      coverImage: converImageUrl,
       body: doc.body.innerHTML
     };
     if (currentuser_.data) {
@@ -352,6 +361,17 @@ const BlogEditor = () => {
           style={{ display: 'block', width: '100%', marginBottom: '10px' }}
         />
         {showTypeTitle && <p style={{ color: 'red' }}>Please provide a title to your post.</p>}
+
+        <div
+          ref={uploadButtonRef}
+          className="upload-main-image"
+        >
+          <label className='labelUploadImage'>
+            Upload Cover Image
+            <input name="coverImage" type="file" onChange={handleFileUpload} />
+          </label>
+        </div>
+
         <div
           ref={editorRef}
           contentEditable
@@ -366,7 +386,8 @@ const BlogEditor = () => {
             <input type="file" onChange={handleFileUpload} multiple />
           </label>
         </div>
-        <Button onClick={handleSubmit} style={{ marginTop: '10px', width: "100%" }} variant="dark">Submit Post</Button>
+
+        <Button onClick={handleSubmit} style={{ marginTop: '10px', width: "100%", backgroundColor:"black" }} variant="dark">Submit Post</Button>
       </div>
 
       {displayAuthForm && (

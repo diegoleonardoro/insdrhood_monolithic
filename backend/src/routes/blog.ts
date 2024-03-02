@@ -12,9 +12,9 @@ function asyncHandler(fn: Function) {
 
 const router = express.Router();
 
-router.post("/post", saveBlogPost);// controller to save blog data.
-router.get("/post/:blogid", getBlog );
-router.get("/getblogs", getAllBlogs);
+router.post("/post", asyncHandler(saveBlogPost));// controller to save blog data.
+router.get("/post/:blogid", asyncHandler(getBlog));
+router.get("/getblogs", asyncHandler(getAllBlogs));
 
 
-export {router as blog}
+export { router as blog }

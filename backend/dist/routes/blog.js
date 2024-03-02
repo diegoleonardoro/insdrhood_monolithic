@@ -15,7 +15,7 @@ function asyncHandler(fn) {
 }
 const router = express_1.default.Router();
 exports.blog = router;
-router.post("/post", blog_1.saveBlogPost); // controller to save blog data.
-router.get("/post/:blogid", blog_1.getBlog);
-router.get("/getblogs", blog_1.getAllBlogs);
+router.post("/post", asyncHandler(blog_1.saveBlogPost)); // controller to save blog data.
+router.get("/post/:blogid", asyncHandler(blog_1.getBlog));
+router.get("/getblogs", asyncHandler(blog_1.getAllBlogs));
 //# sourceMappingURL=blog.js.map

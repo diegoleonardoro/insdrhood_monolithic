@@ -1,3 +1,14 @@
+
+.articlesContainer{
+  display: flex;
+  justify-content: center;
+  background-color: #8080801c;
+  padding: 20px;
+}
+
+.blogsCard{
+  width:30%;
+}
 .nhoodsTable{
  border-collapse: collapse;
 }
@@ -5,7 +16,8 @@
 .filterInputsContainer{
   display: flex;
   width:100%;
-  justify-content: start;
+  justify-content: center;
+  margin-top: 40px;
 }
 
 .searchByNhoodInput{
@@ -45,11 +57,15 @@
 
 @media (max-width: 749px) {
   .searchByNhoodInput{
-    width:50%;
+    width:40%;
   }
 
   .dropdownFilterByBorough{
-     width:50%;
+     width:40%;
+  }
+
+  .blogsCard{
+    width:40%;
   }
 
 }
@@ -92,4 +108,16 @@
 
   /* Label the data */
   .nhoodsTable td:before { content: attr(data-label); }
+}
+
+@media (max-width:500px){
+  .blogsCard{
+    width:60%;
+  }
+}
+
+@media (max-width:450px){
+  .blogsCard{
+    width:90%;
+  }
 }

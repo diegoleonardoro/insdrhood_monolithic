@@ -75,9 +75,11 @@ app.use(
   })
 );
 
-app.use("/api", auth);
+app.use("/api/blog", blog);
 app.use("/api/payments", payments);
-app.use("/api/blog", blog)
+app.use("/api", auth);
+
+
 
 app.use(errorHandler);
 
