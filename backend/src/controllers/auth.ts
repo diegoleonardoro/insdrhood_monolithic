@@ -252,7 +252,6 @@ export const updateUserData = async (req: Request, res: Response) => {
 }
 
 
-
 /**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
@@ -478,8 +477,9 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
 
   // const allNeighborhoods = await Neighborhood.find({});
   const db = await getDb();
-  const neighborhoodsCollection = db.collection("neighborhoods")
-  const neighborhoods = await neighborhoodsCollection.find({}).toArray();
+  const neighborhoodsCollection = db.collection("neighborhoods");
+  const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 }
+  const neighborhoods = await neighborhoodsCollection.find({}, { projection: projection }).toArray();
   res.status(200).send(neighborhoods);
 
 }
@@ -491,7 +491,7 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
  */
 export const getNeighborhood = async (req: Request, res: Response) => {
   const { neighborhoodid } = req.params;
-  const db = await getDb(); 
+  const db = await getDb();
   const neighbohoods = db.collection("neighborhoods");
   const neighborhood = await neighbohoods.findOne({ _id: new ObjectId(neighborhoodid) })
   res.status(200).send(neighborhood);

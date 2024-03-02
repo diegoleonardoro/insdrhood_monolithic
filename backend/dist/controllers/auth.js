@@ -352,7 +352,8 @@ const getAllNeighborhoods = async (req, res) => {
     // const allNeighborhoods = await Neighborhood.find({});
     const db = await (0, index_1.getDb)();
     const neighborhoodsCollection = db.collection("neighborhoods");
-    const neighborhoods = await neighborhoodsCollection.find({}).toArray();
+    const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 };
+    const neighborhoods = await neighborhoodsCollection.find({}, { projection: projection }).toArray();
     res.status(200).send(neighborhoods);
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;

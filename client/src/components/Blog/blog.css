@@ -20,7 +20,7 @@
 }
 
 .blogContainer span{
-  font-size: 26px !important;
+  font-size: 18px !important;
 }
 
 
@@ -56,7 +56,9 @@
 @media only screen and (max-width: 1700px){
   .blogMainContainer{
     width:70%;
-   
+  }
+  .blogContainer span{
+    font-size: 18px !important;
   }
 }
 

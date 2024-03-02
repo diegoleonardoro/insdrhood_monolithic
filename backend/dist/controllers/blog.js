@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBlog = exports.saveBlogPost = void 0;
+exports.getAllBlogs = exports.getBlog = exports.saveBlogPost = void 0;
 const index_1 = require("../index");
 const mongodb_1 = require("mongodb");
 /**
@@ -29,4 +29,16 @@ const getBlog = async (req, res) => {
     res.status(200).send(blog);
 };
 exports.getBlog = getBlog;
+/**
+ * @description gets a specific glov
+ * @route GET /api/blog/getblogs
+ * @access public
+*/
+const getAllBlogs = async (req, res) => {
+    const db = await (0, index_1.getDb)();
+    const blogsCollection = db.collection("blogs");
+    const blogs = await blogsCollection.find({}).toArray();
+    res.status(200).send(blogs);
+};
+exports.getAllBlogs = getAllBlogs;
 //# sourceMappingURL=blog.js.map

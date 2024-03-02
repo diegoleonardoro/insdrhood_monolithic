@@ -24,9 +24,25 @@ export const saveBlogPost = async (req: Request, res: Response) => {
 export const getBlog = async (req: Request, res: Response) => {
 
   const { blogid } = req.params;
-  const db = await getDb(); 
+  const db = await getDb();
   const blogs = db.collection("blogs");
   const blog = await blogs.findOne({ _id: new ObjectId(blogid) });
   res.status(200).send(blog);
+
+}
+
+
+/**
+ * @description gets a specific glov 
+ * @route GET /api/blog/getblogs
+ * @access public
+*/
+
+export const getAllBlogs = async (req: Request, res: Response) => {
+
+  const db = await getDb();
+  const blogsCollection = db.collection("blogs");
+  const blogs = await blogsCollection.find({}).toArray();
+  res.status(200).send(blogs);
 
 }

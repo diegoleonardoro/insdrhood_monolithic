@@ -11,7 +11,6 @@ import Button from 'react-bootstrap/Button';
 
 
 
-
 function Home({ currentuser, updateCurrentUser }) {
 
   const navigate = useNavigate();
@@ -100,8 +99,14 @@ function Home({ currentuser, updateCurrentUser }) {
     (async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
-
+        
         setNeighborhoodsData(response.data);
+
+        const blogs = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
+
+        console.log('blogs', blogs);
+
+
 
       } catch (error) {
         console.error("Failed to fetch neighborhoods", error);
@@ -154,33 +159,3 @@ function Home({ currentuser, updateCurrentUser }) {
 }
 
 export default Home;
-
-{/* 
-
-  // Map the filtered neighborhoods to table rows
-  const neighborhoodsList = filteredNeighborhoods.map((neighborhood) => {
-    return (
-      <tr key={neighborhood._id}>
-        <td data-label="Neighborhood">{neighborhood.neighborhood}</td>
-        <td data-label="Borough">{neighborhood.borough}</td>
-        <td data-label="Description">"{neighborhood.neighborhoodDescription}" {neighborhood.user ? <p>{"- " + neighborhood.user.name + `, resident of ${neighborhood.neighborhood}`}</p> : null}</td>
-        <td data-label="Learn more">
-          <Link to={`/neighborhood/${neighborhood._id}`}>
-            Learn more
-          </Link>
-        </td>
-      </tr>
-    );
-  });
-
-<Table striped bordered hover size="sm" className="nhoodsTable" style={{ marginTop: "0" }} >
-        <thead>
-          <tr>
-            <th >Neighborhood</th>
-            <th >Borough</th>
-            <th >Description</th>
-            <th>Learn more</th>
-          </tr>
-        </thead>
-        {<tbody>{neighborhoodsList}</tbody>}
-</Table> */}
