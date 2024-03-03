@@ -27,7 +27,6 @@ const Blog = () => {
     getBlog()
   }, [])
 
-
   return (
     <div className="blogMainContainer">
       <h1 className="article-title">{title}</h1>
