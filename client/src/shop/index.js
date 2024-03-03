@@ -24,18 +24,7 @@ const SHOP_DATA = [
     ],
     price: 45,
   },
-  {
-    id: 1,
-    title: 'South Williamsburg Architecture',
-    description: 'Photograph captured from a rooftop in South Williamsburg, Brooklyn, dated September 2022. This image highlights the enduring presence of classic pre-war architecture that predominantly characterizes South Williamsburg, distinguishing it from the rest of the neighborhood. 8 in. x 10 in./11 in. x 14 in.',
-    imageUrl: [
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design%20brooklyn%20roof.jpg',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design%20brooklyn%20roof%202.jpg',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Screen%20Shot%202024-02-20%20at%2010.23.17%20AM.png', 
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Screen%20Shot%202024-02-20%20at%2010.23.08%20AM.png'
-    ],
-    price: 20,
-  },
+
   {
     id: 2,
     title: 'Manhattan Glow',

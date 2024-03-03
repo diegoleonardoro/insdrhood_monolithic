@@ -14,7 +14,11 @@ const Shop = () => {
 
   return (
     <div className='product-list-container'>
+
+
       <h2 className='product-list-title'>Shop</h2>
+      <p style={{textAlign:"center"}}>Payments ensured with Stripe's advanced security.</p>
+
       <div className='product-list'>
         {
           allProducts
