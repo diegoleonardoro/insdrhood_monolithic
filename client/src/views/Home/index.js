@@ -12,7 +12,6 @@ import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
 
 
-
 function Home({ currentuser, updateCurrentUser }) {
 
   const navigate = useNavigate();
@@ -23,13 +22,11 @@ function Home({ currentuser, updateCurrentUser }) {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
 
-
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
   const indexOfLastItem = currentPage * itemsPerPage;
-  
+
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   // Filter neighborhoodsData based on searchTerm and selectedBorough
@@ -42,20 +39,16 @@ function Home({ currentuser, updateCurrentUser }) {
 
   const currentNeighborhoods = filteredNeighborhoods.slice(indexOfFirstItem, indexOfLastItem);
 
-
-
   // Handle change in search input
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
   // Handle change in borough selection
   const handleBoroughChange = (event) => {
     setSelectedBorough(event.target.value);
     setCurrentPage(1); // Reset to first page on borough change
   };
-
- 
 
   const neighborhoodCards = currentNeighborhoods.map((neighborhood) => {
 
@@ -84,7 +77,6 @@ function Home({ currentuser, updateCurrentUser }) {
   });
 
   const totalPages = Math.ceil(filteredNeighborhoods.length / itemsPerPage);
-
 
   const renderPageNumbers = [...Array(totalPages).keys()].map(number => (
     <button
@@ -116,7 +108,6 @@ function Home({ currentuser, updateCurrentUser }) {
       </Card>
     )
   })
-
 
   useEffect(() => {
 
@@ -184,11 +175,10 @@ function Home({ currentuser, updateCurrentUser }) {
 
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
-
       <div className='articlesContainer'>
         {blogCards}
       </div>
-
+      <h2 className='residentsHeader'>Discover Neighborhoods from Residents' Perspectives...</h2>
       <div className='filterInputsContainer'>
         <input
           type="text"
@@ -220,7 +210,7 @@ function Home({ currentuser, updateCurrentUser }) {
 
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
 
-      
+
         {neighborhoodCards}
 
       </div>
