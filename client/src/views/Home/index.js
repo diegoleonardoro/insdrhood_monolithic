@@ -23,14 +23,14 @@ function Home({ currentuser, updateCurrentUser }) {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
 
-  // Handle change in search input
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-  // Handle change in borough selection
-  const handleBoroughChange = (event) => {
-    setSelectedBorough(event.target.value);
-  };
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   // Filter neighborhoodsData based on searchTerm and selectedBorough
   const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) => {
@@ -40,7 +40,24 @@ function Home({ currentuser, updateCurrentUser }) {
     );
   });
 
-  const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
+  const currentNeighborhoods = filteredNeighborhoods.slice(indexOfFirstItem, indexOfLastItem);
+
+
+
+  // Handle change in search input
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); 
+  };
+  // Handle change in borough selection
+  const handleBoroughChange = (event) => {
+    setSelectedBorough(event.target.value);
+    setCurrentPage(1); // Reset to first page on borough change
+  };
+
+ 
+
+  const neighborhoodCards = currentNeighborhoods.map((neighborhood) => {
 
     return (
       <Card className="neighborhoodCard" key={neighborhood._id}>
@@ -66,10 +83,23 @@ function Home({ currentuser, updateCurrentUser }) {
 
   });
 
+  const totalPages = Math.ceil(filteredNeighborhoods.length / itemsPerPage);
+
+
+  const renderPageNumbers = [...Array(totalPages).keys()].map(number => (
+    <button
+      key={number + 1}
+      onClick={() => setCurrentPage(number + 1)}
+      className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}
+      style={{ margin: '5px' }}>
+      {number + 1}
+    </button>
+  ));
+
 
   const blogCards = blogs.map((blog) => {
     return (
-      <Card className ="blogsCard" key={blog._id}>
+      <Card className="blogsCard" key={blog._id}>
         <Card.Img variant="top" src={blog.coverImage} />
         <CardBody>
           <Card.Title>{blog.title}</Card.Title>
@@ -77,8 +107,8 @@ function Home({ currentuser, updateCurrentUser }) {
 
         <Card.Footer >
 
-          <Link to={`/post/${blog._id}`} style={{ textDecoration: 'none'}}>
-            <Button style={{ margin: "20px", borderRadius: "0", width:"90%"  }} variant="dark">Read Article</Button>
+          <Link to={`/post/${blog._id}`} style={{ textDecoration: 'none' }}>
+            <Button style={{ margin: "20px", borderRadius: "0", width: "90%" }} variant="dark">Read Article</Button>
           </Link>
 
         </Card.Footer>
@@ -88,11 +118,8 @@ function Home({ currentuser, updateCurrentUser }) {
   })
 
 
-
-
-
-
   useEffect(() => {
+
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -125,20 +152,24 @@ function Home({ currentuser, updateCurrentUser }) {
       checkCurrentUser()
     }
 
-    (async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
-        setNeighborhoodsData(response.data);
-        const blogs = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
-        setBlogs(blogs.data);
+        const neighborhoodsPromise = axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
+        const blogsPromise = axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
 
+        const [neighborhoodsResponse, blogsResponse] = await Promise.all([neighborhoodsPromise, blogsPromise]);
+
+        setNeighborhoodsData(neighborhoodsResponse.data);
+        setBlogs(blogsResponse.data);
       } catch (error) {
-        console.error("Failed to fetch neighborhoods", error);
+        console.error("Failed to fetch data", error);
         // Handle the error state appropriately here
       } finally {
         setIsLoading(false); // Stop loading
       }
-    })();
+    };
+
+    fetchData();
 
   }, []);
 
@@ -177,9 +208,21 @@ function Home({ currentuser, updateCurrentUser }) {
           </select>
         </div>
       </div>
+      <div className="pagination-controls">
+        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
+        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button>
+        <div className="pagination">
+          {renderPageNumbers}
+        </div>
+        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Next</button>
+        <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>Last</button>
+      </div>
 
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+
+      
         {neighborhoodCards}
+
       </div>
 
     </div>
