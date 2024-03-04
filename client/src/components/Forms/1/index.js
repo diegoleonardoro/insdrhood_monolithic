@@ -173,8 +173,6 @@ const FormComponent = ({ updateCurrentUser }) => {
   };
 
 
-
-
   // a request to check the currently logged in user needs to be made:
   const checkCurrentUser = async () => {
     try {
@@ -203,15 +201,6 @@ const FormComponent = ({ updateCurrentUser }) => {
 
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
-    /**
-     * data: 
-     * name:'',
-     * email:'',
-     * neighborhoodId:'',
-     * formsResponded:1, 
-     * userImagesId:''
-     */
-
     // request to save new user's data:
     // make try catch block here to handle possible error of email alredy being registered.
     // request to update the neighborhood's data with the new user data:
@@ -264,7 +253,6 @@ const FormComponent = ({ updateCurrentUser }) => {
     if (direction === "next") {
 
       if (currentDiv) {
-
 
         // check if the user has not responded a question that required to be responded:
         if (currentDiv.className.indexOf("shakieCheck") > -1) {

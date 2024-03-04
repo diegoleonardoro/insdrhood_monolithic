@@ -34,7 +34,6 @@ function Home({ currentuser, updateCurrentUser }) {
     });
   };
 
-  
 
   // Filter neighborhoodsData based on searchTerm and selectedBorough
   const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) => {
@@ -208,6 +207,11 @@ function Home({ currentuser, updateCurrentUser }) {
           </select>
         </div>
       </div>
+
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+        {neighborhoodCards}
+      </div>
+
       <div className="pagination-controls">
         {/* <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
         <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button> */}
@@ -216,13 +220,6 @@ function Home({ currentuser, updateCurrentUser }) {
         </div>
         {/* <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Next</button>
         <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>Last</button> */}
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-
-
-        {neighborhoodCards}
-
       </div>
 
     </div>
