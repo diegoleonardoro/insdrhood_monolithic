@@ -209,13 +209,13 @@ function Home({ currentuser, updateCurrentUser }) {
         </div>
       </div>
       <div className="pagination-controls">
-        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button>
+        {/* <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
+        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button> */}
         <div className="pagination">
           {renderPageNumbers}
         </div>
-        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Next</button>
-        <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>Last</button>
+        {/* <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Next</button>
+        <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>Last</button> */}
       </div>
 
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
