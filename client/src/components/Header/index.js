@@ -10,6 +10,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CartIcon from "../CartIcon/CartIcon";
+import { startTransition } from "react";
 
 // import Col from 'react-bootstrap/Col';
 // import Image from 'react-bootstrap/Image';
@@ -20,6 +21,13 @@ function Header({ updateCurrentUser, currentuser }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [showHeader, setShowHeader] = useState(true);
+
+  const handleNavigation = (path) => {
+    startTransition(() => {
+      navigate(path);
+    });
+  };
+
 
   useEffect(() => {
     // Set the showHeader state based on the current route
@@ -42,18 +50,28 @@ function Header({ updateCurrentUser, currentuser }) {
   const links = [
     !currentuser && { label: "Sign Up", to: "/signup" },
     !currentuser && { label: "Sign In", to: "/signin" },
-    { label: "Questionnaire", to: "/questionnaire" },
+    { label: "Questionnaire", to: "/questionnaire", useTransition: true },
     currentuser && { label: "Sign Out", onClick: handleSignOut },
     { label: "Shop", to: "/shop" },
   ]
     .filter((linkConfig) => linkConfig)
-    .map(({ label, to, onClick }, index) => {
+    .map(({ label, to, onClick, useTransition }, index) => {
       if (onClick) {
-        return <Nav.Link key={index} onClick={onClick}>{label}</Nav.Link>
+        return <Nav.Link key={index} onClick={onClick}>{label}</Nav.Link>;
+      } else if (useTransition) {
+        // Special handling for links marked with useTransition
+        return (
+          <Nav.Link
+            key={index}
+            onClick={() => startTransition(() => navigate(to))}
+            style={{ cursor: 'pointer' }} // Add cursor pointer to indicate it's clickable
+          >
+            {label}
+          </Nav.Link>
+        );
+      } else {
+        return <Nav.Link key={index} as={Link} to={to}>{label}</Nav.Link>;
       }
-      return (
-        <Nav.Link key={index} as={Link} to={to}>{label}</Nav.Link>
-      );
     });
 
   return (
@@ -68,8 +86,8 @@ function Header({ updateCurrentUser, currentuser }) {
               {links}
             </Nav>
 
-            <CartIcon/>
-        
+            <CartIcon />
+
           </Container>
         </Navbar>
       ) : null}

@@ -26,7 +26,6 @@ function Home({ currentuser, updateCurrentUser }) {
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
   const indexOfLastItem = currentPage * itemsPerPage;
-
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const handleNavigation = (path) => {
@@ -34,6 +33,8 @@ function Home({ currentuser, updateCurrentUser }) {
       navigate(path);
     });
   };
+
+  
 
   // Filter neighborhoodsData based on searchTerm and selectedBorough
   const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) => {

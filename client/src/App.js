@@ -9,7 +9,6 @@ import Header from "./components/Header";
 import Signin from './components/Signin';
 import SignUp from './components/Signup';
 import VerifyEmail from './components/EmailConfirmation';
-import FormComponent from './components/Forms/1';
 import NeighborhoodProfile from './components/Neighborhood';
 import EmailRegister from './components/EmailConfirmation';
 import Alert from 'react-bootstrap/Alert';
@@ -30,6 +29,7 @@ import { NavigationHistoryProvider } from "./contexts/navigation-history-context
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
+const FormComponent = React.lazy(() => import("./components/Forms/1"));
 
 
 function App() {
