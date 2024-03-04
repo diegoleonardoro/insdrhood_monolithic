@@ -17,7 +17,6 @@ import Button from 'react-bootstrap/Button';
 import EmailRegisterWindow from './components/EmailRegistrationPopup';
 import PasswordSetPopup from './components/PasswordSetPopup';
 import PrivacyNotice from './components/Privacy';
-import Shop from './components/Shop/shop';
 import SingleProduct from './components/SingleProduct/SingleProduct';
 import CartPage from './components/CartPage/CartPage';
 import Checkout from './components/Checkout/Checkout';
@@ -30,6 +29,7 @@ import { NavigationHistoryProvider } from "./contexts/navigation-history-context
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
 const FormComponent = React.lazy(() => import("./components/Forms/1"));
+const Shop = React.lazy(() => import("./components/Shop/shop"));
 
 
 function App() {
@@ -38,8 +38,6 @@ function App() {
   const [currentuser, setCurrentUser] = useState(null);
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
-
-
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);

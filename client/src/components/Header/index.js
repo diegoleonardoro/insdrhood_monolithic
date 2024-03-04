@@ -52,7 +52,7 @@ function Header({ updateCurrentUser, currentuser }) {
     !currentuser && { label: "Sign In", to: "/signin" },
     { label: "Questionnaire", to: "/questionnaire", useTransition: true },
     currentuser && { label: "Sign Out", onClick: handleSignOut },
-    { label: "Shop", to: "/shop" },
+    { label: "Shop", to: "/shop", useTransition: true },
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, to, onClick, useTransition }, index) => {
