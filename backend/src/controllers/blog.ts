@@ -44,3 +44,4 @@ export const getAllBlogs = async (req: Request, res: Response) => {
   const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
   res.status(200).send(blogs);
 }
+

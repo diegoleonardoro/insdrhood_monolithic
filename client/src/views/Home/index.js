@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, startTransition } from 'react';
 // import axios from 'axios';
 import './home.css';
 import Table from 'react-bootstrap/Table';
@@ -28,6 +28,12 @@ function Home({ currentuser, updateCurrentUser }) {
   const indexOfLastItem = currentPage * itemsPerPage;
 
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const handleNavigation = (path) => {
+    startTransition(() => {
+      navigate(path);
+    });
+  };
 
   // Filter neighborhoodsData based on searchTerm and selectedBorough
   const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) => {
@@ -67,10 +73,13 @@ function Home({ currentuser, updateCurrentUser }) {
             </footer>
           </blockquote>
         </Card.Body>
-
-        <Link to={`/neighborhood/${neighborhood._id}`} style={{ textDecoration: 'none' }}>
-          <Button style={{ margin: "20px", borderRadius: "0" }} variant="dark">Learn More</Button>
-        </Link>
+        <Button
+          onClick={() => handleNavigation(`/neighborhood/${neighborhood._id}`)}
+          style={{ margin: "20px", borderRadius: "0" }}
+          variant="dark"
+        >
+          Learn More
+        </Button>
       </Card>
     );
 
@@ -88,7 +97,6 @@ function Home({ currentuser, updateCurrentUser }) {
     </button>
   ));
 
-
   const blogCards = blogs.map((blog) => {
     return (
       <Card className="blogsCard" key={blog._id}>
@@ -96,13 +104,14 @@ function Home({ currentuser, updateCurrentUser }) {
         <CardBody>
           <Card.Title>{blog.title}</Card.Title>
         </CardBody>
-
         <Card.Footer >
-
-          <Link to={`/post/${blog._id}`} style={{ textDecoration: 'none' }}>
-            <Button style={{ margin: "20px", borderRadius: "0", width: "90%" }} variant="dark">Read Article</Button>
-          </Link>
-
+          <Button
+            onClick={() => handleNavigation(`/post/${blog._id}`)}
+            style={{ margin: "20px", borderRadius: "0" }}
+            variant="dark"
+          >
+            Read Article
+          </Button>
         </Card.Footer>
 
       </Card>

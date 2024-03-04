@@ -1,8 +1,9 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios"
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Suspense, startTransition } from "react";
 import Home from "./views/Home";
 import Header from "./components/Header";
 import Signin from './components/Signin';
@@ -25,9 +26,11 @@ import { useUser } from "../src/contexts/UserContext";
 import { useLocation } from 'react-router-dom';
 import Canceled from "./components/Checkout/stripe-checkout/canceled"
 import Success from "./components/Checkout/stripe-checkout/success"
-import BlogEditor from "./components/BlogEditor/BlogEditor";
-import Blog from "./components/Blog/Blog"
 import { NavigationHistoryProvider } from "./contexts/navigation-history-context"
+
+const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
+const Blog = React.lazy(() => import("./components/Blog/Blog"));
+
 
 function App() {
 
@@ -35,6 +38,8 @@ function App() {
   const [currentuser, setCurrentUser] = useState(null);
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+
+
 
   const hasTokenInUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -85,6 +90,8 @@ function App() {
     }
   }, []); // checkCurrentUser  is now a stable function reference
 
+
+
   return (
     <UserProvider>
       <Router>
@@ -132,8 +139,10 @@ function App() {
                 ) : null
               )}
             </div>
+
+            <Suspense fallback={<div>Loading...</div>}></Suspense>
             <Routes>
-              <Route path="/" element={<Home currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
+              <Route path="/" element={<Home  currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
               <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
               <Route path="/registeremail" element={<EmailRegister updateCurrentUser={updateCurrentUser} />} />
               <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
@@ -150,6 +159,9 @@ function App() {
               <Route path='/post' element={<BlogEditor />}></Route>
               <Route path='/post/:id' element={<Blog />}></Route>
             </Routes>
+            <Suspense />
+
+
           </div>
         </NavigationHistoryProvider>
       </Router>
