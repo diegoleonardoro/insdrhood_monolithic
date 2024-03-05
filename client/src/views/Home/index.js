@@ -28,6 +28,9 @@ function Home({ currentuser, updateCurrentUser }) {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
+  const [totalItems, setTotalItems] = useState(0);
+
+
   const handleNavigation = (path) => {
     startTransition(() => {
       navigate(path);
@@ -56,7 +59,7 @@ function Home({ currentuser, updateCurrentUser }) {
     setCurrentPage(1); // Reset to first page on borough change
   };
 
-  const neighborhoodCards = currentNeighborhoods.map((neighborhood) => {
+  const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
 
     return (
       <Card className="neighborhoodCard" key={neighborhood._id}>
@@ -85,7 +88,8 @@ function Home({ currentuser, updateCurrentUser }) {
 
   });
 
-  const totalPages = Math.ceil(filteredNeighborhoods.length / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
 
   const renderPageNumbers = [...Array(totalPages).keys()].map(number => (
     <button
@@ -154,13 +158,20 @@ function Home({ currentuser, updateCurrentUser }) {
 
     const fetchData = async () => {
       try {
-        const neighborhoodsPromise = axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
-        const blogsPromise = axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
 
-        const [neighborhoodsResponse, blogsResponse] = await Promise.all([neighborhoodsPromise, blogsPromise]);
+        const neighborhoodsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods?page=${currentPage}&pageSize=${itemsPerPage}`;
 
-        setNeighborhoodsData(neighborhoodsResponse.data);
+
+        const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
+
+        const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
+
+        // const [neighborhoodsResponse, blogsResponse] = await Promise.all([neighborhoodsPromise, blogsPromise]);
+
+        setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
+        setTotalItems(neighborhoodsResponse.data.total);
         setBlogs(blogsResponse.data);
+
       } catch (error) {
         console.error("Failed to fetch data", error);
         // Handle the error state appropriately here
@@ -171,7 +182,7 @@ function Home({ currentuser, updateCurrentUser }) {
 
     fetchData();
 
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
   if (isLoading) {
     return (
