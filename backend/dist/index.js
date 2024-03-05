@@ -34,11 +34,21 @@ const client = new mongodb_1.MongoClient(uri, {
 });
 // let dbConnection: Db;
 let dbConnection;
+const createIndexes = async (db) => {
+    // Place your index creation logic here, for example:
+    const neighborhoods = db.collection("neighborhoods");
+    await neighborhoods.createIndex({ borough: 1 });
+    await neighborhoods.createIndex({ neighborhood: 1 });
+    console.log("Indexes created successfully");
+};
 const connectToServer = async () => {
     try {
         await client.connect();
+        const db = client.db("insiderhood");
         console.log("Connected to MongoDB");
-        return client.db("insiderhood");
+        // Call createIndexes right after a successful connection
+        await createIndexes(db);
+        return db;
     }
     catch (error) {
         console.error(error);

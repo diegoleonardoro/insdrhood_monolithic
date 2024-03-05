@@ -7,7 +7,7 @@ import { errorHandler } from './middlewares/error-handler';
 import dotenv from "dotenv";
 import { auth } from "./routes/auth";
 import { payments } from "./routes/payments";
-import {blog} from "./routes/blog" 
+import { blog } from "./routes/blog"
 import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
 import path from 'path';
 
@@ -35,12 +35,22 @@ const client = new MongoClient(uri, {
 // let dbConnection: Db;
 
 let dbConnection: Promise<Db>;
+const createIndexes = async (db: { collection: (arg0: string) => any; }) => {
+  // Place your index creation logic here, for example:
+  const neighborhoods = db.collection("neighborhoods");
+  await neighborhoods.createIndex({ borough: 1 });
+  await neighborhoods.createIndex({ neighborhood: 1 });
+  console.log("Indexes created successfully");
+};
 
 const connectToServer = async () => {
   try {
     await client.connect();
+    const db = client.db("insiderhood");
     console.log("Connected to MongoDB");
-    return client.db("insiderhood");
+    // Call createIndexes right after a successful connection
+    await createIndexes(db);
+    return db;
   } catch (error) {
     console.error(error);
     throw error; // Rethrow the error to be handled by the caller
