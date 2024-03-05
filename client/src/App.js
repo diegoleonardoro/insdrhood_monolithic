@@ -1,7 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import axios from "axios"
 import React, { useEffect, useState, useCallback, Suspense, startTransition } from "react";
 import Home from "./views/Home";
@@ -9,7 +8,6 @@ import Header from "./components/Header";
 import Signin from './components/Signin';
 import SignUp from './components/Signup';
 import VerifyEmail from './components/EmailConfirmation';
-import NeighborhoodProfile from './components/Neighborhood';
 import EmailRegister from './components/EmailConfirmation';
 import Alert from 'react-bootstrap/Alert';
 import { UserProvider } from './contexts/UserContext';
@@ -30,6 +28,7 @@ const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor")
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
 const FormComponent = React.lazy(() => import("./components/Forms/1"));
 const Shop = React.lazy(() => import("./components/Shop/shop"));
+const NeighborhoodProfile = React.lazy(() => import("./components/Neighborhood"));
 
 
 function App() {
@@ -97,12 +96,10 @@ function App() {
           <div className="App">
             <div>
               {showEmailRegisterPopup && <EmailRegisterWindow updateCurrentUser={updateCurrentUser} currentuser={currentuser} setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
-
               {showPasswordForm && < PasswordSetPopup
                 updateCurrentUser={updateCurrentUser}
                 currentuser={currentuser} setShowPasswordForm={setShowPasswordForm}>
               </PasswordSetPopup >}
-
               <HeaderMemo updateCurrentUser={updateCurrentUser} currentuser={currentuser} />
               {currentuser && (
                 currentuser.isVerified === false ? (
@@ -140,7 +137,7 @@ function App() {
 
             <Suspense fallback={<div>Loading...</div>}></Suspense>
             <Routes>
-              <Route path="/" element={<Home  currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
+              <Route path="/" element={<Home currentuser={currentuser} updateCurrentUser={updateCurrentUser} />} />
               <Route path="/signup" element={<SignUp updateCurrentUser={updateCurrentUser} />} />
               <Route path="/registeremail" element={<EmailRegister updateCurrentUser={updateCurrentUser} />} />
               <Route path="/signin" element={<Signin updateCurrentUser={updateCurrentUser} />} />
