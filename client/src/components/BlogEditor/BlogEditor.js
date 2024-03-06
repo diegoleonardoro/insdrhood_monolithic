@@ -1,32 +1,306 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import "./blogeditor.css";
+import axios from "axios";
+import ReactQuill, { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import ImageResize from 'quill-image-resize-module-react';
+import { v4 as uuidv4 } from 'uuid';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import "./blogeditor.css";
-import { useUserContext } from "../../contexts/UserContext";
-import { v4 as uuidv4 } from 'uuid';
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
+
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContext";
 let savedRange = null;
+
+
+Quill.register('modules/imageResize', ImageResize);
 
 const BlogEditor = () => {
 
-  const [title, setTitle] = useState('');
-
-  const editorRef = useRef(null);
-  const uploadButtonRef = useRef(null);
-  const titleRef = useRef(null);
+  const [editorContent, setEditorContent] = useState('');
+  const quillRef = useRef(null);
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [displayAuthForm, setDisplayAuthForm] = useState(false);
-  const [isSignIn, setIsSignIn] = useState(true); // Default to 'Sign in'
+  const [isSignIn, setIsSignIn] = useState(true)
   const [signInData, setSignInData] = useState({ email: '', password: '' });
   const [signUpData, setSignUpData] = useState({ name: '', email: '' });
   const [errors, setErrors] = useState(null);
+  const [isValidEmail, setIsValidEmail] = useState(true);
   const navigate = useNavigate();
 
-  let blogBody = {}// this object will be used for the blog data. 
+  const closeAuthForm = () => {
+    setDisplayAuthForm(false)
+  }
 
+  const validateEmail = (email) => {
+    // Regular expression to test the email format
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return re.test(email);
+  };
+
+  const handleSignInInputChange = (event) => {
+    const { name, value } = event.target;
+    setSignInData({
+      ...signInData,
+      [name]: value
+    })
+  };
+
+  const handleSignUpInputChange = (event) => {
+    const { name, value } = event.target;
+    setSignUpData({
+      ...signUpData,
+      [name]: value
+    })
+  };
+
+  const registerNewUser = () => {
+    const emailValid = validateEmail(signUpData.email);
+    setIsValidEmail(validateEmail(signUpData.email));
+    if (!emailValid) {
+      return
+    }
+
+    // MAKE REQUEST TO REGISTER NEW USER.
+
+  };
+
+  const signInUser = async () => {
+
+    // make request to sign user in
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
+        signInData);
+
+      await setCurrentUserDirectly(response.data);
+      console.log("respnse", response);
+
+     const blog =  await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
+       { content: editorContent, userId: response.data.id });
+
+      navigate(`/post/${blog.data.insertedId}`);
+
+    } catch (error) {
+
+      console.log("err", error)
+      setErrors(error.response.data.errors[0].message)
+
+
+    }
+  };
+
+
+  const displaySignUpForm = () => (
+    <div className="authElementsContainer">
+      <Form.Group as={Row} className="mb-3" >
+        <Form.Label >
+          Name:
+        </Form.Label>
+        <Col>
+          <Form.Control name="name" value={signUpData.name} onChange={handleSignUpInputChange} />
+
+        </Col>
+        <Form.Label>
+          Email:
+        </Form.Label>
+        <Col >
+          <Form.Control name="email" value={signUpData.email} onChange={handleSignUpInputChange} />
+        </Col>
+      </Form.Group>
+      {!isValidEmail && <p style={{ color: 'red' }}>Please enter a valid email address.</p>}
+      <Form.Group as={Row} className="mb-3">
+        <Col >
+          <Button variant="dark" size="lg" style={{ width: "100%", marginTop: "10px" }} type="submit" onClick={registerNewUser}>Submit</Button>
+        </Col>
+      </Form.Group>
+    </div>
+  );
+  const displaySignInForm = () => (
+    <div className="authElementsContainer">
+      <Form.Group as={Row} className="mb-3" controlId="formHorizontalFirstName">
+        <Form.Label >
+          Email:
+        </Form.Label>
+        <Col>
+          <Form.Control name="email" value={signInData.email} onChange={handleSignInInputChange} />
+        </Col>
+        <Form.Label>
+          Password:
+        </Form.Label>
+        <Col >
+          <Form.Control type="password" name="password" value={signInData.password} onChange={handleSignInInputChange} />
+
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3">
+        <Col>
+          <Button variant="dark" size="lg" style={{ width: "100%", marginTop: "10px" }} type="submit" onClick={signInUser}>Submit</Button>
+        </Col>
+      </Form.Group>
+      {< p style={{ color: 'red' }}>{errors}</p>}
+    </div>
+  );
+
+
+  const imageHandler = useCallback(() => {
+
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const imageFile = input.files[0];
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const randomUUID = uuidv4();
+      const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/${randomUUID}`);
+      await axios.put(imageUploadConfig.data.url, imageFile, {
+        headers: {
+          "Content-Type": 'image/jpeg',
+        },
+      });
+
+      const imageUrl = `https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`;
+      const editor = quillRef.current.getEditor();
+      const range = editor.getSelection();
+      editor.insertEmbed(range.index, 'image', imageUrl);
+    };
+
+  }, []);
+
+  const modules = {
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+        ['link', 'image'],
+        ['clean'],
+      ],
+      handlers: {
+        image: imageHandler,
+      },
+    },
+    imageResize: {
+      parchment: Quill.import('parchment'),
+      modules: ['Resize', 'DisplaySize']
+    }
+  };
+
+
+  const handleEditorChange = (content, delta, source, editor) => {
+    console.log("edito", editor)
+    console.log("editogetContents", editor.getContents())
+    setEditorContent(editor.getContents());
+  };
+
+  const saveContent = async (e) => {
+
+    e.preventDefault();
+
+    const content = editorContent; // Assuming this is the Quill content
+    if (content === "") {
+      return
+    };
+    console.log("hola");
+
+    if (currentuser_.data) {
+
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
+        { content: content, userId: currentuser_.data.id });
+
+
+      // make request to the blog using the insertedId
+      // navigate(`/post/${response.data.insertedId}`);
+
+    } else {
+      setDisplayAuthForm(true)
+    }
+
+    // try {
+    //   const response = await axios.post('your_backend_endpoint/api/posts', { content });
+    //   console.log('Save successful', response.data);
+    //   // Handle post-save actions here, e.g., showing a success message
+    // } catch (error) {
+    //   console.error('Save error', error);
+    //   // Handle errors, e.g., showing an error message
+    // }
+  };
+
+  return (
+
+    <div>
+      <div className="editor-container">
+        <ReactQuill
+          ref={quillRef}
+          value={editorContent}
+          onChange={setEditorContent}
+          modules={modules} // Assuming you have modules configured
+          className="editor"
+        />
+        <button onClick={saveContent} className="save-button">Save</button>
+      </div>
+
+
+      {displayAuthForm && (
+        <div className='authFormContainer'>
+          <div className="authForm">
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", marginBottom: "20px" }}>
+              <Button style={{ width: "50%" }} variant={isSignIn ? "dark" : "outline-dark"} onClick={() => setIsSignIn(true)}>Sign In</Button>
+              <Button variant={!isSignIn ? "dark" : "outline-dark"} onClick={() => setIsSignIn(false)} style={{ marginLeft: '10px', width: "50%" }}>Sign Up</Button>
+            </div>
+            {isSignIn ? displaySignInForm() : displaySignUpForm()}
+            <div style={{ position: "absolute", top: "0px", right: "10px", cursor: "pointer" }} onClick={closeAuthForm}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+              </svg>
+            </div>
+            {/* <Button variant="secondary" size="lg" style={{ width: "100%", marginTop: "0px" }} type="submit" onClick={submitWithoutAuthentication}>Submit Without Authentication</Button> */}
+          </div>
+        </div>
+      )}
+
+
+
+
+
+
+    </div>
+
+  );
+
+};
+
+export default BlogEditor
+
+
+
+
+
+
+
+
+/**
+ * 
+ *   const [title, setTitle] = useState('');
+  const editorRef = useRef(null);
+  const uploadButtonRef = useRef(null);
+  const titleRef = useRef(null);
+  
+  const [isSignIn, setIsSignIn] = useState(true); // Default to 'Sign in'
+  
+ 
+
+  const navigate = useNavigate();
+
+
+
+  let blogBody = {}// this object will be used for the blog data. 
   useEffect(() => {
     const editor = editorRef.current;
     if (!editor) return;
@@ -61,15 +335,11 @@ const BlogEditor = () => {
   // This randomUUID will be used to save the images
   const randomUUID = uuidv4();
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
-  const [isValidEmail, setIsValidEmail] = useState(true);
-  const [showTypeTitle, setShowTypeTitle] = useState(false);
-  const[converImageUrl, setCoverImageUrl]= useState("");
 
-  const validateEmail = (email) => {
-    // Regular expression to test the email format
-    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return re.test(email);
-  };
+  const [showTypeTitle, setShowTypeTitle] = useState(false);
+  const [converImageUrl, setCoverImageUrl] = useState("");
+
+
 
   const saveSelection = () => {
     const selection = window.getSelection();
@@ -141,15 +411,15 @@ const BlogEditor = () => {
       });
     }
 
-    if(e.target.name==="coverImage"){
+    if (e.target.name === "coverImage") {
       //update state of cover image
 
       console.log('main image', imgUrls)
       setCoverImageUrl(imgUrls[0]);
-    }else{
+    } else {
       insertImageAtCaret(imgUrls);
     }
-    
+
   };
 
   const insertImageAtCaret = (imgUrls) => {
@@ -174,7 +444,7 @@ const BlogEditor = () => {
       img.style.maxWidth = '100px';
       img.alt = 'Uploaded image';
       img.style.display = 'block';
-     
+
 
       // Append each image to the div container
       divContainer.appendChild(img);
@@ -184,50 +454,11 @@ const BlogEditor = () => {
     editor.appendChild(divContainer);
   };
 
-  const closeAuthForm = () => {
-    setDisplayAuthForm(false)
-  }
-
-  const registerNewUser = () => {
-    const emailValid = validateEmail(signUpData.email);
-    setIsValidEmail(validateEmail(signUpData.email));
-    if (!emailValid) {
-      return
-    }
-
-    // make request to register new user
+  
 
 
 
-
-  };
-
-  const signInUser = async () => {
-
-    // make request to sign user in
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
-        signInData);
-      await setCurrentUserDirectly(response.data);
-
-      // update the blogBody object with the user id
-      blogBody.userId = response.data.id;
-
-      // make request to save blog post.
-
-
-
-
-
-      // direct the user to their blog post. 
-      // navigate('/');
-
-    } catch (error) {
-
-      console.log("err", error)
-      setErrors(error.response.data.errors[0].message)
-    }
-  };
+ 
 
   const handleSignInInputChange = (event) => {
     const { name, value } = event.target;
@@ -255,15 +486,15 @@ const BlogEditor = () => {
   // Submit the data:
   const handleSubmit = async () => {
 
-    if(title===''){
+    if (title === '') {
       setShowTypeTitle(true)
       return
     }
 
     const editorRefInnerHtml = editorRef.current.innerHTML;
 
-    if (editorRefInnerHtml ===''){
-      return 
+    if (editorRefInnerHtml === '') {
+      return
     }
 
     const parser = new DOMParser();
@@ -303,14 +534,13 @@ const BlogEditor = () => {
         </Form.Label>
         <Col>
           <Form.Control name="email" value={signInData.email} onChange={handleSignInInputChange} />
-          {/**onChange={'updateNewUserData'} */}
         </Col>
         <Form.Label>
           Password:
         </Form.Label>
         <Col >
           <Form.Control type="password" name="password" value={signInData.password} onChange={handleSignInInputChange} />
-          {/**onChange={'updateNewUserData'} */}
+         
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="mb-3">
@@ -319,7 +549,6 @@ const BlogEditor = () => {
         </Col>
       </Form.Group>
       {< p style={{ color: 'red' }}>{errors}</p>}
-
     </div>
   );
 
@@ -387,7 +616,7 @@ const BlogEditor = () => {
           </label>
         </div>
 
-        <Button onClick={handleSubmit} style={{ marginTop: '10px', width: "100%", backgroundColor:"black" }} variant="dark">Submit Post</Button>
+        <Button onClick={handleSubmit} style={{ marginTop: '10px', width: "100%", backgroundColor: "black" }} variant="dark">Submit Post</Button>
       </div>
 
       {displayAuthForm && (
@@ -410,9 +639,5 @@ const BlogEditor = () => {
     </div>
   );
 
-};
 
-export default BlogEditor
-
-
-
+ */

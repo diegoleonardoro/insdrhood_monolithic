@@ -3,12 +3,16 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import NeighborhoodEditableDiv from "../NeighborhoodEditableDiv/index";
+import { useUserContext } from "../../contexts/UserContext";
 
 import Button from 'react-bootstrap/Button';
 import { useUser } from "../../contexts/UserContext";
 import { useNavigate } from 'react-router-dom';
 
-const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
+const NeighborhoodProfile = () => {
+
+
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   const { neighborhoodid } = useParams();
   const [neighborhood, setNeighborhood] = useState(null);
@@ -96,7 +100,7 @@ const NeighborhoodProfile = ({ currentuserProp, updateCurrentUser }) => {
                   objectKey={'neighborhoodImages'}
                   images={neighborhood.neighborhoodImages}
                   neighborhood={nhoodName}
-                  imagesId={currentuserProp?.imagesId}
+                  imagesId={currentuser_?.imagesId}
                 />
               </div>
             )}

@@ -6,8 +6,12 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContext";
 
-const SignUp = ({ updateCurrentUser }) => {
+
+const SignUp = () => {
+
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   axios.defaults.withCredentials = true;
 
@@ -33,12 +37,12 @@ const SignUp = ({ updateCurrentUser }) => {
 
     try {
       
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
+     const response =  await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
         {
           withCredentials: true
         });
         
-      // await updateCurrentUser(response.data);
+      setCurrentUserDirectly(response.data);
 
       navigate('/');
 

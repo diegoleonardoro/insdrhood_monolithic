@@ -7,19 +7,21 @@ import ProductsContextProvider from './contexts/products-context';
 import CartContextProvider from './contexts/cart-context';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { UserProvider } from './contexts/UserContext';
+
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
-    <ProductsContextProvider>
-        <CartContextProvider>
+    <UserProvider>
+        <ProductsContextProvider>
+            <CartContextProvider>
                 <Elements stripe={stripePromise}>
                     <App />
                 </Elements>
-        </CartContextProvider>
-    </ProductsContextProvider>
-
+            </CartContextProvider>
+        </ProductsContextProvider>
+    </UserProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

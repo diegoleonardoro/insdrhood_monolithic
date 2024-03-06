@@ -9,10 +9,10 @@ const mongodb_1 = require("mongodb");
  * @access public
 */
 const saveBlogPost = async (req, res) => {
-    const { blogBody } = req.body;
+    console.log("reqbody", req.body);
     const db = await (0, index_1.getDb)();
     const blogs = db.collection("blogs");
-    const newBlog = await blogs.insertOne(blogBody);
+    const newBlog = await blogs.insertOne(req.body);
     res.status(201).send(newBlog);
 };
 exports.saveBlogPost = saveBlogPost;

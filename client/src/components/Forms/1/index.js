@@ -11,13 +11,14 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip'
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
-import { useNavigationHistory } from "../../../contexts/navigation-history-context"
+import { useNavigationHistory } from "../../../contexts/navigation-history-context";
+import { useUserContext } from "../../../contexts/UserContext";
 
 let addLastPlace = false;
 let addPlaceFromForm = true;
 let addPlaceFromFormNightLife = true;
 
-const FormComponent = ({ updateCurrentUser }) => {
+const FormComponent = () => {
 
   const [displayKeyWord, setDisplayKeyWord] = useState(["liveInNY"]);
   const [neighborhood, setNeighborhood] = useState("");
@@ -47,6 +48,8 @@ const FormComponent = ({ updateCurrentUser }) => {
   const [neighborhoodId, setNeighborhoodId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { pathsVisited } = useNavigationHistory();
+
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   const [rows, setRows] = useState([
     {
@@ -210,7 +213,7 @@ const FormComponent = ({ updateCurrentUser }) => {
         data);
       await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${neighborhoodId}`, { user: { id: newuser.data.id, name: newuser.data.name, email: newuser.data.email } });
 
-      await updateCurrentUser(newuser.data);
+      await setCurrentUserDirectly(newuser.data);
       navigate(`/neighborhood/${neighborhoodId}`);
       return;
     } catch (error) {

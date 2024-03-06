@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
-
 import { useParams } from 'react-router-dom';
-
 import axios from "axios";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { useUserContext } from "../../contexts/UserContext";
 import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 import "./emailconfirmation.css"
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
-
-const VerifyEmail = ({ updateCurrentUser }) => {
+const VerifyEmail = () => {
 
   const { emailtoken } = useParams();
   const [errors, setErrors] = useState(null);
   const [user, setUser] = useState(null);
-  
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
+
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
@@ -94,7 +93,9 @@ const VerifyEmail = ({ updateCurrentUser }) => {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
 
       const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
-      updateCurrentUser(response.data);      
+
+
+      setCurrentUserDirectly(response.data);      
       
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
     }

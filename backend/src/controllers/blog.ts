@@ -8,10 +8,13 @@ import { ObjectId } from 'mongodb';
  * @access public
 */
 export const saveBlogPost = async (req: Request, res: Response) => {
-  const { blogBody } = req.body;
+  
+  console.log("reqbody", req.body);
+
+
   const db = await getDb();
   const blogs = db.collection("blogs");
-  const newBlog = await blogs.insertOne(blogBody);
+  const newBlog = await blogs.insertOne(req.body);
   res.status(201).send(newBlog);
 }
 

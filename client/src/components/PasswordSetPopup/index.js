@@ -5,13 +5,14 @@ import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContext";
 
-const PasswordSetPopup = ({ updateCurrentUser, currentuser, setShowPasswordForm }) => {
+const PasswordSetPopup = ({   setShowPasswordForm }) => {
 
   const [errors, setErrors] = useState(null);
-
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   const [unmatchingPasswords, setUnmatchingPasswords] = useState(false);
 
@@ -36,17 +37,17 @@ const PasswordSetPopup = ({ updateCurrentUser, currentuser, setShowPasswordForm 
 
   
       // make request to update the user
-      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser.id}`, formData, {
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser_.id}`, formData, {
         withCredentials: true
       })
 
       // make request to update the neighborhood data with the user:
-      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser.neighborhoodId[0]}`, { user: formData })
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser_.neighborhoodId[0]}`, { user: formData })
 
 
 
       setShowPasswordForm(false);
-      updateCurrentUser(response.data);
+      setCurrentUserDirectly(response.data);
       // navigate to the neighborhood profile so that the udpated data is reflected in the profile:
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
 

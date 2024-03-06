@@ -10,9 +10,9 @@ import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
+import { useUserContext } from '../../contexts/UserContext';
 
-
-function Home({ currentuser, updateCurrentUser }) {
+function Home() {
 
   const navigate = useNavigate();
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
@@ -21,15 +21,13 @@ function Home({ currentuser, updateCurrentUser }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
   const [totalItems, setTotalItems] = useState(0);
 
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   const handleNavigation = (path) => {
     startTransition(() => {
@@ -135,7 +133,7 @@ function Home({ currentuser, updateCurrentUser }) {
               withCredentials: true
             });
           // setUser(response.data);
-          updateCurrentUser(response.data);
+          setCurrentUserDirectly(response.data);
           // Extract the current URL search parameters
           const urlParams = new URLSearchParams(window.location.search);
           // Create the new URL, preserving the existing parameters
@@ -149,11 +147,11 @@ function Home({ currentuser, updateCurrentUser }) {
       logUserWithToken();
     } else {
 
-      const checkCurrentUser = async () => {
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-        updateCurrentUser(response.data);
-      }
-      checkCurrentUser()
+      // const checkCurrentUser = async () => {
+      //   const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+      //   updateCurrentUser(response.data);
+      // }
+      // checkCurrentUser()
     }
 
     const fetchData = async () => {

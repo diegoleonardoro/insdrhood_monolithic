@@ -6,9 +6,11 @@ import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContext";
 
-const EmailRegisterWindow = ({ updateCurrentUser, currentuser, setShowEmailRegisterPopup }) => {
+const EmailRegisterWindow = ({ setShowEmailRegisterPopup }) => {
 
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [errors, setErrors] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -26,17 +28,17 @@ const EmailRegisterWindow = ({ updateCurrentUser, currentuser, setShowEmailRegis
     try {
 
       // make request to update the user
-      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser.id}`, formData, {
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${currentuser_.id}`, formData, {
         withCredentials: true
       })
 
       // make request to update the neighborhood data with the user:
-       await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser.neighborhoodId[0]}`, { user:formData })
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateneighborhood/${currentuser_.neighborhoodId[0]}`, { user:formData })
 
   
 
       setShowEmailRegisterPopup(false);
-      updateCurrentUser(response.data);
+      setCurrentUserDirectly(response.data);
       // navigate to the neighborhood profile so that the udpated data is reflected in the profile:
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
 

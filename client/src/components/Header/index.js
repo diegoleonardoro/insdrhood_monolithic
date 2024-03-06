@@ -12,23 +12,26 @@ import { useEffect, useState } from 'react';
 import CartIcon from "../CartIcon/CartIcon";
 import { startTransition } from "react";
 
+import { useUserContext } from '../../contexts/UserContext';
+
 // import Col from 'react-bootstrap/Col';
 // import Image from 'react-bootstrap/Image';
 
-function Header({ updateCurrentUser, currentuser }) {
+function Header() {
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const location = useLocation();
   const [showHeader, setShowHeader] = useState(true);
 
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
+
   const handleNavigation = (path) => {
     startTransition(() => {
       navigate(path);
     });
   };
-
-
+  
   useEffect(() => {
     // Set the showHeader state based on the current route
     setShowHeader(location.pathname === '/questionnaire');
@@ -37,21 +40,20 @@ function Header({ updateCurrentUser, currentuser }) {
   const handleSignOut = async () => {
 
     try {
-      // await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
-      //https://backendd-w4arsp4ahq-uc.a.run.app
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
+      // I DO NOT THIK I NEED THIS:
       await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`);
-      await updateCurrentUser(null);
+      await setCurrentUserDirectly(null);
       navigate('/');
 
     } catch (err) { console.log('error: ', err) }
   }
 
   const links = [
-    !currentuser && { label: "Sign Up", to: "/signup" },
-    !currentuser && { label: "Sign In", to: "/signin" },
+    !currentuser_ && { label: "Sign Up", to: "/signup" },
+    !currentuser_ && { label: "Sign In", to: "/signin" },
     { label: "Questionnaire", to: "/questionnaire", useTransition: true },
-    currentuser && { label: "Sign Out", onClick: handleSignOut },
+    currentuser_ && { label: "Sign Out", onClick: handleSignOut },
     { label: "Shop", to: "/shop", useTransition: true },
   ]
     .filter((linkConfig) => linkConfig)

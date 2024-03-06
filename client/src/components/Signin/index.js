@@ -6,22 +6,22 @@ import "./signin.css";
 import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContext";
 
-
-const Signin = ({ updateCurrentUser }) => {
+const Signin = () => {
 
   axios.defaults.withCredentials = true;
-
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
 
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
   async function sendUserCredentials() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
         { email, password });
-      await updateCurrentUser(response.data);
+      await setCurrentUserDirectly(response.data);
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
       return;
     } catch (error) {
