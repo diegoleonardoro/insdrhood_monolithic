@@ -2,8 +2,32 @@
 .articlesContainer{
   display: flex;
   justify-content: center;
+   align-items: flex-start;
   background-color: #8080801c;
   padding: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  width:100%;
+}
+
+/* This styles the scrollbar track */
+.articlesContainer::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Track background */
+}
+
+/* This styles the actual scrollbar handle */
+.articlesContainer::-webkit-scrollbar-thumb {
+  background: #888; /* Scrollbar handle color */
+}
+
+/* Handle on hover */
+.articlesContainer::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Scrollbar handle color on hover */
+}
+
+.articlesContainer::-webkit-scrollbar {
+  height: 12px; /* Height of the horizontal scrollbar */
+  width: 12px; /* Width of the vertical scrollbar */
 }
 
 .residentsHeader{
@@ -16,7 +40,10 @@
 
 .blogsCard{
   width:30%;
+  /* margin: 0 10px; */
 }
+
+
 .nhoodsTable{
  border-collapse: collapse;
 }
@@ -122,6 +149,23 @@
   cursor: not-allowed;
   transform: none;
 }
+
+
+
+
+@media (max-width: 1100px) {
+  .blogsCard{
+     box-sizing: border-box;
+    min-width: 100%;
+    margin: 0; /* Reset margin for full width */
+  }
+
+  .articlesContainer{
+    justify-content: start;
+  }
+  
+}
+
 
 @media (max-width: 999px) {
   .neighborhoodCard{
