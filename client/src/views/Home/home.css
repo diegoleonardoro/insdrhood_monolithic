@@ -2,7 +2,7 @@
 .articlesContainer{
   display: flex;
   justify-content: center;
-   align-items: flex-start;
+  
   background-color: #8080801c;
   padding: 20px;
   overflow-x: auto;

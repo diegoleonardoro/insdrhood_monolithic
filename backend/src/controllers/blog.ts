@@ -8,9 +8,6 @@ import { ObjectId } from 'mongodb';
  * @access public
 */
 export const saveBlogPost = async (req: Request, res: Response) => {
-  
-  console.log("reqbody", req.body);
-
 
   const db = await getDb();
   const blogs = db.collection("blogs");
@@ -43,7 +40,7 @@ export const getBlog = async (req: Request, res: Response) => {
 export const getAllBlogs = async (req: Request, res: Response) => {
   const db = await getDb();
   const blogsCollection = db.collection("blogs");
-  const projection = { title: 1, coverImage :1}
+  const projection = { title: 1, coverImageUrl :1}
   const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
   res.status(200).send(blogs);
 }

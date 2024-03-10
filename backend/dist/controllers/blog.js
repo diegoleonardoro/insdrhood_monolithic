@@ -9,7 +9,6 @@ const mongodb_1 = require("mongodb");
  * @access public
 */
 const saveBlogPost = async (req, res) => {
-    console.log("reqbody", req.body);
     const db = await (0, index_1.getDb)();
     const blogs = db.collection("blogs");
     const newBlog = await blogs.insertOne(req.body);
@@ -37,7 +36,7 @@ exports.getBlog = getBlog;
 const getAllBlogs = async (req, res) => {
     const db = await (0, index_1.getDb)();
     const blogsCollection = db.collection("blogs");
-    const projection = { title: 1, coverImage: 1 };
+    const projection = { title: 1, coverImageUrl: 1 };
     const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
     res.status(200).send(blogs);
 };

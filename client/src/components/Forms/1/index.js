@@ -48,7 +48,6 @@ const FormComponent = () => {
   const [neighborhoodId, setNeighborhoodId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { pathsVisited } = useNavigationHistory();
-
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   const [rows, setRows] = useState([

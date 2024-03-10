@@ -30,10 +30,18 @@ const BlogEditor = () => {
   const [errors, setErrors] = useState(null);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [showTypeTitle, setShowTypeTitle] = useState(false);
+  const [coverImageUrl, setCoverImageUrl] = useState("");
 
   const closeAuthForm = () => {
     setDisplayAuthForm(false)
-  }
+  };
+  const handleTitleChange = (e) => {
+    setShowTypeTitle(false);
+    setTitle(e.target.value);
+  };
+
 
   const validateEmail = (email) => {
     // Regular expression to test the email format
@@ -74,21 +82,14 @@ const BlogEditor = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
         signInData);
-
       await setCurrentUserDirectly(response.data);
-      console.log("respnse", response);
-
-     const blog =  await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
-       { content: editorContent, userId: response.data.id });
-
+      const blog = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
+        { content: editorContent, userId: currentuser_.id, title: title, coverImageUrl: coverImageUrl });
       navigate(`/post/${blog.data.insertedId}`);
-
+     
     } catch (error) {
-
       console.log("err", error)
       setErrors(error.response.data.errors[0].message)
-
-
     }
   };
 
@@ -145,7 +146,21 @@ const BlogEditor = () => {
   );
 
 
-  const imageHandler = useCallback(() => {
+  const headerImageHandler = async (e) => {
+    const imageFile = e.target.files[0];
+    const randomUUID = uuidv4();
+    const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/${randomUUID}`);
+    await axios.put(imageUploadConfig.data.url, imageFile, {
+      headers: {
+        "Content-Type": 'image/jpeg',
+      },
+    });
+
+    const imageUrl = `https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`;
+    setCoverImageUrl(imageUrl);
+  }
+
+  const imageHandler = useCallback((e) => {
 
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -153,10 +168,10 @@ const BlogEditor = () => {
     input.click();
 
     input.onchange = async () => {
+
       const imageFile = input.files[0];
       const formData = new FormData();
       formData.append('image', imageFile);
-
       const randomUUID = uuidv4();
       const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/${randomUUID}`);
       await axios.put(imageUploadConfig.data.url, imageFile, {
@@ -170,7 +185,7 @@ const BlogEditor = () => {
       const range = editor.getSelection();
       editor.insertEmbed(range.index, 'image', imageUrl);
     };
-
+  
   }, []);
 
   const modules = {
@@ -193,30 +208,31 @@ const BlogEditor = () => {
   };
 
 
-  const handleEditorChange = (content, delta, source, editor) => {
-    console.log("edito", editor)
-    console.log("editogetContents", editor.getContents())
-    setEditorContent(editor.getContents());
-  };
 
   const saveContent = async (e) => {
 
     e.preventDefault();
 
+    if (title === '') {
+      setShowTypeTitle(true)
+      return
+    }
+
     const content = editorContent; // Assuming this is the Quill content
     if (content === "") {
       return
     };
-    console.log("hola");
+    if (currentuser_) {
 
-    if (currentuser_.data) {
+
+      
 
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
-        { content: content, userId: currentuser_.data.id });
+        { content: content, userId: currentuser_.id, title: title, coverImageUrl: coverImageUrl });
 
 
       // make request to the blog using the insertedId
-      // navigate(`/post/${response.data.insertedId}`);
+      navigate(`/post/${response.data.insertedId}`);
 
     } else {
       setDisplayAuthForm(true)
@@ -236,6 +252,15 @@ const BlogEditor = () => {
 
     <div>
       <div className="editor-container">
+        <Form.Control onChange={handleTitleChange} style={{ marginBottom: "10px" }} size="lg" type="text" placeholder="Title" />
+        {showTypeTitle && <p style={{ color: 'red' }}>Please provide a title to your post.</p>}
+
+        <Form.Group controlId="formFile" className="mb-3">
+          <Form.Label>Add Cover Photo:</Form.Label>
+          <Form.Control onChange={headerImageHandler} type="file" />
+        </Form.Group>
+
+
         <ReactQuill
           ref={quillRef}
           value={editorContent}
@@ -243,7 +268,9 @@ const BlogEditor = () => {
           modules={modules} // Assuming you have modules configured
           className="editor"
         />
-        <button onClick={saveContent} className="save-button">Save</button>
+
+        <Button style={{ width: "100%", marginTop: "10px" }} variant="dark" onClick={saveContent}>Save</Button>
+        {/* <button onClick={saveContent} className="save-button">Save</button> */}
       </div>
 
 
@@ -264,11 +291,6 @@ const BlogEditor = () => {
           </div>
         </div>
       )}
-
-
-
-
-
 
     </div>
 

@@ -50,7 +50,7 @@ img:not(.imageContainer img) {
   scroll-snap-align: start; /* Ensures images snap into place */
   width: 100%; /* Sets image width */
   margin-right: 10px; /* Adds space between images */
-  max-width:400px !important;
+  /* max-width:400px !important; */
   position: relative;
   left:50%;
   transform: translate(-50%, 0);

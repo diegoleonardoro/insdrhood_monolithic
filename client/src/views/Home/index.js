@@ -100,9 +100,10 @@ function Home() {
   ));
 
   const blogCards = blogs.map((blog) => {
+    console.log("asdfasdeeede", blog)
     return (
       <Card className="blogsCard" key={blog._id}>
-        <Card.Img variant="top" src={blog.coverImage} />
+        <Card.Img variant="top" src={blog.coverImageUrl} />
         <CardBody>
           <Card.Title>{blog.title}</Card.Title>
         </CardBody>
@@ -112,7 +113,7 @@ function Home() {
             style={{ margin: "20px", borderRadius: "0" }}
             variant="dark"
           >
-            Read Article
+            Read
           </Button>
         </Card.Footer>
 
