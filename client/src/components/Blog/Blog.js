@@ -4,15 +4,22 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useUserContext } from "../../contexts/UserContext";
 import DOMPurify from 'dompurify';
-
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
 const Blog = () => {
 
   const { id } = useParams();
   const { currentuser_ } = useUserContext();
-
+  const [email, setEmail] = useState("")
   const [blogHtml, setBlogHtml] = useState('');
   const [title, setTitle] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [emailSignUperror, setEmailSignUpError] = useState(null);
+  const [showEmailError, setShowEmailError] = useState(false);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const getBlog = async () => {
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`);
@@ -26,8 +33,72 @@ const Blog = () => {
     getBlog()
   }, [])
 
+  const handleEmailChange = (e) => {
+    const inputEmail = e.target.value;
+    setEmail(inputEmail);
+    // Check email validity whenever the input changes
+    setIsValidEmail(checkEmailStructure(inputEmail));
+  };
+
+  const checkEmailStructure = (inputEmail) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(inputEmail);
+  };
+
+  const handleSubmit = async () => {
+    if (isValidEmail && email) {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`,
+          { email });
+        setSignUpSuccess(true);
+      } catch (error) {
+        setEmailSignUpError(error.response.data.errors[0].message)
+      }
+    } else {
+      setShowEmailError(true)
+    }
+  };
+
+  const setEmailErrorFalse = () => {
+    setShowEmailError(false)
+    setEmailSignUpError(null)
+  }
+
   return (
     <div className="blogMainContainer">
+      {!currentuser_ && !signUpSuccess && (
+        <div>
+          <InputGroup className="mb-3">
+            <Form.Control
+              placeholder="Subscribe to the Newsletter"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+              onChange={(e) => {
+                handleEmailChange(e);
+                setEmailErrorFalse(e);
+              }}
+            />
+            <Button onClick={handleSubmit} variant="outline-secondary" id="button-addon2">
+              Register
+            </Button>
+          </InputGroup>
+          {emailSignUperror && (
+            <Alert style={{ marginTop: "10px" }} variant='danger'>
+              {emailSignUperror}
+            </Alert>
+          )}
+          {showEmailError && (
+            <Alert style={{ marginTop: "10px" }} variant='danger'>
+              Ivalid Email Format
+            </Alert>
+          )}
+        </div>
+      )}
+      {signUpSuccess && ( // Render success message
+        <Alert style={{ marginTop: "10px" }} variant='success'>
+          Thank you for subscribing to our newsletter!
+        </Alert>
+      )}
       <h1 className="article-title">{title}</h1>
       <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
     </div>

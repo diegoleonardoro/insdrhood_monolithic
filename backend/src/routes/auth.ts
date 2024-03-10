@@ -14,7 +14,8 @@ import {
   getAllNeighborhoods,
   updateNeighborhoodData,
   getNeighborhood,
-  uploadBlogFiles
+  uploadBlogFiles, 
+  newsLetterSignUp
 } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
@@ -43,6 +44,7 @@ router.post("/signout", asyncHandler(signout));
 router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
 router.put("/updateuserdata/:id", authenticationValidator, asyncHandler(updateUserData));
+router.post("/newsletter/signup", asyncHandler(newsLetterSignUp));
 
 
 /**

@@ -54,7 +54,7 @@ const sendEmail = async (emailOptions: SendEmailOptions) => {
     });
 
     try {
-      
+
       await transporter?.sendMail(emailOptions);
 
     } catch (error) {
@@ -108,3 +108,62 @@ export const sendVerificationMail = (user: User) => {
 
 }
 
+
+interface Email {
+  email: string;
+  baseUrlForEmailVerification: string
+}
+
+export const sendNewsLetterEmail = (email: Email) => {
+
+  const mjmlContent = `
+  <mjml>
+  <mj-head>
+    <mj-title>Verify Email</mj-title>
+    <mj-font name="Montserrat" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Montserrat, Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#333333" line-height="24px"></mj-text>
+      <mj-button font-family="Montserrat, Helvetica, Arial, sans-serif" font-size="16px" font-weight="500"></mj-button>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+    <mj-style>
+      .title { font-size: 20px; font-weight: 500; margin-bottom: 10px; }
+      .button { font-weight: 500; }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#F2F2F2">
+    <mj-section padding-top="30px" padding-bottom="30px">
+      <mj-column width="600px">
+        <mj-text css-class="title" color="#000000" padding-bottom="20px">
+          Hey there! 
+        </mj-text>
+        <mj-text font-weight="400" padding-bottom="20px">
+          I'm thrilled you've joined us at the Insider Hood newsletter! We're all about diving deep into the heart of New York City, bringing you closer to its people, buildings, and the stories that shape them.
+
+          I will share only the stuff that matters to you, the kind of insights that make you feel more connected to this amazing city. Welcome aboard!
+
+          If you are from New York City and would like to share your insights on your neighborhood, I invite you to fill out the following form:
+        </mj-text>
+        <mj-button href="${email.baseUrlForEmailVerification}/questionnaire" align="center" background-color="#5FA91D" color="#FFFFFF" border-radius="2px" inner-padding="15px 30px" font-weight="bold" padding-bottom="0px" padding-top="20px">
+          QUESTIONNAIRE
+        </mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+  `;
+
+  // Compile MJML to HTML
+  const { html } = mjml(mjmlContent);
+  const mailOptions = {
+    from: `Insider Hood <${process.env.Email}>`,
+    to: email.email,
+    subject: 'Welcome to the Insider Hood Newsletter',
+    html: html,
+    text: "Insider Hood Newsletter."
+  };
+
+  sendEmail(mailOptions);
+
+}

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.signup = void 0;
+exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
 const bad_request_error_1 = require("../errors/bad-request-error");
 const password_1 = require("../services/password");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -77,6 +77,34 @@ const signup = async (req, res) => {
     res.status(201).send(userInfo);
 };
 exports.signup = signup;
+/**
+ * @description registers a new email to the newsletter
+ * @route POST /api/newsletter/signup
+ * @access public
+*/
+const newsLetterSignUp = async (req, res) => {
+    const { email } = req.body;
+    const db = await (0, index_1.getDb)();
+    const emails = db.collection("newsletter");
+    const existingEmail = await emails.findOne({
+        email
+    });
+    if (existingEmail) {
+        throw new bad_request_error_1.BadRequestError("Email in use");
+    }
+    ;
+    const newEmailData = {
+        email,
+        subscribed: true
+    };
+    await emails.insertOne(newEmailData);
+    (0, emailVerification_1.sendNewsLetterEmail)({
+        email: email,
+        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+    });
+    res.status(201).send({ message: "email subscribed" });
+};
+exports.newsLetterSignUp = newsLetterSignUp;
 /**
  * @description logs users in
  * @route POST /api/signin

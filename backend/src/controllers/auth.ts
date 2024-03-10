@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 const AWS = require("aws-sdk");
 import { getDb } from "../index";
 import { ObjectId } from 'mongodb';
-import { sendVerificationMail } from "../services/emailVerification";
+import { sendVerificationMail, sendNewsLetterEmail } from "../services/emailVerification";
 import { User } from "../models/user";
 import { Neighborhood } from "../models/neighborhood";
 
@@ -98,6 +98,34 @@ export const signup = async (req: Request, res: Response) => {
 
 }
 
+/**
+ * @description registers a new email to the newsletter
+ * @route POST /api/newsletter/signup
+ * @access public
+*/
+export const newsLetterSignUp = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  const db = await getDb();
+  const emails = db.collection("newsletter");
+  const existingEmail = await emails.findOne({
+    email
+  });
+
+  if (existingEmail) {
+    throw new BadRequestError("Email in use");
+  };
+  const newEmailData = {
+    email,
+    subscribed: true
+  };
+  await emails.insertOne(newEmailData)
+
+  sendNewsLetterEmail({
+    email: email,
+    baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+  })
+  res.status(201).send({ message: "email subscribed" });
+}
 
 /**
  * @description logs users in
@@ -504,7 +532,7 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
 
 
 
-  res.status(200).send({neighborhoods, total});
+  res.status(200).send({ neighborhoods, total });
 
 }
 

@@ -84,12 +84,9 @@ app.use(
     // maxAge: 24 * 60 * 60 * 1000,
   })
 );
-
 app.use("/api/blog", blog);
 app.use("/api/payments", payments);
 app.use("/api", auth);
-
-
 
 app.use(errorHandler);
 

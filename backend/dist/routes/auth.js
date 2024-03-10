@@ -30,6 +30,7 @@ router.post("/signout", asyncHandler(auth_1.signout));
 router.get("/currentuser", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
 router.put("/updateuserdata/:id", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.updateUserData));
+router.post("/newsletter/signup", asyncHandler(auth_1.newsLetterSignUp));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */
