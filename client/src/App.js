@@ -17,12 +17,12 @@ import PrivacyNotice from './components/Privacy';
 import SingleProduct from './components/SingleProduct/SingleProduct';
 import CartPage from './components/CartPage/CartPage';
 import Checkout from './components/Checkout/Checkout';
-import { useUser } from "../src/contexts/UserContext";
-import { useLocation } from 'react-router-dom';
 import Canceled from "./components/Checkout/stripe-checkout/canceled"
 import Success from "./components/Checkout/stripe-checkout/success"
 import { NavigationHistoryProvider } from "./contexts/navigation-history-context"
 import { useUserContext } from '../src/contexts/UserContext';
+;
+
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -34,7 +34,6 @@ const NeighborhoodProfile = React.lazy(() => import("./components/Neighborhood")
 function App() {
 
   const HeaderMemo = React.memo(Header);
-  const [currentuser, setCurrentUser] = useState(null);
   const [showEmailRegisterPopup, setShowEmailRegisterPopup] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const showEmailRegistration = () => {
@@ -44,23 +43,24 @@ function App() {
     setShowPasswordForm(true)
   }
 
+  const { currentuser_, setCurrentUserDirectly } = useUserContext();
   return (
 
     <Router>
       <NavigationHistoryProvider>
         <div className="App">
           <div>
-            {showEmailRegisterPopup && <EmailRegisterWindow  setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
+            {showEmailRegisterPopup && <EmailRegisterWindow setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
             {showPasswordForm && < PasswordSetPopup setShowPasswordForm={setShowPasswordForm}>
             </PasswordSetPopup >}
-            <HeaderMemo currentuser={currentuser} />
-            {currentuser && (
-              currentuser.isVerified === false ? (
+            <HeaderMemo />
+            {currentuser_ && (
+              currentuser_.isVerified === false ? (
                 <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
-                  {currentuser.email !== null ? (
+                  {currentuser_.email !== null ? (
                     <Alert style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px" }} variant="primary">
                       <div style={{ position: "relative", top: "-9px" }}>
-                        Verify Email {currentuser.email}
+                        Verify Email {currentuser_.email}
                       </div>
                     </Alert>
                   ) : (
@@ -71,7 +71,7 @@ function App() {
                     </div>
                   )}
                 </div>
-              ) : currentuser.passwordSet === false ? (
+              ) : currentuser_.passwordSet === false ? (
                 // Something else to render if passwordSer is false
                 <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
                   <Button onClick={showPassWordForm} style={{ height: "50px", margin: "5px", boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px", cursor: "pointer" }} variant="primary">
@@ -90,13 +90,13 @@ function App() {
 
           <Suspense fallback={<div>Loading...</div>}></Suspense>
           <Routes>
-            <Route path="/" element={<Home  />} />
+            <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/registeremail" element={<EmailRegister />} />
             <Route path="/signin" element={<Signin />} />
-            <Route path="/questionnaire" element={<FormComponent  />} />
+            <Route path="/questionnaire" element={<FormComponent />} />
             <Route path="/emailconfirmation/:emailtoken" element={<VerifyEmail />} />
-            <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile  />} />
+            <Route path="/neighborhood/:neighborhoodid" element={<NeighborhoodProfile />} />
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
             <Route path='/shop' element={<Shop />}></Route>
             <Route path='/product/:id' element={<SingleProduct />}></Route>
@@ -108,7 +108,6 @@ function App() {
             <Route path='/post/:id' element={<Blog />}></Route>
           </Routes>
           <Suspense />
-
 
         </div>
       </NavigationHistoryProvider>

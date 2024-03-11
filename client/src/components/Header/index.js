@@ -1,5 +1,3 @@
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
 import axios from "axios"
 import "./header.css";
@@ -11,27 +9,15 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CartIcon from "../CartIcon/CartIcon";
 import { startTransition } from "react";
-
 import { useUserContext } from '../../contexts/UserContext';
 
-// import Col from 'react-bootstrap/Col';
-// import Image from 'react-bootstrap/Image';
-
 function Header() {
-
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const location = useLocation();
   const [showHeader, setShowHeader] = useState(true);
-
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
-  const handleNavigation = (path) => {
-    startTransition(() => {
-      navigate(path);
-    });
-  };
-  
   useEffect(() => {
     // Set the showHeader state based on the current route
     setShowHeader(location.pathname === '/questionnaire');

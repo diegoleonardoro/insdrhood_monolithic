@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useMemo } from 'react';
 import cartReducer, { sumItems } from './cart-reducer';
 
 export const CartContext = createContext();
@@ -17,14 +17,14 @@ const CartContextProvider = ({ children }) => {
   const removeProduct = (product) => dispatch({ type: 'REMOVE_ITEM', payload: product });
   const clearCart = () => dispatch({ type: 'CLEAR' });
 
-  const contextValues = {
+  const contextValues = useMemo(() => ({
     ...state,
     addProduct,
     increase,
     decrease,
     removeProduct,
     clearCart,
-  }
+  }), [state]);
 
   return (
     <CartContext.Provider value={contextValues}>

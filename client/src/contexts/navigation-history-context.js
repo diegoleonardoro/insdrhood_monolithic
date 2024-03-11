@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const NavigationHistoryContext = createContext({
@@ -14,12 +14,17 @@ export const NavigationHistoryProvider = ({ children }) => {
     setPathsVisited((prevPathsVisited) => prevPathsVisited + 1);
   }, [location]);
 
-  const addPath = () => {
+  const addPath = useMemo(() => () => {
     setPathsVisited((prevPathsVisited) => prevPathsVisited + 1);
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    pathsVisited,
+    addPath,
+  }), [pathsVisited, addPath]);
 
   return (
-    <NavigationHistoryContext.Provider value={{ pathsVisited, addPath }}>
+    <NavigationHistoryContext.Provider value={contextValue}>
       {children}
     </NavigationHistoryContext.Provider>
   );

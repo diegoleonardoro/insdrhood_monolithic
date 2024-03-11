@@ -1,13 +1,10 @@
 import React, { useState, useEffect, startTransition } from 'react';
 // import axios from 'axios';
 import './home.css';
-import Table from 'react-bootstrap/Table';
 import axios from "axios";
-import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner';
 import Card from "react-bootstrap/Card";
-import CardGroup from "react-bootstrap/CardGroup";
 import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
@@ -17,7 +14,6 @@ function Home() {
   const navigate = useNavigate();
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
   const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
@@ -35,7 +31,6 @@ function Home() {
     });
   };
 
-
   // Filter neighborhoodsData based on searchTerm and selectedBorough
   const filteredNeighborhoods = neighborhoodsData.filter((neighborhood) => {
     return (
@@ -43,8 +38,6 @@ function Home() {
       (selectedBorough === 'All' || neighborhood.borough === selectedBorough)
     );
   });
-
-  const currentNeighborhoods = filteredNeighborhoods.slice(indexOfFirstItem, indexOfLastItem);
 
   // Handle change in search input
   const handleSearchChange = (event) => {
@@ -147,7 +140,6 @@ function Home() {
       };
       logUserWithToken();
     } else {
-
       // const checkCurrentUser = async () => {
       //   const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       //   updateCurrentUser(response.data);
@@ -160,20 +152,15 @@ function Home() {
 
         const neighborhoodsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods?page=${currentPage}&pageSize=${itemsPerPage}`;
 
-
         const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
-
         const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
-
-        // const [neighborhoodsResponse, blogsResponse] = await Promise.all([neighborhoodsPromise, blogsPromise]);
-
         setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
         setTotalItems(neighborhoodsResponse.data.total);
         setBlogs(blogsResponse.data);
 
       } catch (error) {
         console.error("Failed to fetch data", error);
-        // Handle the error state appropriately here
+       
       } finally {
         setIsLoading(false); // Stop loading
       }
@@ -221,15 +208,10 @@ function Home() {
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
         {neighborhoodCards}
       </div>
-
       <div className="pagination-controls">
-        {/* <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button> */}
         <div className="pagination">
           {renderPageNumbers}
         </div>
-        {/* <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Next</button>
-        <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>Last</button> */}
       </div>
 
     </div>

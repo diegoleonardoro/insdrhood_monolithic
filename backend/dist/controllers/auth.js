@@ -381,7 +381,6 @@ const getAllNeighborhoods = async (req, res) => {
     const db = await (0, index_1.getDb)();
     const neighborhoodsCollection = db.collection("neighborhoods");
     const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 };
-    // const neighborhoods = await neighborhoodsCollection.find({}, { projection: projection }).toArray();
     // Pagination parameters
     const page = parseInt(req.query.page) || 1; // Default to first page
     const pageSize = parseInt(req.query.pageSize) || 10; // Default to 10 items per page

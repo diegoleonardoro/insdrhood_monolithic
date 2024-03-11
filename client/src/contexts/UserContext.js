@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useState, useContext, useCallback, useMemo } from 'react';
 import axios from 'axios';
 
 const UserContext = createContext(); //The createContext function creates a Context object. When React renders a component that subscribes to this Context object, it will read the current context value from the nearest matching Provider above it in the tree. 
@@ -30,9 +30,15 @@ export const UserProvider = ({ children }) => { // This is a component that allo
     setCurrentUser_(userData);
   }, []);
 
+  const value = useMemo(() => ({
+    currentuser_,
+    updateCurrentUser_,
+    setCurrentUserDirectly
+  }), [currentuser_, updateCurrentUser_, setCurrentUserDirectly]);
+
   // The value passed to the provider is an object containing currentuser and updateCurrentUser, which any consumer of this context can access.
   return (
-    <UserContext.Provider value={{ currentuser_, updateCurrentUser_, setCurrentUserDirectly }}> 
+    <UserContext.Provider value={value}> 
       {children}
     </UserContext.Provider>
   );
