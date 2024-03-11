@@ -1,24 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { CartContext } from "../../contexts/cart-context";
-import CustomCheckout from "./custom-checkout/CustomCheckout"
-import ShippingAddress from './custom-checkout/ShippingAdress';
 import StripeCheckout from "./stripe-checkout/stripe-checkout"
-
-// import ShippingAddress from './custom-checkout/shipping-address';
-// import CustomCheckout from './custom-checkout/custom-checkout';
-// import './checkout.styles.scss';
-
 
 const Checkout = () => {
 
-  const { itemCount, total, cartItems } = useContext(CartContext);
-  const [shipping, setShipping] = useState(null);
-  const addressShown = {
-    display: (shipping ? 'none' : 'block')
-  }
-  const cardShown = {
-    display: (shipping ? 'block' : 'none')
-  }
+  const { itemCount, total } = useContext(CartContext);
 
   return (
 

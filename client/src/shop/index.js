@@ -6,24 +6,23 @@ const SHOP_DATA = [
     description: 'Iconic NYC subway. 30x42cm. No Frame. Shipping included.',
     imageUrl: [
       'https://ae01.alicdn.com/kf/Se480397f62b245aca714f0f9b3042859F/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp',
-      'https://ae01.alicdn.com/kf/S14bbc59109a244ab80fb9b7314d4381e9/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp',
-      'https://ae01.alicdn.com/kf/Sa57a5a60f537470193f3dae85d2bb83aJ/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp',
-      'https://ae01.alicdn.com/kf/Sd137539d077749f5892d17c8f6310052S/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp'
+      'https://ae01.alicdn.com/kf/S14bbc59109a244ab80fb9b7314d4381e9/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp'
     ],
     price: 20,
   },
+
   {
     id: 1.2,
-    title: 'New York City Jigsaw Puzzle. Shipping included.',
-    description: '500-Piece',
+    title: 'The Essex Hotel Framed Illustration. Frame8 in. x 10 in. matted to 5 in. x 7 in. Shipping included.',
+    description: " TEXT: 'The JW Marriott Essex House New York, a prestigious hotel towering over New York City, was constructed during the devastating economic downturn following the Wall Street Crash of 1929, its development was significantly slowed, only opening its doors in late 1931. Despite the financial hardships that led to the bankruptcy of its original owners, the Essex House has become a prominent figure in New York City's skyline, thanks in part to its iconic red neon sign added a year after opening.The building was designed by the architectural firm Walker & Gillette, and it showcases an Art Deco architectural style, characteristic of many prominent structures built in New York City during the late 1920s and early 1930s.' " ,
     imageUrl: [
-      'https://image.doba.com/dg7-aLbmIqyvCeVD/new-york-city-jigsaw-puzzle-500-piece.webp',
-      'https://image.doba.com/dg7-TibylDzFQFqv/new-york-city-jigsaw-puzzle-500-piece.webp',
-      'https://image.doba.com/dg7-aZvcSDhRKeVb/new-york-city-jigsaw-puzzle-500-piece.webp',
-   
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-frame.jpg',
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-frame3.jpg',
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-house2.jpg'
     ],
-    price: 45,
+    price: 26,
   },
+ 
 
   {
     id: 2,
@@ -36,31 +35,10 @@ const SHOP_DATA = [
     ],
     price: 20,
   },
-  {
-    id: 3,
-    title: 'Sugar Crystals Reimagined: One South First',
-    description: "One South First emerged as a landmark structure along the Williamsburg waterfront upon its completion in 2019. The designing architects, Cookfox, stated, 'The modern façade's design draws inspiration from the crystalline structure of sugar, linking the new edifice to the site's industrial past.' The photograph was captured in September of 2022. 8 in. x 10 in./11 in. x 14 in.",
-    imageUrl: [
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1s1_.jpg',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1s1__.png',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Screen%20Shot%202024-02-20%20at%2010.13.38%20AM.png',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Screen%20Shot%202024-02-20%20at%2010.13.52%20AM.png',
-    ],
-    price: 20,
-  },
+  
 
 
-  {
-    id: 4,
-    title: 'Book - Through a Different Lens: Stanley Kubrick Photographs.',
-    description: 'Through a Different Lens reveals the keen and evocative vision of a burgeoning creative genius in a range of feature stories and images, from everyday people at the laundromat to a day in the life of a debutant, from a trip to the circus to Columbia University. Featuring around 300 images, many previously unseen, as well as rare Look magazine tear sheets, this release coincides with a major show at the Museum of the City of New York and includes an introduction by noted photography critic Luc Sante. Donald Albretch, the author,  is the curator of architecture and design at the Museum of the City of New York.',
-    imageUrl: [
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/book2_1.jpg',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/book2_2.jpg',
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/book2_3.jpg'
-    ],
-    price: 25,
-  },
+ 
  
 
 

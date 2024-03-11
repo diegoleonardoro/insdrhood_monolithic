@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import "./blogeditor.css";
 import axios from "axios";
 import ReactQuill, { Quill } from 'react-quill';
@@ -12,8 +12,6 @@ import Row from 'react-bootstrap/Row';
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
 // const Parchment = Quill.import('parchment');
-
-let savedRange = null;
 
 Quill.register('modules/imageResize', ImageResize);
 

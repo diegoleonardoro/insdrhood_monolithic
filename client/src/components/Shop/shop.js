@@ -17,7 +17,7 @@ const Shop = () => {
 
 
       <h2 className='product-list-title'>Shop</h2>
-      <p style={{textAlign:"center"}}>Payments ensured with Stripe's advanced security.</p>
+      <h5 style={{textAlign:"center"}}>Payments are ensured with Stripe's security infrastructure.</h5>
 
       <div className='product-list'>
         {

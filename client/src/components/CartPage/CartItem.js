@@ -58,7 +58,6 @@ const CartItem = (props) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1, // Ensure this is set to display slides horizontally
-    slidesToScroll: 1,
     prevArrow: <PrevArrowPhotos />,
     nextArrow: <NextArrowPhotos />,
     background: "transparent",
@@ -97,7 +96,7 @@ const CartItem = (props) => {
       <div className='galleryParent_Cart'>
         <Slider {...settings}>
           {imageUrl.map((image, index) => (
-            <img key={index} className="imageprodCart" src={image}></img>
+            <img key={index}  alt="product" className="imageprodCart" src={image}></img>
           ))}
         </Slider>
       </div>

@@ -1,8 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import axios from "axios"
-import React, { useEffect, useState, useCallback, Suspense, startTransition } from "react";
+import React, { useState,  Suspense } from "react";
 import Home from "./views/Home";
 import Header from "./components/Header";
 import Signin from './components/Signin';
@@ -43,7 +42,7 @@ function App() {
     setShowPasswordForm(true)
   }
 
-  const { currentuser_, setCurrentUserDirectly } = useUserContext();
+  const { currentuser_ } = useUserContext();
   return (
 
     <Router>

@@ -1,6 +1,6 @@
 import "./blog.css";
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useUserContext } from "../../contexts/UserContext";
 import DOMPurify from 'dompurify';
@@ -48,7 +48,7 @@ const Blog = () => {
   const handleSubmit = async () => {
     if (isValidEmail && email) {
       try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`,
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`,
           { email });
         setSignUpSuccess(true);
       } catch (error) {
