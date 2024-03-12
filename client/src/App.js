@@ -20,7 +20,7 @@ import Canceled from "./components/Checkout/stripe-checkout/canceled"
 import Success from "./components/Checkout/stripe-checkout/success"
 import { NavigationHistoryProvider } from "./contexts/navigation-history-context"
 import { useUserContext } from '../src/contexts/UserContext';
-;
+
 
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));

@@ -31,11 +31,12 @@
 }
 
 .residentsHeader{
+  position:relative;
   font-family: "Roboto Slab", serif;
   font-optical-sizing: auto;
-  margin:20px;
-  margin-top: 40px;
+  margin:40px;
   text-align: center;
+  top:20px;
 }
 
 .blogsCard{
@@ -52,7 +53,9 @@
   display: flex;
   width:100%;
   justify-content: center;
-  margin-top: 40px;
+  position:relative;
+  top:40px;
+  margin-bottom: 50px;
 }
 
 .searchByNhoodInput{
@@ -96,7 +99,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 35px;
   flex-wrap: wrap;
 }
 

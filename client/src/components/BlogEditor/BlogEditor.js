@@ -11,9 +11,38 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
-// const Parchment = Quill.import('parchment');
+
+const Parchment = Quill.import('parchment');
+
+class LazyImageBlot extends Parchment.Embed {
+  static create(value) {
+    let node = super.create(value);
+    node.setAttribute('src', value.url);
+    node.setAttribute('loading', 'lazy'); // Set the lazy loading attribute
+    if (value.alt) {
+      node.setAttribute('alt', value.alt);
+    }
+    return node;
+  }
+
+  static value(node) {
+    return {
+      url: node.getAttribute('src'),
+      alt: node.getAttribute('alt'),
+    };
+  }
+}
 
 Quill.register('modules/imageResize', ImageResize);
+
+LazyImageBlot.blotName = 'lazyImage'; // Define a unique name for your custom blot
+LazyImageBlot.tagName = 'img'; // Use the 'img' tag for this blot
+
+// Step 3: Register the custom blot with Quill
+// Quill.register(LazyImageBlot, true);
+
+Quill.register({ 'formats/customBlot': LazyImageBlot }, true);
+
 
 const BlogEditor = () => {
 
@@ -179,7 +208,11 @@ const BlogEditor = () => {
       const imageUrl = `https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`;
       const editor = quillRef.current.getEditor();
       const range = editor.getSelection();
+
+
       editor.insertEmbed(range.index, 'image', imageUrl);
+
+      
     };
 
   }, []);
