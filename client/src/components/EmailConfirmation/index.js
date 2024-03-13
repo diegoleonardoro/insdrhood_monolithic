@@ -37,7 +37,8 @@ const VerifyEmail = () => {
   const makeRequest = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
-      setCurrentUserDirectly(response.data);
+      await setCurrentUserDirectly(response.data);
+      setUser(response.data)
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }
@@ -48,11 +49,6 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     if (user !== null) {
-
-      // if the user has not set their password, show a form for them to set their passwords:
-      // if (user.passwordSet === false) {
-      //   setShowPasswordForm(true);
-      // } else 
 
       if (user.formsResponded === 0) {
 
@@ -67,7 +63,6 @@ const VerifyEmail = () => {
         }, 2000);
 
       } else {
-
 
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);
@@ -91,11 +86,11 @@ const VerifyEmail = () => {
     } else {
       // make the request to update the user's password (this request will only take place when the user has not set their password prior to confirming their email, which can happen when they respond the form before registering):
 
-      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user.id}`, { password: password1, passwordSet :true});
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/updateuserdata/${user.id}`, { password: password1, passwordSet: true });
 
 
-      setCurrentUserDirectly(response.data);      
-      
+      setCurrentUserDirectly(response.data);
+
       navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
     }
   }
