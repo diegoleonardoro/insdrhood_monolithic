@@ -394,7 +394,7 @@ const FormComponent = () => {
               * In this request we will send a random UUID which will be used to 
               * relate users to the images that they upload. 
               */
-              const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${randomUUID}/${imageType}`);
+              const imageUploadConfig = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/imageupload/${neighborhood}/${randomUUID}`);
 
               imagesUrls.push({
                 image: imageUploadConfig.data.key,

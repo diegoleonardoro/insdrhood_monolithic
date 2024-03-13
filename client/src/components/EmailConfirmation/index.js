@@ -68,7 +68,6 @@ const VerifyEmail = () => {
 
       } else {
 
-        console.log("useruser", user);
 
         // SHOW WINDOW SAYING USER HAS CONFIRMED THEIR EMAIL 
         setShowRedirecting(true);

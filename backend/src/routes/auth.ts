@@ -50,7 +50,7 @@ router.post("/newsletter/signup", asyncHandler(newsLetterSignUp));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */
-router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imageType", uploadFile);
+router.get("/neighborhood/imageupload/:neighborhood/:randomUUID", uploadFile);
 router.get("/blog/:randomUUID", uploadBlogFiles);
 router.post("/neighborhood/savedata", authenticationValidator, saveNeighborhoodData);
 router.put("/updateneighborhood/:id", authenticationValidator, updateNeighborhoodData)

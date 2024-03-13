@@ -1,79 +1,22 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
-const bad_request_error_1 = require("../errors/bad-request-error");
-const password_1 = require("../services/password");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const crypto_1 = __importDefault(require("crypto"));
-const uuid_1 = require("uuid");
-const AWS = require("aws-sdk");
-const index_1 = require("../index");
-const mongodb_1 = require("mongodb");
 const emailVerification_1 = require("../services/emailVerification");
+const neighborhoods_1 = require("../database/repositories/neighborhoods");
+const auth_1 = require("../database/repositories/auth");
+const newsletter_1 = require("../database/repositories/newsletter");
+const AWS = require("aws-sdk");
 /**
  * @description registers a new user
  * @route POST /api/signup
  * @access public
 */
 const signup = async (req, res) => {
-    const { name, email, password, image, formsResponded, neighborhoodId, userImagesId } = req.body;
-    const db = await (0, index_1.getDb)();
-    const users = db.collection("users");
-    const existingUser = await users.findOne({ email });
-    // for this erorr to be thrown, there has to be a saved user with email that came in the request body. 
-    // If when a user does not send email ther email is saved as an empty string, then every time a new user without email is saved, this error will be shown. 
-    if (existingUser) {
-        throw new bad_request_error_1.BadRequestError("Email in use");
-    }
-    ;
-    // // capiralize name and create email token:
-    const nameFirstLetterCapitalized = name.charAt(0).toUpperCase();
-    const remainingName = name.slice(1);
-    const nameCapitalized = nameFirstLetterCapitalized + remainingName;
-    const emailToken = crypto_1.default.randomBytes(64).toString("hex");
-    const hashedPassword = password ? await password_1.Password.toHash(password) : '';
-    const user = {
-        name: nameCapitalized,
-        email: email === '' ? null : email,
-        password: hashedPassword,
-        image: image ? image : null,
-        isVerified: false,
-        emailToken: [emailToken],
-        formsResponded: formsResponded,
-        neighborhoodId: neighborhoodId ? neighborhoodId : null,
-        passwordSet: password ? true : false,
-        userImagesId
-    };
-    const newUser = await users.insertOne(user);
-    const userInfo = {
-        id: newUser.insertedId.toString(),
-        email: user.email,
-        name: user.name,
-        image: user.image,
-        isVerified: user.isVerified,
-        neighborhoodId: user.neighborhoodId,
-        userImagesId: user.userImagesId,
-        passwordSet: user.passwordSet
-    };
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
-    // Store JWT on the session object created by cookieSession
+    const authRepository = new auth_1.AuthRepository();
+    const { userJwt, userInfo } = await authRepository.signup(req.body);
     req.session = {
         jwt: userJwt,
     };
-    // if there is not email present, then do not send email verification:
-    if (user.email !== '' && user.email) {
-        (0, emailVerification_1.sendVerificationMail)({
-            name: user.name,
-            email: user.email,
-            emailToken: user.emailToken,
-            baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
-        });
-    }
-    // const insertedRecord = await users.findOne({ _id: newUser.insertedId });
     res.status(201).send(userInfo);
 };
 exports.signup = signup;
@@ -84,25 +27,9 @@ exports.signup = signup;
 */
 const newsLetterSignUp = async (req, res) => {
     const { email } = req.body;
-    const db = await (0, index_1.getDb)();
-    const emails = db.collection("newsletter");
-    const existingEmail = await emails.findOne({
-        email
-    });
-    if (existingEmail) {
-        throw new bad_request_error_1.BadRequestError("Email in use");
-    }
-    ;
-    const newEmailData = {
-        email,
-        subscribed: true
-    };
-    await emails.insertOne(newEmailData);
-    (0, emailVerification_1.sendNewsLetterEmail)({
-        email: email,
-        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
-    });
-    res.status(201).send({ message: "email subscribed" });
+    const newsletterRepository = new newsletter_1.NewsletterRepository();
+    const result = await newsletterRepository.subscribeToNewsletter(email);
+    res.status(201).send(result);
 };
 exports.newsLetterSignUp = newsLetterSignUp;
 /**
@@ -112,29 +39,8 @@ exports.newsLetterSignUp = newsLetterSignUp;
  */
 const login = async (req, res) => {
     const { email, password } = req.body;
-    const db = await (0, index_1.getDb)();
-    const users = db.collection("users");
-    const existingUser = await users.findOne({ email });
-    if (!existingUser) {
-        throw new bad_request_error_1.BadRequestError("Invalid credentials");
-    }
-    const passwordMatch = await password_1.Password.compare(existingUser?.password, password);
-    if (!passwordMatch) {
-        throw new bad_request_error_1.BadRequestError("Incorrect password");
-    }
-    const userInfo = {
-        id: existingUser._id.toString(),
-        email: existingUser.email,
-        name: existingUser.name,
-        image: existingUser.image,
-        isVerified: existingUser.isVerified,
-        neighborhoodId: existingUser.neighborhoodId,
-        userImagesId: existingUser.userImagesId,
-        passwordSet: existingUser.passwordSet
-    };
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
-    // Store JWT on the session object created by cookieSession
+    const authRepository = new auth_1.AuthRepository();
+    const { userJwt, userInfo } = await authRepository.login(email, password);
     req.session = {
         jwt: userJwt,
     };
@@ -168,40 +74,9 @@ exports.signout = signout;
 const updateUserData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
-    const db = await (0, index_1.getDb)();
-    const users = db.collection("users");
-    // if there is a "password" property in the updates object, then hash the password:
-    if (updates.password) {
-        updates.password = await password_1.Password.toHash(updates.password);
-    }
-    let existingUser;
-    // check if updates has email property and if so create an emailtoken which will be icluded in the updates.
-    if ("email" in updates) {
-        const emailToken = crypto_1.default.randomBytes(64).toString("hex");
-        // check if the email is alredy registered and if so, return an error:
-        existingUser = await users.findOne({
-            email: updates.email,
-            _id: { $ne: new mongodb_1.ObjectId(id) } // Add this line
-        });
-        updates.emailToken = [emailToken];
-    }
-    if (existingUser) {
-        throw new bad_request_error_1.BadRequestError("Email in use");
-    }
-    const user = await users.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: updates }, { returnDocument: 'after' });
-    const userInfo = {
-        id: user?._id.toString(),
-        email: user?.email,
-        name: user?.name,
-        image: user?.image,
-        isVerified: user?.isVerified,
-        neighborhoodId: user?.neighborhoodId,
-        userImagesId: user?.userImagesId,
-        passwordSet: user?.passwordSet
-    };
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
-    // Store JWT on the session object created by cookieSession
+    const authRepository = new auth_1.AuthRepository();
+    const { userJwt, userInfo } = await authRepository.updateUserData(id, updates);
+    //  Store JWT on the session object created by cookieSession
     req.session = {
         jwt: userJwt,
     };
@@ -213,7 +88,7 @@ const updateUserData = async (req, res) => {
             baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
         });
     }
-    res.status(200).send(user);
+    res.status(200).send(userInfo);
 };
 exports.updateUserData = updateUserData;
 /**
@@ -223,32 +98,8 @@ exports.updateUserData = updateUserData;
  */
 const verifyemail = async (req, res) => {
     const emailtoken = req.params.emailtoken;
-    const db = await (0, index_1.getDb)();
-    const users = db.collection("users");
-    // find the user with the email token:
-    const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
-    if (!user) {
-        throw new bad_request_error_1.BadRequestError("Invalid email token");
-    }
-    const updatedUser = await users.findOneAndUpdate({ _id: user._id }, {
-        $set: {
-            isVerified: true,
-            // emailToken: ''
-        }
-    }, { returnDocument: 'after' });
-    const userInfo = {
-        id: updatedUser?._id.toString(),
-        email: updatedUser?.email,
-        name: updatedUser?.name,
-        image: updatedUser?.image,
-        isVerified: updatedUser?.isVerified,
-        neighborhoodId: updatedUser?.neighborhoodId,
-        userImagesId: updatedUser?.userImagesId,
-        passwordSet: user?.passwordSet
-    };
-    // Generate JWT
-    const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
-    // Store JWT on the session object created by cookieSession
+    const authRepository = new auth_1.AuthRepository();
+    const { userJwt, userInfo } = await authRepository.verifyUser(emailtoken);
     req.session = {
         jwt: userJwt,
     };
@@ -257,27 +108,15 @@ const verifyemail = async (req, res) => {
 exports.verifyemail = verifyemail;
 /**
  * @description makes request to aws S3 to get signed url
- * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID/:imagetype
+ * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID
  * @access public
  */
 const uploadFile = async (req, res) => {
-    const s3 = new AWS.S3({
-        accessKeyId: process.env.S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-        signatureVersion: "v4",
-        region: "us-east-1",
-    });
-    const { neighborhood, randomUUID, imageType } = req.params;
-    const randomUUID_imageIdentifier = (0, uuid_1.v4)();
-    const key = `places/${req.currentUser ? req.currentUser.id
-        : randomUUID}/${neighborhood}/${randomUUID_imageIdentifier}.${imageType}`;
-    s3.getSignedUrlPromise("putObject", {
-        Bucket: "insiderhood",
-        ContentType: imageType,
-        Key: key,
-    }, (err, url) => {
-        res.send({ key, url });
-    });
+    const user = req.currentUser ? req.currentUser : null;
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+    const { neighborhood, randomUUID } = req.params;
+    const signedKeyUrl = await neighborhoodRepository.generateUploadUrlForForm(neighborhood, randomUUID, user);
+    res.send(signedKeyUrl);
 };
 exports.uploadFile = uploadFile;
 /**
@@ -286,21 +125,10 @@ exports.uploadFile = uploadFile;
  * @access public
  */
 const uploadBlogFiles = async (req, res) => {
-    const s3 = new AWS.S3({
-        accessKeyId: process.env.S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-        signatureVersion: "v4",
-        region: "us-east-1",
-    });
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
     const { randomUUID } = req.params;
-    const randomUUID_imageIdentifier = (0, uuid_1.v4)();
-    const key = `blog/${randomUUID}/${randomUUID_imageIdentifier}`;
-    s3.getSignedUrlPromise("putObject", {
-        Bucket: "insiderhood",
-        Key: key,
-    }, (err, url) => {
-        res.send({ key, url });
-    });
+    const signedKeyUrl = await neighborhoodRepository.generateUploadUrl(randomUUID);
+    res.send(signedKeyUrl);
 };
 exports.uploadBlogFiles = uploadBlogFiles;
 /**
@@ -309,21 +137,13 @@ exports.uploadBlogFiles = uploadBlogFiles;
  * @access public
  */
 const saveNeighborhoodData = async (req, res) => {
-    const db = await (0, index_1.getDb)();
-    const users = db.collection("users");
     let user;
     if (req.currentUser) {
-        user = await users.findOne({ email: req.currentUser.email });
+        user = await auth_1.AuthRepository.getUser(req.currentUser.email);
     }
     ;
-    const neighborhoods = db.collection("neighborhoods");
-    const newNeighborhood = await neighborhoods.insertOne({
-        ...req.body,
-        user: user ?
-            { id: user._id, name: user.name, email: user.email }
-            :
-                { id: '', name: '', email: '' }
-    });
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+    const newNeighborhood = await neighborhoodRepository.saveFormData(req.body, user);
     res.status(201).send(newNeighborhood);
 };
 exports.saveNeighborhoodData = saveNeighborhoodData;
@@ -335,39 +155,8 @@ exports.saveNeighborhoodData = saveNeighborhoodData;
 const updateNeighborhoodData = async (req, res) => {
     const { id } = req.params;
     let updates = req.body;
-    const db = await (0, index_1.getDb)();
-    const neighborhoods = db.collection("neighborhoods");
-    let updateQuery = {};
-    //Handling updates for nested objects:
-    if (!updates.neighborhoodImages && !updates.removeImages && !updates.nightLifeRecommendations && !updates.recommendedFoodTypes) {
-        Object.keys(updates).forEach((key) => {
-            if (typeof updates[key] === 'object' && updates[key] !== null) {
-                // Iterate over nested object fields
-                for (const nestedKey in updates[key]) {
-                    // Use dot notation for nested fields
-                    updateQuery.$set = updateQuery.$set || {};
-                    updateQuery.$set[`${key}.${nestedKey}`] = updates[key][nestedKey];
-                }
-                // Remove the nested object from updates after processing
-                delete updates[key];
-            }
-        });
-    }
-    if (updates.removeImages) {
-        updateQuery.$set = { neighborhoodImages: updates.removeImages };
-        delete updates.removeImages;
-    }
-    if (updates.neighborhoodImages) {
-        // If updating neighborhoodImages, use $push to add images to the existing array
-        updateQuery.$push = { neighborhoodImages: { $each: updates.neighborhoodImages } };
-        delete updates.neighborhoodImages; // Remove the property after adding to $push
-    }
-    if (Object.keys(updates).length > 0) {
-        // If there are other updates, use $set to update fields
-        updateQuery.$set = { ...updateQuery.$set, ...updates };
-    }
-    const neighborhood = await neighborhoods.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, updateQuery, { returnDocument: "after" });
-    // const neighborhood = await Neighborhood.findByIdAndUpdate(id, updateQuery, { new: true, runValidators: true });
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+    const neighborhood = await neighborhoodRepository.updateNeighborhoodData(id, updates);
     res.status(200).send(neighborhood);
 };
 exports.updateNeighborhoodData = updateNeighborhoodData;
@@ -377,23 +166,11 @@ exports.updateNeighborhoodData = updateNeighborhoodData;
  * @access public
  */
 const getAllNeighborhoods = async (req, res) => {
-    // const allNeighborhoods = await Neighborhood.find({});
-    const db = await (0, index_1.getDb)();
-    const neighborhoodsCollection = db.collection("neighborhoods");
-    const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 };
-    // Pagination parameters
-    const page = parseInt(req.query.page) || 1; // Default to first page
-    const pageSize = parseInt(req.query.pageSize) || 10; // Default to 10 items per page
-    // Calculate the number of documents to skip
-    const skip = (page - 1) * pageSize;
-    const total = await neighborhoodsCollection.countDocuments({});
-    // Applying filter, projection, pagination, and sorting in the query
-    const neighborhoods = await neighborhoodsCollection
-        .find({}, { projection })
-        .sort({ neighborhood: 1 }) // Example sorting, adjust as needed
-        .skip(skip)
-        .limit(pageSize)
-        .toArray();
+    const { page: pageQuery, pageSize: pageSizeQuery } = req.query;
+    const page = parseInt(pageQuery, 10) || 1;
+    const pageSize = parseInt(pageSizeQuery, 10) || 10;
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+    const { neighborhoods, total } = await neighborhoodRepository.getAll({ page, pageSize });
     res.status(200).send({ neighborhoods, total });
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
@@ -403,10 +180,8 @@ exports.getAllNeighborhoods = getAllNeighborhoods;
  * @access public
  */
 const getNeighborhood = async (req, res) => {
-    const { neighborhoodid } = req.params;
-    const db = await (0, index_1.getDb)();
-    const neighbohoods = db.collection("neighborhoods");
-    const neighborhood = await neighbohoods.findOne({ _id: new mongodb_1.ObjectId(neighborhoodid) });
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+    const neighborhood = await neighborhoodRepository.getOne(req.params.neighborhoodid);
     res.status(200).send(neighborhood);
 };
 exports.getNeighborhood = getNeighborhood;

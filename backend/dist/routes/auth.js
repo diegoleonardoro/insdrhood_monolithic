@@ -34,7 +34,7 @@ router.post("/newsletter/signup", asyncHandler(auth_1.newsLetterSignUp));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */
-router.get("/neighborhood/imageupload/:neighborhood/:randomUUID/:imageType", auth_1.uploadFile);
+router.get("/neighborhood/imageupload/:neighborhood/:randomUUID", auth_1.uploadFile);
 router.get("/blog/:randomUUID", auth_1.uploadBlogFiles);
 router.post("/neighborhood/savedata", authentication_validator_1.authenticationValidator, auth_1.saveNeighborhoodData);
 router.put("/updateneighborhood/:id", authentication_validator_1.authenticationValidator, auth_1.updateNeighborhoodData);
