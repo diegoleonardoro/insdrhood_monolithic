@@ -37,7 +37,7 @@ const VerifyEmail = () => {
   const makeRequest = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${emailtoken}`);
-      setUser(response.data);
+      setCurrentUserDirectly(response.data);
     } catch (error) {
       setErrors(error.response.data.errors[0].message);
     }

@@ -379,8 +379,6 @@ const FormComponent = () => {
           const formDataResponse = await sendFormData();
 
           // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
-
-          console.log('formDataResponse', formDataResponse)
           setNeighborhoodId(formDataResponse.insertedId);
 
           // if there is a logged in user, make a request to udpate the user
