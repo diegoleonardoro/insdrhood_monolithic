@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
-import { BadRequestError } from "../errors/bad-request-error";
-import { Password } from "../services/password";
-import jwt from "jsonwebtoken";
-import crypto from 'crypto';
-import { getDb } from "../index";
 import { sendVerificationMail, sendNewsLetterEmail } from "../services/emailVerification";
 import { NeighborhoodRepository } from "../database/repositories/neighborhoods";
 import { AuthRepository } from "../database/repositories/auth";
 import { NewsletterRepository } from "../database/repositories/newsletter";
 
+
+import { BadRequestError } from "../errors/bad-request-error";
+import { Password } from "../services/password";
+import jwt from "jsonwebtoken";
+import crypto from 'crypto';
+// import { getDb } from "../index";
 
 import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';

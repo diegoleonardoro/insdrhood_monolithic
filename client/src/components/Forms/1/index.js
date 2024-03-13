@@ -121,45 +121,8 @@ const FormComponent = () => {
       checkCurrentUser()
     };
 
-    /** localStorage stated updates */
-    // const savedFormData = JSON.parse(localStorage.getItem("formData"));
-    // if (savedFormData) {
-    //   setFormData(savedFormData)
-    // };
-
-    // const savedDisplayKeyWord = JSON.parse(localStorage.getItem("displayKeyWord"));
-    // if (savedDisplayKeyWord) {
-    //   console.log('savedDisplayKeyWord', savedDisplayKeyWord)
-    //   setDisplayKeyWord(savedDisplayKeyWord)
-    // }
-
-    // const savedNeighborhood = JSON.parse(localStorage.getItem("neighborhood") );
-    // if (savedNeighborhood){
-    //   setNeighborhood(savedNeighborhood);
-    // }
-
-    // const savedLiveinNYC = JSON.parse(localStorage.getItem("liveinNYC"));
-    // if (savedLiveinNYC){
-    //   setLiveinNYC("yes");
-    // }
-    /** ------------------------------ */
-
   }, []);
 
-  /** useEffects that will be used for localStorage: */
-  // useEffect(() => {
-  //   localStorage.setItem("formData", JSON.stringify(formData))
-  // }, [formData]);
-
-  // useEffect(() => {
-  //   console.log('displayKeyWord', displayKeyWord)
-  //   localStorage.setItem("displayKeyWord", JSON.stringify(displayKeyWord))
-  // }, [displayKeyWord]);
-
-  // useEffect(() => {
-  //   localStorage.setItem("neighborhood", JSON.stringify(neighborhood))
-  // }, [neighborhood]);
-  /** ----------------------------------------------- */
 
 
   const navigate = useNavigate();
@@ -416,6 +379,8 @@ const FormComponent = () => {
           const formDataResponse = await sendFormData();
 
           // update the neighborhoodDataId state. This state will be used to update the neighborhood data when a new user is registered:
+
+          console.log('formDataResponse', formDataResponse)
           setNeighborhoodId(formDataResponse.insertedId);
 
           // if there is a logged in user, make a request to udpate the user
