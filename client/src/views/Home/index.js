@@ -149,16 +149,16 @@ function Home() {
 
         const neighborhoodsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods?page=${currentPage}&pageSize=${itemsPerPage}`;
 
-        // const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
-        const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
+        const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
+        // const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
 
-        // setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
-        setNeighborhoodsData([]);
+        setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
+        // setNeighborhoodsData([]);
         // setTotalItems(neighborhoodsResponse.data.total);
         setTotalItems([]);
 
-        setBlogs(blogsResponse.data);
-        // setBlogs([]);
+        // setBlogs(blogsResponse.data);
+        setBlogs([]);
 
       } catch (error) {
         console.error("Failed to fetch data", error);
