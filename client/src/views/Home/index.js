@@ -148,17 +148,15 @@ function Home() {
       try {
 
         const neighborhoodsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods?page=${currentPage}&pageSize=${itemsPerPage}`;
-
-        const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
-        // const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
-
+        const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
+        // Use Promise.all to fetch both URLs in parallel
+        const [neighborhoodsResponse, blogsResponse] = await Promise.all([
+          axios.get(neighborhoodsUrl, { withCredentials: true }),
+          axios.get(blogsUrl)
+        ]);
         setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
-        // setNeighborhoodsData([]);
-        // setTotalItems(neighborhoodsResponse.data.total);
-        setTotalItems([]);
-
-        // setBlogs(blogsResponse.data);
-        setBlogs([]);
+        setTotalItems(neighborhoodsResponse.data.total);
+        setBlogs(blogsResponse.data);
 
       } catch (error) {
         console.error("Failed to fetch data", error);
