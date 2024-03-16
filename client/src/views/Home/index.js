@@ -81,7 +81,6 @@ function Home() {
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-
   const renderPageNumbers = [...Array(totalPages).keys()].map(number => (
     <button
       key={number + 1}
@@ -150,15 +149,20 @@ function Home() {
 
         const neighborhoodsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods?page=${currentPage}&pageSize=${itemsPerPage}`;
 
-        const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
-        const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
-        setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
-        setTotalItems(neighborhoodsResponse.data.total);
-        setBlogs(blogsResponse.data);
+        // const neighborhoodsResponse = await axios.get(neighborhoodsUrl, { withCredentials: true });
+        // const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`);
+
+        // setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
+        setNeighborhoodsData([]);
+        // setTotalItems(neighborhoodsResponse.data.total);
+        setTotalItems([]);
+
+        // setBlogs(blogsResponse.data);
+        setBlogs([]);
 
       } catch (error) {
         console.error("Failed to fetch data", error);
-       
+
       } finally {
         setIsLoading(false); // Stop loading
       }
