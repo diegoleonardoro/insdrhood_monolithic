@@ -154,15 +154,18 @@ function Home() {
           axios.get(neighborhoodsUrl, { withCredentials: true }),
           axios.get(blogsUrl)
         ]);
+
+        setBlogs(blogsResponse.data);
+        setIsLoading(false)
         setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
         setTotalItems(neighborhoodsResponse.data.total);
-        setBlogs(blogsResponse.data);
+
 
       } catch (error) {
         console.error("Failed to fetch data", error);
 
       } finally {
-        setIsLoading(false); // Stop loading
+        
       }
     };
 
