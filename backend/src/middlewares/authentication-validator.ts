@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { ObjectId } from "mongodb";
-import { getDb } from "../index"
-import { User } from "../models/user";
+import { AuthRepository } from "../database/repositories/auth";
 
 // Create the user payload interface:
 interface UserPayload {
@@ -41,9 +39,8 @@ export const authenticationValidator = async (
     ) as UserPayload;
 
 
-    const db = await getDb();
-    const users = db.collection("users");
-    const existingUser = await users.findOne({ _id: new ObjectId(payload.id) });
+    const authRepo = new AuthRepository();
+    const existingUser = await authRepo.getUserById(payload.id)
 
     const equal = compareKeyValuePairs(payload, existingUser)
 

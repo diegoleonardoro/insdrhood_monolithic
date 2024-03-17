@@ -5,7 +5,6 @@ const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
 const newsletter_1 = require("../database/repositories/newsletter");
-const AWS = require("aws-sdk");
 /**
  * @description registers a new user
  * @route POST /api/signup

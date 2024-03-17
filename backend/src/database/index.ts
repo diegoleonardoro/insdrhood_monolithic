@@ -20,6 +20,8 @@ const client = new MongoClient(uri ? uri : '', {
 let dbConnection: Promise<Db>;
 
 export const connectToDatabase = async (): Promise<Db> => {
+
+  
   if (!dbConnection) {
     dbConnection = client.connect().then(client => {
       return client.db("insiderhood");

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { getDb } from "../index";
-import { ObjectId } from 'mongodb';
+import { BlogRepository } from "../database/repositories/blog";
+
 
 /**
  * @description user posts blog post
@@ -8,13 +8,10 @@ import { ObjectId } from 'mongodb';
  * @access public
 */
 export const saveBlogPost = async (req: Request, res: Response) => {
-
-  const db = await getDb();
-  const blogs = db.collection("blogs");
-  const newBlog = await blogs.insertOne(req.body);
+  const blogsRepository = new BlogRepository();
+  const newBlog = await blogsRepository.saveBlogPost(req.body)
   res.status(201).send(newBlog);
 }
-
 
 /**
  * @description gets a specific glov 
@@ -23,11 +20,9 @@ export const saveBlogPost = async (req: Request, res: Response) => {
 */
 export const getBlog = async (req: Request, res: Response) => {
   const { blogid } = req.params;
-  const db = await getDb();
-  const blogs = db.collection("blogs");
-  const blog = await blogs.findOne({ _id: new ObjectId(blogid) });
+  const blogsRepository = new BlogRepository();
+  const blog = await blogsRepository.getBlog(blogid);
   res.status(200).send(blog);
-
 }
 
 
@@ -38,10 +33,8 @@ export const getBlog = async (req: Request, res: Response) => {
 */
 
 export const getAllBlogs = async (req: Request, res: Response) => {
-  const db = await getDb();
-  const blogsCollection = db.collection("blogs");
-  const projection = { title: 1, coverImageUrl :1}
-  const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
-  res.status(200).send(blogs);
+  const blogsRepository = new BlogRepository();
+  const allBlogs = await blogsRepository.getAllBlogs()
+  res.status(200).send(allBlogs);
 }
 

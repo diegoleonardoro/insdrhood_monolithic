@@ -22,6 +22,12 @@ class AuthRepository {
         this.collectionName = 'users';
         this.db = (0, index_1.connectToDatabase)();
     }
+    async getUserById(id) {
+        const db = await this.db;
+        const usersCollection = db.collection(this.collectionName);
+        const user = await usersCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
+        return user;
+    }
     async getUser(email) {
         const db = await this.db;
         const usersCollection = db.collection(this.collectionName);

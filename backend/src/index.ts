@@ -8,68 +8,20 @@ import dotenv from "dotenv";
 import { auth } from "./routes/auth";
 import { payments } from "./routes/payments";
 import { blog } from "./routes/blog"
-import { Db, MongoClient, ServerApiVersion, MongoError } from 'mongodb';
 import path from 'path';
+import { NeighborhoodRepository } from './database/repositories/neighborhoods';
 
-// import mongoose from 'mongoose';
-// import { config } from 'dotenv';
-// config();
-// import routes:
-// Determine the path based on NODE_ENV
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
-
-
-/** -------- -------- MongoDB Connection -------- -------- */
-const uri = "mongodb+srv://diegoleoro:r85i3VAYY6k8UVDs@serverlessinstance0.8up76qk.mongodb.net/?retryWrites=true&w=majority";
-
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-// let dbConnection: Db;
-
-let dbConnection: Promise<Db>;
-const createIndexes = async (db: { collection: (arg0: string) => any; }) => {
-  // Place your index creation logic here, for example:
-  const neighborhoods = db.collection("neighborhoods");
-  await neighborhoods.createIndex({ borough: 1 });
-  await neighborhoods.createIndex({ neighborhood: 1 });
-  console.log("Indexes created successfully");
-};
-
-const connectToServer = async () => {
-  try {
-    await client.connect();
-    const db = client.db("insiderhood");
-    console.log("Connected to MongoDB");
-    // Call createIndexes right after a successful connection
-    await createIndexes(db);
-    return db;
-  } catch (error) {
-    console.error(error);
-    throw error; // Rethrow the error to be handled by the caller
-  }
-};
-
-dbConnection = connectToServer();
-
-export const getDb = () => dbConnection;
-
-/** -------- -------- ---------- -------- -------- -------- */
-
+const neighborhoodRepo = new NeighborhoodRepository();
+neighborhoodRepo.createIndexes();
 
 const app = express();
 const PORT = 4000;
 app.use(cors({
   origin: process.env.BASE_URL?.split(" "), // React client's URL
   credentials: true,
-
 }));
 
 app.use(json());

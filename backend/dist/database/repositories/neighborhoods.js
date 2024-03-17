@@ -22,6 +22,12 @@ class NeighborhoodRepository {
             region: 'us-east-1',
         });
     }
+    async createIndexes() {
+        const db = await this.db;
+        const neighborhoodsCollection = db.collection(this.collectionName);
+        await neighborhoodsCollection.createIndex({ borough: 1 });
+        await neighborhoodsCollection.createIndex({ neighborhood: 1 });
+    }
     async getAll({ page = 1, pageSize = 10 }) {
         const db = await this.db;
         const neighborhoodsCollection = db.collection(this.collectionName);

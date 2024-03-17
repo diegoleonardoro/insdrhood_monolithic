@@ -4,11 +4,6 @@ import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 
 
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
-import { Password } from '../../services/password';
-import { BadRequestError } from '../../errors/bad-request-error';
-import { sendVerificationMail } from '../../services/emailVerification';
 
 
 interface updateQuery {
@@ -52,6 +47,13 @@ export class NeighborhoodRepository {
       signatureVersion: 'v4',
       region: 'us-east-1',
     })
+  }
+
+  public async createIndexes(): Promise<void> {
+    const db = await this.db;
+    const neighborhoodsCollection = db.collection(this.collectionName);
+    await neighborhoodsCollection.createIndex({ borough: 1 });
+    await neighborhoodsCollection.createIndex({ neighborhood: 1 });
   }
 
   async getAll({ page = 1, pageSize = 10 }): Promise<{ neighborhoods: any[], total: number }> {
@@ -184,7 +186,7 @@ export class NeighborhoodRepository {
   }
 
 
-  async verifyemail(emailtoken:string): Promise<{}> {
+  async verifyemail(emailtoken: string): Promise<{}> {
 
     const db = await this.db;
     const users = db.collection("users");

@@ -5,8 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticationValidator = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const mongodb_1 = require("mongodb");
-const index_1 = require("../index");
+const auth_1 = require("../database/repositories/auth");
 // Add the "currentUser" property to the request body if there is a currently logged in user:
 const authenticationValidator = async (req, res, next) => {
     if (!req.session?.jwt) {
@@ -14,9 +13,8 @@ const authenticationValidator = async (req, res, next) => {
     }
     try {
         const payload = jsonwebtoken_1.default.verify(req.session.jwt, process.env.JWT_KEY);
-        const db = await (0, index_1.getDb)();
-        const users = db.collection("users");
-        const existingUser = await users.findOne({ _id: new mongodb_1.ObjectId(payload.id) });
+        const authRepo = new auth_1.AuthRepository();
+        const existingUser = await authRepo.getUserById(payload.id);
         const equal = compareKeyValuePairs(payload, existingUser);
         if (!equal) {
             const userInfo = {

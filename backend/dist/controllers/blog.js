@@ -1,17 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllBlogs = exports.getBlog = exports.saveBlogPost = void 0;
-const index_1 = require("../index");
-const mongodb_1 = require("mongodb");
+const blog_1 = require("../database/repositories/blog");
 /**
  * @description user posts blog post
  * @route POST /api/blog/post
  * @access public
 */
 const saveBlogPost = async (req, res) => {
-    const db = await (0, index_1.getDb)();
-    const blogs = db.collection("blogs");
-    const newBlog = await blogs.insertOne(req.body);
+    const blogsRepository = new blog_1.BlogRepository();
+    const newBlog = await blogsRepository.saveBlogPost(req.body);
     res.status(201).send(newBlog);
 };
 exports.saveBlogPost = saveBlogPost;
@@ -22,9 +20,8 @@ exports.saveBlogPost = saveBlogPost;
 */
 const getBlog = async (req, res) => {
     const { blogid } = req.params;
-    const db = await (0, index_1.getDb)();
-    const blogs = db.collection("blogs");
-    const blog = await blogs.findOne({ _id: new mongodb_1.ObjectId(blogid) });
+    const blogsRepository = new blog_1.BlogRepository();
+    const blog = await blogsRepository.getBlog(blogid);
     res.status(200).send(blog);
 };
 exports.getBlog = getBlog;
@@ -34,11 +31,9 @@ exports.getBlog = getBlog;
  * @access public
 */
 const getAllBlogs = async (req, res) => {
-    const db = await (0, index_1.getDb)();
-    const blogsCollection = db.collection("blogs");
-    const projection = { title: 1, coverImageUrl: 1 };
-    const blogs = await blogsCollection.find({}, { projection: projection }).toArray();
-    res.status(200).send(blogs);
+    const blogsRepository = new blog_1.BlogRepository();
+    const allBlogs = await blogsRepository.getAllBlogs();
+    res.status(200).send(allBlogs);
 };
 exports.getAllBlogs = getAllBlogs;
 //# sourceMappingURL=blog.js.map
