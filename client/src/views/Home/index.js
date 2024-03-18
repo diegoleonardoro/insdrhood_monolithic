@@ -20,7 +20,6 @@ function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const [totalItems, setTotalItems] = useState(19);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [cursor, setCursor] = useState('');
@@ -82,31 +81,6 @@ function Home() {
 
   });
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-
-
-
-
-
-
-  const renderPageNumbers = [...Array(totalPages).keys()].map(number => (
-    <button
-      key={number + 1}
-      onClick={() => setCurrentPage(number + 1)}
-      className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}
-      style={{ margin: '5px' }}>
-      {number + 1}
-    </button>
-  ));
-
-
-
-
-
-
-
-
   const blogCards = blogs.map((blog) => {
     return (
       <Card className="blogsCard" key={blog._id}>
@@ -130,15 +104,15 @@ function Home() {
   const fetchData = async () => {
     if (!hasMore) return; 
     try {
-      const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
-      const [neighborhoodsResponse, blogsResponse] = await Promise.all([
+      // const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
+      const [neighborhoodsResponse] = await Promise.all([//blogsResponse
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
           params: { cursor, pageSize: itemsPerPage },
         }),
-        axios.get(blogsUrl)
+        // axios.get(blogsUrl)
       ]);
 
-      setBlogs(blogsResponse.data);
+      setBlogs([]);//blogsResponse.data
       setIsLoading(false);
       setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]); 
       setCursor(neighborhoodsResponse.data.nextCursor);
