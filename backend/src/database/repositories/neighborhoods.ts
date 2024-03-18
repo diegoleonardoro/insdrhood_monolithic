@@ -56,21 +56,25 @@ export class NeighborhoodRepository {
     await neighborhoodsCollection.createIndex({ neighborhood: 1 });
   }
 
-  async getAll({ page = 1, pageSize = 10 }): Promise<{ neighborhoods: any[], total: number }> {
+  async getAll({ cursor, pageSize }: { cursor?: ObjectId | undefined, pageSize: number }): Promise<{ neighborhoods: any[], nextCursor?: string }> {
 
     const db = await this.db;
     const neighborhoodsCollection = db.collection(this.collectionName);
     const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 };
-    const skip = (page - 1) * pageSize;
 
-    const total = await neighborhoodsCollection.countDocuments({});
+    let query = {};
+    if (cursor) {
+      query = { '_id': { '$gt': new ObjectId(cursor) } };
+    }
+
     const neighborhoods = await neighborhoodsCollection
-      .find({}, { projection })
-      .sort({ neighborhood: 1 })
-      .skip(skip)
+      .find(query, { projection })
       .limit(pageSize)
       .toArray();
-    return { neighborhoods, total };
+
+    const nextCursor = neighborhoods.length > 0 ? neighborhoods[neighborhoods.length - 1]._id : '';
+
+    return { neighborhoods, nextCursor: nextCursor.toString() };
   }
 
   async getOne(neighborhoodId: string): Promise<any> {

@@ -68,7 +68,6 @@ export class AuthRepository {
     const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     return user;
   }
-  
   async getUser(email: string): Promise<any> {
     const db = await this.db;
     const usersCollection = db.collection(this.collectionName);

@@ -3,7 +3,7 @@ import { sendVerificationMail, sendNewsLetterEmail } from "../services/emailVeri
 import { NeighborhoodRepository } from "../database/repositories/neighborhoods";
 import { AuthRepository } from "../database/repositories/auth";
 import { NewsletterRepository } from "../database/repositories/newsletter";
-
+import { ObjectId } from 'mongodb';
 
 
 
@@ -191,12 +191,25 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
-  const { page: pageQuery, pageSize: pageSizeQuery } = req.query;
-  const page = parseInt(pageQuery as string, 10) || 1;
-  const pageSize = parseInt(pageSizeQuery as string, 10) || 10;
-  const neighborhoodRepository = new NeighborhoodRepository();
-  const { neighborhoods, total } = await neighborhoodRepository.getAll({ page, pageSize });
-  res.status(200).send({ neighborhoods, total });
+  const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
+  const cursorParam = req.query.cursor;
+  let cursor: ObjectId | undefined = undefined;
+  if (typeof cursorParam === 'string' && cursorParam !== '') {
+    try {
+      cursor = new ObjectId(cursorParam);
+    } catch (error) {
+      return res.status(400).json({ message: 'Invalid cursor format' });
+    }
+  }
+  try {
+    const neighborhoodRepository = new NeighborhoodRepository();
+    const { neighborhoods, nextCursor } = await neighborhoodRepository.getAll({ cursor, pageSize });
+    res.status(200).json({ neighborhoods, nextCursor });
+  } catch (error) {
+    console.error('Failed to fetch neighborhoods:', error);
+    res.status(500).json({ message: 'Failed to fetch neighborhoods' });
+  }
+
 }
 
 /**

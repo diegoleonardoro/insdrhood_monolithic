@@ -1,4 +1,4 @@
-import React, { useState, useEffect, startTransition } from 'react';
+import React, { useState, useEffect, startTransition, useRef } from 'react';
 // import axios from 'axios';
 import './home.css';
 import axios from "axios";
@@ -21,9 +21,12 @@ function Home() {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const [totalItems, setTotalItems] = useState(0);
-
+  const [totalItems, setTotalItems] = useState(19);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
+  const [cursor, setCursor] = useState('');
+  const loaderRef = useRef(null);
+  const [hasMore, setHasMore] = useState(true);
+
 
   const handleNavigation = (path) => {
     startTransition(() => {
@@ -81,6 +84,12 @@ function Home() {
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+
+
+
+
+
+
   const renderPageNumbers = [...Array(totalPages).keys()].map(number => (
     <button
       key={number + 1}
@@ -90,6 +99,13 @@ function Home() {
       {number + 1}
     </button>
   ));
+
+
+
+
+
+
+
 
   const blogCards = blogs.map((blog) => {
     return (
@@ -109,10 +125,35 @@ function Home() {
         </Card.Footer>
       </Card>
     )
-  })
+  });
+
+  const fetchData = async () => {
+    if (!hasMore) return; 
+    try {
+      const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
+      const [neighborhoodsResponse, blogsResponse] = await Promise.all([
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
+          params: { cursor, pageSize: itemsPerPage },
+        }),
+        axios.get(blogsUrl)
+      ]);
+
+      setBlogs(blogsResponse.data);
+      setIsLoading(false);
+      setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]); 
+      setCursor(neighborhoodsResponse.data.nextCursor);
+
+      if (!neighborhoodsResponse.data.nextCursor || neighborhoodsResponse.data.neighborhoods.length < itemsPerPage) {
+        setHasMore(false); 
+      }
+    } catch (error) {
+      console.error("Failed to fetch data", error);
+    } finally {
+    }
+  };
+
 
   useEffect(() => {
-
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -137,41 +178,34 @@ function Home() {
       };
       logUserWithToken();
     } else {
-      // const checkCurrentUser = async () => {
-      //   const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
-      //   updateCurrentUser(response.data);
-      // }
-      // checkCurrentUser()
     }
-
-    const fetchData = async () => {
-      try {
-
-        const neighborhoodsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods?page=${currentPage}&pageSize=${itemsPerPage}`;
-        const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
-        // Use Promise.all to fetch both URLs in parallel
-        const [neighborhoodsResponse, blogsResponse] = await Promise.all([
-          axios.get(neighborhoodsUrl, { withCredentials: true }),
-          axios.get(blogsUrl)
-        ]);
-
-        setBlogs(blogsResponse.data);
-        setIsLoading(false)
-        setNeighborhoodsData(neighborhoodsResponse.data.neighborhoods);
-        setTotalItems(neighborhoodsResponse.data.total);
-
-
-      } catch (error) {
-        console.error("Failed to fetch data", error);
-
-      } finally {
-        
-      }
-    };
 
     fetchData();
 
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage]);
+
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        fetchData(); // Fetch more data when loader comes into view
+      }
+    });
+
+    // Observe the loader element
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    // Cleanup
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [cursor]);
 
   if (isLoading) {
     return (
@@ -211,10 +245,10 @@ function Home() {
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
         {neighborhoodCards}
       </div>
-      <div className="pagination-controls">
-        <div className="pagination">
-          {renderPageNumbers}
-        </div>
+
+
+      <div ref={loaderRef} style={{ height: "20px", margin: "100px" }}>
+        {isLoading && <Spinner animation="border" />}
       </div>
 
     </div>
