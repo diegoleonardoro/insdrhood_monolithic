@@ -9,6 +9,21 @@ class BlogRepository {
         this.collectionName = 'blogs';
         this.db = (0, index_1.connectToDatabase)();
     }
+    async createIndexes() {
+        try {
+            const db = await this.db;
+            const blogsCollection = db.collection(this.collectionName);
+            // Create an index on the title field if you query by title
+            await blogsCollection.createIndex({ title: 1 });
+            // Create an index on the coverImageUrl field if you query by coverImageUrl
+            await blogsCollection.createIndex({ coverImageUrl: 1 });
+            console.log('Indexes ensured for blogs collection');
+        }
+        catch (error) {
+            console.error('Error ensuring indexes', error);
+            throw new bad_request_error_1.BadRequestError('Failed to ensure indexes for blogs');
+        }
+    }
     async getAllBlogs() {
         try {
             const db = await this.db;

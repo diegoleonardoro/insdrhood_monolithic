@@ -10,12 +10,16 @@ import { payments } from "./routes/payments";
 import { blog } from "./routes/blog"
 import path from 'path';
 import { NeighborhoodRepository } from './database/repositories/neighborhoods';
+import { BlogRepository } from './database/repositories/blog';
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
 
 const neighborhoodRepo = new NeighborhoodRepository();
 neighborhoodRepo.createIndexes();
+
+const blogRepo = new BlogRepository();
+blogRepo.createIndexes()
 
 const app = express();
 const PORT = 4000;

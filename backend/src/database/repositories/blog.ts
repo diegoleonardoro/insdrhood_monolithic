@@ -11,6 +11,24 @@ export class BlogRepository {
     this.db = connectToDatabase();
   }
 
+  public async createIndexes(): Promise<void> {
+    try {
+      const db = await this.db;
+      const blogsCollection = db.collection(this.collectionName);
+
+      // Create an index on the title field if you query by title
+      await blogsCollection.createIndex({ title: 1 });
+
+      // Create an index on the coverImageUrl field if you query by coverImageUrl
+      await blogsCollection.createIndex({ coverImageUrl: 1 });
+
+      console.log('Indexes ensured for blogs collection');
+    } catch (error) {
+      console.error('Error ensuring indexes', error);
+      throw new BadRequestError('Failed to ensure indexes for blogs');
+    }
+  }
+
   public async getAllBlogs(): Promise<any[]> {
     try {
       const db = await this.db;

@@ -14,11 +14,14 @@ const payments_1 = require("./routes/payments");
 const blog_1 = require("./routes/blog");
 const path_1 = __importDefault(require("path"));
 const neighborhoods_1 = require("./database/repositories/neighborhoods");
+const blog_2 = require("./database/repositories/blog");
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path_1.default.resolve(__dirname, '..', dotenvPath);
 dotenv_1.default.config({ path: envPath });
 const neighborhoodRepo = new neighborhoods_1.NeighborhoodRepository();
 neighborhoodRepo.createIndexes();
+const blogRepo = new blog_2.BlogRepository();
+blogRepo.createIndexes();
 const app = (0, express_1.default)();
 const PORT = 4000;
 app.use((0, cors_1.default)({

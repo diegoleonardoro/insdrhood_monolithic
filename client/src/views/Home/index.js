@@ -104,15 +104,15 @@ function Home() {
   const fetchData = async () => {
     if (!hasMore) return; 
     try {
-      // const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
-      const [neighborhoodsResponse] = await Promise.all([//blogsResponse
+      const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
+      const [neighborhoodsResponse, blogsResponse] = await Promise.all([//blogsResponse
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
           params: { cursor, pageSize: itemsPerPage },
         }),
-        // axios.get(blogsUrl)
+        axios.get(blogsUrl)
       ]);
 
-      setBlogs([]);//blogsResponse.data
+      setBlogs(blogsResponse.data);//
       setIsLoading(false);
       setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]); 
       setCursor(neighborhoodsResponse.data.nextCursor);
