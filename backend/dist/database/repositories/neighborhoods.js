@@ -36,12 +36,21 @@ class NeighborhoodRepository {
         if (cursor) {
             query = { '_id': { '$gt': new mongodb_1.ObjectId(cursor) } };
         }
-        const neighborhoods = await neighborhoodsCollection
-            .find(query, { projection })
+        // Perform the query with pagination
+        const neighborhoodsCursor = neighborhoodsCollection
+            .find(query)
+            .project(projection) // Only include the fields you really need
             .limit(pageSize)
-            .toArray();
-        const nextCursor = neighborhoods.length > 0 ? neighborhoods[neighborhoods.length - 1]._id : '';
-        return { neighborhoods, nextCursor: nextCursor.toString() };
+            .sort({ '_id': 1 }); // Ensure you sort by an indexed field if you're not just using _id
+        const neighborhoods = await neighborhoodsCursor.toArray();
+        let nextCursor = null;
+        if (neighborhoods.length > 0) {
+            // Get the _id of the last document in the result set
+            nextCursor = neighborhoods[neighborhoods.length - 1]._id;
+        }
+        // const executionPlan = await neighborhoodsCursor.explain('executionStats');
+        // console.log(executionPlan);
+        return { neighborhoods, nextCursor: nextCursor?.toString() };
     }
     async getOne(neighborhoodId) {
         const db = await this.db;

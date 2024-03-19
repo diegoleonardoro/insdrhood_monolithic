@@ -62,19 +62,31 @@ export class NeighborhoodRepository {
     const neighborhoodsCollection = db.collection(this.collectionName);
     const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 };
 
+
     let query = {};
     if (cursor) {
       query = { '_id': { '$gt': new ObjectId(cursor) } };
     }
 
-    const neighborhoods = await neighborhoodsCollection
-      .find(query, { projection })
+    // Perform the query with pagination
+    const neighborhoodsCursor = neighborhoodsCollection
+      .find(query)
+      .project(projection) // Only include the fields you really need
       .limit(pageSize)
-      .toArray();
+      .sort({ '_id': 1 }); // Ensure you sort by an indexed field if you're not just using _id
 
-    const nextCursor = neighborhoods.length > 0 ? neighborhoods[neighborhoods.length - 1]._id : '';
+    const neighborhoods = await neighborhoodsCursor.toArray();
 
-    return { neighborhoods, nextCursor: nextCursor.toString() };
+    let nextCursor = null;
+    if (neighborhoods.length > 0) {
+      // Get the _id of the last document in the result set
+      nextCursor = neighborhoods[neighborhoods.length - 1]._id;
+    }
+
+    // const executionPlan = await neighborhoodsCursor.explain('executionStats');
+    // console.log(executionPlan);
+
+    return { neighborhoods, nextCursor: nextCursor?.toString() };
   }
 
   async getOne(neighborhoodId: string): Promise<any> {

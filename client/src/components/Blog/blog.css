@@ -67,6 +67,24 @@ img:not(.imageContainer img) {
   max-width:400px !important;
 }
 
+.imageProd{
+   height: 400px; 
+  object-fit: contain;
+  margin:20px;
+  width:80% !important;
+  position: relative;
+  left:43.7%;
+  transform: translate(-50%,0);
+}
+
+@media only screen and (max-width: 1300px) {
+  .galleryParent__{
+    width:90%;
+  }
+  
+}
+
+
 @media only screen and (max-width: 1700px){
   .blogMainContainer{
     width:70%;

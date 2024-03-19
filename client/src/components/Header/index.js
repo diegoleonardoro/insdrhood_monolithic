@@ -28,7 +28,7 @@ function Header() {
     try {
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
       // I DO NOT THIK I NEED THIS:
-      await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`);
+      // await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`);
       await setCurrentUserDirectly(null);
       navigate('/');
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useContext } from 'react';
 import "./blogeditor.css";
 import axios from "axios";
 import ReactQuill, { Quill } from 'react-quill';
@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
+import { ProductsContext } from '../../contexts/products-context';
 
 const Parchment = Quill.import('parchment');
 
@@ -59,6 +60,20 @@ const BlogEditor = () => {
   const [title, setTitle] = useState('');
   const [showTypeTitle, setShowTypeTitle] = useState(false);
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+
+  const { products } = useContext(ProductsContext);
+
+  const handleProductChange = (product) => {
+    setSelectedProducts(prev => {
+      if (prev.includes(product)) {
+        return prev.filter(p => p !== product); // Remove unchecked product
+      } else {
+        return [...prev, product]; // Add checked product
+      }
+    });
+  };
 
   const closeAuthForm = () => {
     setDisplayAuthForm(false)
@@ -170,7 +185,6 @@ const BlogEditor = () => {
     </div>
   );
 
-
   const headerImageHandler = async (e) => {
     const imageFile = e.target.files[0];
     const randomUUID = uuidv4();
@@ -212,7 +226,7 @@ const BlogEditor = () => {
 
       editor.insertEmbed(range.index, 'image', imageUrl);
 
-      
+
     };
 
   }, []);
@@ -251,7 +265,13 @@ const BlogEditor = () => {
     if (currentuser_) {
 
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
-        { content: content, userId: currentuser_.id, title: title, coverImageUrl: coverImageUrl });
+        {
+          content: content,
+          userId: currentuser_.id,
+          title: title,
+          selectedProducts: selectedProducts,
+          coverImageUrl: coverImageUrl
+        });
 
       // make request to the blog using the insertedId
       navigate(`/post/${response.data.insertedId}`);
@@ -272,6 +292,27 @@ const BlogEditor = () => {
           <Form.Label>Add Cover Photo:</Form.Label>
           <Form.Control onChange={headerImageHandler} type="file" />
         </Form.Group>
+
+
+        <Form>
+          <div className="mb-3">
+            {products.map((product, index) => (
+              <Form.Check
+                key={index}
+                inline
+                label={product.name}
+                name="group1"
+                type="checkbox"
+                id={`inline-checkbox-${index}`}
+                onChange={() => handleProductChange(product.name)}
+                checked={selectedProducts.includes(product.name)}
+              />
+            ))}
+          </div>
+        </Form>
+
+
+
         <ReactQuill
           ref={quillRef}
           value={editorContent}

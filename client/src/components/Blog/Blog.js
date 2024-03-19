@@ -1,6 +1,6 @@
 import "./blog.css";
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useUserContext } from "../../contexts/UserContext";
 import DOMPurify from 'dompurify';
@@ -8,6 +8,9 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import SingleProduct  from "../SingleProduct/SingleProduct";
+import { ProductsContext } from "../../contexts/products-context";
+
 
 const Blog = () => {
 
@@ -21,11 +24,25 @@ const Blog = () => {
   const [showEmailError, setShowEmailError] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
 
+  const { products } = useContext(ProductsContext);
+  const [associatedProducts, setAssociatedProducts] = useState([])
+
+  const filteredIds = products
+    .filter(product => associatedProducts?.includes(product.name))
+    .map(product => product.id)
+
+  const productsList = filteredIds.map((id) => {
+    return (
+      <SingleProduct key={id} productId={id} />
+    )
+  })
+
   const getBlog = async () => {
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`);
     setTitle(response.data.title);
     const cleanHTML = DOMPurify.sanitize(response.data.content);
-    setBlogHtml(cleanHTML)
+    setBlogHtml(cleanHTML);
+    setAssociatedProducts(response.data.selectedProducts)
   }
 
   useEffect(() => {
@@ -101,8 +118,13 @@ const Blog = () => {
       )}
       <h1 className="article-title">{title}</h1>
       <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
+
+      {productsList}
+
     </div>
-  )
+  );
+
+
 
 }
 

@@ -8,7 +8,6 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 
 
-import Card from 'react-bootstrap/Card';
 
 const FeaturedProduct = (props) => {
 
