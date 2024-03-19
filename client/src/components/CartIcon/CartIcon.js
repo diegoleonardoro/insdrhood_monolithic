@@ -12,7 +12,7 @@ const CartIcon = () => {
 
   return (
     <div className='cart-container' onClick={() => navigate('/cart')}>
-      <img style={{ height: "50px", cursor: "pointer" }} src="https://raw.githubusercontent.com/diegoleonardoro/bx_tourism/master/cart-59-xxl.png" alt='shopping-cart-icon' />
+      <img style={{ height: "50px",width:"50px", cursor: "pointer" }} src="https://raw.githubusercontent.com/diegoleonardoro/bx_tourism/master/cart-59-xxl.png" alt='shopping-cart-icon' />
       {
         itemCount > 0 ? <span className='cart-count'> {itemCount} </span> : null
       }
