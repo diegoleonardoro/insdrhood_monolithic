@@ -29,8 +29,8 @@ class BlogRepository {
             const db = await this.db;
             const blogsCollection = db.collection(this.collectionName);
             const projection = { title: 1, coverImageUrl: 1 };
-            // const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
-            // console.log(explainOutput);
+            const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
+            console.log('explainOutput all blogs', explainOutput);
             const blogs = await blogsCollection.find({}, { projection }).toArray();
             return blogs;
         }

@@ -39,17 +39,16 @@ class NeighborhoodRepository {
         // Perform the query with pagination
         const neighborhoodsCursor = neighborhoodsCollection
             .find(query)
-            .project(projection) // Only include the fields you really need
+            .project(projection)
             .limit(pageSize)
-            .sort({ '_id': 1 }); // Ensure you sort by an indexed field if you're not just using _id
+            .sort({ '_id': 1 });
         const neighborhoods = await neighborhoodsCursor.toArray();
         let nextCursor = null;
         if (neighborhoods.length > 0) {
-            // Get the _id of the last document in the result set
             nextCursor = neighborhoods[neighborhoods.length - 1]._id;
         }
-        // const executionPlan = await neighborhoodsCursor.explain('executionStats');
-        // console.log(executionPlan);
+        const executionPlan = await neighborhoodsCursor.explain('executionStats');
+        console.log('executionPlan form responses', executionPlan);
         return { neighborhoods, nextCursor: nextCursor?.toString() };
     }
     async getOne(neighborhoodId) {
