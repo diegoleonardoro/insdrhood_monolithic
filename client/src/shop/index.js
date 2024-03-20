@@ -15,7 +15,7 @@ const SHOP_DATA = [
   {
     id: 2,
     name:'Essex Hotel Illstrtion',
-    title: 'The Essex Hotel Framed Illustration. Frame 8 in. x 10 in. matted to 5 in. x 7 in. Shipping included.',
+    title: 'The Essex Hotel Framed Illustration. Frame 8 in. x 10 in. matted to 5 in. x 7 in. Free shipping in the U.S.',
     description: " TEXT: 'The JW Marriott Essex House New York, a prestigious hotel towering over New York City, was constructed during the devastating economic downturn following the Wall Street Crash of 1929, its development was significantly slowed, only opening its doors in late 1931. Despite the financial hardships that led to the bankruptcy of its original owners, the Essex House has become a prominent figure in New York City's skyline, thanks in part to its iconic red neon sign added a year after opening.The building was designed by the architectural firm Walker & Gillette, and it showcases an Art Deco architectural style, characteristic of many prominent structures built in New York City during the late 1920s and early 1930s.' ",
     imageUrl: [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-frame.jpg',
