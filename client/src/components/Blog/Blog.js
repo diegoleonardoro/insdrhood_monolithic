@@ -117,9 +117,10 @@ const Blog = () => {
         </Alert>
       )}
       <h1 className="article-title">{title}</h1>
+      {productsList}
       <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
 
-      {productsList}
+     
 
     </div>
   );
