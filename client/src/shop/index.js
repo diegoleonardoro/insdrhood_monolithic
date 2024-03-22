@@ -53,6 +53,19 @@ const SHOP_DATA = [
     price: 20,
   },
 
+  {
+    id: 5,
+    name: 'The El Dorado Frame',
+    title: 'The El Dorado. Framed Photograph 8 in. x 10 in. matted to 5 in. x 7 in. Shipping included',
+    description: "TEXT: The El Dorado, located at 300 Central Park West on the Upper West Side of Manhattan was developed between 1929 and 1931.  The building stands out with its symmetrical facade divided into vertical bays, a base made of yellow cast stone, and Art Deco details such as curved railings and bronze arches at the main entrance. The El Dorado's design makes effective use of the Multiple Dwelling Act of 1929's guidelines for building heights and setbacks, allowing it to maximize window space by opting for a twin-towered structure​​. ",
+    imageUrl: [
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/eldorado3.jpg',
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/eldoradoframed.jpg',
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/theElDorado.jpg',
+    ],
+    price: 29,
+  },
+
 
 
 
