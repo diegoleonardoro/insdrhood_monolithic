@@ -66,6 +66,19 @@ const SHOP_DATA = [
     price: 29,
   },
 
+  {
+    id: 5,
+    name: 'The New Yorker Hotel',
+    title: 'Framed Photograph 8 in. x 10 in. matted to 5 in. x 7 in. Shipping included',
+    description: "The New Yorker Hotel, a striking feature of Manhattan's skyline, is located at 481 Eighth Avenue, between 34th Street and 35th Street in the Hell's Kitchen neighborhood. Designed by Sugarman and Berger, the hotel is an embodiment of the Art Deco style, a design ethos prevalent in New York City during the 1920s and 1930s. This architectural style is characterized by its emphasis on geometric forms, linear decoration, and a sense of opulence, features that are echoed in the hotel's façade and interior design.",
+    imageUrl: [
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/nyfram3.jpg',
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/newyorkerframe1.jpg',
+      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/NewYorkerHotel.jpg',
+    ],
+    price: 29,
+  },
+
 
 
 
