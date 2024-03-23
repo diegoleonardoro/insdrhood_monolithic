@@ -29,18 +29,34 @@ export class BlogRepository {
     }
   }
 
-  public async getAllBlogs(): Promise<any[]> {
+  public async getAllBlogs({ cursor, pageSize }: { cursor?: ObjectId | undefined, pageSize: number }): Promise<{ blogs: any[], nextCursor?: string }> {
     try {
 
       const db = await this.db;
       const blogsCollection = db.collection(this.collectionName);
       const projection = { title: 1, coverImageUrl: 1 };
 
+      let query = {};
+      if (cursor) {
+        query = { '_id': { '$gt': new ObjectId(cursor) } };
+      }
+
+
       const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
       console.log('explainOutput all blogs', explainOutput);
 
-      const blogs = await blogsCollection.find({}, { projection }).toArray();
-      return blogs;
+      const blogsCursor = blogsCollection.find(query)
+        .project(projection)
+        .limit(pageSize)
+        .sort({ '_id': 1 });
+
+      const blogs = await blogsCursor.toArray();
+      let nextCursor = null;
+      if (blogs.length > 0) {
+        nextCursor = blogs[blogs.length - 1]._id;
+      }
+
+      return { blogs, nextCursor: nextCursor?.toString() };
 
     } catch (error) {
       // Assuming you have some error handling mechanism

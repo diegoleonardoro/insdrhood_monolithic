@@ -24,15 +24,27 @@ class BlogRepository {
             throw new bad_request_error_1.BadRequestError('Failed to ensure indexes for blogs');
         }
     }
-    async getAllBlogs() {
+    async getAllBlogs({ cursor, pageSize }) {
         try {
             const db = await this.db;
             const blogsCollection = db.collection(this.collectionName);
             const projection = { title: 1, coverImageUrl: 1 };
+            let query = {};
+            if (cursor) {
+                query = { '_id': { '$gt': new mongodb_1.ObjectId(cursor) } };
+            }
             const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
             console.log('explainOutput all blogs', explainOutput);
-            const blogs = await blogsCollection.find({}, { projection }).toArray();
-            return blogs;
+            const blogsCursor = blogsCollection.find(query)
+                .project(projection)
+                .limit(pageSize)
+                .sort({ '_id': 1 });
+            const blogs = await blogsCursor.toArray();
+            let nextCursor = null;
+            if (blogs.length > 0) {
+                nextCursor = blogs[blogs.length - 1]._id;
+            }
+            return { blogs, nextCursor: nextCursor?.toString() };
         }
         catch (error) {
             // Assuming you have some error handling mechanism

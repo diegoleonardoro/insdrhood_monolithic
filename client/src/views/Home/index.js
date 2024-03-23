@@ -1,5 +1,4 @@
 import React, { useState, useEffect, startTransition, useRef } from 'react';
-// import axios from 'axios';
 import './home.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,8 @@ import Card from "react-bootstrap/Card";
 import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
+import CardGroup from 'react-bootstrap/CardGroup';
+
 
 function Home() {
 
@@ -18,14 +19,133 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
-  const indexOfLastItem = currentPage * itemsPerPage;
+
   const [totalItems, setTotalItems] = useState(19);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
+
   const [cursor, setCursor] = useState('');
+
+  const blogLoaderRef = useRef(null)
   const loaderRef = useRef(null);
   const [hasMore, setHasMore] = useState(true);
+  const blogContainerRef = useRef(null);
+  const blogsCursorRef = useRef('');
+  const hasMoreBlogsRef = useRef(true);
+  const touchStartRef = useRef(null);
+  const touchEndRef = useRef(null);
 
+  const handleTouchStart = (e) => {
+
+    touchStartRef.current = e.targetTouches[0].clientX;
+    console.log("Touch Start:", touchStartRef.current);
+
+    // const start = e.targetTouches[0].clientX;
+    // console.log("Touch Start:", start);
+    // setTouchStart(start);
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+
+    if (touchStartRef.current != null && touchEndRef.current != null) {
+      if (touchStartRef.current - touchEndRef.current > 50) {
+        console.log("Swipe Left Detected");
+        fetchMoreBlogs();
+      } else if (touchStartRef.current - touchEndRef.current < -150) {
+        console.log("Swipe Right Detected");
+        // showPreviousBlogs();
+      }
+    }
+
+    // Reset touch coordinates
+    touchStartRef.current = null;
+    touchEndRef.current = null;
+  };
+
+  useEffect(() => {
+    fetchMoreBlogs()
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const blogContainer = blogContainerRef.current;
+      console.log("blogscontainer", blogContainer);
+
+      if (blogContainer) {
+        blogContainer.addEventListener('touchstart', handleTouchStart);
+        blogContainer.addEventListener('touchmove', handleTouchMove);
+        blogContainer.addEventListener('touchend', handleTouchEnd);
+
+        // Cleanup
+        return () => {
+          blogContainer.removeEventListener('touchstart', handleTouchStart);
+          blogContainer.removeEventListener('touchmove', handleTouchMove);
+          blogContainer.removeEventListener('touchend', handleTouchEnd);
+        };
+      }
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    // Extract the token from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+      const logUserWithToken = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`,
+            {
+              withCredentials: true
+            });
+          // setUser(response.data);
+          setCurrentUserDirectly(response.data);
+          // Extract the current URL search parameters
+          const urlParams = new URLSearchParams(window.location.search);
+          // Create the new URL, preserving the existing parameters
+          const newUrl = `/?${urlParams.toString()}`;
+          // Navigate to the new URL
+          navigate(newUrl, { replace: true });
+        } catch (error) {
+          // Handle error here
+        }
+      };
+      logUserWithToken();
+    } else {
+    }
+
+
+    fetchMoreNeighborhoods();
+  }, [currentPage]);
+
+  useEffect(() => {
+
+    const observer = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        fetchMoreNeighborhoods(); // Fetch more data when loader comes into view
+      }
+    });
+
+    // Observe the loader element
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    // Cleanup
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [cursor]);
+
+  const itemsPerPage = 4; // blogs
+  const blogsPerpage = window.innerWidth < 768 ? 2 : 3
 
   const handleNavigation = (path) => {
     startTransition(() => {
@@ -101,85 +221,67 @@ function Home() {
     )
   });
 
-  const fetchData = async () => {
-    if (!hasMore) return; 
+  const fetchMoreBlogs = async () => {
+
+    const container = blogContainerRef.current;
+    const shiftAmount = 200; // Adjust based on your design
+
+    if (container) {
+      container.style.transform = `translateX(-${shiftAmount}px)`;
+    }
+
+    if (!hasMoreBlogsRef.current) return;
     try {
-      const blogsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`;
-      const [neighborhoodsResponse, blogsResponse] = await Promise.all([//blogsResponse
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
-          params: { cursor, pageSize: itemsPerPage },
-        }),
-        axios.get(blogsUrl)
-      ]);
 
-      setBlogs(blogsResponse.data);//
-      setIsLoading(false);
-      setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]); 
-      setCursor(neighborhoodsResponse.data.nextCursor);
+      const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`, {
+        params: { cursor: blogsCursorRef.current, pageSize: blogsPerpage },
+      });
 
-      if (!neighborhoodsResponse.data.nextCursor || neighborhoodsResponse.data.neighborhoods.length < itemsPerPage) {
-        setHasMore(false); 
+      setBlogs(prevData => [...prevData, ...blogsResponse.data.blogs]);
+      blogsCursorRef.current = blogsResponse.data.nextCursor; //// <<==============--------
+
+      if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
+        hasMoreBlogsRef.current = false;
       }
     } catch (error) {
-      console.error("Failed to fetch data", error);
-    } finally {
+      console.error("Failed to fetch more blogs", error);
     }
   };
 
+  const fetchMoreNeighborhoods = async () => {
 
-  useEffect(() => {
-    // Extract the token from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    if (token) {
-      const logUserWithToken = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/emailVerification/${token}`,
-            {
-              withCredentials: true
-            });
-          // setUser(response.data);
-          setCurrentUserDirectly(response.data);
-          // Extract the current URL search parameters
-          const urlParams = new URLSearchParams(window.location.search);
-          // Create the new URL, preserving the existing parameters
-          const newUrl = `/?${urlParams.toString()}`;
-          // Navigate to the new URL
-          navigate(newUrl, { replace: true });
-        } catch (error) {
-          // Handle error here
-        }
-      };
-      logUserWithToken();
-    } else {
+    if (!hasMore) return;
+
+    try {
+      const neighborhoodsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
+        params: { cursor, pageSize: itemsPerPage },
+      });
+
+      setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]);
+      setCursor(neighborhoodsResponse.data.nextCursor);
+
+      if (!neighborhoodsResponse.data.nextCursor || neighborhoodsResponse.data.neighborhoods.length < itemsPerPage) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Failed to fetch more neighborhoods", error);
     }
 
-    fetchData();
+  };
 
-  }, [currentPage]);
+  const showPreviousBlogs = () => {
 
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const first = entries[0];
-      if (first.isIntersecting) {
-        fetchData(); // Fetch more data when loader comes into view
-      }
-    });
+    // This would be a navigation function that adjusts state to show previous blogs without fetching new ones
+    // For the purpose of demonstration, this could simply scroll to the left
+    if (blogContainerRef.current) {
 
-    // Observe the loader element
-    const currentLoader = loaderRef.current;
-    if (currentLoader) {
-      observer.observe(currentLoader);
+      const container = blogContainerRef.current;
+      // Scroll to the left to show previous blogs
+      container.style.transform = `translateX(${200}px)`; // Adjust the value based on your layout
     }
+  };
 
-    // Cleanup
-    return () => {
-      if (currentLoader) {
-        observer.unobserve(currentLoader);
-      }
-    };
-  }, [cursor]);
 
   if (isLoading) {
     return (
@@ -192,9 +294,34 @@ function Home() {
 
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
-      <div className='articlesContainer'>
-        {blogCards}
+
+
+      <div style={{ width: '100%', overflowX: "hidden", backgroundColor: '#8080801c', display: "flex", position: 'relative' }}>
+        
+        <div className="arrowsContainer" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
+          <svg className='blogArrows bi bi-arrow-left' style={{ fontSize: '100px', border: 'none', zIndex: '10', padding: "10px" }} width="56" height="56" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+            <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+          </svg>
+        </div>
+        <div ref={blogContainerRef} className='articlesContainer' >
+          {blogCards}
+        </div>
+
+        {/* Right Arrow */}
+        <div className="arrowsContainer" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
+          <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none',  padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
+            <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+          </svg>
+        </div>
+
+
+
+        <div ref={blogLoaderRef} style={{ margin: "5px" }}>
+          {isLoading && <Spinner animation="border" />}
+        </div>
       </div>
+
+
       <h2 className='residentsHeader'>Discover Neighborhoods from Residents' Perspectives...</h2>
       <div className='filterInputsContainer'>
         <input
