@@ -51,7 +51,7 @@ function Home() {
   const handleTouchEnd = () => {
 
     if (touchStartRef.current != null && touchEndRef.current != null) {
-      if (touchStartRef.current - touchEndRef.current > 50) {
+      if (touchStartRef.current - touchEndRef.current > 5) {
         console.log("Swipe Left Detected");
         fetchMoreBlogs();
       } else if (touchStartRef.current - touchEndRef.current < -150) {
