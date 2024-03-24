@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import SingleProduct  from "../SingleProduct/SingleProduct";
 import { ProductsContext } from "../../contexts/products-context";
-
+import Spinner from 'react-bootstrap/Spinner';
 
 const Blog = () => {
 
@@ -26,6 +26,9 @@ const Blog = () => {
 
   const { products } = useContext(ProductsContext);
   const [associatedProducts, setAssociatedProducts] = useState([])
+
+  const [isLoading, setIsLoading] = useState(true);
+
 
   const filteredIds = products
     .filter(product => associatedProducts?.includes(product.name))
@@ -48,6 +51,7 @@ const Blog = () => {
   useEffect(() => {
     // make request to fetch the blog post:
     getBlog()
+    setIsLoading(false);
   }, [])
 
   const handleEmailChange = (e) => {
@@ -79,6 +83,15 @@ const Blog = () => {
   const setEmailErrorFalse = () => {
     setShowEmailError(false)
     setEmailSignUpError(null)
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline" }}>
+        <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+        <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
+      </div>
+    )
   }
 
   return (
