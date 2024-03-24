@@ -40,7 +40,6 @@ function Home() {
   }, []);
 
 
-
   const handleTouchTap = () => {
     // Your code to execute upon tap
     console.log("Tap Detected");
@@ -117,8 +116,8 @@ function Home() {
     };
   }, [cursor]);
 
-  const itemsPerPage = 4; // blogs
-  const blogsPerpage = window.innerWidth < 768 ? 2 : 3
+  const itemsPerPage = blogswindow.innerWidth < 768 ? 1 : 2// neighborhoods 
+  const blogsPerpage = window.innerWidth < 768 ? 2 : 3 // blogs
 
   const handleNavigation = (path) => {
     startTransition(() => {
