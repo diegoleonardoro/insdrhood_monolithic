@@ -31,64 +31,41 @@ function Home() {
   const blogContainerRef = useRef(null);
   const blogsCursorRef = useRef('');
   const hasMoreBlogsRef = useRef(true);
-  const touchStartRef = useRef(null);
-  const touchEndRef = useRef(null);
 
-  const handleTouchStart = (e) => {
 
-    touchStartRef.current = e.targetTouches[0].clientX;
-    console.log("Touch Start:", touchStartRef.current);
-
-    // const start = e.targetTouches[0].clientX;
-    // console.log("Touch Start:", start);
-    // setTouchStart(start);
-  };
-
-  const handleTouchMove = (e) => {
-    touchEndRef.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-
-    if (touchStartRef.current != null && touchEndRef.current != null) {
-      if (touchStartRef.current - touchEndRef.current > 5) {
-        console.log("Swipe Left Detected");
-        fetchMoreBlogs();
-      } else if (touchStartRef.current - touchEndRef.current < -150) {
-        console.log("Swipe Right Detected");
-        // showPreviousBlogs();
-      }
-    }
-
-    // Reset touch coordinates
-    touchStartRef.current = null;
-    touchEndRef.current = null;
-  };
 
   useEffect(() => {
     fetchMoreBlogs()
     setIsLoading(false);
   }, []);
 
+
+
+  const handleTouchTap = () => {
+    // Your code to execute upon tap
+    console.log("Tap Detected");
+    fetchMoreBlogs();
+  };
+
   useEffect(() => {
     if (!isLoading) {
       const blogContainer = blogContainerRef.current;
-      console.log("blogscontainer", blogContainer);
 
       if (blogContainer) {
-        blogContainer.addEventListener('touchstart', handleTouchStart);
-        blogContainer.addEventListener('touchmove', handleTouchMove);
-        blogContainer.addEventListener('touchend', handleTouchEnd);
+        // Listen for touchstart events to detect a tap
+        blogContainer.addEventListener('touchstart', handleTouchTap);
 
         // Cleanup
         return () => {
-          blogContainer.removeEventListener('touchstart', handleTouchStart);
-          blogContainer.removeEventListener('touchmove', handleTouchMove);
-          blogContainer.removeEventListener('touchend', handleTouchEnd);
+          blogContainer.removeEventListener('touchstart', handleTouchTap);
         };
       }
     }
   }, [isLoading]);
+
+
+
+
 
   useEffect(() => {
     // Extract the token from the URL
