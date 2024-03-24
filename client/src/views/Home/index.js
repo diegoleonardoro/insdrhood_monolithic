@@ -116,7 +116,7 @@ function Home() {
     };
   }, [cursor]);
 
-  const itemsPerPage = blogswindow.innerWidth < 768 ? 1 : 2// neighborhoods 
+  const itemsPerPage = window.innerWidth < 768 ? 1 : 2// neighborhoods 
   const blogsPerpage = window.innerWidth < 768 ? 2 : 3 // blogs
 
   const handleNavigation = (path) => {
