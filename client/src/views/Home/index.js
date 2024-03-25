@@ -49,9 +49,12 @@ function Home() {
   }, []);
 
 
+
+
+
   // used to attach event listener to the slider div that contains the blogs.
   useEffect(() => {
-    if (!isLoading) {
+    if (!blogsLoading) {
       const blogContainer = blogContainerRef.current;
 
       if (blogContainer) {
@@ -64,7 +67,7 @@ function Home() {
         };
       }
     }
-  }, [isLoading]);
+  }, [blogsLoading]);
 
 
   // initial request for neighborhoods 
