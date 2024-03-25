@@ -25,20 +25,15 @@ function Home() {
 
   const [cursor, setCursor] = useState('');
 
-  const blogLoaderRef = useRef(null)
+
   const loaderRef = useRef(null);
   const [hasMore, setHasMore] = useState(true);
   const blogContainerRef = useRef(null);
   const blogsCursorRef = useRef('');
   const hasMoreBlogsRef = useRef(true);
 
-
-
-  useEffect(() => {
-    fetchMoreBlogs()
-    setIsLoading(false);
-  }, []);
-
+  const [blogsLoading, setBlogsLoading] = useState(true);
+  const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true)
 
   const handleTouchTap = () => {
     // Your code to execute upon tap
@@ -46,6 +41,15 @@ function Home() {
     fetchMoreBlogs();
   };
 
+
+  // fetches the blogs. 
+  useEffect(() => {
+    fetchMoreBlogs()
+    setBlogsLoading(false);
+  }, []);
+
+
+  // used to attach event listener to the slider div that contains the blogs.
   useEffect(() => {
     if (!isLoading) {
       const blogContainer = blogContainerRef.current;
@@ -63,6 +67,7 @@ function Home() {
   }, [isLoading]);
 
 
+  // initial request for neighborhoods 
   useEffect(() => {
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -90,15 +95,19 @@ function Home() {
     } else {
     }
     fetchMoreNeighborhoods();
-    setIsLoading(false);
+
+    setNeighborhoodsLoading(false);
+
   }, [currentPage]);
 
-  useEffect(() => {
 
+  // this will only take effect when the user scrolls down the neighborhoods.
+  useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
         fetchMoreNeighborhoods(); // Fetch more data when loader comes into view
+        ;
       }
     });
 
@@ -115,6 +124,8 @@ function Home() {
       }
     };
   }, [cursor]);
+
+
 
   const itemsPerPage = window.innerWidth < 768 ? 1 : 2// neighborhoods 
   const blogsPerpage = window.innerWidth < 768 ? 2 : 3 // blogs
@@ -234,6 +245,7 @@ function Home() {
 
       if (!neighborhoodsResponse.data.nextCursor || neighborhoodsResponse.data.neighborhoods.length < itemsPerPage) {
         setHasMore(false);
+
       }
     } catch (error) {
       console.error("Failed to fetch more neighborhoods", error);
@@ -255,14 +267,6 @@ function Home() {
   };
 
 
-  if (isLoading) {
-    return (
-      <div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline" }}>
-        <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-        <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
-      </div>
-    )
-  }
 
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
@@ -270,29 +274,34 @@ function Home() {
 
       <div style={{ width: '100%', overflowX: "hidden", backgroundColor: '#8080801c', display: "flex", position: 'relative' }}>
 
-        <div className="arrowsContainer" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
-          <svg className='blogArrows bi bi-arrow-left' style={{ fontSize: '100px', border: 'none', zIndex: '10', padding: "10px" }} width="56" height="56" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-            <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
-          </svg>
-        </div>
-        <div ref={blogContainerRef} className='articlesContainer' >
-          {blogCards}
-        </div>
 
-        {/* Right Arrow */}
-        <div className="arrowsContainer" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
-          <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
-            <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
-          </svg>
-        </div>
+        {!blogsLoading ? (
+          <>
+            <div className="arrowsContainer" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
+              <svg className='blogArrows bi bi-arrow-left' style={{ fontSize: '100px', border: 'none', zIndex: '10', padding: "10px" }} width="56" height="56" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+              </svg>
+            </div>
+            <div ref={blogContainerRef} className='articlesContainer' >
+              {blogCards}
+            </div>
+
+            {/* Right Arrow */}
+            <div className="arrowsContainer" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
+              <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
+                <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+              </svg>
+            </div>
 
 
+          </>
+        )
+          : (<div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline", margin: "40px", marginBottom: "150px" }}>
+            <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+            <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
+          </div>)}
 
-        <div ref={blogLoaderRef} style={{ margin: "5px" }}>
-          {isLoading && <Spinner animation="border" />}
-        </div>
       </div>
-
 
       <h2 className='residentsHeader'>Discover Neighborhoods from Residents' Perspectives...</h2>
       <div className='filterInputsContainer'>
@@ -316,12 +325,22 @@ function Home() {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-        {neighborhoodCards}
-      </div>
 
+        {!neighborhoodsLoading ? (
+          neighborhoodCards
+        ) : (<div >
+          <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+        </div>)}
 
-      <div ref={loaderRef} style={{ height: "20px", margin: "100px" }}>
-        {isLoading && <Spinner animation="border" />}
+      </div >
+
+      <div ref={loaderRef} style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+        {hasMore &&
+          <>
+            <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+            <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
+          </>
+        }
       </div>
 
     </div>
