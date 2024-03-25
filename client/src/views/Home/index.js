@@ -301,7 +301,6 @@ function Home() {
         )
           : (<div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline", margin: "40px", marginBottom: "150px" }}>
             <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-            <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
           </div>)}
 
       </div>
