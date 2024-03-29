@@ -14,7 +14,7 @@ const paymentsRepository = new PaymentsRepository(process.env.STRIPE_SECRET_KEY!
  * @access public
 */
 
-export const createCheckoutSession = async (req: Request, res: Response)=>{
+export const createCheckoutSession = async (req: Request, res: Response) => {
 
   const { line_items, customer_email } = req.body;
 

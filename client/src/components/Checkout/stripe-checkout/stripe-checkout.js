@@ -13,8 +13,6 @@ const StripeCheckout = () => {
   const { cartItems } = useContext(CartContext);
   const stripe = useStripe();
 
-
-
   const handleGuestCheckout = async (e) => {
     e.preventDefault();
 
@@ -25,9 +23,9 @@ const StripeCheckout = () => {
           currency: 'usd',
           unit_amount: item.price * 100, // amount is in cents
           product_data: {
-            name: item.title,
-            description: item.description,
-            images: item.imageUrl,
+            name: item.title ? item.title : 'T-shirt',
+            description: item.description ? item.description : "Iconinc NYC t-shirt",
+            // images: item.imageUrl ? item.imageUrl : null,
           }
         }
       }

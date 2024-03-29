@@ -27,6 +27,10 @@ const TShirtCustomizer = (props) => {
   const [size, setSize] = useState('M');
   const [blendedLogo, setBlendedLogo] = useState(darkLogoImage);
 
+
+  // title
+  // description
+  // imageUrl 
   const [product, setProduct] = useState({
     price,
     id: `${id}-${color}-${size}`,
