@@ -17,10 +17,7 @@ function Home() {
   const [neighborhoodsData, setNeighborhoodsData] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
-
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(19);
@@ -76,13 +73,17 @@ function Home() {
       if (token) {
         // Your existing token logic here...
       }
-      // Your existing call to fetchMoreNeighborhoods...
-      await fetchMoreNeighborhoods();
-      setNeighborhoodsLoading(false);
+      const neighborhoodsPromise = fetchMoreNeighborhoods().then(() => {
+        setNeighborhoodsLoading(false);
+      });
 
-      // Now, await the fetchMoreBlogs before setting blogsLoading to false
-      await fetchMoreBlogs();
-      setBlogsLoading(false);
+      const blogsPromise = fetchMoreBlogs().then(() => {
+        setBlogsLoading(false);
+      });
+
+      // Wait for both promises to complete. 
+      // This is optional depending on whether you have subsequent code that depends on both being completed.
+      await Promise.all([neighborhoodsPromise, blogsPromise]);
     };
     initialize();
 
