@@ -7,8 +7,8 @@ import Total from "./Total"
 const CartPage = () => {
   const { cartItems, itemCount, total, increase, decrease, removeProduct, clearCart } = useContext(CartContext);
   const funcs = { increase, decrease, removeProduct }
-  return (
 
+  return (
     <div >
       <h1 style={{textAlign:'center', margin:'20px'}}>Cart</h1>
       {
@@ -16,16 +16,12 @@ const CartPage = () => {
           :
           <>
             <div  className='cart-page'>
-
               <Total itemCount={itemCount} total={total} clearCart={clearCart} />
               <div className='cart-item-container'>
                 {
                   cartItems.map(item => <CartItem {...item} key={item.id} {...funcs} />)
                 }
               </div>
-
-
-
             </div>
           </>
       }

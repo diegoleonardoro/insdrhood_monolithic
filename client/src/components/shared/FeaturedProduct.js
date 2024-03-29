@@ -101,21 +101,25 @@ const FeaturedProduct = (props) => {
     <div className="galleryParent__" style={{ position: "relative" }}>
       <Slider {...settings}>
         {imageUrl.map((image, index) => (
-          <img key={index}  className="imageprod" src={image}></img>
+          <img key={index} className="imageprod" src={image}></img>
         ))}
       </Slider>
-      <div style={{ margin: '30px', textAlign: "start" }}  className='name-price'>
+      <div style={{ margin: '30px', textAlign: "start" }} className='name-price'>
         <h3>{title}</h3>
         <p>$ {price}</p>
         <p >{description}</p>
         {
           !itemInCart &&
-          <Button style={{ margin: "20px", width: "80%" }} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
+          <Button style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
         }
         {
           itemInCart &&
-          <Button style={{ margin: "20px", width: "80%" }} variant="primary"  onClick={() => increase(product)} >ADD MORE</Button>
+          <Button style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} variant="primary" onClick={() => increase(product)} >ADD MORE</Button>
         }
+
+        <Button variant="primary" style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} onClick={() => navigate('/cart')}>
+          PROCEED TO CHECKOUT
+        </Button>
 
       </div>
     </div>
@@ -127,9 +131,3 @@ const FeaturedProduct = (props) => {
 export default FeaturedProduct;
 // export default withRouter(FeaturedProduct);
 
-
-
-/**
- * 
- *  
- */

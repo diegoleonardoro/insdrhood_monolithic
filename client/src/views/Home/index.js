@@ -18,7 +18,12 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBorough, setSelectedBorough] = useState('All');
+
+
+
   const [currentPage, setCurrentPage] = useState(1);
+
+
 
   const [totalItems, setTotalItems] = useState(19);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
@@ -43,34 +48,6 @@ function Home() {
 
 
   // fetches the blogs. 
-  useEffect(() => {
-    fetchMoreBlogs()
-    setBlogsLoading(false);
-  }, []);
-
-
-
-
-
-  // used to attach event listener to the slider div that contains the blogs.
-  useEffect(() => {
-    if (!blogsLoading) {
-      const blogContainer = blogContainerRef.current;
-
-      if (blogContainer) {
-        // Listen for touchstart events to detect a tap
-        blogContainer.addEventListener('touchstart', handleTouchTap);
-
-        // Cleanup
-        return () => {
-          blogContainer.removeEventListener('touchstart', handleTouchTap);
-        };
-      }
-    }
-  }, [blogsLoading]);
-
-
-  // initial request for neighborhoods 
   useEffect(() => {
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -97,20 +74,55 @@ function Home() {
       logUserWithToken();
     } else {
     }
-    fetchMoreNeighborhoods();
 
-    setNeighborhoodsLoading(false);
+    const initialize = async () => {
+      if (token) {
+        // Your existing token logic here...
+      }
+      // Your existing call to fetchMoreNeighborhoods...
+      await fetchMoreNeighborhoods();
+      setNeighborhoodsLoading(false);
 
-  }, [currentPage]);
+      // Now, await the fetchMoreBlogs before setting blogsLoading to false
+      await fetchMoreBlogs();
+      setBlogsLoading(false);
+    };
+    initialize();
+
+  }, []);
+
+  // used to attach event listener to the slider div that contains the blogs.
+  useEffect(() => {
+    if (!blogsLoading) {
+      const blogContainer = blogContainerRef.current;
+
+      if (blogContainer) {
+        // Listen for touchstart events to detect a tap
+        blogContainer.addEventListener('touchstart', handleTouchTap);
+
+        // Cleanup
+        return () => {
+          blogContainer.removeEventListener('touchstart', handleTouchTap);
+        };
+      }
+    }
+  }, [blogsLoading]);
+
+
+  // // initial request for neighborhoods 
+  // useEffect(() => {
+  // }, [currentPage]);
 
 
   // this will only take effect when the user scrolls down the neighborhoods.
   useEffect(() => {
+
+
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
         fetchMoreNeighborhoods(); // Fetch more data when loader comes into view
-        ;
+
       }
     });
 
@@ -150,12 +162,12 @@ function Home() {
   // Handle change in search input
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setCurrentPage(1);
+    // setCurrentPage(1);
   };
   // Handle change in borough selection
   const handleBoroughChange = (event) => {
     setSelectedBorough(event.target.value);
-    setCurrentPage(1); // Reset to first page on borough change
+    // setCurrentPage(1); // Reset to first page on borough change
   };
 
   const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
@@ -270,14 +282,9 @@ function Home() {
   };
 
 
-
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
-
-
       <div style={{ width: '100%', overflowX: "hidden", backgroundColor: '#8080801c', display: "flex", position: 'relative' }}>
-
-
         {!blogsLoading ? (
           <>
             <div className="arrowsContainer" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
@@ -296,10 +303,9 @@ function Home() {
               </svg>
             </div>
 
-
           </>
         )
-          : (<div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline", margin: "40px", marginBottom: "150px" }}>
+          : (<div className="spinnerBlogs" style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline", margin: "40px", marginBottom: "150px" }}>
             <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
           </div>)}
 
@@ -332,18 +338,28 @@ function Home() {
           neighborhoodCards
         ) : (<div >
           <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-        </div>)}
 
+          Loading
+        </div>)}
       </div >
 
-      <div ref={loaderRef} style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-        {hasMore &&
-          <>
-            <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-            <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
-          </>
-        }
+
+      <div
+        ref={loaderRef}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center", // Center the content vertically
+          flexWrap: "wrap",
+          minHeight: "100px", // Ensure the div occupies vertical space
+          width: "100%", // Ensure the div spans the full width if necessary
+        }}
+      >
+        {hasMore ? (
+          <div style={{ textAlign: "center", width: "100%" }}>Loading...</div>
+        ) : null}
       </div>
+
 
     </div>
   );

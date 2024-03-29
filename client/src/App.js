@@ -20,6 +20,7 @@ import Canceled from "./components/Checkout/stripe-checkout/canceled"
 import Success from "./components/Checkout/stripe-checkout/success"
 import { NavigationHistoryProvider } from "./contexts/navigation-history-context"
 import { useUserContext } from '../src/contexts/UserContext';
+import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
 
 
 
@@ -99,6 +100,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
             <Route path='/shop' element={<Shop />}></Route>
             <Route path='/product/:id' element={<SingleProduct />}></Route>
+            <Route path='/tshirtcustomizer' element={<TShirtCustomizer logoUrl={{ dark: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorker.png', white:'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png'}} />}></Route>
             <Route path='/cart' element={<CartPage />}></Route>
             <Route path='/checkout' element={<Checkout />}></Route>
             <Route path='/canceled' element={<Canceled />}></Route>

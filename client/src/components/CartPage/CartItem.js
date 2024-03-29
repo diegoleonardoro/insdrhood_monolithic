@@ -7,8 +7,15 @@ import "./cartpage.css"
 
 const CartItem = (props) => {
 
-  const { title, imageUrl, price, quantity, id, description, increase, decrease, removeProduct } = props;
-  const product = { title, imageUrl, price, quantity, id, description };
+  const { title, imageUrl,
+    price, quantity,
+    id, description,
+    increase, decrease,
+    removeProduct, 
+    tShirtColor, size, 
+    logo, text, color } = props;
+
+  const product = { title, imageUrl, price, quantity, id, description, size, tShirtColor, text, color };
 
   /** Images slider */
   const PrevArrowPhotos = ({ onClick }) => {
@@ -92,18 +99,36 @@ const CartItem = (props) => {
   return (
     <div className='cart-item'>
 
-
-      <div className='galleryParent_Cart'>
-        <Slider {...settings}>
-          {imageUrl.map((image, index) => (
-            <img key={index}  alt="product" className="imageprodCart" src={image}></img>
-          ))}
-        </Slider>
-      </div>
-
-      <div style ={{marginLeft:"40px"}}>
+      {imageUrl && (
+        <div className='galleryParent_Cart'>
+          <Slider {...settings}>
+            {imageUrl.map((image, index) => (
+              <img key={index} alt="product" className="imageprodCart" src={image}></img>
+            ))}
+          </Slider>
+        </div>
+      )}
+      {tShirtColor && (
+        <div className="tshirt-display">
+          <img src={tShirtColor} className="tshirt" alt="Custom T-shirt" />
+          <img src={logo} className="logo" alt="Logo" />
+        </div>
+      )}
+      {size&&(
+        <p>
+          {`Size ${size}`}
+        </p>
+      )}
+      {color && (
+        <p>
+          {`Color ${color}`}
+        </p>
+      )}
+      <div style={{ marginLeft: "40px" }}>
         <div className='name-price'>
-          <h4>{title}</h4>
+          {title && (
+            <h4>{title}</h4>
+          )}
           <p>${price}</p>
         </div>
         <div className='quantity'>
