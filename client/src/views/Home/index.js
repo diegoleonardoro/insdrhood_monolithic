@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
+import LazyImage from '../../components/LazyImage/LazyImage';
 import CardGroup from 'react-bootstrap/CardGroup';
 
 
@@ -22,9 +23,6 @@ function Home() {
 
 
   const [currentPage, setCurrentPage] = useState(1);
-
-
-
   const [totalItems, setTotalItems] = useState(19);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
@@ -45,7 +43,6 @@ function Home() {
     console.log("Tap Detected");
     fetchMoreBlogs();
   };
-
 
   // fetches the blogs. 
   useEffect(() => {
@@ -109,20 +106,12 @@ function Home() {
   }, [blogsLoading]);
 
 
-  // // initial request for neighborhoods 
-  // useEffect(() => {
-  // }, [currentPage]);
-
-
   // this will only take effect when the user scrolls down the neighborhoods.
   useEffect(() => {
-
-
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
         fetchMoreNeighborhoods(); // Fetch more data when loader comes into view
-
       }
     });
 
@@ -139,7 +128,6 @@ function Home() {
       }
     };
   }, [cursor]);
-
 
 
   const itemsPerPage = window.innerWidth < 768 ? 1 : 2// neighborhoods 
@@ -170,10 +158,10 @@ function Home() {
     // setCurrentPage(1); // Reset to first page on borough change
   };
 
-  const neighborhoodCards = filteredNeighborhoods.map((neighborhood) => {
-
+  const neighborhoodCards = filteredNeighborhoods.map((neighborhood, index) => {
+    const key = neighborhood._id ? `${neighborhood._id}-${index}` : index;
     return (
-      <Card className="neighborhoodCard" key={neighborhood._id}>
+      <Card className="neighborhoodCard" key={key}>
         <Card.Header as="h5">{neighborhood.neighborhood}{", "} {neighborhood.borough}</Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
@@ -202,7 +190,12 @@ function Home() {
   const blogCards = blogs.map((blog) => {
     return (
       <Card className="blogsCard" key={blog._id}>
-        <Card.Img variant="top" src={blog.coverImageUrl} />
+        <LazyImage
+          variant="top"
+          src={blog.coverImageUrl}
+          alt={blog.title}
+          style={{ width: '100%', height: 'auto' }} // Adjust the style as needed
+        />
         <CardBody>
           <Card.Title>{blog.title}</Card.Title>
         </CardBody>
@@ -222,7 +215,7 @@ function Home() {
   const fetchMoreBlogs = async () => {
 
     const container = blogContainerRef.current;
-    const shiftAmount = 200; // Adjust based on your design
+    const shiftAmount = 550; // Adjust based on your design
 
     if (container) {
       container.style.transform = `translateX(-${shiftAmount}px)`;
@@ -270,20 +263,19 @@ function Home() {
 
   const showPreviousBlogs = () => {
 
-
     // This would be a navigation function that adjusts state to show previous blogs without fetching new ones
     // For the purpose of demonstration, this could simply scroll to the left
     if (blogContainerRef.current) {
-
       const container = blogContainerRef.current;
       // Scroll to the left to show previous blogs
-      container.style.transform = `translateX(${200}px)`; // Adjust the value based on your layout
+      container.style.transform = `translateX(${550}px)`; // Adjust the value based on your layout
     }
   };
 
-
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
+
+
       <div style={{ width: '100%', overflowX: "hidden", backgroundColor: '#8080801c', display: "flex", position: 'relative' }}>
         {!blogsLoading ? (
           <>
@@ -292,15 +284,21 @@ function Home() {
                 <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
               </svg>
             </div>
+
+
             <div ref={blogContainerRef} className='articlesContainer' >
               {blogCards}
             </div>
 
             {/* Right Arrow */}
             <div className="arrowsContainer" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
+
+
               <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
               </svg>
+
+
             </div>
 
           </>
@@ -338,8 +336,6 @@ function Home() {
           neighborhoodCards
         ) : (<div >
           <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-
-          Loading
         </div>)}
       </div >
 
