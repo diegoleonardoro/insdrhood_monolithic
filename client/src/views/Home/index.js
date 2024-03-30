@@ -85,7 +85,11 @@ function Home() {
       // This is optional depending on whether you have subsequent code that depends on both being completed.
       await Promise.all([neighborhoodsPromise, blogsPromise]);
     };
+
+
     initialize();
+
+
 
   }, []);
 
@@ -273,6 +277,16 @@ function Home() {
     }
   };
 
+  function SkeletonLoader({ width, height }) {
+    // Inline styles for width and height customization
+    const style = {
+      width: width || '100%',
+      height: height || '20px',
+    };
+
+    return <div className="skeleton-loader" style={style}></div>;
+  }
+
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
 
@@ -304,8 +318,11 @@ function Home() {
 
           </>
         )
-          : (<div className="spinnerBlogs" style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline", margin: "40px", marginBottom: "150px" }}>
-            <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+          : (<div className="skeletonBlogs" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Mimic the structure of your blog card with skeleton loaders */}
+            <SkeletonLoader width="90%" height="200px" /> {/* For the image */}
+            <SkeletonLoader width="80%" height="20px" />  {/* For the title */}
+            <SkeletonLoader width="70%" height="20px" />  {/* For the button or small text */}
           </div>)}
 
       </div>
@@ -335,8 +352,16 @@ function Home() {
 
         {!neighborhoodsLoading ? (
           neighborhoodCards
-        ) : (<div >
-          <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
+        ) : (<div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {/* Repeat the SkeletonLoader or create multiple for simulating several cards */}
+          {[...Array(4)].map((_, index) => (
+            <div key={index} style={{ margin: '10px', width: 'calc(50% - 20px)' }}> {/* Adjust based on your card width */}
+              <SkeletonLoader width="100%" height="150px" /> {/* For the image or header */}
+              <SkeletonLoader width="90%" height="20px" />
+              <SkeletonLoader width="80%" height="20px" />
+              <SkeletonLoader width="70%" height="20px" />
+            </div>
+          ))}
         </div>)}
       </div >
 

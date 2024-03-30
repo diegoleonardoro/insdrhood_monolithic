@@ -1,4 +1,36 @@
 
+
+/* SkeletonLoader */
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-loader {
+  width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 4px;
+  margin: 10px 0;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1000px 104px;
+  animation: shimmer 1.5s linear infinite;
+}
+
+.skeleton-loader__shimmer {
+  transform: skewX(-20deg);
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.2);
+}
 .articlesContainer{
   display: flex;
   justify-content: center;
