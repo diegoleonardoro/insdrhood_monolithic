@@ -1,12 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
-import { createCheckoutSession } from "../controllers/payments";
+import { createCheckoutSession, stripeWebhooks } from "../controllers/payments";
 
 const router = express.Router();
-
-
 router.post('/create-checkout-session', createCheckoutSession);
+router.post('/webhook', stripeWebhooks);
 
-// app.post('/create-payment-intent', paymentIntent);
-
-
-export {router as payments}
+export { router as payments }

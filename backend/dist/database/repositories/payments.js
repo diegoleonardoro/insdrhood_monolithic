@@ -33,6 +33,7 @@ class PaymentsRepository {
             throw new bad_request_error_1.BadRequestError('An error occurred, unable to create session');
         }
     }
+    ;
 }
 exports.PaymentsRepository = PaymentsRepository;
 //# sourceMappingURL=payments.js.map

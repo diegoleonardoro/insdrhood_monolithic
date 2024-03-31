@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 
 import cookieSession from "cookie-session";
 import { json } from "body-parser";
@@ -15,6 +15,14 @@ const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
 
+declare global {
+  namespace Express {
+    interface Request {
+      rawBody?: Buffer;
+    }
+  }
+}
+
 const neighborhoodRepo = new NeighborhoodRepository();
 neighborhoodRepo.createIndexes();
 
@@ -28,7 +36,19 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(json());
+app.use(json({
+  verify: (req: Request, res: Response, buffer: Buffer, encoding: string) => {
+    // Store the raw body buffer
+    if (buffer && buffer.length) {
+      req.rawBody = buffer;
+    }
+  }
+}));
+
+
+
+
+
 app.set("trust proxy", true);
 
 app.use(

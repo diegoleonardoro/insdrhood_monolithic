@@ -3,6 +3,7 @@ import { connectToDatabase } from '../index';
 import { BadRequestError } from '../../errors/bad-request-error';
 
 export class PaymentsRepository {
+
   private stripeAPI: Stripe;
   private domainUrl: string;
 
@@ -34,5 +35,7 @@ export class PaymentsRepository {
       console.error(error);
       throw new BadRequestError('An error occurred, unable to create session');
     }
-  }
+  };
+
+
 }

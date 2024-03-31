@@ -28,7 +28,14 @@ app.use((0, cors_1.default)({
     origin: process.env.BASE_URL?.split(" "),
     credentials: true,
 }));
-app.use((0, body_parser_1.json)());
+app.use((0, body_parser_1.json)({
+    verify: (req, res, buffer, encoding) => {
+        // Store the raw body buffer
+        if (buffer && buffer.length) {
+            req.rawBody = buffer;
+        }
+    }
+}));
 app.set("trust proxy", true);
 app.use((0, cookie_session_1.default)({
     signed: false,
