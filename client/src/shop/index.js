@@ -82,7 +82,7 @@ const SHOP_DATA = [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/newyorkerframe1.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/NewYorkerHotel.jpg',
     ],
-    price: 1,
+    price: 29,
   },
   {
     id: 7,
