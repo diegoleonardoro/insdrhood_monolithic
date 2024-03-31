@@ -45,7 +45,7 @@ const SHOP_DATA = [
 
   {
     id: 4,
-    name:'Manhattan Skyline Photo',
+    name:'Digital Manhattan Skyline Photo - No Frame',
     title: 'Manhattan Glow',
     type: 'frame',
     description: 'Photo taken from the Domino Park waterfront in Williamsburg, Brooklyn, depicting the brightly lit skyline of midtown Manhattan. Captured in September 2022. 8 in. x 10 in./11 in. x 14 in. ',
@@ -68,7 +68,7 @@ const SHOP_DATA = [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/eldoradoframed.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/theElDorado.jpg',
     ],
-    price: 29,
+    price: 1,
   },
 
   {
