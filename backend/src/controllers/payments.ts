@@ -2,11 +2,21 @@ import { Request, Response } from "express";
 // import { BadRequestError } from "../errors/bad-request-error";
 import { stripeAPI } from "../services/stripe";
 import { PaymentsRepository } from "../database/repositories/payments";
-
-// import Stripe from 'stripe';
+import { OrdersRepository } from "../database/repositories/orders";
+import { ObjectId } from 'mongodb'
 
 
 const paymentsRepository = new PaymentsRepository(process.env.STRIPE_SECRET_KEY!, process.env.BASE_URL!);
+
+type OrderInformation = {
+  name: string;
+  email: string;
+  state: string;
+  city: string;
+  address: string;
+  postalCode: string;
+  orderId?: ObjectId; // Make orderId optional
+};
 
 /**
  * @description creates checkout session
@@ -68,11 +78,38 @@ export const stripeWebhooks = async (req: Request, res: Response) => {
 
   if (event?.type === 'checkout.session.completed') {
     const session = event.data.object;
-    
-    console.log('Event data', session);
-    
+
+
+    const ordersRepository = new OrdersRepository();
+
     //SAVE TO THE DATA BASE AND SEND CONFIRMATION EMAIL.
-    
+    const name = session.customer_details?.name as string;
+    const email = session.customer_details?.email as string;
+    const state = session.shipping_details?.address?.state as string;
+    const city = session.shipping_details?.address?.city as string;
+    const address = session.shipping_details?.address?.line1 + ' ' + session.shipping_details?.address?.line2
+    const postalCode = session.shipping_details?.address?.postal_code as string;
+
+    const orderInformation: OrderInformation = {
+      name,
+      email,
+      state,
+      city,
+      address,
+      postalCode
+    }
+
+    // Save Order to DB
+    const order = await ordersRepository.saveToDb(orderInformation);
+    orderInformation.orderId = order.orderId;
+
+
+    // Send Confirmation Email
+    await ordersRepository.sendOrderConfirmationEmail(
+      orderInformation
+    );
+
+
 
   };
 }

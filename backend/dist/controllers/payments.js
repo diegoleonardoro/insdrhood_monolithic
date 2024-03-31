@@ -4,7 +4,7 @@ exports.stripeWebhooks = exports.createCheckoutSession = void 0;
 // import { BadRequestError } from "../errors/bad-request-error";
 const stripe_1 = require("../services/stripe");
 const payments_1 = require("../database/repositories/payments");
-// import Stripe from 'stripe';
+const orders_1 = require("../database/repositories/orders");
 const paymentsRepository = new payments_1.PaymentsRepository(process.env.STRIPE_SECRET_KEY, process.env.BASE_URL);
 /**
  * @description creates checkout session
@@ -60,8 +60,27 @@ const stripeWebhooks = async (req, res) => {
     ;
     if (event?.type === 'checkout.session.completed') {
         const session = event.data.object;
-        console.log('Event data', session);
+        const ordersRepository = new orders_1.OrdersRepository();
         //SAVE TO THE DATA BASE AND SEND CONFIRMATION EMAIL.
+        const name = session.customer_details?.name;
+        const email = session.customer_details?.email;
+        const state = session.shipping_details?.address?.state;
+        const city = session.shipping_details?.address?.city;
+        const address = session.shipping_details?.address?.line1 + ' ' + session.shipping_details?.address?.line2;
+        const postalCode = session.shipping_details?.address?.postal_code;
+        const orderInformation = {
+            name,
+            email,
+            state,
+            city,
+            address,
+            postalCode
+        };
+        // Save Order to DB
+        const order = await ordersRepository.saveToDb(orderInformation);
+        orderInformation.orderId = order.orderId;
+        // Send Confirmation Email
+        await ordersRepository.sendOrderConfirmationEmail(orderInformation);
     }
     ;
 };

@@ -143,17 +143,11 @@ export const uploadFile = async (req: Request, res: Response) => {
  */
 
 export const uploadBlogFiles = async (req: Request, res: Response) => {
-
   const neighborhoodRepository = new NeighborhoodRepository();
   const { randomUUID } = req.params;
   const signedKeyUrl = await neighborhoodRepository.generateUploadUrl(randomUUID)
   res.send(signedKeyUrl);
-
 }
-
-
-
-
 
 /**
  * @description saves form data
@@ -161,7 +155,6 @@ export const uploadBlogFiles = async (req: Request, res: Response) => {
  * @access public 
  */
 export const saveNeighborhoodData = async (req: Request, res: Response) => {
-
   let user;
   if (req.currentUser) {
     user = await AuthRepository.getUser(req.currentUser!.email)

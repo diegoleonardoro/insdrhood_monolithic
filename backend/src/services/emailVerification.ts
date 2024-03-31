@@ -3,7 +3,7 @@ import * as nodemailer from 'nodemailer';
 import mjml from 'mjml';
 import { google } from "googleapis";
 const OAuth2 = google.auth.OAuth2;
-
+import { ObjectId } from 'mongodb';
 
 
 type SendEmailOptions = {
@@ -12,6 +12,16 @@ type SendEmailOptions = {
   subject: string;
   html: any;
   text: string;
+}
+
+interface OrderInfo {
+  name: string;
+  email: string;
+  state: string;
+  city: string;
+  address: string;
+  postalCode: string;
+  orderId?: ObjectId;
 }
 
 const sendEmail = async (emailOptions: SendEmailOptions) => {
@@ -166,4 +176,68 @@ export const sendNewsLetterEmail = (email: Email) => {
 
   sendEmail(mailOptions);
 
+}
+
+
+export const sendOrderConfirmationEmail = (emailInfo: OrderInfo) => {
+
+  const { name, email, state, city, address, postalCode, orderId } = emailInfo
+
+
+  const mjmlContent = `
+  
+  <mjml>
+  <mj-head>
+    <mj-title>Order Confirmation</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto" />
+    <mj-attributes>
+      <mj-all font-family="Roboto, sans-serif" />
+      <mj-text font-size="16px" line-height="24px" />
+    </mj-attributes>
+    <mj-style>
+      .title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333333;
+      }
+      .info-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333333;
+        margin-bottom: 5px;
+      }
+      .info {
+        margin-bottom: 15px;
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f0f0f0">
+    <mj-section background-color="#ffffff" padding="30px">
+      <mj-column>
+        <mj-text css-class="title">Thank you for your order!</mj-text>
+        <mj-text>We've received your order and will follow up with a tracking email once your package is on its way. Here are the details of your order:</mj-text>
+        <mj-text css-class="info-title">Customer Information</mj-text>
+        <mj-text css-class="info">Name: ${name}</mj-text>
+        <mj-text css-class="info">Address: ${address}, ${city}, ${state}, ${postalCode}</mj-text>
+        <mj-text css-class="info">Order Number: ${orderId?.toString()}</mj-text>
+        <mj-text>If you need any further information, please don't hesitate to contact us at:</mj-text>
+        <mj-text>Phone: 917-771-3734 </mj-text>
+        <mj-text>Email: diego@insiderhood.com </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+  
+  `
+
+  const { html } = mjml(mjmlContent);
+
+  const mailOptions = {
+    from: `Insider Hood <${process.env.Email}>`,
+    to: email,
+    subject: 'Thank you for your Order',
+    html: html,
+    text: "Insider Hood Order."
+  };
+  sendEmail(mailOptions);
 }
