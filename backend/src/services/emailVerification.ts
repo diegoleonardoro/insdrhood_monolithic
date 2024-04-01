@@ -183,7 +183,7 @@ export const sendOrderConfirmationEmail = (emailInfo: OrderInfo) => {
 
   const { name, email, state, city, address, postalCode, orderId } = emailInfo
 
-
+  console.log('emailInfo from send confirmatio email methiod', emailInfo)
   const mjmlContent = `
   
   <mjml>

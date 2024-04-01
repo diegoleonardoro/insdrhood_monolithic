@@ -17,6 +17,7 @@ class OrdersRepository {
         return { orderId };
     }
     async sendOrderConfirmationEmail(orderInfo) {
+        console.log('orderInfo from sendConfirmation email ', orderInfo);
         (0, emailVerification_1.sendOrderConfirmationEmail)(orderInfo);
     }
 }

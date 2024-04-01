@@ -33,6 +33,7 @@ export class OrdersRepository {
   }
 
   async sendOrderConfirmationEmail(orderInfo: OrderInfo): Promise<void> {
+    console.log('orderInfo from sendConfirmation email ', orderInfo)
     sendOrderConfirmationEmail(orderInfo)
   }
 

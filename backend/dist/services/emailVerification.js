@@ -161,6 +161,7 @@ const sendNewsLetterEmail = (email) => {
 exports.sendNewsLetterEmail = sendNewsLetterEmail;
 const sendOrderConfirmationEmail = (emailInfo) => {
     const { name, email, state, city, address, postalCode, orderId } = emailInfo;
+    console.log('emailInfo from send confirmatio email methiod', emailInfo);
     const mjmlContent = `
   
   <mjml>
