@@ -79,8 +79,6 @@ const stripeWebhooks = async (req, res) => {
         // Save Order to DB
         const order = await ordersRepository.saveToDb(orderInformation);
         orderInformation.orderId = order.orderId;
-        console.log("orderererere", order);
-        console.log("orderInformationre", orderInformation);
         // Send Confirmation Email
         await ordersRepository.sendOrderConfirmationEmail(orderInformation);
     }

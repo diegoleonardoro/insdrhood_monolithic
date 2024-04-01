@@ -77,25 +77,41 @@ const sendEmail = async (emailOptions) => {
 ;
 const sendVerificationMail = (user) => {
     const mjmlContent = `
-  <mjml>
-  <mj-head>
-    <mj-title>Verify Email</mj-title>
-    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500"></mj-font>
-    <mj-attributes>
-      <mj-all font-family="Montserrat, Helvetica, Arial, sans-serif"></mj-all>
-      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"></mj-text>
-      <mj-section padding="0px"></mj-section>
-    </mj-attributes>
-  </mj-head>
-  <mj-body background-color="#F2F2F2">
-    <mj-section vertical-align="middle" background-size="cover" background-repeat="no-repeat">
-      <mj-column width="100%">
-        <mj-text align="center" padding="50px 40px 0 40px" font-weight="300">Hello,${user.name}, Insider Hood will give you unique perspectives on the enchatning neighborgoohds of New York City. We kindly ask for your email verification </mj-text>
-        <mj-button href="${user.baseUrlForEmailVerification}/emailconfirmation/${user.emailToken[0]}" align="center" background-color="#5FA91D" color="#FFFFFF" border-radius="2px"  inner-padding="15px 30px" padding-bottom="100px" padding-top="20px">VERIFY EMAIL</mj-button>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>
+    <mjml>
+      <mj-head>
+        <mj-title>Order Confirmation</mj-title>
+        <mj-attributes>
+          <mj-all font-family="Roboto, Arial, sans-serif" />
+          <mj-text font-size="16px" line-height="24px" />
+        </mj-attributes>
+        <mj-style inline="inline">
+          .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333333;
+          }
+          .info-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 5px;
+          }
+          .info {
+            margin-bottom: 15px;
+          }
+        </mj-style>
+      </mj-head>
+      <mj-body background-color="#f0f0f0">
+        <mj-section background-color="#ffffff" padding="30px">
+          <mj-column>
+            <mj-text css-class="title">Hi ${name}, your order is confirmed!</mj-text>
+            <mj-text>We're getting your order ready to be shipped. We will notify you when it has been sent. Check your order details below:</mj-text>
+            <!-- Consider adding more details about the order here -->
+            <mj-text>If you have any questions, reply to this email or contact us at support@example.com.</mj-text>
+          </mj-column>
+        </mj-section>
+      </mj-body>
+    </mjml>
   `;
     // Compile MJML to HTML
     const { html } = (0, mjml_1.default)(mjmlContent);
