@@ -194,8 +194,7 @@ const sendOrderConfirmationEmail = (emailInfo) => {
       <mj-column>
         <mj-text css-class="title">Hi ${name}, thank you for your order!</mj-text>
         <mj-text>We will follow up with a tracking email once your package is on its way. Here are the details of your order:</mj-text>
-        <mj-text>If you need any further information, please don't hesitate to contact us at:</mj-text>
-        <mj-text>diego@insiderhood.com </mj-text>
+        <mj-text>If you need any further information, please don't hesitate to reply back to this email.</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

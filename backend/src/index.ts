@@ -45,10 +45,6 @@ app.use(json({
   }
 }));
 
-
-
-
-
 app.set("trust proxy", true);
 
 app.use(
