@@ -192,15 +192,10 @@ const sendOrderConfirmationEmail = (emailInfo) => {
   <mj-body background-color="#f0f0f0">
     <mj-section background-color="#ffffff" padding="30px">
       <mj-column>
-        <mj-text css-class="title">Thank you for your order!</mj-text>
-        <mj-text>We've received your order and will follow up with a tracking email once your package is on its way. Here are the details of your order:</mj-text>
-        <mj-text css-class="info-title">Customer Information</mj-text>
-        <mj-text css-class="info">Name: ${name}</mj-text>
-        <mj-text css-class="info">Address: ${address}, ${city}, ${state}, ${postalCode}</mj-text>
-        <mj-text css-class="info">Order Number: ${orderId?.toString()}</mj-text>
+        <mj-text css-class="title">Hi ${name}, thank you for your order!</mj-text>
+        <mj-text>We will follow up with a tracking email once your package is on its way. Here are the details of your order:</mj-text>
         <mj-text>If you need any further information, please don't hesitate to contact us at:</mj-text>
-        <mj-text>Phone: 917-771-3734 </mj-text>
-        <mj-text>Email: diego@insiderhood.com </mj-text>
+        <mj-text>diego@insiderhood.com </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
