@@ -32,7 +32,7 @@ export class OrdersRepository {
     return { orderId }
   }
 
-  async sendOrderConfirmationEmail(orderInfo: OrderInfo): Promise<void> {
+  async sendOrderConfirmationEmail_(orderInfo: OrderInfo): Promise<void> {
     console.log('orderInfo from sendConfirmation email ', orderInfo)
     sendOrderConfirmationEmail(orderInfo)
   }

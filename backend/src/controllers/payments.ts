@@ -76,8 +76,12 @@ export const stripeWebhooks = async (req: Request, res: Response) => {
     }
   };
 
+  console.log("eeveenttt", event);
+
   if (event?.type === 'checkout.session.completed') {
     const session = event.data.object;
+
+    console.log("sessssionnn", session);
 
 
     const ordersRepository = new OrdersRepository();
@@ -103,13 +107,10 @@ export const stripeWebhooks = async (req: Request, res: Response) => {
     const order = await ordersRepository.saveToDb(orderInformation);
     orderInformation.orderId = order.orderId;
 
-
-
     // Send Confirmation Email
-    await ordersRepository.sendOrderConfirmationEmail(
+    await ordersRepository.sendOrderConfirmationEmail_(
       orderInformation
     );
-
 
 
   };
