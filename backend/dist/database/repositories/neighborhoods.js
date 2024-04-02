@@ -27,6 +27,8 @@ class NeighborhoodRepository {
         const neighborhoodsCollection = db.collection(this.collectionName);
         await neighborhoodsCollection.createIndex({ borough: 1 });
         await neighborhoodsCollection.createIndex({ neighborhood: 1 });
+        await neighborhoodsCollection.createIndex({ neighborhoodDescription: 1 });
+        await neighborhoodsCollection.createIndex({ user: 1 });
     }
     async getAll({ cursor, pageSize }) {
         const db = await this.db;
@@ -47,8 +49,8 @@ class NeighborhoodRepository {
         if (neighborhoods.length > 0) {
             nextCursor = neighborhoods[neighborhoods.length - 1]._id;
         }
-        const executionPlan = await neighborhoodsCursor.explain('executionStats');
-        console.log('executionPlan form responses', executionPlan);
+        // const executionPlan = await neighborhoodsCursor.explain('executionStats');
+        // console.log('executionPlan form responses', executionPlan);
         return { neighborhoods, nextCursor: nextCursor?.toString() };
     }
     async getOne(neighborhoodId) {

@@ -1,25 +1,20 @@
-[
+ [
 
-    {
-    "_id": "1",
-    "name": "Greenwich Village",
-    "city": "New York",
-    "population": 12345,
-    "description": "A charming neighborhood with a rich history."
+  {
+    "_id": "65ed21f3d59e585aa48d9ae2",
+    "title": "El Dorado: An Icon of Art Deco",
+    "coverImageUrl":"https://insiderhood.s3.amazonaws.com/blog/1bc77528-687b-4707-b5b7-ef18900a4121/0b514c93-1c31-4331-9b46-2c24a85c8273"
+  },
+   {
+    "_id": "65f05c5eeb9c735d20ae75d5",
+    "title": "The Beresford Apartments, an Upper West Side Majesty",
+    "coverImageUrl":"https://insiderhood.s3.amazonaws.com/blog/6b2a3afd-37d4-4342-9fa7-3a964074f0b3/65af78ee-99df-4df1-8424-28cfb702efc5"
   },
   {
-    "_id": "2",
-    "name": "Soho",
-    "city": "New York",
-    "population": 6789,
-    "description": "Known for its architecture, art, and shopping."
-  },
-  {
-    "_id": "3",
-    "name": "Williamsburg",
-    "city": "New York",
-    "population": 1011,
-    "description": "A vibrant neighborhood with a strong cultural scene."
+    "_id": "65f062eceb9c735d20ae75d6",
+    "title": "The Cast Iron Legacy of SoHo's Urban Canvas",
+    "coverImageUrl":"https://insiderhood.s3.amazonaws.com/blog/ed249163-9d25-4881-b0c2-2bbee75bb362/171de8cd-dd8a-4206-bac7-72d4ae46d962"
   }
-  
+ 
+
 ]

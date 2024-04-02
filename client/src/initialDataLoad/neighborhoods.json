@@ -1,0 +1,32 @@
+[
+  
+  {
+    "_id": "65b1c142716c215bb9081837",
+    "neighborhoodDescription": "It’s a place of water meeting people with many layers - increasingly its uniqueness is being destroyed by the rezoning. ",
+    "user":{"id":"65b1c14f716c215bb9081838", "name":"Brad","email":"Brad.Vogel@gmail.com"},
+    "borough":"Brooklyn",
+    "neighborhood":"Gowanus"
+  },
+  {
+    "_id": "65b1d1e14b06d6bc3b7698d1",
+    "neighborhoodDescription": "Green space, nice old apartment buildings, diverse population.",
+    "user":{"id":"", "name":"","email":""},
+    "borough":"The Bronx",
+    "neighborhood":"Norwood"
+  },
+  {
+    "_id": "65b1e323d812ef2ad4bb208d",
+    "neighborhoodDescription": "Lively.",
+    "user":{"id":"65b1e335d812ef2ad4bb208e", "name":"Kim","email":"hkimlam@gmail.com"},
+    "borough":"Queens",
+    "neighborhood":"Astoria"
+  },
+  {
+    "_id": "65b807cd6b4f62b064176449",
+    "neighborhoodDescription": "Awesome.",
+    "user":{"id":"", "name":"","email":""},
+    "borough":"The Bronx",
+    "neighborhood":"Westchester Square"
+  }
+
+]

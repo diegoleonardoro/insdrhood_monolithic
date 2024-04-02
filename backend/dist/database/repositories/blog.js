@@ -33,8 +33,8 @@ class BlogRepository {
             if (cursor) {
                 query = { '_id': { '$gt': new mongodb_1.ObjectId(cursor) } };
             }
-            const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
-            console.log('explainOutput all blogs', explainOutput);
+            // const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
+            // console.log('explainOutput all blogs', explainOutput);
             const blogsCursor = blogsCollection.find(query)
                 .project(projection)
                 .limit(pageSize)

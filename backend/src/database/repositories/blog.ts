@@ -42,8 +42,8 @@ export class BlogRepository {
       }
 
 
-      const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
-      console.log('explainOutput all blogs', explainOutput);
+      // const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
+      // console.log('explainOutput all blogs', explainOutput);
 
       const blogsCursor = blogsCollection.find(query)
         .project(projection)

@@ -2,14 +2,14 @@ import React, { useState, useEffect, startTransition, useRef } from 'react';
 import './home.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Spinner from 'react-bootstrap/Spinner';
 import Card from "react-bootstrap/Card";
 import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
 import LazyImage from '../../components/LazyImage/LazyImage';
-import CardGroup from 'react-bootstrap/CardGroup';
 
+import blogsData from '../../initialDataLoad/blogs.json';
+import neighborhoodsData_ from '../../initialDataLoad/neighborhoods.json'
 
 function Home() {
 
@@ -36,12 +36,10 @@ function Home() {
   const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true)
 
   const handleTouchTap = () => {
-    // Your code to execute upon tap
-    console.log("Tap Detected");
     fetchMoreBlogs();
   };
 
-  // fetches the blogs. 
+  // initial static load of neighborhoods and blogs. 
   useEffect(() => {
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,27 +68,13 @@ function Home() {
     }
 
     const initialize = async () => {
-      if (token) {
-        // Your existing token logic here...
-      }
-      const neighborhoodsPromise = fetchMoreNeighborhoods().then(() => {
-        setNeighborhoodsLoading(false);
-      });
-
-      const blogsPromise = fetchMoreBlogs().then(() => {
-        setBlogsLoading(false);
-      });
-
-      // Wait for both promises to complete. 
-      // This is optional depending on whether you have subsequent code that depends on both being completed.
-      await Promise.all([neighborhoodsPromise, blogsPromise]);
+      setNeighborhoodsData(neighborhoodsData_);
+      setNeighborhoodsLoading(false);
+      setBlogs(blogsData);
+      blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
+      setBlogsLoading(false);
     };
-
-
     initialize();
-
-
-
   }, []);
 
   // used to attach event listener to the slider div that contains the blogs.
@@ -116,7 +100,7 @@ function Home() {
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
-        fetchMoreNeighborhoods(); // Fetch more data when loader comes into view
+        fetchMoreNeighborhoods(); 
       }
     });
 
@@ -176,7 +160,7 @@ function Home() {
               {' '}
             </p>
             <footer className="blockquote-footer">
-              {neighborhood.user.name != "" ? neighborhood.user.name : "Anonymous"}
+              {neighborhood.user.name !== "" ? neighborhood.user.name : "Anonymous"}
             </footer>
           </blockquote>
         </Card.Body>
@@ -193,6 +177,7 @@ function Home() {
   });
 
   const blogCards = blogs.map((blog) => {
+
     return (
       <Card className="blogsCard" key={blog._id}>
         <LazyImage
@@ -234,7 +219,7 @@ function Home() {
       });
 
       setBlogs(prevData => [...prevData, ...blogsResponse.data.blogs]);
-      blogsCursorRef.current = blogsResponse.data.nextCursor; //// <<==============--------
+      blogsCursorRef.current = blogsResponse.data.nextCursor;
 
       if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
         hasMoreBlogsRef.current = false;
