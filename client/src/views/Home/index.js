@@ -30,10 +30,13 @@ function Home() {
   const [blogsLoading, setBlogsLoading] = useState(true);
   const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true);
 
-  const handleTouchTap = () => {
-    fetchMoreBlogs();
-  };
+  const [isTapAllowed, setIsTapAllowed] = useState(true);
 
+  const handleTouchTap = () => {
+    if (isTapAllowed) {
+      fetchMoreBlogs();
+    }
+  };
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
     // Extract the token from the URL
@@ -206,7 +209,9 @@ function Home() {
       container.style.transform = `translateX(-${shiftAmount}px)`;
     }
 
-    if (!hasMoreBlogsRef.current) return;
+    if (!hasMoreBlogsRef.current || !isTapAllowed) return;
+
+    setIsTapAllowed(false); // Disable further taps
 
     try {
 
@@ -220,6 +225,7 @@ function Home() {
       if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
         hasMoreBlogsRef.current = false;
       }
+      setIsTapAllowed(true); 
     } catch (error) {
       console.error("Failed to fetch more blogs", error);
     }
