@@ -58,10 +58,8 @@ const stripeWebhooks = async (req, res) => {
         }
     }
     ;
-    console.log("eeveenttt", event);
     if (event?.type === 'checkout.session.completed') {
         const session = event.data.object;
-        console.log("sessssionnn", session);
         const ordersRepository = new orders_1.OrdersRepository();
         //SAVE TO THE DATA BASE AND SEND CONFIRMATION EMAIL.
         const name = session.customer_details?.name;
@@ -82,7 +80,9 @@ const stripeWebhooks = async (req, res) => {
         const order = await ordersRepository.saveToDb(orderInformation);
         orderInformation.orderId = order.orderId;
         // Send Confirmation Email
-        await ordersRepository.sendOrderConfirmationEmail_(orderInformation);
+        // await ordersRepository.sendOrderConfirmationEmail_(
+        //   orderInformation
+        // );
     }
     ;
 };

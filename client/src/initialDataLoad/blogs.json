@@ -1,0 +1,25 @@
+[
+
+    {
+    "_id": "1",
+    "name": "Greenwich Village",
+    "city": "New York",
+    "population": 12345,
+    "description": "A charming neighborhood with a rich history."
+  },
+  {
+    "_id": "2",
+    "name": "Soho",
+    "city": "New York",
+    "population": 6789,
+    "description": "Known for its architecture, art, and shopping."
+  },
+  {
+    "_id": "3",
+    "name": "Williamsburg",
+    "city": "New York",
+    "population": 1011,
+    "description": "A vibrant neighborhood with a strong cultural scene."
+  }
+  
+]
