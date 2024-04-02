@@ -18,22 +18,17 @@ function Home() {
   const [blogs, setBlogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBorough, setSelectedBorough] = useState('All');
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(19);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
-
   const [cursor, setCursor] = useState('');
-
-
   const loaderRef = useRef(null);
   const [hasMore, setHasMore] = useState(true);
   const blogContainerRef = useRef(null);
   const blogsCursorRef = useRef('');
   const hasMoreBlogsRef = useRef(true);
-
   const [blogsLoading, setBlogsLoading] = useState(true);
-  const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true)
+  const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true);
 
   const handleTouchTap = () => {
     fetchMoreBlogs();
@@ -205,13 +200,14 @@ function Home() {
   const fetchMoreBlogs = async () => {
 
     const container = blogContainerRef.current;
-    const shiftAmount = 550; // Adjust based on your design
+    const shiftAmount = 550; 
 
     if (container) {
       container.style.transform = `translateX(-${shiftAmount}px)`;
     }
 
     if (!hasMoreBlogsRef.current) return;
+
     try {
 
       const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`, {

@@ -23,7 +23,6 @@ import { useUserContext } from '../src/contexts/UserContext';
 import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
 
 
-
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
 const FormComponent = React.lazy(() => import("./components/Forms/1"));
@@ -45,7 +44,6 @@ function App() {
 
   const { currentuser_ } = useUserContext();
   return (
-
     <Router>
       <NavigationHistoryProvider>
         <div className="App">

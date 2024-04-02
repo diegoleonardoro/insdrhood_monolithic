@@ -146,11 +146,16 @@ const TShirtCustomizer = (props) => {
               </Button>
             }
 
-            <Button variant="primary" style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }}
-              onClick={() => navigate('/cart')}
-            >
-              PROCEED TO CHECKOUT
-            </Button>
+
+            {cartItems.length > 0 &&
+              <Button variant="primary" style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }}
+                onClick={() => navigate('/cart')}
+              >
+                GO TO CART
+              </Button>
+            }
+
+
 
           </div>
 

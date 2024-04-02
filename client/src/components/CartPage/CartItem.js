@@ -124,12 +124,12 @@ const CartItem = (props) => {
           {`Color ${color}`}
         </p>
       )}
-      <div style={{ marginLeft: "40px" }}>
+      <div className="detailsContainer">
         <div className='name-price'>
           {title && (
-            <h4>{title}</h4>
+            <h4 >{title}</h4>
           )}
-          <p>${price}</p>
+          <p>${price}.00</p>
         </div>
         <div className='quantity'>
           <p>{`Quantity: ${quantity}`}</p>

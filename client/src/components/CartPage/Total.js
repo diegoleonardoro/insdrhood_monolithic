@@ -9,7 +9,7 @@ const Total = ({ itemCount, total, history, clearCart }) => {
     <div className='total-container'>
       <div className='total'>
         <p>Total Items: {itemCount}</p>
-        <p>{`Total: $${total}`}</p>
+        <p>{`Total: $${total}.00`}</p>
       </div>
       <div className='checkout'>
         <button

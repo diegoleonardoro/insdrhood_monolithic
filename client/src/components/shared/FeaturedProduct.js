@@ -106,7 +106,7 @@ const FeaturedProduct = (props) => {
       </Slider>
       <div style={{ margin: '30px', textAlign: "start" }} className='name-price'>
         <h3>{title}</h3>
-        <p>$ {price}</p>
+        <p>${price}.00</p>
         <p >{description}</p>
         {
           !itemInCart &&
@@ -117,9 +117,13 @@ const FeaturedProduct = (props) => {
           <Button style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} variant="primary" onClick={() => increase(product)} >ADD MORE</Button>
         }
 
-        <Button variant="primary" style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} onClick={() => navigate('/cart')}>
-          PROCEED TO CHECKOUT
-        </Button>
+        {cartItems.length > 0 &&
+          <Button variant="primary" style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} onClick={() => navigate('/cart')}>
+            GO TO CART
+          </Button>
+        }
+
+
 
       </div>
     </div>
