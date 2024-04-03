@@ -76,10 +76,10 @@
 
 .blogsCard{
 
-    flex: 0 0 auto; /* Do not grow or shrink */
+  flex: 0 0 auto; /* Do not grow or shrink */
   height: 500px; /* Fixed height */
   width: 400px; /* Fixed width, adjust as needed */
-  margin: 0 10px;
+  margin: 10px !important;
   /* flex: 1 1 0px; 
   height: 500px;
   width:500px;
