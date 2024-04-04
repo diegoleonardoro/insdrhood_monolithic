@@ -35,7 +35,8 @@
   font-size: 3em; /* Sets the size of the title */
   font-weight: bold; /* Makes the title bold */
   color: #333; /* Sets the color of the title text */
-  margin-bottom: 0.5em; /* Adds space below the title */
+  margin-bottom: 0.5em;
+  margin-top: 50px; 
   line-height: 1.2; /* Adjusts the spacing between lines of text */
   text-transform: uppercase; /* Optional: makes the title uppercase */
   font-family: 'Arial', sans-serif; /* Specifies the font */

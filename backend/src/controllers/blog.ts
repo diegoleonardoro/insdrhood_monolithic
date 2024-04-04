@@ -14,6 +14,31 @@ export const saveBlogPost = async (req: Request, res: Response) => {
 }
 
 /**
+ * @description user posts blog post
+ * @route PUT /api/blog/post/:blogid
+ * @access public
+*/
+export const updateBlog = async(req:Request, res: Response)=>{
+
+  const { blogid } = req.params;
+  const blogsRepository = new BlogRepository();
+  const updateData = req.body;
+
+
+
+  try {
+    const blog = await blogsRepository.updateBlog(blogid, updateData);
+    // Assuming you want to send back a success response
+    res.json({ success: true, message: 'Blog updated successfully', blog });
+  } catch (error) {
+    // Handle error, for example, by sending a response with an error message
+    res.status(400).json({ success: false });
+  }
+
+}
+
+
+/**
  * @description gets a specific glov 
  * @route GET /post/:blogid
  * @access public
@@ -25,16 +50,12 @@ export const getBlog = async (req: Request, res: Response) => {
   res.status(200).send(blog);
 }
 
-
 /**
  * @description gets a specific glov 
  * @route GET /api/blog/getblogs
  * @access public
 */
-
 export const getAllBlogs = async (req: Request, res: Response) => {
-
-
   const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
   const cursorParam = req.query.cursor;
   let cursor: ObjectId | undefined = undefined;

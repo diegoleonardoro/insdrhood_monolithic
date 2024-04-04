@@ -45,9 +45,10 @@ LazyImageBlot.tagName = 'img'; // Use the 'img' tag for this blot
 Quill.register({ 'formats/customBlot': LazyImageBlot }, true);
 
 
-const BlogEditor = () => {
+const BlogEditor = (props) => {
 
-  const [editorContent, setEditorContent] = useState('');
+  const { blogHtml, converImage, id, selectedProducts_, title_ } = props;
+  const [editorContent, setEditorContent] = useState(blogHtml ? blogHtml : '');
   const quillRef = useRef(null);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
   const [displayAuthForm, setDisplayAuthForm] = useState(false);
@@ -57,12 +58,10 @@ const BlogEditor = () => {
   const [errors, setErrors] = useState(null);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const navigate = useNavigate();
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(title_ ? title_ : '');
   const [showTypeTitle, setShowTypeTitle] = useState(false);
-  const [coverImageUrl, setCoverImageUrl] = useState("");
-  const [selectedProducts, setSelectedProducts] = useState([]);
-
-
+  const [coverImageUrl, setCoverImageUrl] = useState(converImage ? converImage : "");
+  const [selectedProducts, setSelectedProducts] = useState(selectedProducts_ ? selectedProducts_ : []);
   const { products } = useContext(ProductsContext);
 
   const handleProductChange = (product) => {
@@ -78,11 +77,11 @@ const BlogEditor = () => {
   const closeAuthForm = () => {
     setDisplayAuthForm(false)
   };
+
   const handleTitleChange = (e) => {
     setShowTypeTitle(false);
     setTitle(e.target.value);
   };
-
 
   const validateEmail = (email) => {
     // Regular expression to test the email format
@@ -159,6 +158,7 @@ const BlogEditor = () => {
       </Form.Group>
     </div>
   );
+
   const displaySignInForm = () => (
     <div className="authElementsContainer">
       <Form.Group as={Row} className="mb-3" controlId="formHorizontalFirstName">
@@ -250,7 +250,6 @@ const BlogEditor = () => {
     }
   };
 
-
   const saveContent = async (e) => {
     e.preventDefault();
     if (title === '') {
@@ -262,19 +261,38 @@ const BlogEditor = () => {
     if (content === "") {
       return
     };
+
+
     if (currentuser_) {
 
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
-        {
+
+      // if the component was rendered as a child component then make a request to update the data
+      if (Object.keys(props).length > 0) {
+
+        await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`, {
           content: content,
           userId: currentuser_.id,
           title: title,
           selectedProducts: selectedProducts,
           coverImageUrl: coverImageUrl
-        });
+        })
+        // make request to udpate the blog:
+        window.location.href = `/post/${id}`;
 
-      // make request to the blog using the insertedId
-      navigate(`/post/${response.data.insertedId}`);
+      } else {
+        // if the component was renderes from a url path then make a request to save the data.
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post`,
+          {
+            content: content,
+            userId: currentuser_.id,
+            title: title,
+            selectedProducts: selectedProducts,
+            coverImageUrl: coverImageUrl
+          });
+        navigate(`/post/${response.data.insertedId}`);
+      }
+
+
 
     } else {
       setDisplayAuthForm(true)
@@ -285,7 +303,7 @@ const BlogEditor = () => {
 
     <div>
       <div className="editor-container">
-        <Form.Control onChange={handleTitleChange} style={{ marginBottom: "10px" }} size="lg" type="text" placeholder="Title" />
+        <Form.Control value={title} onChange={handleTitleChange} style={{ marginBottom: "10px" }} size="lg" type="text" placeholder="Title" />
         {showTypeTitle && <p style={{ color: 'red' }}>Please provide a title to your post.</p>}
 
         <Form.Group controlId="formFile" className="mb-3">
@@ -311,8 +329,6 @@ const BlogEditor = () => {
           </div>
         </Form>
 
-
-
         <ReactQuill
           ref={quillRef}
           value={editorContent}
@@ -320,7 +336,6 @@ const BlogEditor = () => {
           modules={modules} // Assuming you have modules configured
           className="editor"
         />
-
         <Button style={{ width: "100%", marginTop: "10px" }} variant="dark" onClick={saveContent}>Save</Button>
       </div>
 

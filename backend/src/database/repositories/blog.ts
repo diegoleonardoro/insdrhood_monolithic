@@ -93,5 +93,29 @@ export class BlogRepository {
   }
 
 
+  public async updateBlog(blogId: string, updateData: {}): Promise<Document> {
+    try {
+      const db = await this.db;
+      const blogsCollection = db.collection(this.collectionName);
+
+      // The $set operator replaces the value of a field with the specified value
+      const updateResult = await blogsCollection.updateOne(
+        { _id: new ObjectId(blogId) }, // Filter document by _id
+        { $set: updateData } // Update document specifying the fields to update
+      );
+
+      if (updateResult.matchedCount === 0) {
+        throw new BadRequestError('Blog not found');
+      }
+
+      return updateResult; // Return the result of the update operation
+    } catch (error) {
+      console.error('Failed to update the blog post', error);
+      throw new BadRequestError('Failed to update the blog post');
+    }
+  }
+
+
+
 
 }

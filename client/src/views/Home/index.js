@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
 import LazyImage from '../../components/LazyImage/LazyImage';
-
 import blogsData from '../../initialDataLoad/blogs.json';
 import neighborhoodsData_ from '../../initialDataLoad/neighborhoods.json'
 

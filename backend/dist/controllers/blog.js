@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllBlogs = exports.getBlog = exports.saveBlogPost = void 0;
+exports.getAllBlogs = exports.getBlog = exports.updateBlog = exports.saveBlogPost = void 0;
 const blog_1 = require("../database/repositories/blog");
 const mongodb_1 = require("mongodb");
 /**
@@ -14,6 +14,26 @@ const saveBlogPost = async (req, res) => {
     res.status(201).send(newBlog);
 };
 exports.saveBlogPost = saveBlogPost;
+/**
+ * @description user posts blog post
+ * @route PUT /api/blog/post/:blogid
+ * @access public
+*/
+const updateBlog = async (req, res) => {
+    const { blogid } = req.params;
+    const blogsRepository = new blog_1.BlogRepository();
+    const updateData = req.body;
+    try {
+        const blog = await blogsRepository.updateBlog(blogid, updateData);
+        // Assuming you want to send back a success response
+        res.json({ success: true, message: 'Blog updated successfully', blog });
+    }
+    catch (error) {
+        // Handle error, for example, by sending a response with an error message
+        res.status(400).json({ success: false });
+    }
+};
+exports.updateBlog = updateBlog;
 /**
  * @description gets a specific glov
  * @route GET /post/:blogid

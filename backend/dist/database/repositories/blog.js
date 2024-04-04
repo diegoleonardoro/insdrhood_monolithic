@@ -78,6 +78,24 @@ class BlogRepository {
             throw new bad_request_error_1.BadRequestError('Failed to save the blog post');
         }
     }
+    async updateBlog(blogId, updateData) {
+        try {
+            const db = await this.db;
+            const blogsCollection = db.collection(this.collectionName);
+            // The $set operator replaces the value of a field with the specified value
+            const updateResult = await blogsCollection.updateOne({ _id: new mongodb_1.ObjectId(blogId) }, // Filter document by _id
+            { $set: updateData } // Update document specifying the fields to update
+            );
+            if (updateResult.matchedCount === 0) {
+                throw new bad_request_error_1.BadRequestError('Blog not found');
+            }
+            return updateResult; // Return the result of the update operation
+        }
+        catch (error) {
+            console.error('Failed to update the blog post', error);
+            throw new bad_request_error_1.BadRequestError('Failed to update the blog post');
+        }
+    }
 }
 exports.BlogRepository = BlogRepository;
 //# sourceMappingURL=blog.js.map
