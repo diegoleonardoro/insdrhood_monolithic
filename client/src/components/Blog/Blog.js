@@ -38,7 +38,6 @@ const Blog = () => {
     .filter(product => associatedProducts?.includes(product.name))
     .map(product => product)
 
-  console.log('associatedProducts', associatedProducts)
 
   const productsList = filteredProds.map((prod) => {
     if (prod.id !== 7) {
@@ -50,6 +49,7 @@ const Blog = () => {
   });
 
   const getBlog = async () => {
+
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`);
     setTitle(response.data.title);
     const cleanHTML = DOMPurify.sanitize(response.data.content);
@@ -57,12 +57,12 @@ const Blog = () => {
     setAssociatedProducts(response.data.selectedProducts);
     setBlogUserid(response.data.userId)
     setCoverImage(response.data.coverImageUrl);
+    setIsLoading(false);
   }
 
   useEffect(() => {
     // make request to fetch the blog post:
     getBlog()
-    setIsLoading(false);
 
   }, [])
 
@@ -100,8 +100,9 @@ const Blog = () => {
   if (isLoading) {
     return (
       <div style={{ position: "relative", left: "45%", transform: "translate(-50%, 0)", display: "inline" }}>
-        <Spinner style={{ position: "relative", height: "100px", width: "100px", top: "50px" }} animation="grow" />
-        <div style={{ display: "inline", position: "absolute", bottom: "-10px", left: "15px", color: "white" }}>Loading...</div>
+        <Spinner style={{ marginTop: "80px" }} animation="border" variant="danger" />
+        <Spinner style={{ marginTop: "80px" }} animation="border" variant="warning" />
+        <Spinner style={{ marginTop: "80px" }} animation="border" variant="info" />
       </div>
     )
   }
@@ -160,8 +161,10 @@ const Blog = () => {
             )}
 
             <h1 className="article-title">{title}</h1>
-            {productsList}
+
             <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
+
+            {productsList}
           </div>
 
         ) :

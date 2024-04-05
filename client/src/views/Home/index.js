@@ -28,13 +28,13 @@ function Home() {
   const hasMoreBlogsRef = useRef(true);
   const [blogsLoading, setBlogsLoading] = useState(true);
   const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true);
-
+  const blogContainer = blogContainerRef.current;
   const [isTapAllowed, setIsTapAllowed] = useState(true);
 
   const handleTouchTap = () => {
-    if (isTapAllowed) {
-      fetchMoreBlogs();
-    }
+    // if (isTapAllowed) {
+    fetchMoreBlogs();
+    // }
   };
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
@@ -65,20 +65,25 @@ function Home() {
     }
 
     const initialize = async () => {
+
       setNeighborhoodsData(neighborhoodsData_);
       setNeighborhoodsLoading(false);
       setBlogs(blogsData);
       blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
+
       setBlogsLoading(false);
     };
+
     initialize();
+
   }, []);
+
+
 
   // used to attach event listener to the slider div that contains the blogs.
   useEffect(() => {
     if (!blogsLoading) {
       const blogContainer = blogContainerRef.current;
-
       if (blogContainer) {
         // Listen for touchstart events to detect a tap
         blogContainer.addEventListener('touchstart', handleTouchTap);
@@ -89,6 +94,7 @@ function Home() {
         };
       }
     }
+
   }, [blogsLoading]);
 
 
@@ -97,7 +103,7 @@ function Home() {
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
-        fetchMoreNeighborhoods(); 
+        fetchMoreNeighborhoods();
       }
     });
 
@@ -197,21 +203,21 @@ function Home() {
         </Card.Footer>
       </Card>
     );
-    
+
   });
 
   const fetchMoreBlogs = async () => {
 
     const container = blogContainerRef.current;
-    const shiftAmount = 550; 
+    const shiftAmount = 550;
 
     if (container) {
       container.style.transform = `translateX(-${shiftAmount}px)`;
     }
 
-    if (!hasMoreBlogsRef.current || !isTapAllowed) return;
+    if (!hasMoreBlogsRef.current) return;//|| !isTapAllowed
 
-    setIsTapAllowed(false); // Disable further taps
+    // setIsTapAllowed(false); // Disable further taps
 
     try {
 
@@ -225,7 +231,7 @@ function Home() {
       if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
         hasMoreBlogsRef.current = false;
       }
-      setIsTapAllowed(true); 
+      // setIsTapAllowed(true);
     } catch (error) {
       console.error("Failed to fetch more blogs", error);
     }

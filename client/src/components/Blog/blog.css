@@ -45,11 +45,11 @@
 }
 
 
-img:not(.imageContainer img) {
+img {
   /* Your styles for all images except those under the div */
   flex: 0 0 auto; /* Prevents images from stretching */
   scroll-snap-align: start; /* Ensures images snap into place */
-  width: 100%; /* Sets image width */
+  width: 90%; /* Sets image width */
   margin-right: 10px; /* Adds space between images */
   /* max-width:400px !important; */
   position: relative;
