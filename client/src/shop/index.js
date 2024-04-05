@@ -87,6 +87,7 @@ const SHOP_DATA = [
   {
     id: 7,
     darkLogoImage: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorker.png',
+    name:'New Yorker Tshirt',
     type: 't-shirt',
     whiteLogoImage: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png',
     text: 'The New Yorker Hotel, constructed in 1929 and masterfully designed by the architectural duo Sugarman and Berger, stands as a quintessential embodiment of the Art Deco style.',

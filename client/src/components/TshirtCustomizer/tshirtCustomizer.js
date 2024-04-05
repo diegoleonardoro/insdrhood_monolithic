@@ -108,6 +108,7 @@ const TShirtCustomizer = (props) => {
               <option value="S">S</option>
               <option value="M">M</option>
               <option value="L">L</option>
+              <option value="XL">XL</option>
             </select>
           </label>
         </div>

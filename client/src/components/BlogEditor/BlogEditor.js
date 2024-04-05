@@ -47,7 +47,7 @@ Quill.register({ 'formats/customBlot': LazyImageBlot }, true);
 
 const BlogEditor = (props) => {
 
-  const { blogHtml, converImage, id, selectedProducts_, title_ } = props;
+  const { blogHtml, coverImage, id, selectedProducts_, title_ } = props;
   const [editorContent, setEditorContent] = useState(blogHtml ? blogHtml : '');
   const quillRef = useRef(null);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
@@ -60,7 +60,7 @@ const BlogEditor = (props) => {
   const navigate = useNavigate();
   const [title, setTitle] = useState(title_ ? title_ : '');
   const [showTypeTitle, setShowTypeTitle] = useState(false);
-  const [coverImageUrl, setCoverImageUrl] = useState(converImage ? converImage : "");
+  const [coverImageUrl, setCoverImageUrl] = useState(coverImage ? coverImage : "");
   const [selectedProducts, setSelectedProducts] = useState(selectedProducts_ ? selectedProducts_ : []);
   const { products } = useContext(ProductsContext);
 
@@ -262,13 +262,9 @@ const BlogEditor = (props) => {
       return
     };
 
-
     if (currentuser_) {
-
-
       // if the component was rendered as a child component then make a request to update the data
       if (Object.keys(props).length > 0) {
-
         await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`, {
           content: content,
           userId: currentuser_.id,
@@ -291,8 +287,6 @@ const BlogEditor = (props) => {
           });
         navigate(`/post/${response.data.insertedId}`);
       }
-
-
 
     } else {
       setDisplayAuthForm(true)

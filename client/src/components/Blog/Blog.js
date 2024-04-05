@@ -9,6 +9,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import SingleProduct from "../SingleProduct/SingleProduct";
+import TShirtCustomizer from "../TshirtCustomizer/tshirtCustomizer";
 import { ProductsContext } from "../../contexts/products-context";
 import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate } from "react-router-dom";
@@ -33,15 +34,20 @@ const Blog = () => {
   const [editContent, setEditContent] = useState(false);
   const [coverImage, setCoverImage] = useState('')
 
-  const filteredIds = products
+  const filteredProds = products
     .filter(product => associatedProducts?.includes(product.name))
-    .map(product => product.id)
+    .map(product => product)
 
-  const productsList = filteredIds.map((id) => {
-    return (
-      <SingleProduct key={id} productId={id} />
-    )
-  })
+  console.log('associatedProducts', associatedProducts)
+
+  const productsList = filteredProds.map((prod) => {
+    if (prod.id !== 7) {
+      return <SingleProduct key={prod.id} productId={prod.id} />;
+    } else {
+      // Spread the prod properties into TShirtCustomizer, ensuring it also receives the key prop.
+      return <TShirtCustomizer {...prod} key={prod.id} />;
+    }
+  });
 
   const getBlog = async () => {
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/post/${id}`);
@@ -100,13 +106,10 @@ const Blog = () => {
     )
   }
 
-
   const handleEditClick = () => {
     //send user to the editor. 
     setEditContent(true)
   };
-
-
 
   return (
     <>
@@ -160,6 +163,7 @@ const Blog = () => {
             {productsList}
             <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
           </div>
+
         ) :
 
           (<BlogEditor
@@ -168,18 +172,13 @@ const Blog = () => {
             title_={title}
             selectedProducts_={associatedProducts}
             coverImage={coverImage}
-             
+
 
           />)
 
       )}
     </>
   );
-
-
-
-
-
 
 
 }

@@ -196,7 +196,8 @@ function Home() {
           </Button>
         </Card.Footer>
       </Card>
-    )
+    );
+    
   });
 
   const fetchMoreBlogs = async () => {
@@ -276,7 +277,6 @@ function Home() {
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
 
-
       <div style={{ width: '100%', overflowX: "hidden", backgroundColor: '#8080801c', display: "flex", position: 'relative' }}>
         {!blogsLoading ? (
           <>
@@ -294,14 +294,10 @@ function Home() {
             {/* Right Arrow */}
             <div className="arrowsContainer" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
 
-
               <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
               </svg>
-
-
             </div>
-
           </>
         )
           : (<div className="skeletonBlogs" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -351,7 +347,6 @@ function Home() {
         </div>)}
       </div >
 
-
       <div
         ref={loaderRef}
         style={{
@@ -367,7 +362,6 @@ function Home() {
           <div style={{ textAlign: "center", width: "100%" }}>Loading...</div>
         ) : null}
       </div>
-
 
     </div>
   );
