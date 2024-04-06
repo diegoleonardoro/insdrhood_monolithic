@@ -7,7 +7,7 @@
   width:80%;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   margin:auto;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 /* T-Shirt Customizer Styles */
@@ -28,7 +28,7 @@
 .tshirt-display img.logo {
   position: absolute;
   top: 20%;
-  left: 58%;
+  left: 65%;
   width: 15%;
   /* mix-blend-mode: multiply; */
 }

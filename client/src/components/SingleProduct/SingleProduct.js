@@ -7,11 +7,11 @@ import "./singleProduct.css";
 import { useNavigate } from "react-router-dom";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
-
+import Button from 'react-bootstrap/Button';
 
 const SingleProduct = (props) => {
 
-  
+
   const params = useParams();
   const id = props.productId || params.id;
 
@@ -133,15 +133,19 @@ const SingleProduct = (props) => {
         </Slider>
       </div>
       <div className='product-details'>
+        <div className='product-description'>
+          <p>
+            {title}
+          </p>
+        </div>
         <div className='name-price'>
-          <h3>{title}</h3>
           <p>${price}.00</p>
         </div>
         <div className='add-to-cart-btns'>
           {
             !itemInCart &&
             <button
-              className='button is-white nomad-btn'
+              className='button is-black'
               id='btn-white-outline'
               onClick={() => addProduct(product)}>
               ADD TO CART
@@ -150,23 +154,23 @@ const SingleProduct = (props) => {
           {
             itemInCart &&
             <button
-              className='button is-white nomad-btn'
+              className='button is-black'
               id='btn-white-outline'
               onClick={() => increase(product)}>
               ADD MORE
             </button>
           }
 
-          {/* <button className='button is-black nomad-btn' id='btn-white-outline' onClick={() => navigate('/checkout')}>
-            PROCEED TO CHECKOUT
-          </button> */}
+          {cartItems.length > 0 &&
+            <Button variant="primary" style={{  width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }}
+              onClick={() => navigate('/cart')}
+            >
+              GO TO CART
+            </Button>
+          }
 
         </div>
-        <div className='product-description'>
-          <p>
-            {description}
-          </p>
-        </div>
+
       </div>
     </div>
 

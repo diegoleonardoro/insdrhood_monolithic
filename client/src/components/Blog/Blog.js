@@ -66,7 +66,6 @@ const Blog = () => {
 
   }, [])
 
-
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
     setEmail(inputEmail);
@@ -164,6 +163,7 @@ const Blog = () => {
 
             <div className="blogContainer" dangerouslySetInnerHTML={{ __html: blogHtml }} />
 
+            {productsList.length > 0 ? (<h1 style={{textAlign:'center', margin:'20px'}}>Explore products that embody the essence of neighborhoods and places.</h1>) : null}
             {productsList}
           </div>
 
