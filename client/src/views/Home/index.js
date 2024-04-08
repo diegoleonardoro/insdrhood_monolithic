@@ -36,6 +36,7 @@ function Home() {
     fetchMoreBlogs();
     // }
   };
+
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
     // Extract the token from the URL
@@ -65,20 +66,21 @@ function Home() {
     }
 
     const initialize = async () => {
-
       setNeighborhoodsData(neighborhoodsData_);
       setNeighborhoodsLoading(false);
+
+      console.log("neighborhoodsData_", neighborhoodsData_[neighborhoodsData_.length - 1]._id)
+
+      setCursor(neighborhoodsData_[neighborhoodsData_.length - 1]._id)
+
       setBlogs(blogsData);
       blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
-
       setBlogsLoading(false);
     };
 
     initialize();
 
   }, []);
-
-
 
   // used to attach event listener to the slider div that contains the blogs.
   useEffect(() => {
@@ -100,6 +102,8 @@ function Home() {
 
   // this will only take effect when the user scrolls down the neighborhoods.
   useEffect(() => {
+    console.log("yoooo")
+
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];
       if (first.isIntersecting) {
@@ -119,7 +123,10 @@ function Home() {
         observer.unobserve(currentLoader);
       }
     };
+
   }, [cursor]);
+
+
 
 
   const itemsPerPage = window.innerWidth < 768 ? 1 : 2// neighborhoods 
@@ -241,18 +248,23 @@ function Home() {
 
     if (!hasMore) return;
 
+
     try {
+
+      console.log("cursor", cursor);
+
       const neighborhoodsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
         params: { cursor, pageSize: itemsPerPage },
       });
 
       setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]);
+      
       setCursor(neighborhoodsResponse.data.nextCursor);
 
       if (!neighborhoodsResponse.data.nextCursor || neighborhoodsResponse.data.neighborhoods.length < itemsPerPage) {
         setHasMore(false);
-
       }
+
     } catch (error) {
       console.error("Failed to fetch more neighborhoods", error);
     }

@@ -199,15 +199,13 @@ const BlogEditor = (props) => {
     setCoverImageUrl(imageUrl);
   }
 
-  const imageHandler = useCallback((e) => {
 
+  const imageHandler = useCallback((e) => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
     input.click();
-
     input.onchange = async () => {
-
       const imageFile = input.files[0];
       const formData = new FormData();
       formData.append('image', imageFile);
@@ -222,14 +220,29 @@ const BlogEditor = (props) => {
       const imageUrl = `https://insiderhood.s3.amazonaws.com/${imageUploadConfig.data.key}`;
       const editor = quillRef.current.getEditor();
       const range = editor.getSelection();
-
-
       editor.insertEmbed(range.index, 'image', imageUrl);
-
-
     };
-
   }, []);
+
+  const insertGraphPlaceholder = (graphType) => {
+    console.log('jiji')
+
+
+    if (quillRef.curren) {
+
+      const editor = quillRef.current.getEditor();
+
+      const range = editor.getSelection();
+      if (range) {
+
+        const placeholder = `[D3_${graphType.toUpperCase()}_PLACEHOLDER]`;
+        editor.insertText(range.index, placeholder, Quill.sources.USER);
+        editor.setSelection(range.index + placeholder.length);
+      }
+    }
+
+
+  };
 
   const modules = {
     toolbar: {
@@ -242,6 +255,8 @@ const BlogEditor = (props) => {
       ],
       handlers: {
         image: imageHandler,
+        insertBarChart: insertGraphPlaceholder('BAR_CHART'),//
+        insertLineChart: insertGraphPlaceholder('LINE_CHART'),//
       },
     },
     imageResize: {
@@ -292,6 +307,7 @@ const BlogEditor = (props) => {
       setDisplayAuthForm(true)
     }
   };
+
 
   return (
 
