@@ -1,17 +1,6 @@
 const SHOP_DATA = [
 
-  {
-    id: 1,
-    name:'NY Subway Canvas',
-    type:'canvas',
-    title: 'New York Subway Train Canvas Print Poster Painting',
-    description: 'Iconic NYC subway. 30x42cm. No Frame. Shipping included.',
-    imageUrl: [
-      'https://ae01.alicdn.com/kf/Se480397f62b245aca714f0f9b3042859F/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp',
-      'https://ae01.alicdn.com/kf/S14bbc59109a244ab80fb9b7314d4381e9/New-York-Subway-Train-Canvas-Print-Poster-Painting-Iconic-NYC-Manhattan-Travel-Wall-Pictures-Art-Minimal.jpg_.webp'
-    ],
-    price: 20,
-  },
+
 
   {
     id: 2,

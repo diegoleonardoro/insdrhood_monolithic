@@ -68,11 +68,7 @@ function Home() {
     const initialize = async () => {
       setNeighborhoodsData(neighborhoodsData_);
       setNeighborhoodsLoading(false);
-
-      console.log("neighborhoodsData_", neighborhoodsData_[neighborhoodsData_.length - 1]._id)
-
       setCursor(neighborhoodsData_[neighborhoodsData_.length - 1]._id)
-
       setBlogs(blogsData);
       blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
       setBlogsLoading(false);
@@ -125,8 +121,6 @@ function Home() {
     };
 
   }, [cursor]);
-
-
 
 
   const itemsPerPage = window.innerWidth < 768 ? 1 : 2// neighborhoods 
@@ -247,7 +241,6 @@ function Home() {
   const fetchMoreNeighborhoods = async () => {
 
     if (!hasMore) return;
-
 
     try {
 
