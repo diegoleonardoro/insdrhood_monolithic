@@ -83,42 +83,42 @@ interface User {
 export const sendVerificationMail = (user: User) => {
 
   const mjmlContent = `
-    <mjml>
-      <mj-head>
-        <mj-title>Order Confirmation</mj-title>
-        <mj-attributes>
-          <mj-all font-family="Roboto, Arial, sans-serif" />
-          <mj-text font-size="16px" line-height="24px" />
-        </mj-attributes>
-        <mj-style inline="inline">
-          .title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333333;
-          }
-          .info-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333333;
-            margin-bottom: 5px;
-          }
-          .info {
-            margin-bottom: 15px;
-          }
-        </mj-style>
-      </mj-head>
-      <mj-body background-color="#f0f0f0">
-        <mj-section background-color="#ffffff" padding="30px">
-          <mj-column>
-            <mj-text css-class="title">Hi ${name}, your order is confirmed!</mj-text>
-            <mj-text>We're getting your order ready to be shipped. We will notify you when it has been sent. Check your order details below:</mj-text>
-            <!-- Consider adding more details about the order here -->
-            <mj-text>If you have any questions, reply to this email or contact us at support@example.com.</mj-text>
-          </mj-column>
-        </mj-section>
-      </mj-body>
-    </mjml>
-  `;
+  <mjml>
+    <mj-head>
+      <mj-title>Welcome to Insider Hood</mj-title>
+      <mj-attributes>
+        <mj-all font-family="Roboto, Arial, sans-serif" />
+        <mj-text font-size="16px" line-height="24px" />
+      </mj-attributes>
+      <mj-style inline="inline">
+        .title {
+          font-size: 24px;
+          font-weight: bold;
+          color: #4A4A4A;
+        }
+        .content {
+          font-size: 16px;
+          color: #4A4A4A;
+          line-height: 24px;
+        }
+        .footer-text {
+          font-size: 14px;
+          color: #4A4A4A;
+        }
+      </mj-style>
+    </mj-head>
+    <mj-body background-color="#f7f7f7">
+      <mj-section background-color="#ffffff" padding="50px 30px">
+        <mj-column>
+          <mj-image src="https://insiderhood.s3.amazonaws.com/blog/70ad7596-d4aa-494f-ae01-38a7a18f1b75/74c92db8-a989-45fe-880d-01fac4e99e17" alt="Insider Hood" width="400px"></mj-image>
+          <mj-text css-class="title" padding-top="20px">Welcome to Insider Hood, ${user.name}!</mj-text>
+          <mj-text css-class="content">Our aim is to provide thoughtful content about New York City. We strive to highlight historic places, delving into their architecture and history.</mj-text>
+          <mj-text css-class="footer-text" padding-top="20px">If you have any questions, feel free to reply to this email.</mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-body>
+  </mjml>
+`;
 
   // Compile MJML to HTML
   const { html } = mjml(mjmlContent);

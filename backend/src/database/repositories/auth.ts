@@ -249,6 +249,9 @@ export class AuthRepository {
 
     const userJwt = jwt.sign(userInfoForJwt, process.env.JWT_KEY!);
 
+
+    console.log("newUser.name", newUser.name)
+
     if (newUser.email) {
       sendVerificationMail({
         name: newUser.name,

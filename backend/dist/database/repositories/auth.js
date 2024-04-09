@@ -162,6 +162,7 @@ class AuthRepository {
             // Include other necessary fields
         };
         const userJwt = jsonwebtoken_1.default.sign(userInfoForJwt, process.env.JWT_KEY);
+        console.log("newUser.name", newUser.name);
         if (newUser.email) {
             (0, emailVerification_1.sendVerificationMail)({
                 name: newUser.name,

@@ -13,6 +13,7 @@ const mongodb_1 = require("mongodb");
 */
 const signup = async (req, res) => {
     const authRepository = new auth_1.AuthRepository();
+    console.log("bodyy", req.body);
     const { userJwt, userInfo } = await authRepository.signup(req.body);
     req.session = {
         jwt: userJwt,
