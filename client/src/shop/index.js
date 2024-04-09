@@ -9,7 +9,6 @@ const SHOP_DATA = [
     title: 'The Essex Hotel Framed Illustration. Frame 8 in. x 10 in. matted to 5 in. x 7 in. Free shipping in the U.S.',
     description: " TEXT: 'The JW Marriott Essex House New York, a prestigious hotel towering over New York City, was constructed during the devastating economic downturn following the Wall Street Crash of 1929, its development was significantly slowed, only opening its doors in late 1931. Despite the financial hardships that led to the bankruptcy of its original owners, the Essex House has become a prominent figure in New York City's skyline, thanks in part to its iconic red neon sign added a year after opening.The building was designed by the architectural firm Walker & Gillette, and it showcases an Art Deco architectural style, characteristic of many prominent structures built in New York City during the late 1920s and early 1930s.' ",
     imageUrl: [
-      'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-frame.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-frame3.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/essex-house2.jpg'
     ],
@@ -34,7 +33,7 @@ const SHOP_DATA = [
 
   {
     id: 4,
-    name:'Digital Manhattan Skyline Photo - No Frame',
+    name:'Digital Manhattan Skyline Photo',
     title: 'Manhattan Glow',
     type: 'frame',
     description: 'Photo taken from the Domino Park waterfront in Williamsburg, Brooklyn, depicting the brightly lit skyline of midtown Manhattan. Captured in September 2022. 8 in. x 10 in./11 in. x 14 in. ',
@@ -43,7 +42,7 @@ const SHOP_DATA = [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Untitled%20design.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/Screen%20Shot%202024-02-20%20at%2010.19.04%20AM.png',
     ],
-    price: 20,
+    price: 29,
   },
 
   {
@@ -57,7 +56,7 @@ const SHOP_DATA = [
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/eldoradoframed.jpg',
       'https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/theElDorado.jpg',
     ],
-    price: 1,
+    price: 29,
   },
 
   {
