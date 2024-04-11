@@ -37,11 +37,10 @@ export const signup = async (req: Request, res: Response) => {
  * @access public
 */
 export const newsLetterSignUp = async (req: Request, res: Response) => {
-  const { email } = req.body;
   const newsletterRepository = new NewsletterRepository();
-  const result = await newsletterRepository.subscribeToNewsletter(email)
+  const result = await newsletterRepository.subscribeToNewsletter(req.body)
   res.status(201).send(result);
-}
+};
 
 /**
  * @description logs users in

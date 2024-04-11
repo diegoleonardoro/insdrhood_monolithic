@@ -21,7 +21,7 @@ import Success from "./components/Checkout/stripe-checkout/success"
 import { NavigationHistoryProvider } from "./contexts/navigation-history-context"
 import { useUserContext } from '../src/contexts/UserContext';
 import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
-
+import NewsLetterLanding from './components/Newsletter/newsletter';
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -105,6 +105,7 @@ function App() {
             <Route path='/success' element={<Success />}></Route>
             <Route path='/post' element={<BlogEditor />}></Route>
             <Route path='/post/:id' element={<Blog />}></Route>
+            <Route path='/newsletter' element={<NewsLetterLanding />}></Route>
           </Routes>
           <Suspense />
 

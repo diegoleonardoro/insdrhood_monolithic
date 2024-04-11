@@ -27,9 +27,8 @@ exports.signup = signup;
  * @access public
 */
 const newsLetterSignUp = async (req, res) => {
-    const { email } = req.body;
     const newsletterRepository = new newsletter_1.NewsletterRepository();
-    const result = await newsletterRepository.subscribeToNewsletter(email);
+    const result = await newsletterRepository.subscribeToNewsletter(req.body);
     res.status(201).send(result);
 };
 exports.newsLetterSignUp = newsLetterSignUp;

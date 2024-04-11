@@ -23,9 +23,6 @@ export const updateBlog = async(req:Request, res: Response)=>{
   const { blogid } = req.params;
   const blogsRepository = new BlogRepository();
   const updateData = req.body;
-
-
-
   try {
     const blog = await blogsRepository.updateBlog(blogid, updateData);
     // Assuming you want to send back a success response

@@ -1,0 +1,60 @@
+.newsLetterParent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px;
+  width:90%;
+  margin:auto;
+}
+
+.newsLetterformControl {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.newsLetterImage {
+  width: 100%;
+  max-width: 300px; /* Adjust as needed */
+  object-fit: cover;
+  margin-bottom: 15px;
+  border-bottom: 1px solid black;
+}
+
+.newsLetterExplanationText {
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  padding-top: 30px;
+  width: 100%;
+ justify-content: center;
+}
+
+.newsLetterExplanationText p {
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.newsLetterlabel {
+  margin-bottom: 15px;
+  font-weight: normal;
+  color: #333;
+}
+
+.newsLetterbutton {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.newsLetterformGroup {
+  width: 100%;
+}
+
+.checksContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.checksContainer label{
+  margin-right: 15px;
+}
