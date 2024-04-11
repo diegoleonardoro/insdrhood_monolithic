@@ -21,6 +21,8 @@ const NewsLetterLanding = () => {
   const [suceess, setSuccess] = useState(false)
   const [errors, setErrors] = useState(null);
 
+  const emailRegex = /\S+@\S+\.\S+/;
+
   // Handle form field changes
   const handleChange = (e) => {
     setErrors(null);
@@ -34,6 +36,15 @@ const NewsLetterLanding = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.email) {
+      setErrors("Email is required.");
+      return;
+    } else if (!emailRegex.test(formData.email)) {
+      setErrors("Please enter a valid email address.");
+      return;
+    }
+
 
     // console.log("formdata", formData)
     try {
@@ -55,16 +66,6 @@ const NewsLetterLanding = () => {
 
       <div className='newsLetterExplanationText'>
         <img className="newsLetterImage" src="https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkernotext.png"></img>
-        {/* <p>
-          Welcome to Insider Hood, <span style={{ backgroundColor:'#ffff96', padding:'10px'}}>a window to the distinctive architecture and vibrant neighborhoods New York City.</span>
-        </p>
-        <p>
-          Our mission is to provide you with fascinating information about New York's historic and iconic buildings. Dive deep into the <span style={{ backgroundColor: '#ffff96', padding: '10px' }}>architectural essence and the rich history</span> that shape the character of the city.
-        </p>
-        <p>
-          If exploring the architectural marvels and historical narratives of New York City excites you, <span style={{ backgroundColor: '#ffff96', padding: '10px' }}>sign up to the newsletter by filling out the form to the right.</span>
-        </p> */}
-
       </div>
       <Form className="newsLetterform" onSubmit={handleSubmit}>
 
