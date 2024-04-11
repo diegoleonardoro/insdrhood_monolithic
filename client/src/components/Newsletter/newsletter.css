@@ -19,8 +19,7 @@
 }
 
 .newsLetterImage {
-  width: 20%;
- 
+  width: 13%;
   object-fit: cover;
   margin-bottom: 15px;
   border-bottom: 1px solid black;
@@ -29,7 +28,7 @@
 .newsLetterExplanationText {
   font-family: 'Arial', sans-serif;
   display: flex;
-  padding-top: 30px;
+  padding-top: 10px;
   width: 100%;
  justify-content: center;
 }
@@ -41,7 +40,7 @@
 
 .newsLetterlabel {
   margin-bottom: 15px;
-  font-weight: normal;
+  font-weight: bold;
   color: #333;
 }
 
@@ -69,6 +68,14 @@
     width:40%;
   }
   .newsLetterParent{
-    padding:50px;
+    padding-left:40px;
+    padding-right:40px;
+  }
+  .newsLetterExplanationText{
+    padding-top: 10px;
+  }
+
+  .checksContainer{
+    width:110%
   }
 }
