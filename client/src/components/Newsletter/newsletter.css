@@ -16,8 +16,8 @@
 }
 
 .newsLetterImage {
-  width: 100%;
-  max-width: 300px; /* Adjust as needed */
+  width: 20%;
+ 
   object-fit: cover;
   margin-bottom: 15px;
   border-bottom: 1px solid black;
@@ -43,7 +43,8 @@
 }
 
 .newsLetterbutton {
-  margin-top: 20px;
+  margin-top: 50px;
+  margin-bottom: 50px;
   width: 100%;
 }
 
@@ -57,4 +58,11 @@
 }
 .checksContainer label{
   margin-right: 15px;
+}
+
+
+@media only screen and (max-width: 800px) {
+  .newsLetterImage {
+    width:40%;
+  }
 }
