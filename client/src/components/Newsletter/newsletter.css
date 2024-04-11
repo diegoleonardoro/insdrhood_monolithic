@@ -3,8 +3,11 @@
   flex-direction: column;
   align-items: center;
   padding: 0 10px;
-  width:90%;
+  width:100%;
   margin:auto;
+  background-color: #fffaf3;
+  position:fixed;
+  height:100vh
 }
 
 .newsLetterformControl {
@@ -64,5 +67,8 @@
 @media only screen and (max-width: 800px) {
   .newsLetterImage {
     width:40%;
+  }
+  .newsLetterParent{
+    padding:50px;
   }
 }
