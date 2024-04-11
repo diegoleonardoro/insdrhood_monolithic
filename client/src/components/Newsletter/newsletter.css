@@ -65,7 +65,7 @@
 
 @media only screen and (max-width: 800px) {
   .newsLetterImage {
-    width:40%;
+    width:30%;
   }
   .newsLetterParent{
     padding-left:40px;

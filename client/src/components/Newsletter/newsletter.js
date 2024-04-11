@@ -4,8 +4,12 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import "./newsletter.css";
 import Alert from 'react-bootstrap/Alert';
+import { useNavigate } from "react-router-dom";
+
 const NewsLetterLanding = () => {
-  // State to hold form data
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +17,8 @@ const NewsLetterLanding = () => {
     frequency: 'everyweek'
   });
 
+
+  const [suceess, setSuccess] = useState(false)
   const [errors, setErrors] = useState(null);
 
   // Handle form field changes
@@ -31,8 +37,12 @@ const NewsLetterLanding = () => {
 
     // console.log("formdata", formData)
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`, formData);
-      console.log(response.data);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`, formData);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+
     } catch (error) {
       console.error("There was an error submitting the form:", error);
       setErrors(error?.response?.data?.errors?.[0]?.message);
@@ -126,7 +136,17 @@ const NewsLetterLanding = () => {
             {errors}
           </Alert>
         )}
-        <Button variant="dark" className="newsLetterbutton" type="submit">Sign me up to the newsletter</Button>
+
+        {!suceess && (
+          <Button variant="dark" className="newsLetterbutton" type="submit">Sign me up to the newsletter</Button>
+        )}
+
+        {suceess && (
+          <Alert variant='success'>
+            Thank you for for singing up!
+          </Alert>
+        )}
+
       </Form>
     </div>
   );
