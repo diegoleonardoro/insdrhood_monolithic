@@ -121,7 +121,7 @@ const Blog = () => {
       ) : (
         !editContent ? (
           <div className="blogMainContainer">
-            {!currentuser_ && !signUpSuccess && (
+            {/* {!currentuser_ && !signUpSuccess && (
               <div>
                 <InputGroup className="mb-3">
                   <Form.Control
@@ -153,7 +153,7 @@ const Blog = () => {
               <Alert style={{ marginTop: "10px" }} variant='success'>
                 Thank you for subscribing to our newsletter!
               </Alert>
-            )}
+            )} */}
 
             {isEditable && (
               <Button variant="dark" onClick={handleEditClick} className="editSvg" size="lg" style={{ width: '100%' }} >Edit</Button>
