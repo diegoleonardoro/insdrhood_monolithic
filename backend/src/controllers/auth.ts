@@ -22,7 +22,6 @@ interface updateQuery {
 export const signup = async (req: Request, res: Response) => {
   const authRepository = new AuthRepository();
 
-  console.log("bodyy", req.body)
   const { userJwt, userInfo } = await authRepository.signup(req.body)
 
   req.session = {

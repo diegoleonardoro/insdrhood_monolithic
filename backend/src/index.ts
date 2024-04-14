@@ -7,7 +7,8 @@ import { errorHandler } from './middlewares/error-handler';
 import dotenv from "dotenv";
 import { auth } from "./routes/auth";
 import { payments } from "./routes/payments";
-import { blog } from "./routes/blog"
+import { blog } from "./routes/blog";
+import { newsletter } from "./routes/newsletter";
 import path from 'path';
 import { NeighborhoodRepository } from './database/repositories/neighborhoods';
 import { BlogRepository } from './database/repositories/blog';
@@ -58,6 +59,7 @@ app.use(
 );
 app.use("/api/blog", blog);
 app.use("/api/payments", payments);
+app.use("/api/newsletter", newsletter)
 app.use("/api", auth);
 
 app.use(errorHandler);

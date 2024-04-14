@@ -12,6 +12,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const auth_1 = require("./routes/auth");
 const payments_1 = require("./routes/payments");
 const blog_1 = require("./routes/blog");
+const newsletter_1 = require("./routes/newsletter");
 const path_1 = __importDefault(require("path"));
 const neighborhoods_1 = require("./database/repositories/neighborhoods");
 const blog_2 = require("./database/repositories/blog");
@@ -46,6 +47,7 @@ app.use((0, cookie_session_1.default)({
 }));
 app.use("/api/blog", blog_1.blog);
 app.use("/api/payments", payments_1.payments);
+app.use("/api/newsletter", newsletter_1.newsletter);
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {
