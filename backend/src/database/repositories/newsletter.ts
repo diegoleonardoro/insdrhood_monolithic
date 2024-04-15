@@ -9,12 +9,7 @@ export class NewsletterRepository {
   private db: Promise<Db>;
   private collectionName = 'newsletter';
 
-  // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-
-
   constructor() {
-   
     this.db = connectToDatabase();
   }
 
@@ -42,15 +37,10 @@ export class NewsletterRepository {
 
 
   async sendNewsLetter(data: { frequency: string, }): Promise<{ message: string, statusCode: number }> {
-
     sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-
     const db = await this.db;
     const { frequency } = data;
     const emailsCollection = db.collection(this.collectionName);
-
-    console.log("Querying frequency:", frequency); // Check the value of frequency
-
     try {
       const subscribersDocuments = await emailsCollection.find(
         { frequency: frequency },
@@ -64,33 +54,60 @@ export class NewsletterRepository {
         return { message: `No subscribers.`, statusCode: 500 }
       } else {
 
-        console.log("subscribers", subscribers);
-
         const msg = {
           to: subscribers, // Ensure this is an array of email strings
           from: {
-            name: "Inisider Hood", // Note there's a typo here in "Inisider", should it be "Insider"?
+            name: "Insider Hood",
             email: "admin@insiderhood.com"
           },
-          dynamic_template_data: {
-            name: "Diego"
-          },
-          templateId: "d-007c132db5d3481996d2e3720cb9fdce" // Corrected from 'templageId' to 'templateId'
+          // dynamic_template_data: {
+          //   name: "Diego"
+          // },
+          templateId: "d-007c132db5d3481996d2e3720cb9fdce"
         }
         await sgMail.send(msg);
         return { message: "Newsletter Sent", statusCode: 200 };
-
-
       };
 
-      
     } catch (error) {
       console.error("Error retrieving subscribers:", error); // Catch and log any errors during the query
       return { message: `Failed to send newsletter.`, statusCode: 500 }
     }
+  };
 
+
+  async sendReferralEmail(data: { email: string, templateId: string }): Promise<{ message: string, statusCode:number }> {
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+    const { email, templateId } = data;
+    const db = await this.db;
+    const emailsCollection = db.collection(this.collectionName);
+    const existingEmail = await emailsCollection.findOne({ email });
+    if (existingEmail) {
+      throw new BadRequestError("Email in use");
+    };
+
+    try {
+      const msg = {
+        to: email,
+        from: {
+          name: "Insider Hood",
+          email: "admin@insiderhood.com"
+        },
+        templateId: templateId
+      };
+      await sgMail.send(msg);
+      return { message: "Newsletter Sent", statusCode:200 };
+
+    } catch (error) {
+      console.error("Error retrieving subscribers:", error); // Catch and log any errors during the query
+      return { message: `Failed to send newsletter.`, statusCode: 500}
+    }
 
   }
+
+
+
 
 
 }

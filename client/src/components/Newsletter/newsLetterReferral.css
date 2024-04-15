@@ -1,0 +1,30 @@
+.emailReferralForm{
+  position: relative;
+  width:30%;
+  top:30%;
+}
+
+@media only screen and (max-width: 850px) {
+  .emailReferralForm{
+    width:50%;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .emailReferralForm{
+    width:70%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .emailReferralForm{
+    width:90%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .emailReferralForm{
+    width:100%;
+    top:25%;
+  }
+}

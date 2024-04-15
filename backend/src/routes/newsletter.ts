@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import { sendNewsLetter } from '../controllers/newsletter';
+import { sendNewsLetter, sendNewsLetterReferralEmail } from '../controllers/newsletter';
 
 function asyncHandler(fn: Function) {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -10,8 +10,7 @@ function asyncHandler(fn: Function) {
 }
 
 const router = express.Router();
-
 router.post("/sendnewsletter", asyncHandler(sendNewsLetter));
-
+router.post("/newsletterreferral", asyncHandler(sendNewsLetterReferralEmail));
 
 export { router as newsletter }
