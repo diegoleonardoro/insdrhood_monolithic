@@ -81,7 +81,9 @@ export class NewsletterRepository {
         return { message: "Newsletter Sent", statusCode: 200 };
 
 
-      }
+      };
+
+      
     } catch (error) {
       console.error("Error retrieving subscribers:", error); // Catch and log any errors during the query
       return { message: `Failed to send newsletter.`, statusCode: 500 }

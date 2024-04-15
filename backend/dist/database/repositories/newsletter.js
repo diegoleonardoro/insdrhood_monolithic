@@ -60,6 +60,7 @@ class NewsletterRepository {
                 await mail_1.default.send(msg);
                 return { message: "Newsletter Sent", statusCode: 200 };
             }
+            ;
         }
         catch (error) {
             console.error("Error retrieving subscribers:", error); // Catch and log any errors during the query
