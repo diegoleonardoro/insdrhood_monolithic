@@ -14,7 +14,7 @@ const NewsLetterLanding = () => {
     name: '',
     email: '',
     newsletter: true,
-    frequency: 'everyweek'
+    frequency: 1
   });
 
 
@@ -45,8 +45,6 @@ const NewsLetterLanding = () => {
       return;
     }
 
-
-    // console.log("formdata", formData)
     try {
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`, formData);
       setSuccess(true);
@@ -99,7 +97,7 @@ const NewsLetterLanding = () => {
               id='everyweek'
               name='frequency'
               label='Every week'
-              value='Every week'
+              value={1}
               onChange={handleChange}
               checked={formData.frequency === 'Every week'}
             />
@@ -108,7 +106,7 @@ const NewsLetterLanding = () => {
               id='everytwoweeks'
               name='frequency'
               label='Every two weeks'
-              value='Every two weeks'
+              value={2}
               onChange={handleChange}
               checked={formData.frequency === 'Every two weeks'}
             />
@@ -117,7 +115,7 @@ const NewsLetterLanding = () => {
               id='everythreeweeks'
               name='frequency'
               label='Every three weeks'
-              value='Every three weeks'
+              value={3}
               onChange={handleChange}
               checked={formData.frequency === 'Every three weeks'}
             />
@@ -126,7 +124,7 @@ const NewsLetterLanding = () => {
               id='everymonth'
               name='frequency'
               label='Every month'
-              value='Every month'
+              value={4}
               onChange={handleChange}
               checked={formData.frequency === 'Every month'}
             />
