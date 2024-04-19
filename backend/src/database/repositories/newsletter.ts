@@ -32,10 +32,9 @@ export class NewsletterRepository {
       const desiredFrequencyInMs = desiredFrequencyInWeeks * 7 * 24 * 60 * 60 * 1000;
       return emailsCollection.find({
         frequency: frequency,
-        // Check if lastSent is either missing or greater than or equal to desired frequency
         $or: [
           { lastSent: { $exists: false } },
-          { $expr: { $gte: [{ $subtract: [now, '$lastSent'] }, desiredFrequencyInMs] } } 
+          { $expr: { $gte: [{ $subtract: [now, { $dateToString: { format: "%Y-%m-%dT%H:%M:%SZ", date: "$lastSent" } }] }, desiredFrequencyInMs] } }
         ]
       }, { projection: { email: 1, name: 1, frequency: 1, _id: 0 } }).toArray();
     };
@@ -43,6 +42,9 @@ export class NewsletterRepository {
 
 
   private async sendEmails(subscribers: any[]) {
+    
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+
     if (subscribers.length === 0) {
       return { message: "No subscribers.", statusCode: 404 };
     }
@@ -100,18 +102,18 @@ export class NewsletterRepository {
   async sendNewsLetter(data: { frequency: string }): Promise<{ message: string, statusCode: number }> {
 
     try {
-      const subscribers = await this.fetchSubscribers(data.frequency);      
+      const subscribers = await this.fetchSubscribers(data.frequency);
       return await this.sendEmails(subscribers);
     } catch (error) {
       console.error("Error processing newsletter:", error);
       return { message: "Failed to send newsletter.", statusCode: 500 };
     }
-  
+
   };
 
-
-
   async sendReferralEmail(data: { email: string, templateId: string }): Promise<{ message: string, statusCode: number }> {
+
+
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
     const { email, templateId } = data;
@@ -140,8 +142,6 @@ export class NewsletterRepository {
     }
 
   }
-
-
 
 
 }

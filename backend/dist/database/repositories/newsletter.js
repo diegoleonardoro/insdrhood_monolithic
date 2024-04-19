@@ -28,10 +28,9 @@ class NewsletterRepository {
             const desiredFrequencyInMs = desiredFrequencyInWeeks * 7 * 24 * 60 * 60 * 1000;
             return emailsCollection.find({
                 frequency: frequency,
-                // Check if lastSent is either missing or greater than or equal to desired frequency
                 $or: [
                     { lastSent: { $exists: false } },
-                    { $expr: { $gte: [{ $subtract: [now, '$lastSent'] }, desiredFrequencyInMs] } }
+                    { $expr: { $gte: [{ $subtract: [now, { $dateToString: { format: "%Y-%m-%dT%H:%M:%SZ", date: "$lastSent" } }] }, desiredFrequencyInMs] } }
                 ]
             }, { projection: { email: 1, name: 1, frequency: 1, _id: 0 } }).toArray();
         }
@@ -39,6 +38,7 @@ class NewsletterRepository {
     }
     ;
     async sendEmails(subscribers) {
+        mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
         if (subscribers.length === 0) {
             return { message: "No subscribers.", statusCode: 404 };
         }

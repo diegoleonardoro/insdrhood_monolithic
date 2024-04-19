@@ -29,14 +29,13 @@ const NewsLetterLanding = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox'?checked:value
     });
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.email) {
       setErrors("Email is required.");
       return;
@@ -97,36 +96,36 @@ const NewsLetterLanding = () => {
               id='everyweek'
               name='frequency'
               label='Every week'
-              value={1}
-              onChange={handleChange}
-              checked={formData.frequency === 'Every week'}
+              value="1"
+              onClick={handleChange}
+              checked={formData.frequency === "1"}
             />
             <Form.Check
               type='radio'
               id='everytwoweeks'
               name='frequency'
               label='Every two weeks'
-              value={2}
-              onChange={handleChange}
-              checked={formData.frequency === 'Every two weeks'}
+              value="2"
+              onClick={handleChange}
+              checked={formData.frequency === '2'}
             />
             <Form.Check
               type='radio'
               id='everythreeweeks'
               name='frequency'
               label='Every three weeks'
-              value={3}
-              onChange={handleChange}
-              checked={formData.frequency === 'Every three weeks'}
+              value="3"
+              onClick={handleChange}
+              checked={formData.frequency === '3'}
             />
             <Form.Check
               type='radio'
               id='everymonth'
               name='frequency'
               label='Every month'
-              value={4}
-              onChange={handleChange}
-              checked={formData.frequency === 'Every month'}
+              value="4"
+              onClick={handleChange}
+              checked={formData.frequency === '4'}
             />
           </div>
         </Form.Group>
