@@ -4,6 +4,8 @@ import { BadRequestError } from '../../errors/bad-request-error';
 import { sendNewsLetterEmail } from '../../services/emailVerification';
 import sgMail from '@sendgrid/mail';
 import { ObjectId } from 'mongodb';
+import { v4 as uuidv4 } from 'uuid'; // For generating UUIDs
+import { Document } from 'mongodb';
 
 
 export class NewsletterRepository {
@@ -15,19 +17,25 @@ export class NewsletterRepository {
     this.db = connectToDatabase();
   };
 
-
   private async fetchSubscribers(frequency: string) {
     const db = await this.db;
     const emailsCollection = db.collection(this.collectionName);
     const now = Date.now();
 
     if (frequency === 'allofthem') {
-      return emailsCollection.find(
-        {},
-        { projection: { email: 1, name: 1, frequency: 1, _id: 0 } } // also return the unique identifier 
-      ).toArray();
-    } else {
 
+      // Filtering logic for 'allofthem'
+      const documents = await emailsCollection.find({
+        $or: [
+          { lastSent: { $exists: false } },
+          // { $expr: { $gte: [{ $subtract: [now, { $dateToString: { format: "%Y-%m-%dT%H:%M:%SZ", date: "$lastSent" } }] }, 0] } } // Always pass the filter
+        ]
+      }, { projection: { email: 1, name: 1, frequency: 1, _id: 1, identifier: 1 } }).toArray();
+
+      return documents
+
+    } else {
+      // Original logic for specific frequencies
       const desiredFrequencyInWeeks = parseInt(frequency);
       const desiredFrequencyInMs = desiredFrequencyInWeeks * 7 * 24 * 60 * 60 * 1000;
       return emailsCollection.find({
@@ -36,37 +44,44 @@ export class NewsletterRepository {
           { lastSent: { $exists: false } },
           { $expr: { $gte: [{ $subtract: [now, { $dateToString: { format: "%Y-%m-%dT%H:%M:%SZ", date: "$lastSent" } }] }, desiredFrequencyInMs] } }
         ]
-      }, { projection: { email: 1, name: 1, frequency: 1, _id: 0 } }).toArray();
+      }, { projection: { email: 1, name: 1, frequency: 1, _id: 1, identifier: 1 } }).toArray();
     };
   };
 
-
   private async sendEmails(subscribers: any[]) {
-    
+
     sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
     if (subscribers.length === 0) {
       return { message: "No subscribers.", statusCode: 404 };
     }
-
     const msg = {
       from: { name: "Insider Hood", email: "admin@insiderhood.com" },
       personalizations: subscribers.map(subscriber => ({
         to: [{ email: subscriber.email }],
-        dynamic_template_data: { name: subscriber.name }
-        // add unique identifier for user which will be used to give the user the option to unsubscribe or change the frequency they receive emails
+        dynamic_template_data: {
+          name: subscriber.name,
+          unsubscribeButton: `<a href="${process.env.BASE_URL?.split(" ")[0]}/newsletterpreferences?user_id=${subscriber.identifier}"
+          style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+          Click Here
+        </a>`
+        }
       })),
       templateId: "d-007c132db5d3481996d2e3720cb9fdce"
     };
 
+    console.log('msggg', JSON.stringify(msg, null, 2));
     await sgMail.send(msg);
     const ids = subscribers.map(sub => sub._id);
     await this.updateLastSent(ids);
+
     return { message: "Newsletter Sent", statusCode: 200 };
 
   }
 
   private async updateLastSent(ids: string[]) {
+
+
     const db = await this.db;
     const emailsCollection = db.collection(this.collectionName);
     // Convert string array to ObjectId array
@@ -103,6 +118,8 @@ export class NewsletterRepository {
 
     try {
       const subscribers = await this.fetchSubscribers(data.frequency);
+      console.log('subscribersss', subscribers)
+      // return({message:'', statusCode:2})
       return await this.sendEmails(subscribers);
     } catch (error) {
       console.error("Error processing newsletter:", error);
@@ -112,8 +129,6 @@ export class NewsletterRepository {
   };
 
   async sendReferralEmail(data: { email: string, templateId: string }): Promise<{ message: string, statusCode: number }> {
-
-
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
     const { email, templateId } = data;
@@ -143,5 +158,46 @@ export class NewsletterRepository {
 
   }
 
+  async updateUsers(data: { identifier?: string, updates?: {} }): Promise<{ message: string, statusCode: number }> {
+    const db = await this.db;
+    const emailsCollection = db.collection(this.collectionName);
 
+    if (!data.identifier) {
+      const allUsersCursor = emailsCollection.find({});
+      const allUsers = await allUsersCursor.toArray();
+
+      for (const doc of allUsers) {
+        const updateResult = await emailsCollection.updateOne(
+          { _id: doc._id },
+          { $set: { identifier: uuidv4() } }
+        );
+        console.log(updateResult);
+      }
+      return { message: `Updated documents with UUIDs`, statusCode: 200 };
+    } else {
+      // Update specific document by identifier
+      const updateResult = await emailsCollection.updateOne(
+        { identifier: data.identifier },
+        { $set: data.updates }
+      );
+
+      if (updateResult.matchedCount === 0) {
+        return { message: 'No document found with the provided identifier', statusCode: 200 };
+      } else {
+        return { message: 'Document updated successfully', statusCode: 200 };
+      }
+    }
+  };
+
+
+  async getUserInfo(data: { identifier: string }): Promise<{ user: Document, statusCode: number }> {
+    const db = await this.db;
+    const emailsCollection = db.collection(this.collectionName);
+    const { identifier } = data;
+    const existingUser = await emailsCollection.findOne({ identifier });
+    if (!existingUser) {
+      throw new BadRequestError("No user found");
+    };
+    return ({ user: existingUser, statusCode: 200 })
+  }
 }

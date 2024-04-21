@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import React, { useState,  Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import Home from "./views/Home";
 import Header from "./components/Header";
 import Signin from './components/Signin';
@@ -23,6 +23,7 @@ import { useUserContext } from '../src/contexts/UserContext';
 import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
 import NewsLetterLanding from './components/Newsletter/newsletter';
 import NewsLetterReferral from './components/Newsletter/newsLetterReferal';
+import NewsLetterPreferences from './components/NewsletterPreferences/newsLetterPreferences'
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -99,7 +100,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
             <Route path='/shop' element={<Shop />}></Route>
             <Route path='/product/:id' element={<SingleProduct />}></Route>
-            <Route path='/tshirtcustomizer' element={<TShirtCustomizer logoUrl={{ dark: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorker.png', white:'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png'}} />}></Route>
+            <Route path='/tshirtcustomizer' element={<TShirtCustomizer logoUrl={{ dark: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorker.png', white: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png' }} />}></Route>
             <Route path='/cart' element={<CartPage />}></Route>
             <Route path='/checkout' element={<Checkout />}></Route>
             <Route path='/canceled' element={<Canceled />}></Route>
@@ -108,6 +109,8 @@ function App() {
             <Route path='/post/:id' element={<Blog />}></Route>
             <Route path='/newsletter' element={<NewsLetterLanding />}></Route>
             <Route path='/newsletterreferral' element={<NewsLetterReferral />}></Route>
+            <Route path='/newsletterpreferences' element={<NewsLetterPreferences />}></Route>
+
           </Routes>
           <Suspense />
         </div>

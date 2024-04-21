@@ -17,4 +17,6 @@ const router = express_1.default.Router();
 exports.newsletter = router;
 router.post("/sendnewsletter", asyncHandler(newsletter_1.sendNewsLetter));
 router.post("/newsletterreferral", asyncHandler(newsletter_1.sendNewsLetterReferralEmail));
+router.put("/udpate", asyncHandler(newsletter_1.udpateNewsletterUsers));
+router.get("/getuserinfo/:identifier", asyncHandler(newsletter_1.getuserInfo));
 //# sourceMappingURL=newsletter.js.map

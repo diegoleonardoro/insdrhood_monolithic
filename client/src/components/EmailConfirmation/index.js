@@ -15,7 +15,6 @@ const VerifyEmail = () => {
   const [errors, setErrors] = useState(null);
   const [user, setUser] = useState(null);
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
-
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
