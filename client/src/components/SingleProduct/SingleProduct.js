@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import Button from 'react-bootstrap/Button';
+import TShirtCustomizer from '../TshirtCustomizer/tshirtCustomizer';
 
 const SingleProduct = (props) => {
 
@@ -116,21 +117,38 @@ const SingleProduct = (props) => {
   }, [id, product, products]);
 
 
+  console.log("product", product);
+
   if (!product) { return null }
 
   const { imageUrl, title, price, description } = product;
   const itemInCart = isInCart(product, cartItems);
 
 
+  if (!imageUrl) {
+    return (
+      <TShirtCustomizer {...product} key={product.id} />
+    )
+  }
+
+
+
   return (
 
     <div className='single-product-container'>
       <div className="galleryParent__" style={{ position: "relative" }}>
+
         <Slider {...settings}>
           {imageUrl.map((image, index) => (
             <img key={index} className="imageprod" src={image}></img>
           ))}
         </Slider>
+
+
+
+
+
+
       </div>
       <div className='product-details'>
         <div className='product-description'>
@@ -162,7 +180,7 @@ const SingleProduct = (props) => {
           }
 
           {cartItems.length > 0 &&
-            <Button variant="primary" style={{  width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }}
+            <Button variant="primary" style={{ width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }}
               onClick={() => navigate('/cart')}
             >
               GO TO CART

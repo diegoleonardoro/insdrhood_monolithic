@@ -3,11 +3,11 @@
   flex-direction: column;
   padding: 20px;
   width: 100%;
-  margin: auto;
+  /* margin: auto; */
   background-color: #fffaf3;
-  position: fixed;
+  /* position: fixed; */
   height: 100vh;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 

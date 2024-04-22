@@ -76,7 +76,7 @@ const NewsLetterPreferences = () => {
 
   const handlePreferencesSubmit = async (e) => {
     e.preventDefault();
-    console.log('frequencyFormData', frequencyFormData)
+    console.log('frequencyFormData', frequencyFormData);
     try {
       await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/udpate`, {
         identifier: identifier,
@@ -99,17 +99,12 @@ const NewsLetterPreferences = () => {
         updates: { newsletter: false }
       });
       setUnsubscribeSuccess(true);
-
       // setTimeout(() => {
       //   navigate('/');
       // }, 2000);
-      
     } catch (error) {
-
     }
-
   }
-
   const makeRequest = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/getuserinfo/${identifier}`);
@@ -133,11 +128,11 @@ const NewsLetterPreferences = () => {
   if (frequency === "1") {
     freq = "every week";
   } else if (frequency === "2") {
-    freq = "every month";
+    freq = "every two weeks";
   } else if (frequency === "3") {
-    freq = "every year";
-  } else {
-    freq = "";
+    freq = "every three weeks";
+  } else if (frequency === "4") {
+    freq = "every month";
   }
 
   const handleFrequencyChange = (event) => {
@@ -147,14 +142,16 @@ const NewsLetterPreferences = () => {
 
   return (
     <div className="newsletterPreferencesParent">
-
       <div className="newsLetterContainer">
-        <section className="current-status">
-          <p>You are currently set to receive the newsletter {freq}.</p>
-        </section>
+        <h1>Newsletter Preferences</h1>
+        <hr></hr>
+        <div className="current-settings">
+          <h3>Current Settings</h3>
+          <p>You are currently set to receive the newsletter <strong>{freq}</strong>.</p>
+        </div>
         <Form className="frequency-form">
 
-          <p>You can change the frequency here:</p>
+          <h5>Update Frequency:</h5>
           <Form.Check
             type="radio"
             id="one-week"
@@ -192,7 +189,7 @@ const NewsLetterPreferences = () => {
             onChange={handleFrequencyChange}
           />
           {!frequencyUpdatesSuccess && (
-            <Button className="button" onClick={handlePreferencesSubmit} variant="dark">Update Preferences</Button>)}
+            <Button className="button" onClick={handlePreferencesSubmit} variant="dark">Update</Button>)}
           {frequencyUpdatesSuccess && (
             <Alert variant='success'>
               Preferences updated!
@@ -200,7 +197,7 @@ const NewsLetterPreferences = () => {
           )}
         </Form>
         <hr></hr>
-        <div>You can also share this newsletter with someone else:</div>
+        <h3>Refer a Friend</h3>
         <InputGroup className="mb-3 button">
           <Form.Control
             placeholder="Recipient's email"
@@ -229,8 +226,8 @@ const NewsLetterPreferences = () => {
           )
         }
         <hr></hr>
-        <div>If you think this newsletter has fallen short of your expectation you can unsubscribe:</div>
-
+        <h3>Unsubscribe</h3>
+        <p>If you'd like to unsubscribe, click the button below.</p>
         {!unsubscribeSuccess && (<Button className="button" onClick={handUnsubscribeSubmit} variant="dark">Unsubscribe</Button>)}
         {unsubscribeSuccess && (<Button variant="warning">You have been unsubscribed</Button>)}
 
