@@ -16,10 +16,11 @@ const sendNewsLetter = async (req, res) => {
 exports.sendNewsLetter = sendNewsLetter;
 /**
  * @description send newsletter
- * @route POST /api/newsletter/udpate
+ * @route PUT /api/newsletter/udpate
  * @access public
 */
 const udpateNewsletterUsers = async (req, res) => {
+    console.log("reqq", req.body);
     const { identifier, updates } = req.body;
     const newsletterRepository = new newsletter_1.NewsletterRepository();
     const { message, statusCode } = await newsletterRepository.updateUsers({ identifier, updates });

@@ -14,7 +14,7 @@ const NewsLetterReferral = () => {
     email: '',
   });
 
-  const [suceess, setSuccess] = useState(false)
+  const [suceess, setSuccess] = useState(false);
   const [errors, setErrors] = useState(null);
   const emailRegex = /\S+@\S+\.\S+/;
   const handleSubmit = async (e) => {
@@ -72,7 +72,7 @@ const NewsLetterReferral = () => {
             > Send Invite </Button>)}
           {suceess && (
             <Alert variant='success'>
-              Thank you for for singing up!
+              Thank you for for sharing the word!
             </Alert>
           )}
         </InputGroup>

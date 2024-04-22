@@ -1,0 +1,23 @@
+.newsletterPreferencesParent {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  margin: auto;
+  background-color: #fffaf3;
+  position: fixed;
+  height: 100vh;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.newsLetterContainer{
+  position: relative;
+  width:70%;
+  margin-left:auto;
+  margin-right: auto;
+  top:5%;
+}
+.button{
+  margin:10px
+}

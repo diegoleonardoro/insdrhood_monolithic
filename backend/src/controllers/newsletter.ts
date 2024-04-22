@@ -15,10 +15,13 @@ export const sendNewsLetter = async (req: Request, res: Response) => {
 
 /**
  * @description send newsletter
- * @route POST /api/newsletter/udpate
+ * @route PUT /api/newsletter/udpate
  * @access public
 */
 export const udpateNewsletterUsers = async (req: Request, res: Response) => {
+
+  console.log("reqq", req.body)
+
   const { identifier , updates } = req.body;
   const newsletterRepository = new NewsletterRepository();
   const { message, statusCode } = await newsletterRepository.updateUsers({identifier, updates});
