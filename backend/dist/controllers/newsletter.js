@@ -9,8 +9,7 @@ const newsletter_1 = require("../database/repositories/newsletter");
 */
 const sendNewsLetter = async (req, res) => {
     const newsletterRepository = new newsletter_1.NewsletterRepository();
-    const { frequency } = req.body;
-    const { message } = await newsletterRepository.sendNewsLetter({ frequency });
+    const { message } = await newsletterRepository.sendNewsLetter();
     res.status(200).send(message);
 };
 exports.sendNewsLetter = sendNewsLetter;
@@ -48,7 +47,6 @@ exports.sendNewsLetterReferralEmail = sendNewsLetterReferralEmail;
 const getuserInfo = async (req, res) => {
     const newsletterRepository = new newsletter_1.NewsletterRepository();
     const { identifier } = req.params;
-    console.log("iddd", identifier);
     const { statusCode, user } = await newsletterRepository.getUserInfo({ identifier });
     res.status(statusCode).send(user);
 };

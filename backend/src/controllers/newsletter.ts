@@ -8,8 +8,7 @@ import { Document } from 'mongodb';
 */
 export const sendNewsLetter = async (req: Request, res: Response) => {
   const newsletterRepository = new NewsletterRepository();
-  const { frequency } = req.body;
-  const { message } = await newsletterRepository.sendNewsLetter({ frequency })
+  const { message } = await newsletterRepository.sendNewsLetter()
   res.status(200).send(message);
 }
 
@@ -50,7 +49,6 @@ export const sendNewsLetterReferralEmail = async (req: Request, res: Response) =
 export const getuserInfo = async(req:Request, res:Response)=>{
   const newsletterRepository = new NewsletterRepository();
   const { identifier } = req.params;
-  console.log("iddd", identifier)
   const {  statusCode , user} = await newsletterRepository.getUserInfo({ identifier })
   res.status(statusCode).send(user);
 }

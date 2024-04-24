@@ -17,35 +17,27 @@ export class NewsletterRepository {
     this.db = connectToDatabase();
   };
 
-  private async fetchSubscribers(frequency: string) {
+  private async fetchSubscribers() {
+
     const db = await this.db;
     const emailsCollection = db.collection(this.collectionName);
-    const now = Date.now();
-
-    if (frequency === 'allofthem') {
-
-      // Filtering logic for 'allofthem'
-      const documents = await emailsCollection.find({
-        $or: [
-          { lastSent: { $exists: false } },
-          // { $expr: { $gte: [{ $subtract: [now, { $dateToString: { format: "%Y-%m-%dT%H:%M:%SZ", date: "$lastSent" } }] }, 0] } } // Always pass the filter
-        ]
-      }, { projection: { email: 1, name: 1, frequency: 1, _id: 1, identifier: 1 } }).toArray();
-
-      return documents
-
-    } else {
-      // Original logic for specific frequencies
-      const desiredFrequencyInWeeks = parseInt(frequency);
-      const desiredFrequencyInMs = desiredFrequencyInWeeks * 7 * 24 * 60 * 60 * 1000;
-      return emailsCollection.find({
-        frequency: frequency,
-        $or: [
-          { lastSent: { $exists: false } },
-          { $expr: { $gte: [{ $subtract: [now, { $dateToString: { format: "%Y-%m-%dT%H:%M:%SZ", date: "$lastSent" } }] }, desiredFrequencyInMs] } }
-        ]
-      }, { projection: { email: 1, name: 1, frequency: 1, _id: 1, identifier: 1 } }).toArray();
+    const now = new Date();
+    const query = {
+      $or: [
+        { lastSent: { $exists: false } },
+        {
+          $expr: {
+            $gte: [
+              { $subtract: [now, "$lastSent"] },
+              { $multiply: [{ $toDecimal: "$frequency" }, 604800000] } // Ensure frequency is a number
+            ]
+          }
+        }
+      ]
     };
+
+    const newslettersToSend = await emailsCollection.find(query).toArray();
+    return newslettersToSend;
   };
 
   private async sendEmails(subscribers: any[]) {
@@ -114,13 +106,15 @@ export class NewsletterRepository {
 
   };
 
-  async sendNewsLetter(data: { frequency: string }): Promise<{ message: string, statusCode: number }> {
+  async sendNewsLetter(): Promise<{ message: string, statusCode: number }> {
 
     try {
-      const subscribers = await this.fetchSubscribers(data.frequency);
-      console.log('subscribersss', subscribers)
-      // return({message:'', statusCode:2})
-      return await this.sendEmails(subscribers);
+
+      const subscribers = await this.fetchSubscribers();//data.frequency
+      console.log('subscribersss', subscribers);
+      return ({ message: '', statusCode: 2 });
+      // return await this.sendEmails(subscribers);
+
     } catch (error) {
       console.error("Error processing newsletter:", error);
       return { message: "Failed to send newsletter.", statusCode: 500 };
