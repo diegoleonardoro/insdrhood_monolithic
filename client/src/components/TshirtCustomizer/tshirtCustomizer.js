@@ -8,18 +8,20 @@ import Button from 'react-bootstrap/Button';
 
 const TShirtCustomizer = (props) => {
 
-  const { id, darkLogoImage, whiteLogoImage, text, price, type } = props;
+  const { id, darkLogoImage, whiteLogoImage, text, price, type, position } = props;
   const { addProduct, cartItems, increase } = useContext(CartContext);
 
   const navigate = useNavigate();
 
   var colorOptions = {
     white: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtwhite.jpg',
-    black: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtblack.jpg',
     grey: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtgray.jpg',
     green: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtgreen.jpg',
-    red: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtred.jpg',
-    yellow: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtyellow.jpg'
+    yellow: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtyellow.jpg',
+    ...(whiteLogoImage && {
+      black: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtblack.jpg',
+      red: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtred.jpg'
+    })
   };
 
   const [color, setColor] = useState('white');
@@ -36,6 +38,17 @@ const TShirtCustomizer = (props) => {
     color,
     type
   });
+
+  const logoStyle = position ? {
+    top: '20%',
+    left: '40%',
+    width: '18%'
+  } : {
+    top: '20%',
+    left: '33%',
+    width: '20%'
+  };
+
 
   const itemInCart = isInCart(product, cartItems);
 
@@ -77,10 +90,10 @@ const TShirtCustomizer = (props) => {
 
   return (
     <div className='mainImageControlContainer'>
-      <div style={{overflow:"hidden"}}>
+      <div style={{ overflow: "hidden" }}>
         <div className="tshirt-display" >
           <img src={colorOptions[color]} className="tshirt" alt="Custom T-shirt" />
-          <img src={blendedLogo} className="logo" alt="Logo" />
+          <img src={blendedLogo} style={logoStyle} className="logo" alt="Logo" />
         </div>
       </div>
       <div className='controlsProductDetailsContainer'>
@@ -149,10 +162,7 @@ const TShirtCustomizer = (props) => {
               </Button>
             }
 
-
-
           </div>
-
         </div>
       </div>
     </div>

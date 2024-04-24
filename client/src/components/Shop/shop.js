@@ -7,8 +7,7 @@ import "./shop.css";
 
 const Shop = () => {
 
-  const { products } = useContext(ProductsContext);// all products from the DataBase
-
+  const { products } = useContext(ProductsContext);
   const allProducts = products.map(product => {
     // Check the condition. For example, whether the product is featured.
     if (product.type !== 't-shirt') {

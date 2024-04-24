@@ -87,9 +87,9 @@ const SHOP_DATA = [
     darkLogoImage: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/apollotheatre_.png',
     name: 'New Yorker Tshirt',
     type: 't-shirt',
-    whiteLogoImage: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png',
     text: 'The New Yorker Hotel, constructed in 1929 and masterfully designed by the architectural duo Sugarman and Berger, stands as a quintessential embodiment of the Art Deco style.',
-    price: 39
+    price: 39,
+    position:'center-vertical'
   },
 
   {
@@ -97,7 +97,6 @@ const SHOP_DATA = [
     darkLogoImage: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/apollosign.png',
     name: 'New Yorker Tshirt',
     type: 't-shirt',
-    whiteLogoImage: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png',
     text: 'The New Yorker Hotel, constructed in 1929 and masterfully designed by the architectural duo Sugarman and Berger, stands as a quintessential embodiment of the Art Deco style.',
     price: 39
   },
