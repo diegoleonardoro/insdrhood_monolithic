@@ -13,7 +13,6 @@ const TShirtCustomizer = (props) => {
 
   const navigate = useNavigate();
 
-  // Initial state setup with color options and corresponding T-shirt image URLs
   var colorOptions = {
     white: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtwhite.jpg',
     black: 'https://insiderhood.s3.amazonaws.com/tshirts/tshirts/tshirtblack.jpg',
@@ -27,10 +26,6 @@ const TShirtCustomizer = (props) => {
   const [size, setSize] = useState('M');
   const [blendedLogo, setBlendedLogo] = useState(darkLogoImage);
 
-
-  // title
-  // description
-  // imageUrl 
   const [product, setProduct] = useState({
     price,
     id: `${id}-${color}-${size}`,
@@ -82,14 +77,12 @@ const TShirtCustomizer = (props) => {
 
   return (
     <div className='mainImageControlContainer'>
-
-      <div>
-        <div className="tshirt-display">
+      <div style={{overflow:"hidden"}}>
+        <div className="tshirt-display" >
           <img src={colorOptions[color]} className="tshirt" alt="Custom T-shirt" />
           <img src={blendedLogo} className="logo" alt="Logo" />
         </div>
       </div>
-
       <div className='controlsProductDetailsContainer'>
         <div className="controls">
           <label style={{ display: "flex", justifyContent: "space-evenly" }}>
@@ -162,8 +155,6 @@ const TShirtCustomizer = (props) => {
 
         </div>
       </div>
-
-
     </div>
   );
 
