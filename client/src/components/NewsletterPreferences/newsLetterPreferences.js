@@ -105,10 +105,10 @@ const NewsLetterPreferences = () => {
     } catch (error) {
     }
   }
+  console.log(identifier)
   const makeRequest = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/getuserinfo/${identifier}`);
-      console.log("ress", response)
       setUser(response.data);
       setFrequency(response.data.frequency)
     } catch (error) {

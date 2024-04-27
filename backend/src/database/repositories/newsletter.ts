@@ -29,7 +29,7 @@ export class NewsletterRepository {
           $expr: {
             $gte: [
               { $subtract: [now, "$lastSent"] },
-              { $multiply: [{ $toDecimal: "$frequency" }, 604800000] } // Ensure frequency is a number
+              { $multiply: [{ $toDecimal: "$frequency" }, 518400000] } // Ensure frequency is a number
             ]
           }
         }
@@ -42,6 +42,9 @@ export class NewsletterRepository {
 
   private async sendEmails(subscribers: any[]) {
 
+
+    console.log("process.env.SENDGRID_API_KEY!", process.env.SENDGRID_API_KEY!)
+
     sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
     if (subscribers.length === 0) {
@@ -53,21 +56,23 @@ export class NewsletterRepository {
         to: [{ email: subscriber.email }],
         dynamic_template_data: {
           name: subscriber.name,
-          unsubscribeButton: `<a href="${process.env.BASE_URL?.split(" ")[0]}/newsletterpreferences?user_id=${subscriber.identifier}"
-          style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-          Click Here
-        </a>`
+        //   unsubscribeButton: `<a href="${process.env.BASE_URL?.split(" ")[0]}/newsletterpreferences?user_id=${subscriber.identifier}"
+        //   style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+        //   Click Here
+        // </a>`
         }
       })),
-      templateId: "d-007c132db5d3481996d2e3720cb9fdce"
+      templateId: "d-beef468c69d64cfdbfac6b4e03546e08"
     };
-
-    console.log('msggg', JSON.stringify(msg, null, 2));
-    await sgMail.send(msg);
-    const ids = subscribers.map(sub => sub._id);
-    await this.updateLastSent(ids);
-
-    return { message: "Newsletter Sent", statusCode: 200 };
+    try {
+      await sgMail.send(msg);
+      const ids = subscribers.map(sub => sub._id);
+      await this.updateLastSent(ids);
+      return { message: "Newsletter Sent", statusCode: 200 };
+    } catch (error) {
+      console.error("Error sending email: ", error);
+      return { message: "Failed to send newsletter", statusCode: 400 };
+    }
 
   }
 
@@ -112,8 +117,8 @@ export class NewsletterRepository {
 
       const subscribers = await this.fetchSubscribers();//data.frequency
       console.log('subscribersss', subscribers);
-      return ({ message: '', statusCode: 2 });
-      // return await this.sendEmails(subscribers);
+      // return ({ message: '', statusCode: 2 });
+      return await this.sendEmails(subscribers);
 
     } catch (error) {
       console.error("Error processing newsletter:", error);

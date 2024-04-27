@@ -27,4 +27,16 @@ steps:
     args: ['run', 'deploy', 'clientt', '--image', 'gcr.io/insider-hoods321/client', '--region', 'us-central1']
     id: 'deploy-client'
 
-      
+  # Build and push the Python backend service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/insider-hoods321/open-data-backend', './open-data-backend']
+    id: 'build-open-data-backendd'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/insider-hoods321/open-data-backend']
+    id: 'push-open-data-backend'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: ['run', 'deploy', 'open-data-backend', '--image', 'gcr.io/insider-hoods321/open-data-backend', '--region', 'us-central1']
+    id: 'deploy-python-backend'
