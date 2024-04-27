@@ -40,3 +40,5 @@ steps:
     entrypoint: gcloud
     args: ['run', 'deploy', 'open-data-backend', '--image', 'gcr.io/insider-hoods321/open-data-backend', '--region', 'us-central1']
     id: 'deploy-python-backend'
+
+
