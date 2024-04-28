@@ -29,7 +29,7 @@ steps:
 
   # Build and push the Python backend service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/insider-hoods321/open-data-backend', './open-data-backend']
+    args: ['build', '-t', 'gcr.io/insider-hoods321/open-data-backend', './NYC_data_backend']
     id: 'build-open-data-backendd'
 
   - name: 'gcr.io/cloud-builders/docker'
