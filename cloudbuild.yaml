@@ -30,7 +30,7 @@ steps:
   # Build and push the Python backend service
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/insider-hoods321/open-data-backend', './NYC_data_backend']
-    id: 'build-open-data-backendd'
+    id: 'build-open-data-backend'
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/insider-hoods321/open-data-backend']
@@ -40,6 +40,6 @@ steps:
     entrypoint: gcloud
     args: ['run', 'deploy', 'open-data-backend', '--image', 'gcr.io/insider-hoods321/open-data-backend', '--region', 'us-central1']
     id: 'deploy-python-backend'
-    
+
 
 
