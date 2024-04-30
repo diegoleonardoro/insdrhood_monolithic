@@ -24,7 +24,7 @@ neighborhoodRepo.createIndexes();
 const blogRepo = new blog_2.BlogRepository();
 blogRepo.createIndexes();
 const app = (0, express_1.default)();
-const PORT = 4000;
+const PORT = process.env.PORT || 5000;
 app.use((0, cors_1.default)({
     origin: process.env.BASE_URL?.split(" "),
     credentials: true,

@@ -1,45 +1,106 @@
+
 steps:
   # Build and push the backend service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/insider-hoods321/backend', './backend']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/backend', './backend']
     id: 'build-backend'
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/insider-hoods321/backend']
+    args: ['push', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/backend']
     id: 'push-backend'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'backendd', '--image', 'gcr.io/insider-hoods321/backend', '--region', 'us-central1']
+    args: ['run', 'deploy', 'backendd', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/backend', '--region', 'us-central1'] 
     id: 'deploy-backend'
 
   # Build and push the client service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/insider-hoods321/client', './client']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/client', './client']
     id: 'build-client'
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/insider-hoods321/client']
+    args: ['push', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/client']
     id: 'push-client'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'clientt', '--image', 'gcr.io/insider-hoods321/client', '--region', 'us-central1']
+    args: ['run', 'deploy', 'clientt', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/client', '--region', 'us-central1']
     id: 'deploy-client'
 
   # Build and push the Python backend service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/insider-hoods321/open-data-backend', './NYC_data_backend']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', './NYC_data_backend']
     id: 'build-open-data-backend'
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/insider-hoods321/open-data-backend']
+    args: ['push', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data']
     id: 'push-open-data-backend'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'open-data-backend', '--image', 'gcr.io/insider-hoods321/open-data-backend', '--region', 'us-central1']
+    args: ['run', 'deploy', 'open-data-backend', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', '--region', 'us-central1']
     id: 'deploy-python-backend'
 
+# steps:
+#   # Build and push the backend service
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 'gcr.io/insider-hoods321/backend', './backend']
+#     #   args: ['build', '-t', 'gcr.io/PROJECT_ID/IMAGE', '.']
+#     id: 'build-backend'
+
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 'gcr.io/insider-hoods321/backend']
+#     #   args: ['push', 'gcr.io/PROJECT_ID/IMAGE']
+#     id: 'push-backend'
+
+#   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#     entrypoint: gcloud
+#     args: ['run', 'deploy', 'backendd', '--image', 'gcr.io/insider-hoods321/backend', '--region', 'us-central1'] 
+#     # args: ['run', 'deploy', 'SERVICE_NAME', '--image', 'gcr.io/PROJECT_ID/IMAGE', '--region', 'SERVICE_REGION']
+#     id: 'deploy-backend'
+
+#   # Build and push the client service
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 'gcr.io/insider-hoods321/client', './client']
+#     id: 'build-client'
+
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 'gcr.io/insider-hoods321/client']
+#     id: 'push-client'
+
+#   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#     entrypoint: gcloud
+#     args: ['run', 'deploy', 'clientt', '--image', 'gcr.io/insider-hoods321/client', '--region', 'us-central1']
+#     id: 'deploy-client'
+
+#   # Build and push the Python backend service
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 'gcr.io/insider-hoods321/nyc-open-data', './NYC_data_backend']
+#     id: 'build-open-data-backend'
+
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 'gcr.io/insider-hoods321/nyc-open-data']
+#     id: 'push-open-data-backend'
+
+#   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#     entrypoint: gcloud
+#     args: ['run', 'deploy', 'open-data-backend', '--image', 'gcr.io/insider-hoods321/nyc-open-data', '--region', 'us-central1']
+#     id: 'deploy-python-backend'
 
 
+
+
+# steps:
+# # Build the container image
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['build', '-t', 'gcr.io/PROJECT_ID/IMAGE', '.']
+# # Push the container image to Container Registry
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['push', 'gcr.io/PROJECT_ID/IMAGE']
+# # Deploy container image to Cloud Run
+# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#   entrypoint: gcloud
+#   args: ['run', 'deploy', 'SERVICE_NAME', '--image', 'gcr.io/PROJECT_ID/IMAGE', '--region', 'SERVICE_REGION']
+# images:
+# - gcr.io/PROJECT_ID/IMAGE

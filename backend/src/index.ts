@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-
 import cookieSession from "cookie-session";
 import { json } from "body-parser";
 import cors from "cors";
@@ -31,7 +30,8 @@ const blogRepo = new BlogRepository();
 blogRepo.createIndexes()
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 5000;
+
 app.use(cors({
   origin: process.env.BASE_URL?.split(" "), // React client's URL
   credentials: true,
