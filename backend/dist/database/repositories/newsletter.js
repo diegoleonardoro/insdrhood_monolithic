@@ -55,7 +55,7 @@ class NewsletterRepository {
                     // </a>`
                 }
             })),
-            templateId: "d-beef468c69d64cfdbfac6b4e03546e08"
+            templateId: "d-a9c9d7ddcb51448e8c73e2e26f25b14d"
         };
         try {
             await mail_1.default.send(msg);
