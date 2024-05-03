@@ -98,7 +98,6 @@ function Home() {
 
   // this will only take effect when the user scrolls down the neighborhoods.
   useEffect(() => {
-    console.log("yoooo")
 
     const observer = new IntersectionObserver((entries) => {
       const first = entries[0];

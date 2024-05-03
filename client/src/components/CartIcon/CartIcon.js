@@ -7,7 +7,6 @@ import "./cartIcon.css";
 
 const CartIcon = () => {
   const { itemCount } = useContext(CartContext);
-  console.log('itemCount:', itemCount);
   const navigate = useNavigate();
 
   return (

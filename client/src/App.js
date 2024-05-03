@@ -23,7 +23,8 @@ import { useUserContext } from '../src/contexts/UserContext';
 import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
 import NewsLetterLanding from './components/Newsletter/newsletter';
 import NewsLetterReferral from './components/Newsletter/newsLetterReferal';
-import NewsLetterPreferences from './components/NewsletterPreferences/newsLetterPreferences'
+import NewsLetterPreferences from './components/NewsletterPreferences/newsLetterPreferences';
+import Complaints311 from'./components/311Complaints/311complaints';
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -110,6 +111,7 @@ function App() {
             <Route path='/newsletter' element={<NewsLetterLanding />}></Route>
             <Route path='/newsletterreferral' element={<NewsLetterReferral />}></Route>
             <Route path='/newsletterpreferences' element={<NewsLetterPreferences />}></Route>
+            <Route path='/311complaints' element={<Complaints311 />}></Route>
 
           </Routes>
           <Suspense />
