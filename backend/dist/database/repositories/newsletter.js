@@ -97,8 +97,8 @@ class NewsletterRepository {
         try {
             const subscribers = await this.fetchSubscribers(); //data.frequency
             console.log('subscribersss', subscribers);
-            // return ({ message: '', statusCode: 2 });
-            return await this.sendEmails(subscribers);
+            return ({ message: '', statusCode: 2 });
+            // return await this.sendEmails(subscribers);
         }
         catch (error) {
             console.error("Error processing newsletter:", error);
