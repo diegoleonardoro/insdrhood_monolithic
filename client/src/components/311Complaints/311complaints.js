@@ -15,6 +15,7 @@ const Complaints311 = () => {
   const fetchComplaints = async () => {
     const complaints311 = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`);
 
+    console.log("complaints311 ", complaints311);
 
     setComplaints(complaints311.data);
   }
