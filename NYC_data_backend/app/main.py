@@ -10,7 +10,7 @@ load_dotenv()
 
 baseUrl = os.environ.get("BASE_URL")
 
-print ('baseurl', baseUrl)
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/311calls": {"origins": baseUrl}}, supports_credentials=True)
