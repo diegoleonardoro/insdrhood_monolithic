@@ -27,7 +27,8 @@ const Complaints311 = () => {
 
   console.log("complaints", complaints)
 
-  const complaintsCards = complaints.map((complaint, index) => {
+  const complaintsCards = 
+  complaints.map((complaint, index) => {
 
     const key = index
 

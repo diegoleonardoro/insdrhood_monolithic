@@ -49,6 +49,7 @@ def calls311():
     #     return jsonify(filtered_data)  # Return the filtered data as JSON
     # else:
     #     return 'Failed to retrieve data', 500 
+    print("request received")
     return []
   
 
