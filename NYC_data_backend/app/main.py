@@ -20,7 +20,7 @@ def hello_world():
     return 'Hello, Worls!'
 
 @app.route('/311calls', methods=['GET'])
-# @cross_origin(origin='localhost', headers=['Content-Type', 'Authorization'])
+@cross_origin(origin='localhost', headers=['Content-Type', 'Authorization'])  # Ensure CORS settings are as intended
 def calls311():
     # API URL with a limit to avoid fetching too much data at once (you might need to paginate or adjust this)
     response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json')
