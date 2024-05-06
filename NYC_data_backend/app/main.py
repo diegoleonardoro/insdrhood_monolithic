@@ -8,12 +8,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-baseUrl = os.environ.get("BASE_URL")
 
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/311calls": {"origins": baseUrl}}, supports_credentials=True)
+
+base_url = os.environ.get("BASE_URL", "http://localhost:3000")
+CORS(app, resources={r"/311calls": {"origins": base_url}}, supports_credentials=True)
+
+print ('base url', base_url);
 
 @app.route('/')
 def hello_world():
