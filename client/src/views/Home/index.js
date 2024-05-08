@@ -242,12 +242,12 @@ function Home() {
     if (!hasMore) return;
 
     try {
+      const neighborhoodsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`);
 
-      console.log("cursor", cursor);
 
-      const neighborhoodsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoods`, {
-        params: { cursor, pageSize: itemsPerPage },
-      });
+    //   , {
+    //   params: { cursor, pageSize: itemsPerPage },
+    // }
 
       setNeighborhoodsData(prevData => [...prevData, ...neighborhoodsResponse.data.neighborhoods]);
       

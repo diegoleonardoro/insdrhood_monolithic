@@ -30,7 +30,7 @@ scheduler.start()
 
 # Background task to fetch data and cache in Redis
 def fetch_and_cache_data():
-    response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=50')
+    response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json') # ?$limit=50
     if response.status_code == 200:
         raw_data = response.json()
         filtered_data = [
