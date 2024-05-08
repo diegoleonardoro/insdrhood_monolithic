@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from redis import Redis
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
+from pytz import utc
+
 
 load_dotenv()
 
@@ -15,7 +17,7 @@ base_url = os.environ.get("BASE_URL", "http://localhost:3000")
 print ('base urlll', base_url);
 
 
-CORS(app, resources={r"/311calls": {"origins": base_url}}, supports_credentials=True)
+CORS(app, resources={r"/311calls": {"origins": [base_url, "https://www.insiderhood.com"]}}, supports_credentials=True)
 
 # Use environment variables for Redis host and port
 redis_host = os.getenv("REDIS_HOST", "localhost")
@@ -23,7 +25,7 @@ redis_port = int(os.getenv("REDIS_PORT", 6379))
 redis = Redis(host=redis_host, port=redis_port, db=0, decode_responses=True)
 # redis = Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler(timezone=utc)
 scheduler.start()
 
 # Background task to fetch data and cache in Redis
