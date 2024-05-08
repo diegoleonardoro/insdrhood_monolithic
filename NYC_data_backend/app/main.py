@@ -12,6 +12,9 @@ load_dotenv()
 
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
+print ('base urlll', base_url);
+
+
 CORS(app, resources={r"/311calls": {"origins": base_url}}, supports_credentials=True)
 
 # Use environment variables for Redis host and port
