@@ -13,7 +13,7 @@ const Complaints311 = () => {
   const fetchComplaints = async () => {
     if (!loading && hasMore) {
       setLoading(true);
-      const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?page=${page}&limit=15`);
+      const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`); //?page=${page}&limit=15
       if (response.data.length > 0) {
         setComplaints(prevComplaints => [...prevComplaints, ...response.data]);
         setPage(prevPage => prevPage + 1);
