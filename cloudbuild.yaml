@@ -43,14 +43,13 @@ steps:
     id: 'deploy-python-backend'
 
 
-
   # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   #   entrypoint: gcloud
   #   args: ['run', 'deploy', 'open-data-backend', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', '--region', 'us-central1']
   #   id: 'deploy-python-backend'
 
 
-  
+
 
 # steps:
 #   # Build and push the backend service
