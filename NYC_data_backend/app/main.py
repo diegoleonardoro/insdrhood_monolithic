@@ -8,6 +8,7 @@ from redis import Redis
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
 from pytz import utc
+import gzip
 
 
 load_dotenv()
@@ -22,15 +23,33 @@ CORS(app, resources={r"/311calls": {"origins": [base_url, "https://www.insiderho
 # Use environment variables for Redis host and port
 redis_host = os.getenv("REDIS_HOST", "localhost")
 redis_port = int(os.getenv("REDIS_PORT", 6379))
-redis = Redis(host=redis_host, port=redis_port, db=0, decode_responses=True)
-# redis = Redis(host='localhost', port=6379, db=0, decode_responses=True)
+redis = Redis(host=redis_host, port=redis_port, db=0, decode_responses=False)  
+
 
 scheduler = BackgroundScheduler(timezone=utc)
 scheduler.start()
 
+def compress_data(data):
+    # Ensure data is a JSON string and then compress
+    if not isinstance(data, bytes):
+        data = json.dumps(data).encode('utf-8')
+    return gzip.compress(data)
+
+def decompress_data(data):
+    # Check if data needs decompression
+    try:
+        # Attempt to decompress and decode
+        return json.loads(gzip.decompress(data).decode('utf-8'))
+    except (OSError, gzip.BadGzipFile):
+        # Handle cases where data is not compressed
+        # This should be logged and investigated
+        print("Data was not in compressed format, attempting to load as JSON")
+        return json.loads(data.decode('utf-8') if isinstance(data, bytes) else data)
+
+
 # Background task to fetch data and cache in Redis
 def fetch_and_cache_data():
-    response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json') # ?$limit=50
+    response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json')
     if response.status_code == 200:
         raw_data = response.json()
         filtered_data = [
@@ -47,19 +66,18 @@ def fetch_and_cache_data():
                 'Location': item.get('location', {'latitude': 'Not specified', 'longitude': 'Not specified'})
             } for item in raw_data
         ]
-        # Cache filtered data in Redis, setting an expiration of 86400 seconds (24 hours)
-        redis.setex('complaints_data', 86400, json.dumps(filtered_data))
-        print("Data fetched and cached")
+        compressed_data = compress_data(filtered_data)
+        redis.setex('complaints_data', 86400, compressed_data)
+        print("Data fetched and compressed and cached")
         return filtered_data
     else:
         print("Failed to fetch data from API")
-        return None  # Indicate failure
+        return None
 
 # Schedule the fetch_and_cache_data to run daily at 4:00 AM
 scheduler.add_job(fetch_and_cache_data, 'cron', hour=4)
 
 @app.route('/')
-
 def hello_world():
     return 'Hello, Worls!'
 
@@ -69,12 +87,20 @@ def calls311():
     cached_data = redis.get('complaints_data')
     if cached_data:
         print("Cache hit")
-        return jsonify(json.loads(cached_data))
-    # If no cache, fetch data from the API
+        try:
+            data = decompress_data(cached_data)
+            response = jsonify(data)
+            response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+            return response
+        except Exception as e:
+            print(f"Failed to decompress and load data: {e}")
+            return jsonify({"error": "Failed to process cached data"}), 500
     print("Cache miss, fetching data from API...")
     data = fetch_and_cache_data()
     if data:
-        return jsonify(data)
+        response = jsonify(data)
+        response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+        return response
     else:
         return jsonify([]), 404
     
