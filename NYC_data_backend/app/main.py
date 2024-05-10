@@ -90,7 +90,8 @@ def calls311():
         try:
             data = decompress_data(cached_data)
             response = jsonify(data)
-            response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+            # max-age is for browsers, and s-maxage is for the CDN.
+            response.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
             return response
         except Exception as e:
             print(f"Failed to decompress and load data: {e}")
@@ -99,7 +100,7 @@ def calls311():
     data = fetch_and_cache_data()
     if data:
         response = jsonify(data)
-        response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+        response.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
         return response
     else:
         return jsonify([]), 404
