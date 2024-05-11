@@ -46,6 +46,16 @@ def decompress_data(data):
         print("Data was not in compressed format, attempting to load as JSON")
         return json.loads(data.decode('utf-8') if isinstance(data, bytes) else data)
 
+# filter the data based on the parameters coming from the client
+def filter_data(data, filters):
+    filtered_data = []
+    for item in data:
+        if (not filters['zip'] or item['Incident Zip'] == filters['zip']) and \
+           (not filters['borough'] or item['Borough'].lower() == filters['borough'].lower()) and \
+           (not filters['agency'] or item['Agency'].lower() == filters['agency'].lower()) and \
+           (not filters['createdDate'] or item['Created Date'].startswith(filters['createdDate'])):
+            filtered_data.append(item)
+    return filtered_data
 
 # Background task to fetch data and cache in Redis
 def fetch_and_cache_data():
@@ -72,10 +82,13 @@ def fetch_and_cache_data():
         return filtered_data
     else:
         print("Failed to fetch data from API")
-        return None
+        return []
 
 # Schedule the fetch_and_cache_data to run daily at 4:00 AM
 scheduler.add_job(fetch_and_cache_data, 'cron', hour=4)
+
+
+
 
 @app.route('/')
 def hello_world():
@@ -84,26 +97,29 @@ def hello_world():
 @app.route('/311calls', methods=['GET'])
 @cross_origin(origin='*', supports_credentials=True)
 def calls311():
+
+    filters = {
+        'zip': request.args.get('zip', ''),
+        'borough': request.args.get('borough', ''),
+        'agency': request.args.get('agency', ''),
+        'createdDate': request.args.get('createdDate', '')
+    }
+
+    page = int(request.args.get('page', 1))
+    limit = int(request.args.get('limit', 50))
+
     cached_data = redis.get('complaints_data')
     if cached_data:
-        print("Cache hit")
-        try:
-            data = decompress_data(cached_data)
-            response = jsonify(data)
-            # max-age is for browsers, and s-maxage is for the CDN.
-            response.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
-            return response
-        except Exception as e:
-            print(f"Failed to decompress and load data: {e}")
-            return jsonify({"error": "Failed to process cached data"}), 500
-    print("Cache miss, fetching data from API...")
-    data = fetch_and_cache_data()
-    if data:
-        response = jsonify(data)
+        data = decompress_data(cached_data)
+        filtered_data = filter_data(data, filters)
+        start = (page - 1) * limit
+        end = start + limit
+        paged_data = filtered_data[start:end]
+        response = jsonify(paged_data)
         response.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
         return response
     else:
-        return jsonify([]), 404
+        return jsonify({"error": "Data not available"}), 404
     
 
 if __name__ == '__main__':
