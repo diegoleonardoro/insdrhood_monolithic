@@ -50,10 +50,10 @@ def decompress_data(data):
 def filter_data(data, filters):
     filtered_data = []
     for item in data:
-        if (not filters['zip'] or item['Incident Zip'] == filters['zip']) and \
-           (not filters['borough'] or item['Borough'].lower() == filters['borough'].lower()) and \
-           (not filters['agency'] or item['Agency'].lower() == filters['agency'].lower()) and \
-           (not filters['createdDate'] or item['Created Date'].startswith(filters['createdDate'])):
+        if (not filters['Incident Zip'] or item['Incident Zip'] == filters['Incident Zip']) and \
+           (not filters['Borough'] or item['Borough'].lower() == filters['Borough'].lower()) and \
+           (not filters['Agency'] or item['Agency'].lower() == filters['Agency'].lower()) and \
+           (not filters['Created Date'] or item['Created Date'].startswith(filters['Created Date'])):
             filtered_data.append(item)
     return filtered_data
 
@@ -97,13 +97,17 @@ def hello_world():
 @app.route('/311calls', methods=['GET'])
 @cross_origin(origin='*', supports_credentials=True)
 def calls311():
+    print("hellooo")
+    
 
     filters = {
-        'zip': request.args.get('zip', ''),
-        'borough': request.args.get('borough', ''),
-        'agency': request.args.get('agency', ''),
-        'createdDate': request.args.get('createdDate', '')
+        'Incident Zip': request.args.get('IncidentZip', ''),
+        'Borough': request.args.get('Borough', ''),
+        'Agency': request.args.get('Agency', ''),
+        'Created Date': request.args.get('CreatedDate', '')
     }
+
+    print("filters", filters)
 
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 50))
