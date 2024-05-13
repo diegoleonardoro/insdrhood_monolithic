@@ -89,6 +89,9 @@ const Complaints311 = () => {
             <option value="">Select Borough</option>
             <option value="BRONX">Bronx</option>
             <option value="Brooklyn">Brooklyn</option>
+            <option value="QUEENS">Queens</option>
+            <option value="MANHATTAN">Manhattan</option>
+            <option value="STATEN ISLAND">Staten Island</option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="formAgency">
@@ -99,12 +102,21 @@ const Complaints311 = () => {
             value={filters.Agency}
             onChange={handleFilterChange}
           >
-            <option value="">Select Agency</option>
-            <option value="NYPD">NYPD</option>
-            <option value="DOT">DOT</option>
+            <option value="">Show All</option>
+            <option value="NYPD">NYPD - New York Police Department</option>
+            <option value="DOT">DOT - Department of Transportation</option>
+            <option value="DHS">DHS - Department of Homeless Services</option>
+            <option value="DOHMH">DOHMH - Department of Health and Mental Hygiene</option>
+            <option value="HPD">HPD - Housing Preservation and Development</option>
+            <option value="DPR">DPR - Department of Parks and Recreation</option>
+            <option value="DSNY">DSNY - Department of Sanitation</option>
+            <option value="DCWP">DCWP - Department of Consumer and Worker Protection</option>
+            <option value="TLC">TLC - Taxi and Limousine Commission</option>
+            <option value="EDC">EDC - Economic Development Corporation</option>
+            <option value="DEP">DEP - Department of Environmental Protection</option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="formDate">
+        {/* <Form.Group controlId="formDate">
           <Form.Label>Created Date</Form.Label>
           <Form.Control
             type="date"
@@ -112,8 +124,8 @@ const Complaints311 = () => {
             value={filters.CreatedDate}
             onChange={handleFilterChange}
           />
-        </Form.Group>
-        <Button type="submit" variant="primary">Apply Filters</Button>
+        </Form.Group> */}
+        <Button style={{ marginTop: "20px", width: "100%" }} type="submit" variant="dark">Apply Filters</Button>
       </Form>
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
         {complaints.map((complaint, index) => (
@@ -126,10 +138,10 @@ const Complaints311 = () => {
             </ListGroup>
           </Card>
         ))}
-        {loading && <div>Loading more complaints...</div>}
-        {!hasMore && <div>No more complaints to show.</div>}
-        {hasMore && !loading && <Button onClick={() => fetchComplaints()}>Load More</Button>}
       </div>
+      {loading && <div>Loading more complaints...</div>}
+      {!hasMore && <div>No more complaints to show.</div>}
+      {hasMore && !loading && <Button style={{ margin: "20px", padding:"15px"}}variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
     </div>
   );
 
