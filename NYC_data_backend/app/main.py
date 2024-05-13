@@ -1,5 +1,5 @@
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 import requests
 import os
 from flask_cors import CORS, cross_origin
@@ -10,13 +10,10 @@ import json
 from pytz import utc
 import gzip
 
-
 load_dotenv()
 
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
-print ('base urlll', base_url);
-
 
 CORS(app, resources={r"/311calls": {"origins": [base_url, "https://www.insiderhood.com"]}}, supports_credentials=True)
 
@@ -41,21 +38,9 @@ def decompress_data(data):
         # Attempt to decompress and decode
         return json.loads(gzip.decompress(data).decode('utf-8'))
     except (OSError, gzip.BadGzipFile):
-        # Handle cases where data is not compressed
-        # This should be logged and investigated
-        print("Data was not in compressed format, attempting to load as JSON")
-        return json.loads(data.decode('utf-8') if isinstance(data, bytes) else data)
+        # Fallback to plain JSON loading if data is not compressed
+        return json.loads(data)
 
-# filter the data based on the parameters coming from the client
-def filter_data(data, filters):
-    filtered_data = []
-    for item in data:
-        if (not filters['Incident Zip'] or item['Incident Zip'] == filters['Incident Zip']) and \
-           (not filters['Borough'] or item['Borough'].lower() == filters['Borough'].lower()) and \
-           (not filters['Agency'] or item['Agency'].lower() == filters['Agency'].lower()) and \
-           (not filters['Created Date'] or item['Created Date'].startswith(filters['Created Date'])):
-            filtered_data.append(item)
-    return filtered_data
 
 # Background task to fetch data and cache in Redis
 def fetch_and_cache_data():
@@ -84,11 +69,9 @@ def fetch_and_cache_data():
         print("Failed to fetch data from API")
         return []
 
+
 # Schedule the fetch_and_cache_data to run daily at 4:00 AM
 scheduler.add_job(fetch_and_cache_data, 'cron', hour=4)
-
-
-
 
 @app.route('/')
 def hello_world():
@@ -97,34 +80,55 @@ def hello_world():
 @app.route('/311calls', methods=['GET'])
 @cross_origin(origin='*', supports_credentials=True)
 def calls311():
-    print("hellooo")
-    
-
-    filters = {
+    filters = { # 1. get the filters coming from the client side 
         'Incident Zip': request.args.get('IncidentZip', ''),
         'Borough': request.args.get('Borough', ''),
         'Agency': request.args.get('Agency', ''),
         'Created Date': request.args.get('CreatedDate', '')
     }
 
-    print("filters", filters)
-
     page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 50))
+    limit = int(request.args.get('limit', 5))
+    cached_data = redis.get('complaints_data') # 2. get the data stored on redis
 
-    cached_data = redis.get('complaints_data')
+    print("hola")
+
     if cached_data:
         data = decompress_data(cached_data)
-        filtered_data = filter_data(data, filters)
+
+        filtered_data = [
+            item for item in data
+            if (not filters['Incident Zip'] or filters['Incident Zip'] in item['Incident Zip']) and
+               (not filters['Borough'] or filters['Borough'].lower() == item['Borough'].lower()) and
+               (not filters['Agency'] or filters['Agency'].lower() == item['Agency'].lower()) and
+               (not filters['Created Date'] or filters['Created Date'] in item['Created Date'])
+        ]
+
+        # Handle pagination
         start = (page - 1) * limit
         end = start + limit
-        paged_data = filtered_data[start:end]
-        response = jsonify(paged_data)
+        paginated_data = filtered_data[start:end]
+        response = make_response(jsonify(paginated_data))
         response.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
         return response
-    else:
-        return jsonify({"error": "Data not available"}), 404
     
+    else:
+        fetch_and_cache_data()
+
+        
+def filter_data(data, filters):
+    if all(value == '' for value in filters.values()):  # Check if all filter values are empty
+        return data  # Return all data if no filters are specified
+    else:
+        return [
+            item for item in data
+            if all(
+                not filters[key] or str(item.get(key, '')).lower() == str(filters[key]).lower()
+                for key in filters
+            )
+        ]
+
+
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google Cloud Run,
@@ -132,40 +136,6 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
 
-
-
-
-
-    # page = int(request.args.get('page', 1))
-    # limit = int(request.args.get('limit', 50))
-    # offset = (page - 1) * limit
-    # response = requests.get(f'https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit={limit}&$offset={offset}')
-    # print ("serverrr hit")
-    # if response.status_code == 200:
-    #     data = response.json()
-    #     filtered_data = []
-    #     for item in data:
-    #         # Check if the created date is within May 2024
-    #         created_date = item.get('created_date', '')
-    #         if created_date.startswith('2024-05'):
-    #             filtered_item = {
-    #                 'Created Date': created_date,
-    #                 'Agency': item.get('agency', 'Not specified'),
-    #                 'Agency Name': item.get('agency_name', 'Not specified'),
-    #                 'Complaint Type': item.get('complaint_type', 'Not specified'),
-    #                 'Descriptor': item.get('descriptor', 'Not specified'),
-    #                 'Location Type': item.get('location_type', 'Not specified'),
-    #                 'Incident Zip': item.get('incident_zip', 'Not specified'),
-    #                 'Incident Address': item.get('incident_address', 'Not specified'),
-    #                 'Borough': item.get('borough', 'Not specified'),
-    #                 'Location': item.get('location', {'latitude': 'Not specified', 'longitude': 'Not specified'})
-    #             }
-    #             filtered_data.append(filtered_item)
-
-    #     return jsonify(filtered_data)  # Return the filtered data as JSON
-    # else:
-    #     return 'Failed to retrieve data', 500 
- 
   
 
 

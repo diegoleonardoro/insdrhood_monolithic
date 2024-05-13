@@ -22,30 +22,30 @@ const Complaints311 = () => {
   });
 
   const fetchComplaints = async (reset = false) => {
-    if (!loading && hasMore) {
-      setLoading(true);
+    // if (!loading && hasMore) {
+    setLoading(true);
 
-      const params = new URLSearchParams({
-        ...filters,
-        page,
-        limit: 5
-      });
-      console.log("filters", filters)
-      console.log("paramss", params.toString())
-      console.log("url", `${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?${params}`)
-      // const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?${params}`);
-      const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, { params: { ...filters, page, limit: 5 } });
+    const params = new URLSearchParams({
+      ...filters,
+      page,
+      limit: 5
+    });
+    console.log("filters", filters)
+    console.log("paramss", params.toString())
+    console.log("url", `${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?${params}`)
+    // const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?${params}`);
+    const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, { params: { ...filters, page, limit: 5 } });
 
-
-      console.log("responseeee", response)
-      if (response.data.length > 0) {
-        setComplaints(prevComplaints => reset ? [...response.data] : [...prevComplaints, ...response.data]);
-        setPage(prevPage => prevPage + 1);
-      } else {
-        setHasMore(false);
-      }
-      setLoading(false);
+    console.log("responseeee", response)
+    if (response.data.length > 0) {
+      setComplaints(prevComplaints => reset ? [...response.data] : [...prevComplaints, ...response.data]);
+      setPage(prevPage => prevPage + 1);
+    } else {
+      setHasMore(false);
     }
+    setLoading(false);
+
+    // }
   };
 
   // Handler for changing filters
@@ -137,32 +137,3 @@ const Complaints311 = () => {
 
 export default Complaints311;
 
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || loading) return;
-  //     fetchComplaints();
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, [loading, hasMore, filters]);
-
-
-
-  // // Function to reset filters
-  // const resetFilters = () => {
-  //   setFilters({ zip: '', borough: '', agency: '', createdDate: '' });
-  // };
-
-
-  // const complaintsCards = complaints.map((complaint, index) => (
-  //   <Card style={{ width: '18rem', margin: "20px" }} key={index}>
-  //     <ListGroup className="list-group-flush">
-  //       <Card.Header as="h5">{complaint['Descriptor']}. {complaint['Complaint Type']}</Card.Header>
-  //       <ListGroup.Item>{complaint['Created Date']}</ListGroup.Item>
-  //       <ListGroup.Item>{complaint['Incident Address']}, {complaint['Incident Zip']}, {complaint['Borough']}</ListGroup.Item>
-  //       <ListGroup.Item>Responding agency: {complaint['Agency']}</ListGroup.Item>
-  //     </ListGroup>
-  //   </Card>
-  // ));
