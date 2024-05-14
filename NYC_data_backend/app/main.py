@@ -50,6 +50,8 @@ def decompress_data(data):
 
 # Background task to fetch data and cache in Redis
 def fetch_and_cache_data():
+
+    print ("yayayay")
     response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json')
     if response.status_code == 200:
         raw_data = response.json()
@@ -83,57 +85,53 @@ scheduler.add_job(fetch_and_cache_data, 'cron', hour=4)
 def hello_world():
     return 'Hello, Worls!'
 
+
 @app.route('/311calls', methods=['GET'])
 @cross_origin(origin='*', supports_credentials=True)
 def calls311():
-    filters = { # 1. get the filters coming from the client side 
-        'Incident Zip': request.args.get('IncidentZip', ''),
-        'Borough': request.args.get('Borough', ''),
-        'Agency': request.args.get('Agency', ''),
-        'Created Date': request.args.get('CreatedDate', '')
+
+
+    filters = {
+        'Incident Zip': request.args.get('IncidentZip', '').strip(),
+        'Borough': request.args.get('Borough', '').strip(),
+        'Agency': request.args.get('Agency', '').strip(), 
+        'Created Date': request.args.get('CreatedDate', '').strip()
     }
 
     page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 5))
-    cached_data = redis.get('complaints_data') # 2. get the data stored on redis
+    limit = int(request.args.get('limit', 0))
+    
 
-    print("hola")
+    cached_data = redis.get('complaints_data') 
 
     if cached_data:
-        data = decompress_data(cached_data)
+            data = decompress_data(cached_data)
+            filtered_data = filter_data(data, filters)
 
-        filtered_data = [
-            item for item in data
-            if (not filters['Incident Zip'] or filters['Incident Zip'] in item['Incident Zip']) and
-               (not filters['Borough'] or filters['Borough'].lower() == item['Borough'].lower()) and
-               (not filters['Agency'] or filters['Agency'].lower() == item['Agency'].lower()) and
-               (not filters['Created Date'] or filters['Created Date'] in item['Created Date'])
-        ]
-
-        # Handle pagination
-        start = (page - 1) * limit
-        end = start + limit
-        paginated_data = filtered_data[start:end]
-        response = make_response(jsonify(paginated_data))
-        response.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
-        return response
-    
+            # Check if a valid limit is provided
+            if limit > 0:
+                start = (page - 1) * limit
+                end = start + limit
+                paginated_data = filtered_data[start:end]
+                response = make_response(jsonify(paginated_data))
+            else:
+                # If limit is 0 or not provided, return all filtered data
+                response = make_response(jsonify(filtered_data))
+            return response
     else:
+        # If no cached data, fetch and cache the data
         fetch_and_cache_data()
 
         
 def filter_data(data, filters):
-    if all(value == '' for value in filters.values()):  # Check if all filter values are empty
-        return data  # Return all data if no filters are specified
-    else:
-        return [
-            item for item in data
-            if all(
-                not filters[key] or str(item.get(key, '')).lower() == str(filters[key]).lower()
-                for key in filters
-            )
-        ]
-
+    filtered_data = [
+        item for item in data
+        if all(
+            item[key] == value or value == '' 
+            for key, value in filters.items()
+        )
+    ]
+    return filtered_data
 
 
 if __name__ == '__main__':

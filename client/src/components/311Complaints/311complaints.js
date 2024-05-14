@@ -8,12 +8,11 @@ import Button from 'react-bootstrap/Button';
 import "./311complaints.css";
 
 const Complaints311 = () => {
+
   const [complaints, setComplaints] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
-  //filters:
   const [filters, setFilters] = useState({
     "IncidentZip": '',
     "Borough": '',
@@ -21,49 +20,113 @@ const Complaints311 = () => {
     "CreatedDate": ''
   });
 
-  const fetchComplaints = async (reset = false) => {
-    // if (!loading && hasMore) {
+  const [initialLoad, setInitialLoad] = useState(true);
+
+
+  const fetchComplaints = async (reset = false, applyFilters = false) => {
     setLoading(true);
 
-    const params = new URLSearchParams({
-      ...filters,
-      page,
-      limit: 5
-    });
-    console.log("filters", filters)
-    console.log("paramss", params.toString())
-    console.log("url", `${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?${params}`)
-    // const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls?${params}`);
-    const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, { params: { ...filters, page, limit: 5 } });
+    // Define parameters based on whether filters are applied
+    const params = applyFilters ? filters : { limit: 10, page };
 
-    console.log("responseeee", response)
-    if (response.data.length > 0) {
-      setComplaints(prevComplaints => reset ? [...response.data] : [...prevComplaints, ...response.data]);
-      setPage(prevPage => prevPage + 1);
-    } else {
-      setHasMore(false);
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
+        params: params
+      });
+
+      if (response.data.length > 0) {
+        if (reset) {
+          setComplaints(response.data);
+        } else {
+          setComplaints(prev => [...prev, ...response.data]);
+        }
+        setPage(prevPage => prevPage + 1);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching complaints:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-
-    // }
   };
 
-  // Handler for changing filters
-  const handleFilterChange = (event) => {
-    const { name, value } = event.target;
-    setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
-  };
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
-    fetchComplaints(true);
+    setInitialLoad(false);
+    fetchComplaints(true, true);
   };
 
   useEffect(() => {
-    fetchComplaints(true);
-  }, []);
+    if (initialLoad) {
+      fetchComplaints(true, false);
+    }
+  }, [initialLoad]);
 
 
+
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+
+    if (name === 'IncidentZip') {
+      // Reset the borough to the default value when zip code changes
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        [name]: value,
+        Borough: ''
+      }));
+    } else if (name === 'Borough') {
+      // Reset the zip code to the default value when borough changes
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        [name]: value,
+        IncidentZip: ''
+      }));
+    } else {
+      // For other fields, just update them as before
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        [name]: value
+      }));
+    }
+  };
+
+  function formatDate(dateStr) {
+    const months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+
+    const date = new Date(dateStr);
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    // Adding ordinal suffix to day
+    let suffix = 'th';
+    const exceptions = [1, 21, 31];
+    if (exceptions.includes(day)) {
+      suffix = 'st';
+    } else if ([2, 22].includes(day)) {
+      suffix = 'nd';
+    } else if ([3, 23].includes(day)) {
+      suffix = 'rd';
+    }
+
+    // Formatting time in 12-hour format
+    const timePeriod = hours >= 12 ? 'PM' : 'AM';
+    const formattedHour = ((hours + 11) % 12 + 1); // converts 24h to 12h format and handles midnight case
+    const formattedMinute = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${month} ${day}${suffix} at ${formattedHour}:${formattedMinute} ${timePeriod}`;
+  }
+
+  function titleCase(string) {
+    return string.toLowerCase().split(' ').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -88,7 +151,7 @@ const Complaints311 = () => {
           >
             <option value="">Select Borough</option>
             <option value="BRONX">Bronx</option>
-            <option value="Brooklyn">Brooklyn</option>
+            <option value="BROOKLYN">Brooklyn</option>
             <option value="QUEENS">Queens</option>
             <option value="MANHATTAN">Manhattan</option>
             <option value="STATEN ISLAND">Staten Island</option>
@@ -132,18 +195,22 @@ const Complaints311 = () => {
           <Card style={{ width: '18rem', margin: "20px" }} key={index}>
             <ListGroup className="list-group-flush">
               <Card.Header as="h5">{complaint['Descriptor']}. {complaint['Complaint Type']}</Card.Header>
-              <ListGroup.Item>{complaint['Created Date']}</ListGroup.Item>
-              <ListGroup.Item>{complaint['Incident Address']}, {complaint['Incident Zip']}, {complaint['Borough']}</ListGroup.Item>
-              <ListGroup.Item>Responding agency: {complaint['Agency']}</ListGroup.Item>
+              <ListGroup.Item>{titleCase(complaint['Borough'])}, {complaint['Incident Zip']} </ListGroup.Item>
+              <ListGroup.Item><span style={{ fontWeight: "bold" }}>Issued: </span>{formatDate(complaint['Created Date'])}</ListGroup.Item>
+
+              <ListGroup.Item> <span style={{ fontWeight: "bold" }} >Address: </span>{titleCase(complaint['Incident Address'])}</ListGroup.Item>
+              <ListGroup.Item><span style={{ fontWeight: "bold" }} >Responding agency: </span>{complaint['Agency']}</ListGroup.Item>
             </ListGroup>
           </Card>
         ))}
       </div>
       {loading && <div>Loading more complaints...</div>}
       {!hasMore && <div>No more complaints to show.</div>}
-      {hasMore && !loading && <Button style={{ margin: "20px", padding:"15px"}}variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
+      {hasMore && !loading && <Button style={{ margin: "20px", padding: "15px" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
     </div>
   );
+
+
 
 };
 
