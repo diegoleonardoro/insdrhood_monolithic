@@ -9,7 +9,7 @@ const CartPage = () => {
   const funcs = { increase, decrease, removeProduct }
 
   return (
-    <div >
+    <div className='cartPageContainer'>
       <h1 style={{textAlign:'center', margin:'20px'}}>Order Summary</h1>
       {
         cartItems.length === 0 ? <div style={{ margin:"auto" }} className='empty-cart'>Your Cart is empty</div>

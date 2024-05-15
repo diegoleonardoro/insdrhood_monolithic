@@ -1,15 +1,13 @@
 .single-product-container {
   display: flex;
-  flex-direction: row;
-  align-items: start;
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
-  gap: 20px;
-  background: #fff;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-  width:80%;
-  align-items: center;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    background-color: #B2AC88;
+    z-index: -1;
+    width: 100%;
 }
 
 .product-image img {

@@ -1,4 +1,16 @@
 
+
+.cartPageContainer{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    background-color: #B2AC88;
+    z-index: -1;
+    width: 100%;
+}
 .cart-item-container{
   display: flex;
   flex-flow: wrap;

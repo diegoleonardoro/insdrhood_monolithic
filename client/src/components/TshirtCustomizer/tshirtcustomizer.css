@@ -1,12 +1,13 @@
 .mainImageControlContainer{
-  display:flex;
-  align-items: center;
-  margin-top: 40px;
-  justify-content: space-evenly;
-  width:80%;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-  margin:auto;
-  margin-top: 50px;
+ display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    background-color: #B2AC88;
+    z-index: -1;
+    width: 100%;
 }
 
 /* T-Shirt Customizer Styles */
