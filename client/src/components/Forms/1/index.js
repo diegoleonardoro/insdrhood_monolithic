@@ -211,12 +211,10 @@ const FormComponent = () => {
   const changeQuestion = async (direction, flag, errs) => {
 
     let keyWord;
-
     const currentDiv = divRefs.current[activeIndex];
     const tooltip = currentDiv.querySelector(".tooltip_");
 
     if (direction === "next") {
-
       if (currentDiv) {
 
         // check if the user has not responded a question that required to be responded:
@@ -269,26 +267,6 @@ const FormComponent = () => {
           };
         }
 
-        // else if (
-        //   currentDiv.className.indexOf("neighborhoodEvaluationFlag") > -1 ||
-        //   currentDiv.className.indexOf("agreeOrDisagreeFoodQuestions") > -1 ||
-        //   currentDiv.className.indexOf("nightlifeQuestions") > -1
-        // ) {
-
-        //   const inputs = currentDiv.querySelectorAll("input");
-        //   let hasValue = false;
-        //   for (let i = 0; i < inputs.length; i++) {
-        //     if (inputs[i].checked) {
-        //       hasValue = true;
-        //       break;
-        //     }
-        //   }
-        //   if (!hasValue) {
-        //     tooltip.style.display = "inline-block";
-        //     return;
-        //   }
-        // }
-
         // Check if we are about to show the food questions, so that we can change the display value of the header that annouces the upcoming food questions:
         if (currentDiv.className.indexOf("stereotypicalResident") > -1) {
           setTimeout(() => {
@@ -316,25 +294,6 @@ const FormComponent = () => {
           setNeighborhood(currentDiv.children[1].children[0].value);
         }
 
-
-        // this block will check if there are inputs in the night life recommeded places 
-        // if (currentDiv.className.indexOf("nightLifeRecommendedPlaces") > -1) {
-        //   const placeName = nightLifeRecommendationsRef.current.placeName.value;
-        //   const placeDescription = nightLifeRecommendationsRef.current.placeDescription.value;
-        //   if (placeName === "" && placeDescription === "") {
-        //     return;
-        //   }
-        //   setFormData((prevFormData) => ({
-        //     ...prevFormData,
-        //     nightLifeRecommendations: [
-        //       ...prevFormData.nightLifeRecommendations,
-        //       {
-        //         assessment: nightLifeRecommendationsRef.current.placeName.value,
-        //         explanation: nightLifeRecommendationsRef.current.placeDescription.value,
-        //       },
-        //     ],
-        //   }));
-        // }
 
 
         // The following if statement will check if the user has clicked the last question
@@ -900,7 +859,7 @@ const FormComponent = () => {
         </Button>
 
       ) : (
-        <div>
+        <div className="formContainer">
           <div
             style={{ display: onlyNYCResidentsSign, position: "relative", zIndex: "10" }}
             className="onlyNYCResident"
@@ -910,7 +869,7 @@ const FormComponent = () => {
             </Alert>
           </div>
 
-          <div style={{ position: "absolute", top: "10px", right: "10px", cursor: "pointer" }} onClick={handleGoBack}>
+          <div style={{ position: "relative", right: "-85%", cursor: "pointer" }} onClick={handleGoBack}>
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
             </svg>
@@ -925,6 +884,7 @@ const FormComponent = () => {
               }
               ref={ref => divRefs.current[0] = ref}
             >
+
               <label htmlFor="neighborhood">Do you live in New York City?</label>
 
               <div
@@ -1106,9 +1066,9 @@ const FormComponent = () => {
                 <span style={{ textDecoration: "underline" }} className="nhoodName"> {neighborhood}: </span>
               </label>
               {selectedOptions.length > 0 && (
-                <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+                <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid rgba(65,117,5,1)', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
                   {selectedOptions.map((option, index) => (
-                    <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
+                    <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: 'rgb(255, 156, 85)', display: 'flex' }} key={option} >
                       {option}
                       <div
                         onClick={(e) => {
@@ -1131,7 +1091,7 @@ const FormComponent = () => {
                 </div>
               )}
 
-              <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(201, 201, 201" }}>
+              <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgba(65,117,5,1)" }}>
 
                 <div ref={nehoodAdjectivesDivRef}
                   style={{
@@ -1145,7 +1105,7 @@ const FormComponent = () => {
                   {/** Type your own adjective */}
                   <div style={{
                     display: "flex",
-                    border: "1px solid #dcd7d7",
+                    border: "1px solid rgba(65,117,5,1)",
                     padding: "5px",
                     marginTop: "15px",
                     margin: '10px',
@@ -1162,7 +1122,7 @@ const FormComponent = () => {
                         changeTooltipDisplay(e, "none");
                       }}
                       value={nhoodAdjective}
-                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
+                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid rgb(47, 85, 4)" }}
 
                     />
                     <button onClick={(e) => {
@@ -1185,7 +1145,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Vibrant"
@@ -1202,7 +1162,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Tranquil"
@@ -1219,7 +1179,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Safe"
@@ -1236,7 +1196,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Cosmopolitan"
@@ -1253,7 +1213,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Picturesque"
@@ -1270,7 +1230,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Historic"
@@ -1287,7 +1247,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Lively"
@@ -1304,7 +1264,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Charming"
@@ -1321,7 +1281,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Diverse"
@@ -1338,7 +1298,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Peaceful"
@@ -1355,7 +1315,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Bustling"
@@ -1372,7 +1332,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Eclectic"
@@ -1389,7 +1349,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Welcoming"
@@ -1406,7 +1366,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85))",
                       display: "flex"
                     }}
                     data-option="Serene"
@@ -1423,7 +1383,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Quaint"
@@ -1440,7 +1400,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Thriving"
@@ -1457,7 +1417,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Family-oriented"
@@ -1474,7 +1434,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Trendy"
@@ -1491,7 +1451,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Gritty"
@@ -1508,7 +1468,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85))",
                       display: "flex"
                     }}
                     data-option="Up-and-coming"
@@ -1635,9 +1595,9 @@ const FormComponent = () => {
               </label>
 
               {residentsAdjsSelectedOpts.length > 0 && (
-                <div ref={residentAdjectivesDivContainer} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #c9c9c9', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
+                <div ref={residentAdjectivesDivContainer} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid rgb(65, 117, 5)', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
                   {residentsAdjsSelectedOpts.map((option, index) => (
-                    <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex' }} key={option} >
+                    <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: 'rgb(255, 156, 85)', display: 'flex' }} key={option} >
                       {option}
                       <div
                         onClick={(e) => {
@@ -1660,7 +1620,7 @@ const FormComponent = () => {
                 </div>
               )}
 
-              <div className="scrollbarContainer" style={{ height: "200px", overflow: "scroll", marginTop: "20px", border: "1px solid #c9c9c9" }}>
+              <div className="scrollbarContainer" style={{ height: "200px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(65, 117, 5)" }}>
 
                 <div ref={residentAdjectivesDivRef}
                   style={{
@@ -1673,7 +1633,7 @@ const FormComponent = () => {
                   {/** Type your own adjective */}
                   <div style={{
                     display: "flex",
-                    border: "1px solid #dcd7d7",
+                    border: "1px solid rgb(65, 117, 5)",
                     padding: "5px",
                     marginTop: "15px",
                     margin: '10px',
@@ -1690,7 +1650,7 @@ const FormComponent = () => {
                         changeTooltipDisplay(e, "none");
                       }}
                       value={residentAdjective}
-                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
+                        style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid rgb(47, 85, 4" }}
                     />
                     <button onClick={(e) => {
                       e.preventDefault();
@@ -1711,7 +1671,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Friendly"
@@ -1728,7 +1688,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Welcoming"
@@ -1745,7 +1705,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Harmonious"
@@ -1762,7 +1722,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Inclusive"
@@ -1779,7 +1739,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Active"
@@ -1796,7 +1756,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Caring"
@@ -1813,7 +1773,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Hospitable"
@@ -1830,7 +1790,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Collaborative"
@@ -1847,7 +1807,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Supportive"
@@ -1864,7 +1824,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Community-oriented"
@@ -1881,7 +1841,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Lively"
@@ -1898,7 +1858,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Neighborly"
@@ -1915,7 +1875,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Respectful"
@@ -1932,7 +1892,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Progressive"
@@ -1949,7 +1909,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Traditional"
@@ -1966,7 +1926,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="United"
@@ -1983,7 +1943,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Empowered"
@@ -2000,7 +1960,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Empathetic"
@@ -2017,7 +1977,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Cohesive"
@@ -2034,7 +1994,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Involved"
@@ -2070,7 +2030,7 @@ const FormComponent = () => {
                 What food and restaurants should people try in <span className="nhoodName"> {neighborhood}? </span>
               </label>
 
-              <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid #d5d5d5" }}>
+                <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid rgb(47, 85, 4)" }}>
 
                 <div ref={typesOfFoodRecommendationsRef}
                   style={{
@@ -2090,7 +2050,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Italian"
@@ -2107,7 +2067,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Mexican"
@@ -2124,7 +2084,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Chinese"
@@ -2141,7 +2101,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Indian"
@@ -2158,7 +2118,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Japanese"
@@ -2175,7 +2135,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Mediterranean"
@@ -2192,7 +2152,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Thai"
@@ -2209,7 +2169,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="French"
@@ -2226,7 +2186,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="American"
@@ -2243,7 +2203,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Middle Eastern"
@@ -2260,7 +2220,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Greek"
@@ -2277,7 +2237,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Vietnamese"
@@ -2294,7 +2254,7 @@ const FormComponent = () => {
                       border: "1px solid black",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(137, 207, 240)",
+                      backgroundColor: "rgb(255, 156, 85)",
                       display: "flex"
                     }}
                     data-option="Korean"
@@ -2313,7 +2273,7 @@ const FormComponent = () => {
                       placeholder="Type another option..."
                       onChange={(e) => handleInputChange(e.target.value)}
                       value={foodTypesInput}
-                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid black" }}
+                        style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid  rgb(47, 85, 4)" }}
                     />
                     {/* Button to add the typed option */}
                     <button className="addButton" onClick={handleAddButton}>
@@ -2329,13 +2289,13 @@ const FormComponent = () => {
               <div className="tooltip_">Your opinion on this is important. </div>
 
               {foodTypesSelectedOpts.length > 0 && (
-                <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer" style={{
+                  <div ref={favTypesOfFoodRef} className="scrollbarContainer adjsResContainer footTypesSelectedOpts" style={{
                   display: 'flex', alignItems: 'center', margin: '10px', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "120px", overflow: "scroll",
-                  border: "1px solid grey"
+                    border: "1px solid rgb(47, 85, 4)"
                 }}>
                   {foodTypesSelectedOpts.map((option, index) => (
 
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #d5d5d5", padding: "5px", width: "100%", marginTop: "5px" }} key={option.assessment}>
+                    <div  style={{ display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgb(47, 85, 4)", padding: "5px", width: "100%", marginTop: "5px" }} key={option.assessment}>
 
                       {/* <div ref={(e) => { foodRecommendationsRef.current['explanation'] = e }} style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: '#89cFF0', display: 'flex', height: "40px", alignItems: "center", width: "50%", justifyContent: "center" }}  >
                     {option.assessment}
@@ -2925,7 +2885,7 @@ const FormComponent = () => {
                   <p style={{ display: "inline" }}>If you had to pick <span className="questionHighlight"> one place to enjoy night life </span> in {neighborhood} it would be </p>
                   <input style={{
                     width: '35%',
-                    height: '25px'
+                    
                   }}
                     className="completeSentenceInput"
                     onChange={
@@ -2947,7 +2907,6 @@ const FormComponent = () => {
                   <p style={{ display: "inline" }}> because</p>
                   <input style={{
                     width: '35%',
-                    height: '25px',
                     textTransform: "lowercase"
                   }}
                     className="completeSentenceInput"
@@ -2979,7 +2938,7 @@ const FormComponent = () => {
             >
               <div ref={letsTalkAboutGeneralInfo} className="introHeader" >
                 <h4> Let's talk about some general information </h4>
-                <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202024-02-19%2016.56.15%20-%20A%20refined%20pencil%20sketch%20of%20a%20thinking%20emoji%2C%20centered%20on%20a%20white%20background.%20The%20emoji%20should%20display%20a%20subtle%2C%20intelligent%20expression%2C%20with%20a%20slight%2C.webp" height="190px"></img>
+                  <img alt="generalinfo" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/__.png" height="190px"></img>
               </div>
 
               <h3 style={{ fontWeight: 'bold' }}> True or False: </h3>
@@ -3609,9 +3568,9 @@ const FormComponent = () => {
             </div>
 
           </form>
-          <div style={{ position: "absolute", bottom: "15px", left: "50%", transform: "translate(-50%, 0)" }}>
+          <p style={{ position: "relative", textAlign: "center" }}>
             {Math.floor(progressPercentage)}% completed
-          </div>
+          </p>
         </div >
       )}
 

@@ -39,10 +39,11 @@
   scroll-behavior: smooth;
   width:100%;
   transition: transform 1s ease; 
+  border-bottom: 1px solid black;
 }
 
 .blogArrows{
-  color: #000000; /* Black text color */
+  color: black; /* Black text color */
 }
 
 /* This styles the scrollbar track */
@@ -79,7 +80,9 @@
   flex: 0 0 auto; /* Do not grow or shrink */
   height: 500px; /* Fixed height */
   width: 400px; /* Fixed width, adjust as needed */
+  background-color: transparent;
   margin: 10px !important;
+  border:1px solid black;
   /* flex: 1 1 0px; 
   height: 500px;
   width:500px;
@@ -107,6 +110,7 @@
   position:relative;
   top:40px;
   margin-bottom: 50px;
+ 
 }
 
 .searchByNhoodInput{
@@ -114,11 +118,44 @@
   margin-bottom: 20px;
   align-self: flex-start;
   height:40px;
+  background-color: rgb(255 217 19 / 52%);
+  border: 1px solid grey;
+  padding:25px;
+  border-radius: 10px;
+  color:black;
+}
+.searchByNhoodInput:focus {
+    outline: none;
+    border:3px solid #34ff01; /* Subtle change in border color */
+}
+
+.searchByNhoodInput::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: rgb(72, 72, 72);
+}
+.searchByNhoodInput::-moz-placeholder { /* Firefox 19+ */
+    color: rgb(72, 72, 72);
+    opacity: 1; /* Firefox reduces the opacity by default */
+}
+.searchByNhoodInput:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgb(72, 72, 72);
+}
+.searchByNhoodInput:-moz-placeholder { /* Firefox 18- */
+    color: rgb(72, 72, 72);
+    opacity: 1;
 }
 
 .boroughSelect{
-  height:40px;
+  height:50px;
   margin-left: 20px;
+  background-color: rgb(255 217 19 / 52%);
+  padding-left:15px;
+  border-radius: 10px;
+  color:rgb(72, 72, 72);
+}
+
+.boroughSelect:focus {
+    outline: none;
+    border-color: #34ff01; /* Subtle change in border color */
 }
 
 .dropdownFilterByBorough{
@@ -126,12 +163,23 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
-  height:40px;
+  height:50px; 
 }
 
 .neighborhoodCard{
   width:30%;
   margin:30px;
+  background-color: rgb(255 217 19 / 52%);
+  border: 1px solid black;
+}
+
+.neighborhoodCard:hover {
+  box-shadow: rgba(0, 0, 255, 0.09) 0px 0px 0px 2px inset, 
+      rgba(255, 255, 255, 0) 5px -5px 0px -2px, rgb(31, 193, 27) 5px -5px, 
+      rgba(255, 255, 255, 0) 10px -10px 0px -2px, rgb(255, 217, 19) 10px -10px, 
+      rgba(255, 255, 255, 0) 15px -15px 0px -2px, rgb(255, 156, 85) 15px -15px, 
+      rgba(255, 255, 255, 0) 20px -20px 0px -2px, rgb(255, 85, 85) 20px -20px;
+  cursor: pointer;
 }
 
 .pagination button {
@@ -205,7 +253,10 @@
 }
 
 
-
+.arrowsContainer__{
+ background-color: #dcd8bf;
+ box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
 
 @media (max-width: 1100px) {
   .blogsCard{
@@ -240,7 +291,7 @@
     width:40%;
      height: 500px;
   }
-  .arrowsContainer{
+  .arrowsContainer__{
     display: none;
   }
   .articlesContainer{

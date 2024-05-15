@@ -3,18 +3,27 @@
   width: 50%;
   left: 50%;
   transform: translate(-50%, 0%);
-  background-color: #f8f9fa;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 25px;
   /* height:100vh; */
-  margin-top:70px;
-  margin-bottom: 50px;
+  /* margin-top:70px; */
+  /* margin-bottom: 50px; */
   /* max-height: calc(100vh - 100px); */
   overflow-y: auto;
-
+  height: 100vh;
+  overflow: hidden;
 }
+
+.formContainer{
+  border:1px solid rgb(47, 85, 4);
+  box-shadow: 5px 5px 0 0 rgba(65,117,5,1), 10px 10px 0 0 rgba(65,117,5,0.6), 15px 15px 0 0 rgba(65,117,5,0.4), 20px 20px 0 0 rgba(65,117,5,0.2), 25px 25px 0 0 rgba(65,117,5,0.1);
+  width:90%;
+}
+
+
 
 .form {
   position:relative;
@@ -31,6 +40,69 @@
   left:50%;
   transform: translate(-50%, 0);
 }
+
+.form input{
+  background-color: transparent;
+  border: 1px solid rgb(47, 85, 4);
+}
+
+.form input:focus{
+  /* border:1px solid rgb(255, 217, 19) */
+  box-shadow: 0 0 0 2px rgb(255, 217, 19), 4px 4px 0 0 rgb(255, 217, 19);
+}
+
+.form input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: rgb(72, 72, 72);
+}
+.form input::-moz-placeholder { /* Firefox 19+ */
+    color: rgb(72, 72, 72);
+    opacity: 1; /* Firefox reduces the opacity by default */
+}
+.form input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgb(72, 72, 72);
+}
+.form input:-moz-placeholder { /* Firefox 18- */
+    color: rgb(72, 72, 72);
+    opacity: 1;
+}
+ 
+
+.form textarea:focus{
+  /* border:1px solid rgb(255, 217, 19) */
+  box-shadow: 0 0 0 2px rgb(255, 217, 19), 3px 3px 0 0 rgb(255, 217, 19);
+}
+
+form textarea::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: rgb(72, 72, 72);
+}
+.form textarea::-moz-placeholder { /* Firefox 19+ */
+    color: rgb(72, 72, 72);
+    opacity: 1; /* Firefox reduces the opacity by default */
+}
+.form textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgb(72, 72, 72);
+}
+.form textarea:-moz-placeholder { /* Firefox 18- */
+    color: rgb(72, 72, 72);
+    opacity: 1;
+}
+
+
+
+
+
+
+
+.form select{
+  background-color: transparent;
+   border: 1px solid rgb(47, 85, 4);
+}
+
+.form select:focus{
+  box-shadow: 0 0 0 2px rgb(255, 217, 19), 8px 8px 0 0 rgb(255, 217, 19);
+}
+
+
 
 .tooltip_ {
   position: relative;
@@ -141,7 +213,7 @@ textarea::placeholder{
   height: 10px;
   border-radius: 50%;
   content: "";
-  background-color: #000000;
+  background-color: transparent;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -243,7 +315,7 @@ textarea::placeholder{
 
 /*What neighborhood do you live in*/
 .questionHighlight{
-  background-color: #F4D03F;
+  background-color: rgb(255, 156, 85);
   padding:4px;
 }
 
@@ -314,17 +386,18 @@ input:focus{
   width:50%
 }
 
+
+
 .scrollbarContainer{
   -webkit-overflow-scrolling: touch;
 }
 .scrollbarContainer::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 /* Track */
 .scrollbarContainer::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: transparent; 
 }
- 
 /* Handle */
 .scrollbarContainer::-webkit-scrollbar-thumb {
   background: #888; 
@@ -355,10 +428,6 @@ input:focus{
   top:0px;
 }
 
-.textarea_text:focus {
-  border-color: #1192e9;
-}
-
 
 /** Which of the following best describes the cost of food in {neighborhood}? */
 .statementResponseContainer {
@@ -382,11 +451,11 @@ input:focus{
 }
 
 .nhoodEvalLabelTrue{
-  background-color: #f8f9fa;
+  background-color: #B2AC88;
 }
 
 .nhoodEvalLabelFalse{
-  background-color: #f8f9fa;
+  background-color: #B2AC88;
 }
 
 .statementResponseContainerInput:checked + .nhoodEvalLabelTrue {
@@ -401,7 +470,7 @@ input:focus{
 
 
 .nightLifeDescription{
-  background-color: #f8f9fa;
+  background-color: #B2AC88;
 }
 
 .nightLifeDescription:checked + .nightLifeDescription {
@@ -462,7 +531,7 @@ input:focus{
   width: 50%;
   border-width: 1px;
   border-style: solid;
-  border-color: rgb(222, 220, 220) transparent rgb(222, 220, 220) rgb(222, 220, 220);
+  border-color: rgb(47, 85, 4) transparent rgb(47, 85, 4) rgb(47, 85, 4);
   /* top - right  - bottom - left*/
 }
 
@@ -470,8 +539,8 @@ input:focus{
   width: 50%;
   border-width: 1px;
   border-style: solid;
-  border-color: rgb(222, 220, 220) rgb(222, 220, 220) rgb(222, 220, 220)
-    rgb(222, 220, 220);
+  border-color: rgb(47, 85, 4) rgb(47, 85, 4) rgb(47, 85, 4)
+    rgb(47, 85, 4);
   /* top - right  - bottom - left*/
 }
 
@@ -481,7 +550,7 @@ input:focus{
   width: 25%;
   border-width: 1px;
   border-style: solid;
-  border-color: rgb(222, 220, 220) rgb(222, 220, 220) rgb(222, 220, 220)
+  border-color: rgb(47, 85, 4) rgb(47, 85, 4) rgb(47, 85, 4)
    transparent;
   /* top - right  - bottom - left*/
 }
@@ -490,7 +559,7 @@ input:focus{
   width: 25%;
   border-width: 1px;
   border-style: solid;
-  border-color: rgb(222, 220, 220) rgb(222, 220, 220) rgb(222, 220, 220) transparent;
+  border-color: rgb(47, 85, 4) rgb(47, 85, 4) rgb(47, 85, 4) transparent;
   /* top - right  - bottom - left*/
 }
 
@@ -502,15 +571,15 @@ input:focus{
 .favoritePlacesBody div:nth-child(1) {
   border-width: 1px;
   border-style: solid;
-  border-color: transparent transparent rgb(222, 220, 220) rgb(222, 220, 220);
+  border-color: transparent transparent rgb(47, 85, 4) rgb(47, 85, 4);
   /* top - right  - bottom - left*/
 }
 
 .favoritePlacesBody div:nth-child(2) {
   border-width: 1px;
   border-style: solid;
-  border-color: transparent rgb(222, 220, 220) rgb(222, 220, 220)
-    rgb(222, 220, 220);
+  border-color: transparent rgb(47, 85, 4) rgb(47, 85, 4)
+    rgb(47, 85, 4);
   /* top - right  - bottom - left*/
 }
 
@@ -519,7 +588,7 @@ input:focus{
   width: 25%;
   border-width: 1px;
   border-style: solid;
-  border-color: transparent rgb(222, 220, 220) rgb(222, 220, 220)
+  border-color: transparent rgb(47, 85, 4) rgb(47, 85, 4)
     transparent;
   /* top - right  - bottom - left*/
 }
@@ -529,7 +598,7 @@ input:focus{
   width: 25%;
   border-width: 1px;
   border-style: solid;
-  border-color: transparent rgb(222, 220, 220) rgb(222, 220, 220) transparent;
+  border-color: transparent rgb(47, 85, 4) rgb(47, 85, 4)transparent;
   /* top - right  - bottom - left*/
 }
 
@@ -577,6 +646,7 @@ input:focus{
   padding: 0.5em;
   border: thin solid grey;
   border-radius: 3px;
+  background-color: transparent;
 }
 
 
@@ -635,7 +705,7 @@ input:focus{
   width:100%;
   height:100%;
   z-index: 9;
-  background-color: #f8f9fa;
+  background-color: #B2AC88;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -646,17 +716,21 @@ input:focus{
   z-index: 9;
   width:110%;
   height:100%;
-  background-color: #f8f9fa;
+  background-color: #B2AC88;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.footTypesSelectedOpts{
+   box-shadow: 0 0 0 2px rgb(255, 217, 19), 4px 4px 0 0 rgb(255, 217, 19);
 }
 
 /* media queries: */
 @media screen and (max-width: 777px) {
   .mainContainer {
     width: 90%; /* Adjust width to 90% */
-    max-width: 90%;
+    /* max-width: 90%; */
   }
 }
 
@@ -679,7 +753,7 @@ input:focus{
 
 @media screen and (min-height: 1000px) {
     .mainContainer{
-      height:70vh;
+      /* height:70vh; */
     }
 }
 

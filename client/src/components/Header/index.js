@@ -62,10 +62,11 @@ function Header() {
       }
     });
 
+    // bg="dark" data-bs-theme="dark"
   return (
     <>
       {!showHeader ? (
-        <Navbar bg="dark" data-bs-theme="dark">
+        <Navbar style={{borderBottom:"1px solid"}}>
           <Container id="container_">
             <Navbar.Brand id="navBrand" as={Link} to="/">
               Insdr Hood

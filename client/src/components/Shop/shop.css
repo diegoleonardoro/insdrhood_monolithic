@@ -2,6 +2,10 @@
   margin: 3rem 0;
 }
 
+.galleryParent__{
+  border: 1px solid grey;
+}
+
 
 .product-list{
   display: flex;
@@ -12,7 +16,7 @@
 }
 
  .product-list div{
-  background-color: #f5f5f5;
+  background-color: transparent;
  }
 
 

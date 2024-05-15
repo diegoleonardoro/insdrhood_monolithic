@@ -29,6 +29,8 @@ function Home() {
   const [blogsLoading, setBlogsLoading] = useState(true);
   const [neighborhoodsLoading, setNeighborhoodsLoading] = useState(true);
   const blogContainer = blogContainerRef.current;
+  const [hoverStates, setHoverStates] = useState([]);
+
   const [isTapAllowed, setIsTapAllowed] = useState(true);
 
   const handleTouchTap = () => {
@@ -153,7 +155,7 @@ function Home() {
   const neighborhoodCards = filteredNeighborhoods.map((neighborhood, index) => {
     const key = neighborhood._id ? `${neighborhood._id}-${index}` : index;
     return (
-      <Card className="neighborhoodCard" key={key}>
+      <Card className="neighborhoodCard" key={key} onClick={() => handleNavigation(`/neighborhood/${neighborhood._id}`)}>
         <Card.Header as="h5">{neighborhood.neighborhood}{", "} {neighborhood.borough}</Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
@@ -162,14 +164,15 @@ function Home() {
               {neighborhood.neighborhoodDescription}
               {' '}
             </p>
-            <footer className="blockquote-footer">
+            <footer style={{color:"black", fontStyle:"italic"}}className="blockquote-footer">
               {neighborhood.user.name !== "" ? neighborhood.user.name : "Anonymous"}
             </footer>
           </blockquote>
         </Card.Body>
         <Button
+          className="card_button"
           onClick={() => handleNavigation(`/neighborhood/${neighborhood._id}`)}
-          style={{ margin: "20px", borderRadius: "0" }}
+          style={{ margin: "auto", backgroundColor:"rgb(255, 156, 85)",color:"black",marginBottom:"15px", width:"60%", borderRadius: "0" }}
           variant="dark"
         >
           Learn More
@@ -195,7 +198,7 @@ function Home() {
         <Card.Footer >
           <Button
             onClick={() => handleNavigation(`/post/${blog._id}`)}
-            style={{ margin: "20px", borderRadius: "0" }}
+            style={{ borderRadius: "0", backgroundColor:"rgb(255, 156, 85)", width:"100%", color:"black", position:"relative", left:"50%", transform:"translate(-50%, 0)", height:"60px", borderRadius:"10px"  }}
             variant="dark"
           >
             Read
@@ -280,14 +283,14 @@ function Home() {
 
     return <div className="skeleton-loader" style={style}></div>;
   }
-
+  // backgroundColor: '#B2AC88',
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
 
-      <div style={{ width: '100%', overflowX: "hidden", backgroundColor: '#8080801c', display: "flex", position: 'relative' }}>
+      <div style={{ width: '100%', overflowX: "hidden", display: "flex", position: 'relative' }}>
         {!blogsLoading ? (
           <>
-            <div className="arrowsContainer" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
+            <div className="arrowsContainer__" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black",  borderRadius: "50px", padding: "10px", marginLeft: "20px"}}>
               <svg className='blogArrows bi bi-arrow-left' style={{ fontSize: '100px', border: 'none', zIndex: '10', padding: "10px" }} width="56" height="56" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
               </svg>
@@ -299,7 +302,7 @@ function Home() {
             </div>
 
             {/* Right Arrow */}
-            <div className="arrowsContainer" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px", backgroundColor: "white", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
+            <div className="arrowsContainer__" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
 
               <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
@@ -327,7 +330,7 @@ function Home() {
         />
         <div className="dropdownFilterByBorough">
           <select value={selectedBorough} onChange={handleBoroughChange} className='boroughSelect' id="boroughSelect">
-            <option value="All">All Boroughs</option>
+            <option  value="All">All Boroughs</option>
             <option value="Manhattan">Manhattan</option>
             <option value="Brooklyn">Brooklyn</option>
             <option value="Queens">Queens</option>
