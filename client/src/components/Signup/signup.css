@@ -2,13 +2,44 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 100vh;
+  position: absolute;
+  top:0;
+  background-color: #B2AC88;
+  z-index: -1;
+  width:100%;
 }
 
 .signupForm{
   padding:50px;
-  border: 1px solid #f2eeee;
+  border: 1px solid grey;
   border-radius: 15px;
+  margin:5%;
+}
+
+.label-signup-form{
+  
+}
+.signupFormInput_{
+  background-color: transparent;
+  border: 1px solid black;
+  height:50px;
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+.signupFormInput_:focus{
+  /* border:1px solid rgb(255, 217, 19) */
+  box-shadow: 0 0 0 2px rgb(255, 217, 19), 8px 8px 0 0 rgb(255, 217, 19);
+  background-color: transparent;
+  border: 1px solid black;
+}
+
+
+
+.signupForm label{
+  background-color: transparent !important;
+  
 }
 
 .signupSubmitButton{

@@ -35,11 +35,11 @@ const SignUp = () => {
 
   async function saveUserData() {
     try {
-     const response =  await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
         {
           withCredentials: true
         });
-        
+
       setCurrentUserDirectly(response.data);
 
       navigate('/');
@@ -70,25 +70,29 @@ const SignUp = () => {
 
       <form className="signupForm">
 
-        <FloatingLabel controlId="floatingInput" label="Your name" className="mb-3" >
+        {/* <FloatingLabel controlId="floatingInput" label="Your name" className="mb-3" > */}
           <Form.Control
             value={formData.name}
             onChange={(e) => {
               setFormData({ ...formData, name: e.target.value });
             }}
+          placeholder="Name"
+          className="signupFormInput_"
           />
-        </FloatingLabel>
+        {/* </FloatingLabel> */}
 
-        <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3" >
-          <Form.Control
-            type="email"
-            value={formData.email}
-            onChange={(e) => {
-              setFormData({ ...formData, email: e.target.value });
-              setErrors(null);
-            }}
-          />
-        </FloatingLabel>
+        {/* <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3" > */}
+        <Form.Control
+          type="email"
+          value={formData.email}
+          placeholder="Email address"
+          onChange={(e) => {
+            setFormData({ ...formData, email: e.target.value });
+            setErrors(null);
+          }}
+          className="signupFormInput_"
+        />
+        {/* </FloatingLabel> */}
 
         {errors && (
           <Alert style={{ marginTop: "10px" }} variant='danger'>
@@ -96,29 +100,33 @@ const SignUp = () => {
           </Alert>
         )}
 
-        <FloatingLabel controlId="floatingInput" label="Create a password" className="mb-3" >
-          <Form.Control
-            type="password"
-            value={password1}
-            onChange={(e) => {
-              setFormData({ ...formData, password: e.target.value });
-              setPassword1(e.target.value);
-              setUnmatchingPasswords(false);
-            }}
-          />
-        </FloatingLabel>
 
-        <FloatingLabel controlId="floatingInput" label="Confirm password" className="mb-3" >
-          <Form.Control
-            type="password"
-            value={password2}
-            onChange={(e) => {
-              setFormData({ ...formData, password: e.target.value });
-              setPassword2(e.target.value);
-              setUnmatchingPasswords(false);
-            }}
-          />
-        </FloatingLabel>
+        <Form.Control
+          type="password"
+          value={password1}
+          placeholder="Create a Password"
+          onChange={(e) => {
+            setFormData({ ...formData, password: e.target.value });
+            setPassword1(e.target.value);
+            setUnmatchingPasswords(false);
+          }}
+          className="signupFormInput_"
+        />
+
+
+        {/* <FloatingLabel label="Confirm password" className="label-signup-form"  > */}
+        <Form.Control
+          type="password"
+          value={password2}
+          placeholder="Confirm Password"
+          onChange={(e) => {
+            setFormData({ ...formData, password: e.target.value });
+            setPassword2(e.target.value);
+            setUnmatchingPasswords(false);
+          }}
+          className="signupFormInput_"
+        />
+        {/* </FloatingLabel> */}
         {
           unmatchingPasswords ? (
             <Alert style={{ textAlign: "center", marginTop: "15px" }} variant="danger">
@@ -126,13 +134,14 @@ const SignUp = () => {
             </Alert>
           ) : null
         }
-        <Form.Group controlId="formFile" className="mb-3">
+        <Form.Group style={{backgroundColor:"transparent"}} id="formFile" className="mb-3">
           <Form.Label>Choose profile picture</Form.Label>
           <Form.Control
             onChange={(e) => {
               setImageFile(e.target.files[0]);
             }}
-            type="file" />
+            type="file"
+            style={{ border: "1px solid black" }} />
         </Form.Group>
 
         <Button className="signupSubmitButton" onClick={onSubmit} variant="secondary">Sign Up </Button>
