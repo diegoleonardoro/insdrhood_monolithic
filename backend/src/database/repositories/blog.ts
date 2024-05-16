@@ -1,14 +1,20 @@
 import { ObjectId, Db, InsertOneResult, Document } from 'mongodb';
 import { connectToDatabase } from '../index';
 import { BadRequestError } from '../../errors/bad-request-error';
+import { createClient, RedisClientType } from 'redis';
 
 export class BlogRepository {
 
   private db: Promise<Db>;
   private collectionName = 'blogs';
+  private redisClient: RedisClientType;
 
   constructor() {
     this.db = connectToDatabase();
+    this.redisClient = createClient({
+      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+    });
+    this.redisClient.connect().catch(console.error);
   }
 
   public async createIndexes(): Promise<void> {
@@ -30,7 +36,17 @@ export class BlogRepository {
   }
 
   public async getAllBlogs({ cursor, pageSize }: { cursor?: ObjectId | undefined, pageSize: number }): Promise<{ blogs: any[], nextCursor?: string }> {
+    
+    const cacheKey = 'blogs';
+
     try {
+
+      const cachedBlogs = await this.redisClient.get(cacheKey);
+      if (cachedBlogs) {
+
+        console.log("cached blogs", JSON.parse(cachedBlogs))
+        return JSON.parse(cachedBlogs);
+      }
 
       const db = await this.db;
       const blogsCollection = db.collection(this.collectionName);
@@ -40,11 +56,6 @@ export class BlogRepository {
       if (cursor) {
         query = { '_id': { '$gt': new ObjectId(cursor) } };
       }
-
-
-      // const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
-      // console.log('explainOutput all blogs', explainOutput);
-
       const blogsCursor = blogsCollection.find(query)
         .project(projection)
         .limit(pageSize)
@@ -53,10 +64,14 @@ export class BlogRepository {
       const blogs = await blogsCursor.toArray();
       let nextCursor = null;
       if (blogs.length > 0) {
-        nextCursor = blogs[blogs.length - 1]._id;
+        nextCursor = blogs[blogs.length - 1]._id.toString();
       }
 
-      return { blogs, nextCursor: nextCursor?.toString() };
+      const result = { blogs, nextCursor };
+      // Cache the result in Redis
+      await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(result));  // Expiry time is set to 3600 seconds (1 hour)
+
+      return result;
 
     } catch (error) {
       // Assuming you have some error handling mechanism

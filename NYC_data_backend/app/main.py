@@ -51,7 +51,6 @@ def decompress_data(data):
 # Background task to fetch data and cache in Redis
 def fetch_and_cache_data():
 
-    print ("yayayay")
     response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json')
     if response.status_code == 200:
         raw_data = response.json()

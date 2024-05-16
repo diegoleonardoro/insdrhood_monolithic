@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { BlogRepository } from "../database/repositories/blog";
 import { ObjectId } from 'mongodb';
 
+
 /**
  * @description user posts blog post
  * @route POST /api/blog/post 
@@ -53,6 +54,8 @@ export const getBlog = async (req: Request, res: Response) => {
  * @access public
 */
 export const getAllBlogs = async (req: Request, res: Response) => {
+
+
   const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
   const cursorParam = req.query.cursor;
   let cursor: ObjectId | undefined = undefined;

@@ -11,6 +11,10 @@ import { newsletter } from "./routes/newsletter";
 import path from 'path';
 import { NeighborhoodRepository } from './database/repositories/neighborhoods';
 import { BlogRepository } from './database/repositories/blog';
+
+import { createClient } from 'redis';
+
+
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
@@ -23,11 +27,15 @@ declare global {
   }
 }
 
+
+
+
 const neighborhoodRepo = new NeighborhoodRepository();
 neighborhoodRepo.createIndexes();
-
 const blogRepo = new BlogRepository();
-blogRepo.createIndexes()
+blogRepo.createIndexes();
+
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;

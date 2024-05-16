@@ -4,10 +4,15 @@ exports.BlogRepository = void 0;
 const mongodb_1 = require("mongodb");
 const index_1 = require("../index");
 const bad_request_error_1 = require("../../errors/bad-request-error");
+const redis_1 = require("redis");
 class BlogRepository {
     constructor() {
         this.collectionName = 'blogs';
         this.db = (0, index_1.connectToDatabase)();
+        this.redisClient = (0, redis_1.createClient)({
+            url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+        });
+        this.redisClient.connect().catch(console.error);
     }
     async createIndexes() {
         try {
@@ -25,7 +30,13 @@ class BlogRepository {
         }
     }
     async getAllBlogs({ cursor, pageSize }) {
+        const cacheKey = 'blogs';
         try {
+            const cachedBlogs = await this.redisClient.get(cacheKey);
+            if (cachedBlogs) {
+                console.log("cached blogs", JSON.parse(cachedBlogs));
+                return JSON.parse(cachedBlogs);
+            }
             const db = await this.db;
             const blogsCollection = db.collection(this.collectionName);
             const projection = { title: 1, coverImageUrl: 1 };
@@ -33,8 +44,6 @@ class BlogRepository {
             if (cursor) {
                 query = { '_id': { '$gt': new mongodb_1.ObjectId(cursor) } };
             }
-            // const explainOutput = await blogsCollection.find({}, { projection }).explain('executionStats');
-            // console.log('explainOutput all blogs', explainOutput);
             const blogsCursor = blogsCollection.find(query)
                 .project(projection)
                 .limit(pageSize)
@@ -42,9 +51,12 @@ class BlogRepository {
             const blogs = await blogsCursor.toArray();
             let nextCursor = null;
             if (blogs.length > 0) {
-                nextCursor = blogs[blogs.length - 1]._id;
+                nextCursor = blogs[blogs.length - 1]._id.toString();
             }
-            return { blogs, nextCursor: nextCursor?.toString() };
+            const result = { blogs, nextCursor };
+            // Cache the result in Redis
+            await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(result)); // Expiry time is set to 3600 seconds (1 hour)
+            return result;
         }
         catch (error) {
             // Assuming you have some error handling mechanism

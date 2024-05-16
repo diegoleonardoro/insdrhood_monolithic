@@ -4,8 +4,6 @@ import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 
 
-
-
 interface updateQuery {
   $set?: any,
   $push?: any,
@@ -29,7 +27,6 @@ interface UserData {
 
 
 export class NeighborhoodRepository {
-
 
   static saveFormData(body: any, user: any) {
     throw new Error("Method not implemented.");
