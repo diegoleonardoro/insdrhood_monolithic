@@ -72,11 +72,11 @@ function Home() {
       setNeighborhoodsLoading(false);
       setCursor(neighborhoodsData_[neighborhoodsData_.length - 1]._id)
 
-      setTimeout(() => {
-        setBlogs(blogsData);
-        blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
-        setBlogsLoading(false);
-      }, 5000);
+
+      setBlogs(blogsData);
+      blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
+      setBlogsLoading(false);
+
 
     };
 
