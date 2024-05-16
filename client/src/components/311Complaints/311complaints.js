@@ -126,27 +126,30 @@ const Complaints311 = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh" }}>
+
       <Form onSubmit={handleFilterSubmit} style={{ width: '100%', maxWidth: '500px', margin: '20px' }}>
         <Form.Group controlId="formZip">
-          <Form.Label>Incident Zip</Form.Label>
+          <Form.Label>Incident Zip:</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter zip"
             name="IncidentZip"
             value={filters.IncidentZip}
             onChange={handleFilterChange}
+            style={{ backgroundColor: "transparent", border: "1px solid  #5f5e5e" }}
           />
         </Form.Group>
         <Form.Group controlId="formBorough">
-          <Form.Label>Borough</Form.Label>
+          <Form.Label>Borough:</Form.Label>
           <Form.Control
             as="select"
             name="Borough"
             value={filters.Borough}
             onChange={handleFilterChange}
+            style={{ backgroundColor: "transparent", border: "1px solid  #5f5e5e", cursor: "pointer" }}
           >
-            <option value="">Select Borough</option>
+            <option value="">All Boroughs</option>
             <option value="BRONX">Bronx</option>
             <option value="BROOKLYN">Brooklyn</option>
             <option value="QUEENS">Queens</option>
@@ -154,28 +157,28 @@ const Complaints311 = () => {
             <option value="STATEN ISLAND">Staten Island</option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="formAgency">
-          <Form.Label>Agency</Form.Label>
-          <Form.Control
-            as="select"
-            name="Agency"
-            value={filters.Agency}
-            onChange={handleFilterChange}
-          >
-            <option value="">Show All</option>
-            <option value="NYPD">NYPD - New York Police Department</option>
-            <option value="DOT">DOT - Department of Transportation</option>
-            <option value="DHS">DHS - Department of Homeless Services</option>
-            <option value="DOHMH">DOHMH - Department of Health and Mental Hygiene</option>
-            <option value="HPD">HPD - Housing Preservation and Development</option>
-            <option value="DPR">DPR - Department of Parks and Recreation</option>
-            <option value="DSNY">DSNY - Department of Sanitation</option>
-            <option value="DCWP">DCWP - Department of Consumer and Worker Protection</option>
-            <option value="TLC">TLC - Taxi and Limousine Commission</option>
-            <option value="EDC">EDC - Economic Development Corporation</option>
-            <option value="DEP">DEP - Department of Environmental Protection</option>
-          </Form.Control>
-        </Form.Group>
+        {/* <Form.Group controlId="formAgency">
+            <Form.Label>Agency</Form.Label>
+            <Form.Control
+              as="select"
+              name="Agency"
+              value={filters.Agency}
+              onChange={handleFilterChange}
+            >
+              <option value="">Show All</option>
+              <option value="NYPD">NYPD - New York Police Department</option>
+              <option value="DOT">DOT - Department of Transportation</option>
+              <option value="DHS">DHS - Department of Homeless Services</option>
+              <option value="DOHMH">DOHMH - Department of Health and Mental Hygiene</option>
+              <option value="HPD">HPD - Housing Preservation and Development</option>
+              <option value="DPR">DPR - Department of Parks and Recreation</option>
+              <option value="DSNY">DSNY - Department of Sanitation</option>
+              <option value="DCWP">DCWP - Department of Consumer and Worker Protection</option>
+              <option value="TLC">TLC - Taxi and Limousine Commission</option>
+              <option value="EDC">EDC - Economic Development Corporation</option>
+              <option value="DEP">DEP - Department of Environmental Protection</option>
+            </Form.Control>
+          </Form.Group> */}
         {/* <Form.Group controlId="formDate">
           <Form.Label>Created Date</Form.Label>
           <Form.Control
@@ -185,11 +188,12 @@ const Complaints311 = () => {
             onChange={handleFilterChange}
           />
         </Form.Group> */}
-        <Button style={{ marginTop: "20px", width: "100%" }} type="submit" variant="dark">Apply Filters</Button>
+        <Button className="filter311button"style={{ marginTop: "20px", width: "100%", backgroundColor:"rgb(220 198 86)", color:"black"}} type="submit" variant="dark">Apply Filters</Button>
       </Form>
-      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "#B2AC88" }}>
         {complaints.map((complaint, index) => (
-          <Card style={{ width: '18rem', margin: "20px" }} key={index}>
+          <Card className="Cards311" style={{ width: '18rem', margin: "20px" }} key={index}>
             <ListGroup className="list-group-flush Cards_Group">
               <Card.Header className="Cards_Group_1" as="h5">{titleCase(complaint['Borough'])}, {complaint['Incident Zip']}</Card.Header>
               <ListGroup.Item className="Cards_Group_2"> {complaint['Descriptor']}. {complaint['Complaint Type']} </ListGroup.Item>
@@ -199,10 +203,12 @@ const Complaints311 = () => {
             </ListGroup>
           </Card>
         ))}
+        {loading && <div>Loading more complaints...</div>}
+        {!hasMore && <div>No more complaints to show.</div>}
+        {hasMore && !loading && <Button style={{ margin: "20px", padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
+
       </div>
-      {loading && <div>Loading more complaints...</div>}
-      {!hasMore && <div>No more complaints to show.</div>}
-      {hasMore && !loading && <Button style={{ margin: "20px", padding: "15px" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
+
     </div>
   );
 
