@@ -51,7 +51,6 @@ const Complaints311 = () => {
     }
   };
 
-
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setInitialLoad(false);
@@ -63,8 +62,6 @@ const Complaints311 = () => {
       fetchComplaints(true, false);
     }
   }, [initialLoad]);
-
-
 
 
   const handleFilterChange = (event) => {
@@ -193,13 +190,12 @@ const Complaints311 = () => {
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
         {complaints.map((complaint, index) => (
           <Card style={{ width: '18rem', margin: "20px" }} key={index}>
-            <ListGroup className="list-group-flush">
-              <Card.Header as="h5">{complaint['Descriptor']}. {complaint['Complaint Type']}</Card.Header>
-              <ListGroup.Item>{titleCase(complaint['Borough'])}, {complaint['Incident Zip']} </ListGroup.Item>
-              <ListGroup.Item><span style={{ fontWeight: "bold" }}>Issued: </span>{formatDate(complaint['Created Date'])}</ListGroup.Item>
-
-              <ListGroup.Item> <span style={{ fontWeight: "bold" }} >Address: </span>{titleCase(complaint['Incident Address'])}</ListGroup.Item>
-              <ListGroup.Item><span style={{ fontWeight: "bold" }} >Responding agency: </span>{complaint['Agency']}</ListGroup.Item>
+            <ListGroup className="list-group-flush Cards_Group">
+              <Card.Header className="Cards_Group_1" as="h5">{titleCase(complaint['Borough'])}, {complaint['Incident Zip']}</Card.Header>
+              <ListGroup.Item className="Cards_Group_2"> {complaint['Descriptor']}. {complaint['Complaint Type']} </ListGroup.Item>
+              <ListGroup.Item className="Cards_Group_3" > <span style={{ fontWeight: "bold" }} >Address: </span>{titleCase(complaint['Incident Address'])}</ListGroup.Item>
+              <ListGroup.Item className="Cards_Group_4" ><span style={{ fontWeight: "bold" }}>Issued: </span>{formatDate(complaint['Created Date'])}</ListGroup.Item>
+              <ListGroup.Item className="Cards_Group_5"><span style={{ fontWeight: "bold" }} >Responding agency: </span>{complaint['Agency']}</ListGroup.Item>
             </ListGroup>
           </Card>
         ))}
