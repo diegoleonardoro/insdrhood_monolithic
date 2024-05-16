@@ -12,7 +12,12 @@ class BlogRepository {
         this.redisClient = (0, redis_1.createClient)({
             url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
         });
-        this.redisClient.connect().catch(console.error);
+        this.redisClient.connect().then(() => {
+            console.log('Successfully connected to Redis');
+        })
+            .catch(error => {
+            console.error('Failed to connect to Redis:', error);
+        });
     }
     async createIndexes() {
         try {
@@ -31,6 +36,10 @@ class BlogRepository {
     }
     async getAllBlogs({ cursor, pageSize }) {
         const cacheKey = 'blogs';
+        this.redisClient.on('connect', () => console.log('Redis client connecting'));
+        this.redisClient.on('ready', () => console.log('Redis client connected and ready to use'));
+        this.redisClient.on('error', (err) => console.error('Redis error', err));
+        this.redisClient.on('end', () => console.log('Redis client disconnected'));
         try {
             const cachedBlogs = await this.redisClient.get(cacheKey);
             if (cachedBlogs) {
