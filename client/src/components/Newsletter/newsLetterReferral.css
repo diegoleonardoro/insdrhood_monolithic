@@ -2,6 +2,29 @@
   position: relative;
   width:30%;
   top:30%;
+ 
+}
+
+.emailReferralForm input{
+ background-color: #f5deb330;
+ border: 1px solid rgb(98, 98, 98);
+}
+.emailReferralForm input:focus{
+   /* box-shadow: 5px 5px 30px rgba(218,102,123,1); */
+   background-color: transparent;
+    /* border: 1px solid rgba(218,102,123,1); */
+
+}
+
+.emailReferralForm  button{
+  color: black;
+  border: 1px solid black;
+  box-shadow: 0 0 0 2px rgba(218,102,123,1), 8px 8px 0 0 rgba(218,102,123,1);
+}
+
+.emailReferralForm  button:hover{
+  background-color: rgba(218,102,123,1);
+  color:white 
 }
 
 @media only screen and (max-width: 850px) {
