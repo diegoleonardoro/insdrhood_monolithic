@@ -128,7 +128,7 @@ const Complaints311 = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh" }}>
 
-      <Form onSubmit={handleFilterSubmit} style={{ width: '100%', maxWidth: '500px', margin: '20px' }}>
+      <Form onSubmit={handleFilterSubmit} style={{ width: '85%', maxWidth: '400px', margin: '40px' }}>
         <Form.Group controlId="formZip">
           <Form.Label>Incident Zip:</Form.Label>
           <Form.Control
