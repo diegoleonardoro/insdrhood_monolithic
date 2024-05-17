@@ -92,8 +92,11 @@ class BlogRepository {
         try {
             const db = await this.db;
             const blogsCollection = db.collection(this.collectionName);
-            const newBlog = await blogsCollection.insertOne(blogData);
-            return newBlog; // Return the result of the insertion
+            // const newBlog = await blogsCollection.insertOne(blogData);
+            const cacheKey = 'blogs';
+            const blogs = await blogsCollection.find({}).toArray();
+            await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs));
+            return 'newBlog'; // Return the result of the insertion
         }
         catch (error) {
             // Error handling for blog post saving operation

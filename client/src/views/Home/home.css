@@ -39,7 +39,7 @@
   scroll-behavior: smooth;
   width:100%;
   transition: transform 1s ease; 
-  border-bottom: 1px solid black;
+
 }
 
 .blogArrows{

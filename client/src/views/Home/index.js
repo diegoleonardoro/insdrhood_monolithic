@@ -308,7 +308,7 @@ function Home() {
   return (
     <div style={{ width: '100%', margin: '60px auto auto auto' }}>
 
-      <div style={{ width: '100%', overflowX: "hidden", display: "flex", position: 'relative' }}>
+      <div style={{ width: '100%', overflowX: "hidden", display: "flex", position: 'relative', borderBottom:"1px solid black" }}>
         {!blogsLoading ? (
           <>
             <div className="arrowsContainer__" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
