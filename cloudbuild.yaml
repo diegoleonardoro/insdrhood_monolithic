@@ -11,7 +11,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'backendd', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/backend', '--region', 'us-central1'] 
+    args: ['run', 'deploy', 'backendd', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/backend', '--region', 'us-central1', '--vpc-connector', 'nycopendata', '--allow-unauthenticated'] 
     id: 'deploy-backend'
 
   # Build and push the client service
@@ -25,7 +25,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'clientt', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/client', '--region', 'us-central1', '--vpc-connector', 'nycopendata', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'clientt', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/insiderhood-artifacts-repo/client', '--region', 'us-central1']
     id: 'deploy-client'
 
   # Build and push the Python backend service
