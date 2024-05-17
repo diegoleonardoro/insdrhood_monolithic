@@ -176,7 +176,7 @@ function Home() {
         <Button
           className="card_button"
           onClick={() => handleNavigation(`/neighborhood/${neighborhood._id}`)}
-          style={{ margin: "auto", backgroundColor: "rgb(255, 156, 85)", color: "black", marginBottom: "15px", width: "60%", borderRadius: "0" }}
+          style={{ margin: "auto", backgroundColor: "rgba(255, 151, 5, 0.221)", color: "black", marginBottom: "15px", width: "60%", borderRadius: "0" }}
           variant="dark"
         >
           Learn More

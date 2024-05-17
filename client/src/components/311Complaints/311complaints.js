@@ -188,10 +188,10 @@ const Complaints311 = () => {
             onChange={handleFilterChange}
           />
         </Form.Group> */}
-        <Button className="filter311button"style={{ marginTop: "20px", width: "100%", backgroundColor:"rgb(220 198 86)", color:"black"}} type="submit" variant="dark">Apply Filters</Button>
+        <Button className="filter311button" style={{ marginTop: "20px", width: "100%", backgroundColor:"rgba(255, 151, 5, 0.221)", color:"black"}} type="submit" variant="dark">Apply Filters</Button>
       </Form>
 
-      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "#B2AC88" }}>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "#F4E1D2" }}>
         {complaints.map((complaint, index) => (
           <Card className="Cards311" style={{ width: '18rem', margin: "20px" }} key={index}>
             <ListGroup className="list-group-flush Cards_Group">
