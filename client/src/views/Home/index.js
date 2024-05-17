@@ -35,7 +35,7 @@ function Home() {
 
   const handleTouchTap = () => {
     // if (isTapAllowed) {
-    fetchMoreBlogs();
+    // fetchMoreBlogs();
     // }
   };
 
@@ -73,9 +73,16 @@ function Home() {
       setCursor(neighborhoodsData_[neighborhoodsData_.length - 1]._id)
 
 
-      setBlogs(blogsData);
-      blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
+
+      // here make a request to the server to fetch the blogs
+      const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`)
+      console.log('blogsResponse', blogsResponse)
+      setBlogs(blogsResponse.data.blogs)
       setBlogsLoading(false);
+
+      // setBlogs(blogsData);
+      // blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
+      // setBlogsLoading(false);    
 
 
     };
@@ -186,6 +193,9 @@ function Home() {
 
   });
 
+
+
+
   const blogCards = blogs.map((blog) => {
 
     return (
@@ -213,6 +223,7 @@ function Home() {
 
   });
 
+
   const fetchMoreBlogs = async () => {
 
     const container = blogContainerRef.current;
@@ -226,22 +237,28 @@ function Home() {
 
     // setIsTapAllowed(false); // Disable further taps
 
-    try {
 
-      const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`, {
-        params: { cursor: blogsCursorRef.current, pageSize: blogsPerpage },
-      });
 
-      setBlogs(prevData => [...prevData, ...blogsResponse.data.blogs]);
-      blogsCursorRef.current = blogsResponse.data.nextCursor;
+    // try {
 
-      if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
-        hasMoreBlogsRef.current = false;
-      }
-      // setIsTapAllowed(true);
-    } catch (error) {
-      console.error("Failed to fetch more blogs", error);
-    }
+    //   const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`, {
+    //     params: { cursor: blogsCursorRef.current, pageSize: blogsPerpage },
+    //   });
+
+    //   setBlogs(prevData => [...prevData, ...blogsResponse.data.blogs]);
+    //   blogsCursorRef.current = blogsResponse.data.nextCursor;
+
+    //   if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
+    //     hasMoreBlogsRef.current = false;
+    //   }
+    //   // setIsTapAllowed(true);
+    // } catch (error) {
+    //   console.error("Failed to fetch more blogs", error);
+    // }
+
+
+
+
   };
 
   const fetchMoreNeighborhoods = async () => {
@@ -378,6 +395,7 @@ function Home() {
 
     </div>
   );
+
 
 }
 

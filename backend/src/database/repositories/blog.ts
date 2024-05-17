@@ -57,33 +57,28 @@ export class BlogRepository {
 
       const cachedBlogs = await this.redisClient.get(cacheKey);
       if (cachedBlogs) {
-
         console.log("SERVING CACHED BLOGS ", JSON.parse(cachedBlogs))
         return JSON.parse(cachedBlogs);
       }
-
-
-
       const db = await this.db;
       const blogsCollection = db.collection(this.collectionName);
       const projection = { title: 1, coverImageUrl: 1 };
-
       let query = {};
       if (cursor) {
         query = { '_id': { '$gt': new ObjectId(cursor) } };
       }
       const blogsCursor = blogsCollection.find(query)
         .project(projection)
-        .limit(pageSize)
-        .sort({ '_id': 1 });
+        // .limit(pageSize)
+        // .sort({ '_id': 1 });
 
       const blogs = await blogsCursor.toArray();
-      let nextCursor = null;
-      if (blogs.length > 0) {
-        nextCursor = blogs[blogs.length - 1]._id.toString();
-      }
+      // let nextCursor = null;
+      // if (blogs.length > 0) {
+      //   nextCursor = blogs[blogs.length - 1]._id.toString();
+      // }
 
-      const result = { blogs, nextCursor };
+      const result = { blogs };//nextCursor
       // Cache the result in Redis
       await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(result));  // Expiry time is set to 3600 seconds (1 hour)
 

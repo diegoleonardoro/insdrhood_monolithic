@@ -54,15 +54,15 @@ class BlogRepository {
                 query = { '_id': { '$gt': new mongodb_1.ObjectId(cursor) } };
             }
             const blogsCursor = blogsCollection.find(query)
-                .project(projection)
-                .limit(pageSize)
-                .sort({ '_id': 1 });
+                .project(projection);
+            // .limit(pageSize)
+            // .sort({ '_id': 1 });
             const blogs = await blogsCursor.toArray();
-            let nextCursor = null;
-            if (blogs.length > 0) {
-                nextCursor = blogs[blogs.length - 1]._id.toString();
-            }
-            const result = { blogs, nextCursor };
+            // let nextCursor = null;
+            // if (blogs.length > 0) {
+            //   nextCursor = blogs[blogs.length - 1]._id.toString();
+            // }
+            const result = { blogs }; //nextCursor
             // Cache the result in Redis
             await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(result)); // Expiry time is set to 3600 seconds (1 hour)
             console.log("SERVING UNCACHED DATA ", result);
