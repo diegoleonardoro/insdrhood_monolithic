@@ -36,10 +36,6 @@ class BlogRepository {
     }
     async getAllBlogs({ cursor, pageSize }) {
         const cacheKey = 'blogs';
-        this.redisClient.on('connect', () => console.log('Redis client connecting'));
-        this.redisClient.on('ready', () => console.log('Redis client connected and ready to use'));
-        this.redisClient.on('error', (err) => console.error('Redis error', err));
-        this.redisClient.on('end', () => console.log('Redis client disconnected'));
         try {
             const cachedBlogs = await this.redisClient.get(cacheKey);
             if (cachedBlogs) {
@@ -61,7 +57,7 @@ class BlogRepository {
             // let nextCursor = null;
             // if (blogs.length > 0) {
             //   nextCursor = blogs[blogs.length - 1]._id.toString();
-            // }
+            // } 
             const result = { blogs }; //nextCursor
             // Cache the result in Redis
             await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs)); // Expiry time is set to 3600 seconds (1 hour)
