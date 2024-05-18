@@ -75,7 +75,7 @@ function Home() {
       // here make a request to the server to fetch the blogs
       const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`)
       console.log('blogsResponse', blogsResponse)
-      setBlogs(blogsResponse.data.blogs)
+      setBlogs(blogsResponse.data)
       setBlogsLoading(false);
       // setBlogs(blogsData);
       // blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
