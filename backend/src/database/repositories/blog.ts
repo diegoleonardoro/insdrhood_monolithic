@@ -44,7 +44,7 @@ export class BlogRepository {
     }
   }
 
-  public async getAllBlogs({ cursor, pageSize }: { cursor?: ObjectId | undefined, pageSize: number }): Promise<{ blogs: any[], nextCursor?: string }> {
+  public async getAllBlogs({ cursor, pageSize }: { cursor?: ObjectId | undefined, pageSize: number }): Promise<Document> {//{ blogs: any[], nextCursor?: string }
 
     const cacheKey = 'blogs';
 
@@ -71,21 +71,16 @@ export class BlogRepository {
         .project(projection)
         // .limit(pageSize)
         // .sort({ '_id': 1 });
-
       const blogs = await blogsCursor.toArray();
       // let nextCursor = null;
       // if (blogs.length > 0) {
       //   nextCursor = blogs[blogs.length - 1]._id.toString();
       // }
-
       const result = { blogs };//nextCursor
       // Cache the result in Redis
-      await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(result));  // Expiry time is set to 3600 seconds (1 hour)
-
+      await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs));  // Expiry time is set to 3600 seconds (1 hour)
       console.log("SERVING UNCACHED DATA ", result)
-
-      return result;
-
+      return blogs;
     } catch (error) {
       // Assuming you have some error handling mechanism
       throw new BadRequestError('Failed to fetch blogs');

@@ -188,6 +188,7 @@ function Home() {
 
 
 
+console.log("blogss", blogs);
 
   const blogCards = blogs.map((blog) => {
 

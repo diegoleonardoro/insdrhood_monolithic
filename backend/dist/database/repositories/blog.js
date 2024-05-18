@@ -64,9 +64,9 @@ class BlogRepository {
             // }
             const result = { blogs }; //nextCursor
             // Cache the result in Redis
-            await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(result)); // Expiry time is set to 3600 seconds (1 hour)
+            await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs)); // Expiry time is set to 3600 seconds (1 hour)
             console.log("SERVING UNCACHED DATA ", result);
-            return result;
+            return blogs;
         }
         catch (error) {
             // Assuming you have some error handling mechanism
