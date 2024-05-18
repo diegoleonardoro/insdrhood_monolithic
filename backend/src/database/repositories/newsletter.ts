@@ -89,10 +89,12 @@ export class NewsletterRepository {
     );
   }
 
-  async subscribeToNewsletter(data: { email: string, name?: string, newsletter: boolean, frequency?: string }): Promise<{ message: string }> {
+  async subscribeToNewsletter(data: { email: string, name?: string, newsletter: boolean, frequency?: string, zipCode?:string }): Promise<{ message: string }> {
+
+    console.log("data",data)
 
     const db = await this.db;
-    const { email, name = null, newsletter, frequency = 'everyweek' } = data;
+    const { email, name = null, newsletter, zipCode, frequency = 'everyweek' } = data;
     const emailsCollection = db.collection(this.collectionName);
     const existingEmail = await emailsCollection.findOne({ email });
 
@@ -100,7 +102,7 @@ export class NewsletterRepository {
       throw new BadRequestError("Email in use");
     };
 
-    const newData = { email, name, newsletter, frequency };
+    const newData = { email, name, newsletter, frequency, zipCode };
     await emailsCollection.insertOne(newData);
 
     sendNewsLetterEmail({

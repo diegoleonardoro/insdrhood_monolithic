@@ -81,6 +81,7 @@ export class BlogRepository {
       await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs));  // Expiry time is set to 3600 seconds (1 hour)
       console.log("SERVING UNCACHED DATA ", result)
       return blogs;
+      
     } catch (error) {
       // Assuming you have some error handling mechanism
       throw new BadRequestError('Failed to fetch blogs');

@@ -30,12 +30,10 @@ neighborhoodRepo.createIndexes();
 const blogRepo = new BlogRepository();
 blogRepo.createIndexes();
 
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 console.log('enb base url: ',process.env.BASE_URL?.split(" "));
-
 
 app.use(cors({
   origin: process.env.BASE_URL?.split(" "), // React client's URL

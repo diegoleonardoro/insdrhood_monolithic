@@ -76,15 +76,16 @@ class NewsletterRepository {
         await emailsCollection.updateMany({ _id: { $in: objectIds } }, { $set: { lastSent: new Date() } });
     }
     async subscribeToNewsletter(data) {
+        console.log("data", data);
         const db = await this.db;
-        const { email, name = null, newsletter, frequency = 'everyweek' } = data;
+        const { email, name = null, newsletter, zipCode, frequency = 'everyweek' } = data;
         const emailsCollection = db.collection(this.collectionName);
         const existingEmail = await emailsCollection.findOne({ email });
         if (existingEmail) {
             throw new bad_request_error_1.BadRequestError("Email in use");
         }
         ;
-        const newData = { email, name, newsletter, frequency };
+        const newData = { email, name, newsletter, frequency, zipCode };
         await emailsCollection.insertOne(newData);
         (0, emailVerification_1.sendNewsLetterEmail)({
             email: email,

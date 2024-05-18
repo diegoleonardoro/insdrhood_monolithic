@@ -26,16 +26,28 @@ const Complaints311 = () => {
   const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
   const [formVisible, setFormVisible] = useState(true); // Controls the form's visible state
 
+  const [showNewsletterForm, setShowNewsletterForm] = useState(true)
+
   const handleNewsletterChange = (event) => {
     const { name, value } = event.target;
     setNewsletter(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     // Implement the newsletter signup logic here, possibly calling an API
-    console.log("Signing up for newsletter with", newsletter);
-    alert('Thank you for signing up!');
+    try {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`,
+         newsletter );
+
+      setShowNewsletterForm(false);
+
+    } catch (error) {
+
+    }
+
+
+
   };
 
   const toggleForm = () => {
@@ -231,28 +243,33 @@ const Complaints311 = () => {
 
 
       {/* Sticky signup form at the bottom */}
-      <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding:"2px" }}>
-        <p className='p_signup311Complaints'>Sign Up for 311 Updates</p>
-        <Form className="signup311Complaints"onSubmit={handleNewsletterSubmit} style={{ display: 'flex', alignItems: 'center' }}>
-          {formVisible ? (
-            <>
-              
-              <Form.Group className="emailcomplaintsnewsletter" style={{ width: '90%' }}>
-                <Form.Control className='input311Form' type="email" name="email" placeholder="Enter email" value={newsletter.email} onChange={handleNewsletterChange} required />
-              </Form.Group>
-              <Form.Group style={{ width: '90%' }}>
-                <Form.Control className='input311Form' type="text" name="zipCode" placeholder="Zip Code" value={newsletter.zipCode} onChange={handleNewsletterChange} required />
-              </Form.Group>
-              <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '10px' }}>
-                <Button style={{ width: "65%", height: "30px" , backgroundColor:"#ffc107", color:"black", borderColor:"black", fontSize:"12px"}} type="submit" variant="primary">Register</Button>
-                <Button style={{ width: "35%", height: "30px", alignSelf: "center", fontSize: "12px" }} variant="outline-secondary" onClick={toggleForm}>Close</Button>
-              </div>
-            </>
-          ) : (
-            <Button variant="outline-secondary" onClick={toggleForm} style={{ width: '100%' }}>Sign Up for Updates</Button>
-          )}
-        </Form>
-      </div>
+
+      {showNewsletterForm && (
+        <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding: "2px" }}>
+          <p className='p_signup311Complaints'>Register for 311 Updates in your Zipcode:</p>
+          <Form className="signup311Complaints" onSubmit={handleNewsletterSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+            {formVisible ? (
+              <>
+
+                <Form.Group className="emailcomplaintsnewsletter" style={{ width: '90%' }}>
+                  <Form.Control className='input311Form' type="email" name="email" placeholder="Enter email" value={newsletter.email} onChange={handleNewsletterChange} required />
+                </Form.Group>
+                <Form.Group style={{ width: '90%' }}>
+                  <Form.Control className='input311Form' type="text" name="zipCode" placeholder="Zip Code" value={newsletter.zipCode} onChange={handleNewsletterChange} required />
+                </Form.Group>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '10px' }}>
+                  <Button style={{ width: "65%", height: "30px", backgroundColor: "#ffc107", color: "black", borderColor: "black", fontSize: "12px" }} type="submit" variant="primary">Register</Button>
+                  <Button style={{ width: "35%", height: "30px", alignSelf: "center", fontSize: "12px" }} variant="outline-secondary" onClick={toggleForm}>Close</Button>
+                </div>
+              </>
+            ) : (
+              <Button variant="outline-secondary" onClick={toggleForm} style={{ width: '100%' }}>Sign Up for Updates</Button>
+            )}
+          </Form>
+        </div>
+
+      )}
+
 
     </div>
   );
