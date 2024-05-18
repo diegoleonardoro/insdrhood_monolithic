@@ -72,23 +72,16 @@ function Home() {
       setNeighborhoodsLoading(false);
       setCursor(neighborhoodsData_[neighborhoodsData_.length - 1]._id)
 
-
-
       // here make a request to the server to fetch the blogs
       const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`)
       console.log('blogsResponse', blogsResponse)
       setBlogs(blogsResponse.data.blogs)
       setBlogsLoading(false);
-
       // setBlogs(blogsData);
       // blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
       // setBlogsLoading(false);    
-
-
     };
-
     initialize();
-
   }, []);
 
   // used to attach event listener to the slider div that contains the blogs.

@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 import "./311complaints.css";
 
@@ -20,7 +21,26 @@ const Complaints311 = () => {
     "CreatedDate": ''
   });
 
+
   const [initialLoad, setInitialLoad] = useState(true);
+  const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
+  const [formVisible, setFormVisible] = useState(true); // Controls the form's visible state
+
+  const handleNewsletterChange = (event) => {
+    const { name, value } = event.target;
+    setNewsletter(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    // Implement the newsletter signup logic here, possibly calling an API
+    console.log("Signing up for newsletter with", newsletter);
+    alert('Thank you for signing up!');
+  };
+
+  const toggleForm = () => {
+    setFormVisible(!formVisible);
+  };
 
 
   const fetchComplaints = async (reset = false, applyFilters = false) => {
@@ -188,7 +208,7 @@ const Complaints311 = () => {
             onChange={handleFilterChange}
           />
         </Form.Group> */}
-        <Button className="filter311button" style={{ marginTop: "20px", width: "100%", backgroundColor:"rgba(255, 151, 5, 0.221)", color:"black"}} type="submit" variant="dark">Apply Filters</Button>
+        <Button className="filter311button" style={{ marginTop: "20px", width: "100%", backgroundColor: "rgba(255, 151, 5, 0.221)", color: "black" }} type="submit" variant="dark">Apply Filters</Button>
       </Form>
 
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "#F4E1D2" }}>
@@ -207,6 +227,31 @@ const Complaints311 = () => {
         {!hasMore && <div>No more complaints to show.</div>}
         {hasMore && !loading && <Button style={{ margin: "20px", padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
 
+      </div>
+
+
+      {/* Sticky signup form at the bottom */}
+      <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding:"2px" }}>
+        <p className='p_signup311Complaints'>Sign Up for 311 Updates</p>
+        <Form className="signup311Complaints"onSubmit={handleNewsletterSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+          {formVisible ? (
+            <>
+              
+              <Form.Group className="emailcomplaintsnewsletter" style={{ width: '90%' }}>
+                <Form.Control className='input311Form' type="email" name="email" placeholder="Enter email" value={newsletter.email} onChange={handleNewsletterChange} required />
+              </Form.Group>
+              <Form.Group style={{ width: '90%' }}>
+                <Form.Control className='input311Form' type="text" name="zipCode" placeholder="Zip Code" value={newsletter.zipCode} onChange={handleNewsletterChange} required />
+              </Form.Group>
+              <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '10px' }}>
+                <Button style={{ width: "65%", height: "30px" , backgroundColor:"#ffc107", color:"black", borderColor:"black", fontSize:"12px"}} type="submit" variant="primary">Register</Button>
+                <Button style={{ width: "35%", height: "30px", alignSelf: "center", fontSize: "12px" }} variant="outline-secondary" onClick={toggleForm}>Close</Button>
+              </div>
+            </>
+          ) : (
+            <Button variant="outline-secondary" onClick={toggleForm} style={{ width: '100%' }}>Sign Up for Updates</Button>
+          )}
+        </Form>
       </div>
 
     </div>

@@ -117,9 +117,9 @@ export class BlogRepository {
       const blogs = await blogsCollection.find({}).toArray();
       await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs)); 
 
-
-
+      console.log('JSON.stringify(blogs)==>>>', JSON.stringify(blogs))
       return 'newBlog'; // Return the result of the insertion
+
     } catch (error) {
       // Error handling for blog post saving operation
       throw new BadRequestError('Failed to save the blog post');
