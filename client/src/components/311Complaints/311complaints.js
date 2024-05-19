@@ -253,26 +253,28 @@ const Complaints311 = () => {
 
       {showNewsletterForm && (
         <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding: "2px" }}>
-          <p className='p_signup311Complaints'>Register for 311 Updates in your Zipcode:</p>
-          <Form className="signup311Complaints" onSubmit={handleNewsletterSubmit} style={{ display: 'flex', alignItems: 'center' }}>
-            {formVisible ? (
-              <>
+          <div style={{padding:"15px", paddingBottom:"30px"}}>
+            <p className='p_signup311Complaints'>Register for 311 Updates in your Zipcode:</p>
+            <Form className="signup311Complaints" onSubmit={handleNewsletterSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+              {formVisible ? (
+                <>
 
-                <Form.Group className="emailcomplaintsnewsletter" style={{ width: '90%' }}>
-                  <Form.Control className='input311Form' type="email" name="email" placeholder="Enter email" value={newsletter.email} onChange={handleNewsletterChange} required />
-                </Form.Group>
-                <Form.Group style={{ width: '90%' }}>
-                  <Form.Control className='input311Form' type="text" name="zipCode" placeholder="Zip Code" value={newsletter.zipCode} onChange={handleNewsletterChange} required />
-                </Form.Group>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '10px' }}>
-                  <Button style={{ width: "65%", height: "30px", backgroundColor: "#ffc107", color: "black", borderColor: "black", fontSize: "12px" }} type="submit" variant="primary">Register</Button>
-                  <Button style={{ width: "35%", height: "30px", alignSelf: "center", fontSize: "12px" }} variant="outline-secondary" onClick={toggleForm}>Close</Button>
-                </div>
-              </>
-            ) : (
-              <Button variant="outline-secondary" onClick={toggleForm} style={{ width: '100%' }}>Sign Up for Updates</Button>
-            )}
-          </Form>
+                  <Form.Group className="emailcomplaintsnewsletter" style={{ width: '90%' }}>
+                    <Form.Control className='input311Form' type="email" name="email" placeholder="Enter email" value={newsletter.email} onChange={handleNewsletterChange} required />
+                  </Form.Group>
+                  <Form.Group style={{ width: '90%' }}>
+                    <Form.Control className='input311Form' type="text" name="zipCode" placeholder="Zip Code" value={newsletter.zipCode} onChange={handleNewsletterChange} required />
+                  </Form.Group>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '10px' }}>
+                    <Button style={{ width: "65%", height: "30px", backgroundColor: "#ffc107", color: "black", borderColor: "black", fontSize: "12px" }} type="submit" variant="primary">Register</Button>
+                    <Button style={{ width: "35%", height: "30px", alignSelf: "center", fontSize: "10px" }} variant="outline-secondary" onClick={toggleForm}>Close</Button>
+                  </div>
+                </>
+              ) : (
+                <Button className="show311Form"variant="outline-secondary" onClick={toggleForm} style={{ width: '100%', marginBottom:"10px", height:"25px" }}>Sign Up for Updates</Button>
+              )}
+            </Form>
+          </div>
         </div>
 
       )}
