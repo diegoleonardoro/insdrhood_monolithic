@@ -112,27 +112,28 @@
 .show311Form{
   font-size: 10px;
 }
-@keyframes fadeIn {
-  from {
+
+@keyframes fadeInOut {
+  0%, 100% {
     opacity: 0;
   }
-  to {
+  50% {
     opacity: 1;
   }
 }
 
 .spinner {
-  animation: fadeIn 1s ease-in-out forwards;
+  animation: fadeInOut 1s ease-in-out infinite;  /* Reduced to 1 second for a faster effect */
 }
 
 .spinner1 {
-  animation-delay: 0s; /* Appears immediately */
+  animation-delay: 0s; /* Starts immediately */
 }
 
 .spinner2 {
-  animation-delay: 0.5s; /* Appears after 0.5 seconds */
+  animation-delay: 0.333s; /* Adjusted delay for faster cycle */
 }
 
 .spinner3 {
-  animation-delay: 1s; /* Appears after 1 second */
+  animation-delay: 0.666s; /* Adjusted delay for faster cycle */
 }
