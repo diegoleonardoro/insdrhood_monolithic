@@ -1,4 +1,3 @@
-
 steps:
   # Build and push the backend service
   - name: 'gcr.io/cloud-builders/docker'

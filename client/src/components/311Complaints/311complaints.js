@@ -4,6 +4,8 @@ import Card from "react-bootstrap/Card";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+
 import Modal from 'react-bootstrap/Modal';
 
 import "./311complaints.css";
@@ -14,6 +16,7 @@ const Complaints311 = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
   const [filters, setFilters] = useState({
     "IncidentZip": '',
     "Borough": '',
@@ -38,7 +41,7 @@ const Complaints311 = () => {
     // Implement the newsletter signup logic here, possibly calling an API
     try {
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/newsletter/signup`,
-         newsletter );
+        newsletter);
 
       setShowNewsletterForm(false);
 
@@ -235,9 +238,13 @@ const Complaints311 = () => {
             </ListGroup>
           </Card>
         ))}
-        {loading && <div>Loading more complaints...</div>}
+        {loading && <div>
+          <Spinner animation="grow" size="sm" className="spinner spinner1" />
+          <Spinner animation="grow" className="spinner spinner2" />
+          <Spinner animation="grow" style={{ height: "50px", width: "50px" }} className="spinner spinner3" />
+        </div>}
         {!hasMore && <div>No more complaints to show.</div>}
-        {hasMore && !loading && <Button style={{ margin: "20px", padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
+        {hasMore && !loading && <Button style={{ padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
 
       </div>
 

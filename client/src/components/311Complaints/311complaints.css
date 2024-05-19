@@ -88,3 +88,28 @@
   padding:2px;
   margin:0px !important;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.spinner {
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+.spinner1 {
+  animation-delay: 0s; /* Appears immediately */
+}
+
+.spinner2 {
+  animation-delay: 0.5s; /* Appears after 0.5 seconds */
+}
+
+.spinner3 {
+  animation-delay: 1s; /* Appears after 1 second */
+}
