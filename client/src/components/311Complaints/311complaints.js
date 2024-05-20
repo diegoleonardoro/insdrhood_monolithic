@@ -10,7 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 
 import "./311complaints.css";
 
-const Complaints311 = () => {
+const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const [complaints, setComplaints] = useState([]);
   const [page, setPage] = useState(1);
@@ -215,7 +215,8 @@ const Complaints311 = () => {
             {hasMore && <Button style={{ padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
           </div>
 
-          {showNewsletterForm && (
+
+          {showRegisterFrom && showNewsletterForm && (
             <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding: "2px" }}>
               <div style={{ padding: "15px", paddingBottom: "30px" }}>
                 <p className='p_signup311Complaints'>Register for 311 Updates in your Zipcode:</p>

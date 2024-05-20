@@ -24,7 +24,8 @@ import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
 import NewsLetterLanding from './components/Newsletter/newsletter';
 import NewsLetterReferral from './components/Newsletter/newsLetterReferal';
 import NewsLetterPreferences from './components/NewsletterPreferences/newsLetterPreferences';
-import Complaints311 from'./components/311Complaints/311complaints';
+import Complaints311 from './components/311Complaints/311complaints';
+import Dashboard from './components/Dashboard/Dashboard';
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -112,7 +113,7 @@ function App() {
             <Route path='/newsletterreferral' element={<NewsLetterReferral />}></Route>
             <Route path='/newsletterpreferences' element={<NewsLetterPreferences />}></Route>
             <Route path='/311complaints' element={<Complaints311 />}></Route>
-
+            <Route path='/dashboard' element={<Dashboard />}></Route>
           </Routes>
           <Suspense />
         </div>
