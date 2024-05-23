@@ -26,6 +26,7 @@ import NewsLetterReferral from './components/Newsletter/newsLetterReferal';
 import NewsLetterPreferences from './components/NewsletterPreferences/newsLetterPreferences';
 import Complaints311 from './components/311Complaints/311complaints';
 import Dashboard from './components/Dashboard/Dashboard';
+import DOBApprovedPermits from './components/DOB_ApprovedPermits/DobApprovedPermits'
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -114,6 +115,9 @@ function App() {
             <Route path='/newsletterpreferences' element={<NewsLetterPreferences />}></Route>
             <Route path='/311complaints' element={<Complaints311 />}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
+            <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route>
+
+    
           </Routes>
           <Suspense />
         </div>

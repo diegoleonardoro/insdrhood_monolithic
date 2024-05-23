@@ -5,10 +5,53 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
+import chroma from 'chroma-js';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-import Modal from 'react-bootstrap/Modal';
 
 import "./311complaints.css";
+
+
+const transformAndSortData = (dataObject) => {
+  const transformedData = Object.keys(dataObject).map(key => ({
+    name: key,
+    value: dataObject[key]
+  }));
+  return transformedData.sort((a, b) => b.value - a.value);
+};
+
+
+const generateColorPalette = (dataLength) => {
+  return chroma.scale(
+    [
+      "#003366",
+      "#014421",
+      "#800020",
+      "#002147",
+      "#8E4585",
+      "#E97451",
+      "#008080",
+      "#800000",
+      "#4B0082",
+      "#954535"
+    ]
+
+  ).mode('lch').colors(dataLength);
+};
+
+function formatReadableDate(dateString) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
+
+
 
 const Complaints311 = ({ showRegisterFrom = true }) => {
 
@@ -16,14 +59,17 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const [descriptorCountchartData, setDescriptorCountchartData] = useState([]);
+
+  const [minDate, setMinDate] = useState('');
+  const [maxDate, setMaxDate] = useState('');
 
   const [filters, setFilters] = useState({
-    "IncidentZip": '',
+    "zip": '',
     "Borough": '',
     "Agency": '',
     "CreatedDate": ''
   });
-
 
   const [initialLoad, setInitialLoad] = useState(true);
   const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
@@ -55,28 +101,50 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     setFormVisible(!formVisible);
   };
 
-
   const fetchComplaints = async (reset = false, applyFilters = false) => {
+
     setLoading(true);
 
-    // Define parameters based on whether filters are applied
-    const params = applyFilters ? filters : { limit: 10, page };
+    const valueThreshold = Object.values(filters).some(value => value !== '') ? 3: 20
+
+    const params_ = applyFilters ? filters : { limit: 10, page };
+
+    const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
 
     try {
       const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
-        params: params
+        params: {
+          ...params_,
+          zip: zipCodesArray
+        }
       });
 
-      if (response.data.length > 0) {
+      setMinDate(formatReadableDate(response.data.max_date))
+      setMaxDate(formatReadableDate(response.data.min_date))
+    
+
+      const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
+      const filteredData_descriptor_counts = sortedData_descriptor_counts.filter(item => item.value > valueThreshold);
+      // Determine the entries that do not exceed the threshold
+      const otherEntries = sortedData_descriptor_counts.filter(item => item.value <= valueThreshold);
+      // Calculate the total count of 'Other' entries
+      const otherDataSum = otherEntries.reduce((acc, item) => acc + item.value, 0);
+      // Add 'Other' category only if there are more than 15 items in otherEntries
+      const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
+      setDescriptorCountchartData(finalData_descriptor_counts);
+
+      if (response.data.original_data.length > 0) {
         if (reset) {
-          setComplaints(response.data);
+          setComplaints(response.data.original_data);
         } else {
-          setComplaints(prev => [...prev, ...response.data]);
+
+          setComplaints(prev => [...prev, ...response.data.original_data]);
         }
         setPage(prevPage => prevPage + 1);
       } else {
         setHasMore(false);
       }
+
     } catch (error) {
       console.error("Error fetching complaints:", error);
     } finally {
@@ -94,27 +162,27 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     if (initialLoad) {
       fetchComplaints(true, false);
 
-
+   
     }
   }, [initialLoad]);
-
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === 'IncidentZip') {
-      // Reset the borough to the default value when zip code changes
+    if (name === 'zip') {
+
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
         Borough: ''
       }));
+
     } else if (name === 'Borough') {
       // Reset the zip code to the default value when borough changes
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
-        IncidentZip: ''
+        zip: ''
       }));
     } else {
       // For other fields, just update them as before
@@ -160,8 +228,26 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     ).join(' ');
   }
 
+  const colors = generateColorPalette(descriptorCountchartData.length);
+  
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh" }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor:'white' }}>
+
+      <div style={{
+        backgroundColor: '#f0f4f8', // light greyish background
+        padding: '10px 20px', // padding around the text
+        borderRadius: '8px', // rounded corners
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // subtle shadow for depth
+        margin: '20px auto', // centered with margin
+        maxWidth: '600px', // maximum width
+        textAlign: 'center', // center text alignment
+        fontFamily: 'Arial, sans-serif', // font family
+        fontSize: '20px', // text size
+        color: '#333' // dark grey text color
+      }}>
+        Data from {minDate} to {maxDate}
+      </div>
 
       {/* Always render the form */}
       <Form onSubmit={handleFilterSubmit} style={{ width: '85%', maxWidth: '400px', margin: '40px' }}>
@@ -170,8 +256,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           <Form.Control
             type="text"
             placeholder="Enter zip"
-            name="IncidentZip"
-            value={filters.IncidentZip}
+            name="zip"
+            value={filters.zip}
             onChange={handleFilterChange}
             style={{ backgroundColor: "transparent", border: "1px solid  #5f5e5e" }}
           />
@@ -196,10 +282,57 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         <Button className="filter311button" style={{ marginTop: "20px", width: "100%", backgroundColor: "rgba(255, 151, 5, 0.221)", color: "black" }} type="submit" variant="dark">Apply Filters</Button>
       </Form>
 
+      <ResponsiveContainer width="100%" height={500}>
+        <PieChart margin={{ top: 20, right: 150, bottom: 20, left: 150 }}>
+          <Pie
+            data={descriptorCountchartData}
+            cx="50%"
+            cy="50%"
+            outerRadius={130}
+            fill="#8884d8"
+            dataKey="value"
+            startAngle={280}
+            endAngle={-180}
+            labelLine={true}
+            label={(props) => {
+              const { cx, cy, midAngle, outerRadius, name, percent } = props;
+              const RADIAN = Math.PI / 180;
+              const radius = outerRadius + 30;  // Adjust the distance of the label from the center
+              const x = cx + radius * Math.cos(-midAngle * RADIAN);
+              const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+              // Determine if label should be on the left or right half of the pie
+              const textAnchor = (midAngle > 270 || midAngle < 90) ? 'start' : 'end';
+
+              return (
+                <text
+                  x={x}
+                  y={y}
+                  fill="#333"
+                  textAnchor={textAnchor}
+                  dominantBaseline="central"
+                  style={{ fontSize: '0.55rem' }}  // You can adjust the font size for better fit
+                >
+                  {`${name}: ${(percent * 100).toFixed(0)}%`}
+                </text>
+              );
+            }}
+          >
+            {descriptorCountchartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          {/* <Legend align="right" verticalAlign="middle" layout="vertical" wrapperStyle={{ top: 0, right: 0, width: 300 }} content={<CustomLegend />} /> */}
+        </PieChart>
+      </ResponsiveContainer>
+
+
+
       {/* Conditional rendering based on loading for the remaining content */}
       {!loading && (
         <>
-          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "#F4E1D2" }}>
+          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "white" }}>
             {complaints.map((complaint, index) => (
               <Card className="Cards311" style={{ width: '18rem', margin: "20px" }} key={index}>
                 <ListGroup className="list-group-flush Cards_Group">
@@ -256,9 +389,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       )}
     </div>
   );
-
-
-
 
 
 

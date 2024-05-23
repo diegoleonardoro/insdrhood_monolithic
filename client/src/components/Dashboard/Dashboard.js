@@ -18,7 +18,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import Complaints311 from '../311Complaints/311complaints'
+import Complaints311 from '../311Complaints/311complaints';
+import DOBApprovedPermits from '../DOB_ApprovedPermits/DobApprovedPermits'
 
 import { useState } from 'react';
 import "./dashboard.css"
@@ -107,8 +108,8 @@ const Dashboard = () => {
         return <InboxComponent />;
       case '311 Complaints':
         return <Complaints311 showRegisterFrom={false} />;
-      case 'Send email':
-        return <SendEmailComponent />;
+      case 'DOB Approved Permits':
+        return <DOBApprovedPermits />; // DOB approved permits component
       case 'Drafts':
         return <DraftsComponent />;
       default:
@@ -156,7 +157,7 @@ const Dashboard = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', '311 Complaints', 'Send email', 'Drafts'].map((text, index) => (
+          {['Inbox', '311 Complaints', 'DOB Approved Permits', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton onClick={() => handleMenuItemClick(text)}>
                 <ListItemIcon>
@@ -183,7 +184,7 @@ const Dashboard = () => {
         </List>
 
       </Drawer>
-      <Main open={open}>
+      <Main open={open} style={{overflowX:"scroll", backgroundColor:"white"}}>
         <DrawerHeader />
 
 

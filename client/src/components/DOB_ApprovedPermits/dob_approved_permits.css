@@ -1,0 +1,9 @@
+
+.MuiTableRow-root {
+  height: auto !important; /* Allows row height to grow with content */
+  white-space: normal !important; /* Allows text to wrap */
+}
+
+.MuiTableCell-root {
+  padding: 8px !important; /* Reduces padding, adjust as needed */
+}
