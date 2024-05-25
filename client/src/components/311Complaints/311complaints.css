@@ -12,36 +12,37 @@
 } */
 
 .Cards311{
-  background-color: #F4E1D2 ;
+  /* background-color: #F4E1D2 ; */
   
 }
 
 .Cards_Group_1{
-  background-color: rgb(255, 156, 85) !important;
+  background-color:rgb(0, 0, 0) !important;
+  color:white;
   border-bottom: 1px solid grey !important;
 
 }
 
 .Cards_Group_2{
-  background-color: rgba(255, 156, 85, 0.701) !important;
-  border-bottom: 1px solid grey !important;
-
+  background-color: rgba(0, 0, 0, 0.213)!important;
+  border-bottom: 1px solid grey !important; 
+  
 }
 
 .Cards_Group_3{
-  background-color: rgba(255, 156, 85, 0.402) !important;
+  background-color:  rgba(0, 0, 0, 0.109) !important;
     border-bottom: 1px solid grey !important;
 
 }
 
 .Cards_Group_4{
-  background-color: rgba(255, 156, 85, 0.200)!important;
+  background-color:  rgba(0, 0, 0, 0.037)!important;
     border-bottom: 1px solid grey !important;
 
 }
 
 .Cards_Group_5{
-  background-color: rgba(255, 156, 85, 0.100) !important;
+  background-color: rgba(0, 0, 0, 0) !important;
    
 
 }
@@ -161,7 +162,7 @@
     margin-right:0px;
     width:95%;
   }
-  
+
   .zipBoroughFilterForm button{
     width:100%;
   }
