@@ -7,6 +7,16 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import chroma from 'chroma-js';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import MuiButton from '@mui/material/Button';
+import { styled } from '@mui/system';
+
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField'
+
+
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
 
 
 import "./311complaints.css";
@@ -50,6 +60,7 @@ function formatReadableDate(dateString) {
     second: '2-digit'
   });
 }
+
 
 
 
@@ -105,7 +116,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     setLoading(true);
 
-    const valueThreshold = Object.values(filters).some(value => value !== '') ? 3: 20
+    const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
 
     const params_ = applyFilters ? filters : { limit: 10, page };
 
@@ -119,9 +130,9 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         }
       });
 
-      setMinDate(formatReadableDate(response.data.max_date))
-      setMaxDate(formatReadableDate(response.data.min_date))
-    
+      setMaxDate(formatReadableDate(response.data.max_date))
+      setMinDate(formatReadableDate(response.data.min_date))
+
 
       const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
       const filteredData_descriptor_counts = sortedData_descriptor_counts.filter(item => item.value > valueThreshold);
@@ -162,12 +173,14 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     if (initialLoad) {
       fetchComplaints(true, false);
 
-   
+
     }
   }, [initialLoad]);
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
+
+    console.log("event", event.target)
 
     if (name === 'zip') {
 
@@ -179,6 +192,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     } else if (name === 'Borough') {
       // Reset the zip code to the default value when borough changes
+
+      console.log("value", value)
+
+      console.log("name", name)
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
@@ -229,28 +246,13 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   }
 
   const colors = generateColorPalette(descriptorCountchartData.length);
-  
+
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor:'white' }}>
-
-      <div style={{
-        backgroundColor: '#f0f4f8', // light greyish background
-        padding: '10px 20px', // padding around the text
-        borderRadius: '8px', // rounded corners
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // subtle shadow for depth
-        margin: '20px auto', // centered with margin
-        maxWidth: '600px', // maximum width
-        textAlign: 'center', // center text alignment
-        fontFamily: 'Arial, sans-serif', // font family
-        fontSize: '20px', // text size
-        color: '#333' // dark grey text color
-      }}>
-        Data from {minDate} to {maxDate}
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
 
       {/* Always render the form */}
-      <Form onSubmit={handleFilterSubmit} style={{ width: '85%', maxWidth: '400px', margin: '40px' }}>
+      {/* <Form className="zipBoroughFilterForm" onSubmit={handleFilterSubmit}>
         <Form.Group controlId="formZip">
           <Form.Label>Incident Zip:</Form.Label>
           <Form.Control
@@ -279,8 +281,74 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             <option value="STATEN ISLAND">Staten Island</option>
           </Form.Control>
         </Form.Group>
-        <Button className="filter311button" style={{ marginTop: "20px", width: "100%", backgroundColor: "rgba(255, 151, 5, 0.221)", color: "black" }} type="submit" variant="dark">Apply Filters</Button>
-      </Form>
+        <Button className="filter311button" style={{ marginTop: "20px", backgroundColor: "rgba(255, 151, 5, 0.221)", color: "black" }} type="submit" variant="dark">Apply Filters</Button>
+      </Form> */}
+      
+
+      {/** Filter form: */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          '& > :not(style)': { m: 1 },
+          width: "100%",
+          margin:'10px',
+          marginBottom:'0px'
+        }}
+        className="zipBoroughFilterForm"
+      >
+        <TextField
+          id="demo-helper-text-aligned"
+          label="Incident Zip"
+          sx={{ width: "100%" }}
+          name="zip"
+          value={filters.zip}
+          onChange={handleFilterChange}
+        />
+        <Select
+          displayEmpty
+          inputProps={{ 'aria-label': 'Name' }}
+          sx={{ width: "100%" }}
+          name="Borough"
+          value={filters.Borough}
+          onChange={handleFilterChange}
+        >
+          <MenuItem value="">
+            <em>Select Borough</em>
+          </MenuItem>
+          <MenuItem value='MANHATTAN'>Manhattan</MenuItem>
+          <MenuItem value='BROOKLYN'>Brooklyn</MenuItem>
+          <MenuItem value='QUEENS'>Queens</MenuItem>
+          <MenuItem value='BRONX'>Bronx</MenuItem>
+          <MenuItem value='STATEN ISLAND'>Staten Island</MenuItem>
+
+        </Select>
+        <MuiButton sx={{
+          color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
+          '&:hover': {
+            backgroundColor: 'white',
+            color: 'black',
+            border: "1px solid rgba(0, 0, 0, 0.87)",
+
+          },
+          marginBottom: "20px",
+          width: "30%",
+          cursor: "pointer",
+          height:"50px"
+        }} variant="outlined" onClick={handleFilterSubmit}>Apply Filters</MuiButton>
+      </Box>
+
+      <div style={{
+        borderRadius: '8px', // rounded corners
+        fontFamily: 'Arial, sans-serif', // font family
+        fontSize: '10px', // text size
+        color: '#333', // dark grey text color
+        alignSelf:'start',
+        marginLeft:'10px'
+      }}>
+        Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}</span>
+      </div>
+
 
       <ResponsiveContainer width="100%" height={500}>
         <PieChart margin={{ top: 20, right: 150, bottom: 20, left: 150 }}>
@@ -288,16 +356,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             data={descriptorCountchartData}
             cx="50%"
             cy="50%"
-            outerRadius={130}
+            outerRadius={140}
             fill="#8884d8"
             dataKey="value"
             startAngle={280}
             endAngle={-180}
             labelLine={true}
             label={(props) => {
-              const { cx, cy, midAngle, outerRadius, name, percent } = props;
+              const { cx, cy, midAngle, outerRadius, name, percent, index } = props;
               const RADIAN = Math.PI / 180;
-              const radius = outerRadius + 30;  // Adjust the distance of the label from the center
+              const radius = outerRadius + (index % 2 === 0 ? 24 : 20);  // Adjust the distance of the label from the center
               const x = cx + radius * Math.cos(-midAngle * RADIAN);
               const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -387,6 +455,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           </div>
         </div>
       )}
+
+
     </div>
   );
 

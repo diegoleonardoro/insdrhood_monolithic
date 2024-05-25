@@ -1,3 +1,16 @@
+
+/* .zipBoroughFilterForm{
+  margin:40px;
+  position:relative;
+  display: flex;
+  width:80%;
+}
+
+.zipBoroughFilterForm div{
+  margin:10px;
+  width:50%;
+} */
+
 .Cards311{
   background-color: #F4E1D2 ;
   
@@ -136,4 +149,28 @@
 
 .spinner3 {
   animation-delay: 0.666s; /* Adjusted delay for faster cycle */
+}
+
+
+
+@media screen and (max-width: 904px) {
+  .zipBoroughFilterForm{
+    flex-direction: column;
+    margin-top:4px;
+    margin-left:0px;
+    margin-right:0px;
+    width:95%;
+  }
+  
+  .zipBoroughFilterForm button{
+    width:100%;
+  }
+
+  /* .zipBoroughFilterForm div{
+    width:100%;
+    margin-left:0px;
+    margin-right:0px;
+  } */
+
+
 }

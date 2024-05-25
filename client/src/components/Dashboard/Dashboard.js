@@ -185,7 +185,7 @@ const Dashboard = () => {
 
       </Drawer>
       <Main open={open} style={{overflowX:"scroll", backgroundColor:"white"}}>
-        <DrawerHeader />
+        
 
 
         {/* <Typography paragraph>
