@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import chroma from 'chroma-js';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Rectangle } from 'recharts';
 import MuiButton from '@mui/material/Button';
 import { styled } from '@mui/system';
 
@@ -62,6 +62,17 @@ function formatReadableDate(dateString) {
 }
 
 
+const CustomBarShape = (props) => {
+  const { x, y, width, height, fill, payload, handleBarClick } = props;
+  return (
+    <g>
+      <rect x={x} y={y} width={width} height={height} fill={fill} />
+      {/* Transparent overlay for extending the clickable area */}
+      <rect x={x - 10} y={0} width={width + 20} height="100%" fill="transparent" onClick={() => handleBarClick(payload)} style={{ cursor: 'pointer' }} />
+    </g>
+  );
+};
+
 
 
 const Complaints311 = ({ showRegisterFrom = true }) => {
@@ -95,7 +106,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     const { name, value } = event.target;
     setNewsletter(prev => ({ ...prev, [name]: value }));
   };
-
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     // Implement the newsletter signup logic here, possibly calling an API
@@ -110,11 +120,9 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     }
 
   };
-
   const toggleForm = () => {
     setFormVisible(!formVisible);
   };
-
   const fetchComplaints = async (reset = false, applyFilters = false) => {
 
     if (reset) {
@@ -143,14 +151,19 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       setMinDate(formatReadableDate(response.data.min_date))
 
       const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
+
+
+      // ---- The following lines will create the "Other" category ----
       const filteredData_descriptor_counts = sortedData_descriptor_counts.filter(item => item.value > valueThreshold);
       // Determine the entries that do not exceed the threshold
       const otherEntries = sortedData_descriptor_counts.filter(item => item.value <= valueThreshold);
       // Calculate the total count of 'Other' entries
       const otherDataSum = otherEntries.reduce((acc, item) => acc + item.value, 0);
-      // Add 'Other' category only if there are more than 15 items in otherEntries
+      // Add 'Other' category only if there are more than 15 items in otherEntries. Pass this value to 'setDescriptorCountchartData' if you want to have an "Other" section
       const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
-      setDescriptorCountchartData(finalData_descriptor_counts);
+      // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+      setDescriptorCountchartData(sortedData_descriptor_counts);
 
       setComplaintsNumber(response.data.data_length);
 
@@ -175,29 +188,22 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     }
   };
-
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setInitialLoad(false);
     fetchComplaints(true, false);
   };
-
   useEffect(() => {
     if (initialLoad) {
       fetchComplaints(true, false);
     }
   }, [initialLoad]);
 
-
   const handleBarClick = (event) => {
-
     console.log("event", event)
-
     // Update the state to the clicked bar's data
     setSelectedData(event.name);
   };
-
-
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -344,8 +350,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div className='chartsContainer' >
 
-        <div style={{ position: "relative", left: "30px", backgroundColor: "#c4c4c4", marginTop: "10px", width: "fit-content", padding: "8px", fontSize: "15px", marginBotom: "0px", borderRadius: "10px" }}>Number of Complaints</div>
-
 
         {selectedData && (
           <div className='complainTypeSelected'>
@@ -354,21 +358,23 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         )}
 
         <div style={{ width: '100%', overflowX: 'auto' }}>
-          <ResponsiveContainer style={{margin:'auto'}} width={chartWidth} height={500}>
+          <ResponsiveContainer style={{margin:'auto'}} width={chartWidth} height={600}>
             <BarChart
               width={chartWidth}
               data={descriptorCountchartData}
-              margin={{ top: 20, right: 50, bottom: 20, left: 50 }}
+              margin={{ top: 20, right: 50, bottom: 70, left: 50 }} 
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis dataKey="name" textAnchor="end" angle={-35} interval={0} style={{ fontSize: '11px' }} />
+              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
-              <Bar dataKey="value" fill="#8884d8" barSize={50} onClick={handleBarClick}  >
-                {descriptorCountchartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-                ))}
-              </Bar>
+
+              <Bar
+                dataKey="value"
+                fill="#8884d8" // Default fill, not necessary unless you want a fallback color
+                shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[props.index % colors.length]} />}
+              />
+
             </BarChart>
           </ResponsiveContainer>
         </div>

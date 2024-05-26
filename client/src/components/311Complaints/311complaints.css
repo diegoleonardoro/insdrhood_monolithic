@@ -36,7 +36,7 @@
   color: #333,
 }
 .complainTypeSelected{
-  position: absolute;
+  position: relative;
   background-color: rgb(240, 240, 240);
   margin-top:10px;
   width:fit-content;
