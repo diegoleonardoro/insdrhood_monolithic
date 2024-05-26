@@ -58,7 +58,7 @@ def decompress_data(data):
 def fetch_and_cache_data(data_source):
 
     if data_source == '311calls':
-        response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json')
+        response = requests.get('https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=50000')
         if response.status_code == 200:
             raw_data = response.json()
             filtered_data = [
@@ -76,7 +76,6 @@ def fetch_and_cache_data(data_source):
                 } for item in raw_data
             ]
 
-
             dates = [datetime.strptime(item["Created Date"], "%Y-%m-%dT%H:%M:%S.%f") for item in filtered_data]
             min_date = min(dates)
             max_date = max(dates)
@@ -86,8 +85,6 @@ def fetch_and_cache_data(data_source):
             redis.hset("complaints_date_range", "min_date", min_date_str)
             redis.hset("complaints_date_range", "max_date", max_date_str)
             redis.expire("complaints_date_range", 86400)  # Set expiration to 24 hours
-
-
 
             compressed_data = compress_data(filtered_data)
             redis.setex('complaints_data', 86400, compressed_data)
@@ -145,6 +142,8 @@ def calls311():
         'Created Date': request.args.get('CreatedDate', '').strip()
     }
 
+    print('filters', filters)
+
     zip_codes = request.args.getlist('zip[]')
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 0))
@@ -164,8 +163,9 @@ def calls311():
         # Filter data with updated filters, including zip codes if provided
         filtered_data = filter_data(data, filters)
 
+
         # Calculate counts of descriptors and times for the filtered data
-        descriptor_counts = Counter(item['Descriptor'] for item in filtered_data)
+        descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
 
         hour_minute_counts = count_hour_minute(filtered_data)
 
@@ -184,7 +184,8 @@ def calls311():
                 "hour_minute_counts": hour_minute_counts,
                 "descriptor_counts":descriptor_counts,
                 "min_date": min_date,  # Add min date to response
-                "max_date": max_date
+                "max_date": max_date, 
+                "data_length":len(filtered_data)
         }
         return jsonify(response_data)
     else:

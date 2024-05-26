@@ -71,9 +71,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [descriptorCountchartData, setDescriptorCountchartData] = useState([]);
-
+  const [complaintsNumber, setComplaintsNumber] = useState();
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
+  const [loadingLoadMore, setLoadingLoadMore] = useState(false);
+
 
   const [filters, setFilters] = useState({
     "zip": '',
@@ -114,7 +116,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const fetchComplaints = async (reset = false, applyFilters = false) => {
 
-    setLoading(true);
+    if (reset) {
+      setLoading(true);
+    } else {
+      setLoadingLoadMore(true)
+    }
 
     const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
 
@@ -123,16 +129,17 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
 
     try {
+
       const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
         params: {
           ...params_,
-          zip: zipCodesArray
+          zip: zipCodesArray,
+          Borough: filters.Borough
         }
       });
 
       setMaxDate(formatReadableDate(response.data.max_date))
       setMinDate(formatReadableDate(response.data.min_date))
-
 
       const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
       const filteredData_descriptor_counts = sortedData_descriptor_counts.filter(item => item.value > valueThreshold);
@@ -143,6 +150,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       // Add 'Other' category only if there are more than 15 items in otherEntries
       const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
       setDescriptorCountchartData(finalData_descriptor_counts);
+
+      setComplaintsNumber(response.data.data_length);
 
       if (response.data.original_data.length > 0) {
         if (reset) {
@@ -159,28 +168,29 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     } catch (error) {
       console.error("Error fetching complaints:", error);
     } finally {
+
       setLoading(false);
+      setLoadingLoadMore(false);
+
     }
   };
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setInitialLoad(false);
-    fetchComplaints(true, true);
+    fetchComplaints(true, false);
   };
 
   useEffect(() => {
     if (initialLoad) {
       fetchComplaints(true, false);
-
-
     }
   }, [initialLoad]);
 
+
+
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
-
-    console.log("event", event.target)
 
     if (name === 'zip') {
 
@@ -191,16 +201,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       }));
 
     } else if (name === 'Borough') {
+
       // Reset the zip code to the default value when borough changes
-
-      console.log("value", value)
-
-      console.log("name", name)
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
         zip: ''
       }));
+
+
+
     } else {
       // For other fields, just update them as before
       setFilters(prevFilters => ({
@@ -247,43 +257,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const colors = generateColorPalette(descriptorCountchartData.length);
 
+  // Define the width for each bar (e.g., 100px)
+  const barWidth = 50;
+  // Calculate the total width of the chart
+  const chartWidth = descriptorCountchartData.length * barWidth;
+
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
 
-      {/* Always render the form */}
-      {/* <Form className="zipBoroughFilterForm" onSubmit={handleFilterSubmit}>
-        <Form.Group controlId="formZip">
-          <Form.Label>Incident Zip:</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter zip"
-            name="zip"
-            value={filters.zip}
-            onChange={handleFilterChange}
-            style={{ backgroundColor: "transparent", border: "1px solid  #5f5e5e" }}
-          />
-        </Form.Group>
-        <Form.Group controlId="formBorough">
-          <Form.Label>Borough:</Form.Label>
-          <Form.Control
-            as="select"
-            name="Borough"
-            value={filters.Borough}
-            onChange={handleFilterChange}
-            style={{ backgroundColor: "transparent", border: "1px solid  #5f5e5e", cursor: "pointer" }}
-          >
-            <option value="">All Boroughs</option>
-            <option value="BRONX">Bronx</option>
-            <option value="BROOKLYN">Brooklyn</option>
-            <option value="QUEENS">Queens</option>
-            <option value="MANHATTAN">Manhattan</option>
-            <option value="STATEN ISLAND">Staten Island</option>
-          </Form.Control>
-        </Form.Group>
-        <Button className="filter311button" style={{ marginTop: "20px", backgroundColor: "rgba(255, 151, 5, 0.221)", color: "black" }} type="submit" variant="dark">Apply Filters</Button>
-      </Form> */}
-      
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
 
       {/** Filter form: */}
       <Box
@@ -292,8 +274,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           alignItems: 'center',
           '& > :not(style)': { m: 1 },
           width: "100%",
-          margin:'10px',
-          marginBottom:'0px'
+          margin: '10px',
+          marginBottom: '0px'
         }}
         className="zipBoroughFilterForm"
       >
@@ -334,68 +316,47 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           marginBottom: "20px",
           width: "30%",
           cursor: "pointer",
-          height:"50px"
+          height: "50px"
         }} variant="outlined" onClick={handleFilterSubmit}>Apply Filters</MuiButton>
       </Box>
 
       <div style={{
         borderRadius: '8px', // rounded corners
         fontFamily: 'Arial, sans-serif', // font family
-        fontSize: '10px', // text size
+        fontSize: '13px', // text size
         color: '#333', // dark grey text color
-        alignSelf:'start',
-        marginLeft:'10px'
+        alignSelf: 'start',
+        marginLeft: '10px',
+        margin: '20px'
       }}>
-        Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}</span>
+        Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
+
       </div>
 
-
-      <ResponsiveContainer width="100%" height={500}>
-        <PieChart margin={{ top: 20, right: 150, bottom: 20, left: 150 }}>
-          <Pie
-            data={descriptorCountchartData}
-            cx="50%"
-            cy="50%"
-            outerRadius={140}
-            fill="#8884d8"
-            dataKey="value"
-            startAngle={280}
-            endAngle={-180}
-            labelLine={true}
-            label={(props) => {
-              const { cx, cy, midAngle, outerRadius, name, percent, index } = props;
-              const RADIAN = Math.PI / 180;
-              const radius = outerRadius + (index % 2 === 0 ? 24 : 20);  // Adjust the distance of the label from the center
-              const x = cx + radius * Math.cos(-midAngle * RADIAN);
-              const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-              // Determine if label should be on the left or right half of the pie
-              const textAnchor = (midAngle > 270 || midAngle < 90) ? 'start' : 'end';
-
-              return (
-                <text
-                  x={x}
-                  y={y}
-                  fill="#333"
-                  textAnchor={textAnchor}
-                  dominantBaseline="central"
-                  style={{ fontSize: '0.55rem' }}  // You can adjust the font size for better fit
-                >
-                  {`${name}: ${(percent * 100).toFixed(0)}%`}
-                </text>
-              );
-            }}
-          >
-            {descriptorCountchartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          {/* <Legend align="right" verticalAlign="middle" layout="vertical" wrapperStyle={{ top: 0, right: 0, width: 300 }} content={<CustomLegend />} /> */}
-        </PieChart>
-      </ResponsiveContainer>
+      <div className='chartsContainer' >
+        <div style={{ position: "relative", left: "30px", backgroundColor: "#c4c4c4", marginTop: "10px" , width:"fit-content", padding:"8px", fontSize:"15px", marginBotom:"0px", borderRadius:"10px"}}>Number of Complaints</div>
+        <div style={{ width: '100%', overflowX: 'auto' }}>
+          <ResponsiveContainer width={chartWidth} height={500}>
+            <BarChart
+              width={chartWidth}
+              data={descriptorCountchartData}
+              margin={{ top: 20, right: 50, bottom: 20, left: 50 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#8884d8" barSize={50}>
+                {descriptorCountchartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
 
+      </div>
 
       {/* Conditional rendering based on loading for the remaining content */}
       {!loading && (
@@ -413,7 +374,22 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
               </Card>
             ))}
             {!hasMore && <div>No more complaints to show.</div>}
-            {hasMore && <Button style={{ padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>Load More</Button>}
+            {hasMore && !loadingLoadMore && (
+              <Button style={{ padding: "15px", alignSelf: "center" }} variant="dark" onClick={() => fetchComplaints()}>
+                Load More
+              </Button>
+            )}
+
+            {loadingLoadMore && (
+              <div >
+                <div style={{ position: "relative", left: "45%", top: "30%" }}>
+                  <Spinner animation="grow" size="sm" className="spinner spinner1" />
+                  <Spinner animation="grow" className="spinner spinner2" />
+                  <Spinner animation="grow" style={{ height: "50px", width: "50px" }} className="spinner spinner3" />
+                </div>
+              </div>
+            )}
+
           </div>
 
 
@@ -457,7 +433,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       )}
 
 
+
+
+
     </div>
+
   );
 
 
