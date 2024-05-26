@@ -348,13 +348,13 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
         {selectedData && (
-          <div style={{ position: "relative", left: "30px", backgroundColor: "#f0f0f0", marginTop: "10px", width: "fit-content", padding: "8px", fontSize: "15px", marginBotom: "0px", borderRadius: "10px" }}>
+          <div className='complainTypeSelected'>
             {selectedData}
           </div>
         )}
 
         <div style={{ width: '100%', overflowX: 'auto' }}>
-          <ResponsiveContainer width={chartWidth} height={500}>
+          <ResponsiveContainer style={{margin:'auto'}} width={chartWidth} height={500}>
             <BarChart
               width={chartWidth}
               data={descriptorCountchartData}
