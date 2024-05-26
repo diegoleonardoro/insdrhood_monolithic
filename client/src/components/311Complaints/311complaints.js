@@ -75,6 +75,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
   const [loadingLoadMore, setLoadingLoadMore] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
 
 
   const [filters, setFilters] = useState({
@@ -188,6 +189,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   }, [initialLoad]);
 
 
+  const handleBarClick = (event) => {
+
+    console.log("event", event)
+
+    // Update the state to the clicked bar's data
+    setSelectedData(event.name);
+  };
+
+
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -257,11 +267,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const colors = generateColorPalette(descriptorCountchartData.length);
 
-  // Define the width for each bar (e.g., 100px)
-  const barWidth = 50;
+  // Define the width for each bar (e.g., 100px)  
   // Calculate the total width of the chart
+  const barWidth = 100;
   const chartWidth = descriptorCountchartData.length * barWidth;
-
 
   return (
 
@@ -334,7 +343,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       </div>
 
       <div className='chartsContainer' >
-        <div style={{ position: "relative", left: "30px", backgroundColor: "#c4c4c4", marginTop: "10px" , width:"fit-content", padding:"8px", fontSize:"15px", marginBotom:"0px", borderRadius:"10px"}}>Number of Complaints</div>
+
+        <div style={{ position: "relative", left: "30px", backgroundColor: "#c4c4c4", marginTop: "10px", width: "fit-content", padding: "8px", fontSize: "15px", marginBotom: "0px", borderRadius: "10px" }}>Number of Complaints</div>
+
+
+        {selectedData && (
+          <div style={{ position: "relative", left: "30px", backgroundColor: "#f0f0f0", marginTop: "10px", width: "fit-content", padding: "8px", fontSize: "15px", marginBotom: "0px", borderRadius: "10px" }}>
+            {selectedData}
+          </div>
+        )}
+
         <div style={{ width: '100%', overflowX: 'auto' }}>
           <ResponsiveContainer width={chartWidth} height={500}>
             <BarChart
@@ -346,7 +364,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill="#8884d8" barSize={50}>
+              <Bar dataKey="value" fill="#8884d8" barSize={50} onClick={handleBarClick}  >
                 {descriptorCountchartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                 ))}
@@ -354,8 +372,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-
-
       </div>
 
       {/* Conditional rendering based on loading for the remaining content */}
