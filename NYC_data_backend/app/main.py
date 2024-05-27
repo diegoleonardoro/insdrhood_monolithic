@@ -142,42 +142,46 @@ def calls311():
         'Created Date': request.args.get('CreatedDate', '').strip()
     }
 
-    print('filters', filters)
-
     zip_codes = request.args.getlist('zip[]')
+    complaint_type = request.args.get('ComplaintType')
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 0))
     cached_data = redis.get('complaints_data') 
     date_range = redis.hgetall('complaints_date_range')
 
+    print("page===>>>>>", page)
+
+
     if cached_data and date_range:
             
         data = decompress_data(cached_data)
-
         min_date = date_range.get(b'min_date').decode('utf-8')  # Ensure to handle byte keys if necessary
         max_date = date_range.get(b'max_date').decode('utf-8')
 
         if zip_codes:
             filters['Incident Zip'] = zip_codes
+
+        if complaint_type:
+            filters['Complaint Type'] = complaint_type
         
         # Filter data with updated filters, including zip codes if provided
         filtered_data = filter_data(data, filters)
 
+        print(len(filtered_data))
 
         # Calculate counts of descriptors and times for the filtered data
         descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
-
         hour_minute_counts = count_hour_minute(filtered_data)
 
         # Check if a valid limit is provided
         if limit > 0:
-                start = (page - 1) * limit
-                end = start + limit
-                paginated_data = filtered_data[start:end]
-                response = paginated_data
+            start = (page - 1) * limit
+            end = start + limit
+            paginated_data = filtered_data[start:end]
+            response = paginated_data
         else:
                 # If limit is 0 or not provided, return all filtered data
-                response = filtered_data
+            response = filtered_data
 
         response_data = {
                 "original_data": response,

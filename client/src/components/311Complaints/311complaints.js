@@ -87,12 +87,13 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [maxDate, setMaxDate] = useState('');
   const [loadingLoadMore, setLoadingLoadMore] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
-
+  const [currentZipForDisplay, setCurrentZipForDisplay] = useState([]);
 
   const [filters, setFilters] = useState({
     "zip": '',
     "Borough": '',
     "Agency": '',
+    "ComplaintType": '',
     "CreatedDate": ''
   });
 
@@ -122,8 +123,9 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   };
   const toggleForm = () => {
     setFormVisible(!formVisible);
-  };
-  const fetchComplaints = async (reset = false, applyFilters = false) => {
+  }
+
+  const fetchComplaints = async (reset = false, applyFilters = false, resetPage = false) => {
 
     if (reset) {
       setLoading(true);
@@ -131,53 +133,80 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       setLoadingLoadMore(true)
     }
 
-    const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
+    if (resetPage) {
+      setPage(1)
+    }
 
-    const params_ = applyFilters ? filters : { limit: 10, page };
+    // This if statement will take place if the user clicks "Apply Filters" or if there is a hard reload of the page
+    if(reset && !applyFilters && !resetPage){
+      setSelectedData(null);
+    }
 
+
+    const params_ = applyFilters ? filters : { limit: 10, page: resetPage ? 1 : page };
     const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
 
     try {
+
+      setCurrentZipForDisplay(zipCodesArray);
 
       const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
         params: {
           ...params_,
           zip: zipCodesArray,
-          Borough: filters.Borough
+          Borough: filters.Borough,
+          ComplaintType: filters.ComplaintType
         }
       });
 
-      setMaxDate(formatReadableDate(response.data.max_date))
-      setMinDate(formatReadableDate(response.data.min_date))
-
-      const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
-
 
       // ---- The following lines will create the "Other" category ----
-      const filteredData_descriptor_counts = sortedData_descriptor_counts.filter(item => item.value > valueThreshold);
-      // Determine the entries that do not exceed the threshold
-      const otherEntries = sortedData_descriptor_counts.filter(item => item.value <= valueThreshold);
-      // Calculate the total count of 'Other' entries
-      const otherDataSum = otherEntries.reduce((acc, item) => acc + item.value, 0);
-      // Add 'Other' category only if there are more than 15 items in otherEntries. Pass this value to 'setDescriptorCountchartData' if you want to have an "Other" section
-      const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
+      //  const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
+      // const filteredData_descriptor_counts = filteredData_descriptor_counts.filter(item => item.value > valueThreshold);
+      // // Determine the entries that do not exceed the threshold
+      // const otherEntries = filteredData_descriptor_counts.filter(item => item.value <= valueThreshold);
+      // // Calculate the total count of 'Other' entries
+      // const otherDataSum = otherEntries.reduce((acc, item) => acc + item.value, 0);
+      // // Add 'Other' category only if there are more than 15 items in otherEntries. Pass this value to 'setDescriptorCountchartData' if you want to have an "Other" section
+      // const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
       // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-      setDescriptorCountchartData(sortedData_descriptor_counts);
 
-      setComplaintsNumber(response.data.data_length);
+      // the following lines of code should not take place when there state filters.complaintType has a value
+      if (filters.ComplaintType == '') {
+        setMaxDate(formatReadableDate(response.data.max_date))
+        setMinDate(formatReadableDate(response.data.min_date))
+        const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
+        setDescriptorCountchartData(sortedData_descriptor_counts);
+        setComplaintsNumber(response.data.data_length);
+      }
+      //----------------------------------------------
 
+
+      console.log('response.data.original_data', response.data.original_data)
       if (response.data.original_data.length > 0) {
-        if (reset) {
-          setComplaints(response.data.original_data);
-        } else {
 
+        //it is important to set hasmMore to True here because every time the user fetches data with the bar graph button the previous value of hasMore is going to be preserved, and if it is "false" the no more complaints will be shown.
+        setHasMore(true);
+
+        if (reset) {
+          setComplaints(response.data.original_data); // when the user clicks on the bar graph button, all complaints should be reset.
+        } else {
           setComplaints(prev => [...prev, ...response.data.original_data]);
         }
-        setPage(prevPage => prevPage + 1);
+
+        // if (!resetPage) {
+          setPage(prevPage => prevPage + 1);// increase page number when the data fetching process is not being made from the button in the bar graph. 
+        // }else{
+          // setPage(1)
+        // }
+
       } else {
+        console.log("tetetetete")
         setHasMore(false);
       }
+
+
 
     } catch (error) {
       console.error("Error fetching complaints:", error);
@@ -188,21 +217,74 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     }
   };
+
+
+
+
+
+
+  const fetchComplatintsfromChartButton = async () => {
+
+    // make request to fetch the data with the slected data and the zip codes as the filer
+    const params_ = { limit: 10, page: 1 };
+
+    const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
+
+    const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
+      params: {
+        ...params_,
+        zip: zipCodesArray,
+        Borough: filters.Borough,
+        ['Complaint Type']: selectedData // selected data fromfrom the bar chart.
+      }
+    });
+
+
+    console.log("responseee", response)
+
+    // update the filters.complaintType state
+    // update the page state
+    // i am doing this request separately because whenever the button on top of the chart is clicked, i do not want to upadate the data that goes to the chart.
+
+
+
+
+
+
+
+
+  };
+
+
+
+
+
+
+
+
+
+
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setInitialLoad(false);
     fetchComplaints(true, false);
   };
+
   useEffect(() => {
     if (initialLoad) {
       fetchComplaints(true, false);
     }
   }, [initialLoad]);
 
+
+
   const handleBarClick = (event) => {
-    console.log("event", event)
-    // Update the state to the clicked bar's data
-    setSelectedData(event.name);
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ComplaintType: event.name
+    }));
+    setSelectedData(event.name);// this state is going to be used for displaying that complaint data was clicked by the use
+
   };
 
   const handleFilterChange = (event) => {
@@ -213,7 +295,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
-        Borough: ''
+        Borough: '',
+        ComplaintType: ''
       }));
 
     } else if (name === 'Borough') {
@@ -222,10 +305,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
-        zip: ''
+        zip: '',
+        ComplaintType: ''
+
       }));
-
-
 
     } else {
       // For other fields, just update them as before
@@ -277,6 +360,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   // Calculate the total width of the chart
   const barWidth = 100;
   const chartWidth = descriptorCountchartData.length * barWidth;
+
+  console.log("hasmore==>>>", hasMore)
 
   return (
 
@@ -350,23 +435,25 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div className='chartsContainer' >
 
-
         {selectedData && (
           <div className='complainTypeSelected'>
-            {selectedData}
+            <MuiButton variant="outlined" color="info" onClick={() => { fetchComplaints(true, false, true) }}>
+              See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
+              <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
+            </MuiButton>
           </div>
         )}
 
         <div style={{ width: '100%', overflowX: 'auto' }}>
-          <ResponsiveContainer style={{margin:'auto'}} width={chartWidth} height={600}>
+          <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={680}>
             <BarChart
               width={chartWidth}
               data={descriptorCountchartData}
-              margin={{ top: 20, right: 50, bottom: 70, left: 50 }} 
+              margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" textAnchor="end" angle={-35} interval={0} style={{ fontSize: '11px' }} />
-              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft' }} />
+              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35 }} />
               <Tooltip />
 
               <Bar
@@ -378,6 +465,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
       </div>
 
       {/* Conditional rendering based on loading for the remaining content */}
