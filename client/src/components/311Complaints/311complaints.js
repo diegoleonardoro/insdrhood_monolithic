@@ -9,16 +9,10 @@ import chroma from 'chroma-js';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Rectangle } from 'recharts';
 import MuiButton from '@mui/material/Button';
 import { styled } from '@mui/system';
-
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
-
-
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
-
-
 import "./311complaints.css";
 
 
@@ -29,7 +23,6 @@ const transformAndSortData = (dataObject) => {
   }));
   return transformedData.sort((a, b) => b.value - a.value);
 };
-
 
 const generateColorPalette = (dataLength) => {
   return chroma.scale(
@@ -159,7 +152,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         }
       });
 
-
       // ---- The following lines will create the "Other" category ----
       //  const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
       // const filteredData_descriptor_counts = filteredData_descriptor_counts.filter(item => item.value > valueThreshold);
@@ -182,8 +174,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       }
       //----------------------------------------------
 
-
-      console.log('response.data.original_data', response.data.original_data)
       if (response.data.original_data.length > 0) {
 
         //it is important to set hasmMore to True here because every time the user fetches data with the bar graph button the previous value of hasMore is going to be preserved, and if it is "false" the no more complaints will be shown.
@@ -202,11 +192,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         // }
 
       } else {
-        console.log("tetetetete")
         setHasMore(false);
       }
-
-
 
     } catch (error) {
       console.error("Error fetching complaints:", error);
@@ -217,51 +204,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     }
   };
-
-
-
-
-
-
-  const fetchComplatintsfromChartButton = async () => {
-
-    // make request to fetch the data with the slected data and the zip codes as the filer
-    const params_ = { limit: 10, page: 1 };
-
-    const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
-
-    const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
-      params: {
-        ...params_,
-        zip: zipCodesArray,
-        Borough: filters.Borough,
-        ['Complaint Type']: selectedData // selected data fromfrom the bar chart.
-      }
-    });
-
-
-    console.log("responseee", response)
-
-    // update the filters.complaintType state
-    // update the page state
-    // i am doing this request separately because whenever the button on top of the chart is clicked, i do not want to upadate the data that goes to the chart.
-
-
-
-
-
-
-
-
-  };
-
-
-
-
-
-
-
-
 
 
   const handleFilterSubmit = (e) => {
@@ -361,7 +303,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const barWidth = 100;
   const chartWidth = descriptorCountchartData.length * barWidth;
 
-  console.log("hasmore==>>>", hasMore)
+
 
   return (
 
@@ -436,16 +378,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       <div className='chartsContainer' >
 
         {selectedData && (
-          <div className='complainTypeSelected'>
-            <MuiButton variant="outlined" color="info" onClick={() => { fetchComplaints(true, false, true) }}>
+          
+          <Button style={{width:"90%", margin:"auto"}} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true) }}>
               See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
               <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
-            </MuiButton>
-          </div>
+            </Button>
+         
         )}
 
         <div style={{ width: '100%', overflowX: 'auto' }}>
-          <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={680}>
+          <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={400}>
             <BarChart
               width={chartWidth}
               data={descriptorCountchartData}
@@ -453,7 +395,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" textAnchor="end" angle={-35} interval={0} style={{ fontSize: '11px' }} />
-              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35 }} />
+              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35,dy:55, fontSize:"13px"}} />
               <Tooltip />
 
               <Bar
@@ -502,7 +444,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
           </div>
 
-
           {showRegisterFrom && showNewsletterForm && (
             <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding: "2px" }}>
               <div style={{ padding: "15px", paddingBottom: "30px" }}>
@@ -528,6 +469,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
               </div>
             </div>
           )}
+          
         </>
       )}
 

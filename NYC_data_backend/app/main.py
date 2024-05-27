@@ -149,9 +149,6 @@ def calls311():
     cached_data = redis.get('complaints_data') 
     date_range = redis.hgetall('complaints_date_range')
 
-    print("page===>>>>>", page)
-
-
     if cached_data and date_range:
             
         data = decompress_data(cached_data)
@@ -166,8 +163,6 @@ def calls311():
         
         # Filter data with updated filters, including zip codes if provided
         filtered_data = filter_data(data, filters)
-
-        print(len(filtered_data))
 
         # Calculate counts of descriptors and times for the filtered data
         descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
@@ -195,7 +190,6 @@ def calls311():
     else:
         # If no cached data, fetch and cache the data
         fetch_and_cache_data("311calls")
-
 
 
 @app.route('/dob_approved_permits', methods=['GET'])
