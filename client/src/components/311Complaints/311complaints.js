@@ -101,7 +101,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const [initialLoad, setInitialLoad] = useState(true);
   const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
-  const [formVisible, setFormVisible] = useState(true); // Controls the form's visible state
+  const [formVisible, setFormVisible] = useState(false); // Controls the form's visible state
 
   const [showNewsletterForm, setShowNewsletterForm] = useState(true)
 
@@ -420,18 +420,12 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div className='chartsContainer' >
 
-
-
-
         {selectedData && (
-
           <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
             See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
             <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
           </Button>
-
         )}
-
 
         <div style={{ width: '100%', overflowX: 'auto', marginBottom:"15px" }}>
           <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
