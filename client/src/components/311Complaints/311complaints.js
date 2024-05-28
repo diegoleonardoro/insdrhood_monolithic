@@ -433,8 +433,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         )}
 
 
-
-
         <div style={{ width: '100%', overflowX: 'auto', marginBottom:"15px" }}>
           <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
             <BarChart

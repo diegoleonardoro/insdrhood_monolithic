@@ -1,9 +1,11 @@
 #container_{
   flex-wrap: wrap;
+  color:white;
 }
 
 #navBrand{
   margin-left: 5px;
+  
 }
 
 @media (max-width: 400px) {

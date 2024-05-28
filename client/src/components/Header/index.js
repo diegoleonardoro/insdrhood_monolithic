@@ -45,20 +45,20 @@ function Header() {
     .filter((linkConfig) => linkConfig)
     .map(({ label, to, onClick, useTransition }, index) => {
       if (onClick) {
-        return <Nav.Link key={index} onClick={onClick}>{label}</Nav.Link>;
+        return <Nav.Link style={{ cursor: 'pointer', color: "white" }} key={index} onClick={onClick}>{label}</Nav.Link>;
       } else if (useTransition) {
         // Special handling for links marked with useTransition
         return (
           <Nav.Link
             key={index}
             onClick={() => startTransition(() => navigate(to))}
-            style={{ cursor: 'pointer' }} // Add cursor pointer to indicate it's clickable
+            style={{ cursor: 'pointer', color:"white" }} // Add cursor pointer to indicate it's clickable
           >
             {label}
           </Nav.Link>
         );
       } else {
-        return <Nav.Link key={index} as={Link} to={to}>{label}</Nav.Link>;
+        return <Nav.Link style={{ cursor: 'pointer', color: "white" }}  key={index} as={Link} to={to}>{label}</Nav.Link>;
       }
     });
 
@@ -66,17 +66,15 @@ function Header() {
   return (
     <>
       {!showHeader ? (
-        <Navbar style={{borderBottom:"1px solid"}}>
+        <Navbar style={{borderBottom:"1px solid", backgroundColor:"black"}}>
           <Container id="container_">
-            <Navbar.Brand id="navBrand" as={Link} to="/">
+            <Navbar.Brand  style={{color:"white"}}id="navBrand" as={Link} to="/">
               Insdr Hood
             </Navbar.Brand>
-            <Nav className="me-auto">
+            <Nav  className="me-auto">
               {links}
             </Nav>
-
             <CartIcon />
-
           </Container>
         </Navbar>
       ) : null}
