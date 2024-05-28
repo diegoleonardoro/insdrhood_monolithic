@@ -83,6 +83,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [selectedData, setSelectedData] = useState('all');
   const [currentZipForDisplay, setCurrentZipForDisplay] = useState([]);
 
+  const [loadingBarChart, setLoadingBarChart] = useState(false)
 
   const [chartMainWidth, setChartMainWidth] = useState(window.innerWidth);
   const [chartHeight, setChartHeight] = useState(400);
@@ -153,6 +154,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     // This if statement will take place if the user clicks "Apply Filters" or if there is a hard reload of the page
     if (reset && !applyFilters && !resetPage) {
+      setLoadingBarChart(true); // show the loading component for the bar chart area
       setSelectedData('all');
     }
 
@@ -212,13 +214,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         } else {
           setComplaints(prev => [...prev, ...response.data.original_data]);
         }
-
-        // if (!resetPage) {
         setPage(prevPage => prevPage + 1);// increase page number when the data fetching process is not being made from the button in the bar graph. 
-        // }else{
-        // setPage(1)
-        // }
-
+       
       } else {
         setHasMore(false);
       }
@@ -229,6 +226,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       setLoading(false);
       setLoadingLoadMore(false);
+      setLoadingBarChart(false);
 
     }
   };
@@ -263,7 +261,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     return () => window.removeEventListener('resize', handleResize);
 
 
-  }, [initialLoad]);
+  }, []);
+
 
   const handleBarClick = (event) => {
     setFilters(prevFilters => ({
@@ -420,34 +419,48 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div className='chartsContainer' >
 
-        {selectedData && (
-          <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
-            See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
-            <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
-          </Button>
+        {loadingBarChart && (
+          <>
+            <div style={{ margin:"30px", textAlign:"center"}}>
+              Fetching data...
+            </div>
+          </>
         )}
 
-        <div style={{ width: '100%', overflowX: 'auto', marginBottom:"15px" }}>
-          <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
-            <BarChart
-              width={chartWidth}
-              data={descriptorCountchartData}
-              margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
-              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
-              <Tooltip />
+        {!loadingBarChart && (
 
-              <Bar
-                dataKey="value"
-                fill="#8884d8" // Default fill, not necessary unless you want a fallback color
-                shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[props.index % colors.length]} />}
-              />
+          <>
+            {selectedData && (
+              <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
+                See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
+                <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
+              </Button>
+            )}
 
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+            <div style={{ width: '100%', overflowX: 'auto', marginBottom: "15px" }}>
+              <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
+                <BarChart
+                  width={chartWidth}
+                  data={descriptorCountchartData}
+                  margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
+                  <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+                  <Tooltip />
+
+                  <Bar
+                    dataKey="value"
+                    fill="#8884d8" // Default fill, not necessary unless you want a fallback color
+                    shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[props.index % colors.length]} />}
+                  />
+
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+
+        )}
 
       </div>
 
@@ -529,8 +542,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     </div>
 
   );
-
-
 
 
 
