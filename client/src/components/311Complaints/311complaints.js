@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -14,6 +14,8 @@ import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import "./311complaints.css";
+
+
 
 
 const transformAndSortData = (dataObject) => {
@@ -54,7 +56,6 @@ function formatReadableDate(dateString) {
   });
 }
 
-
 const CustomBarShape = (props) => {
   const { x, y, width, height, fill, payload, handleBarClick } = props;
   return (
@@ -79,8 +80,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
   const [loadingLoadMore, setLoadingLoadMore] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedData, setSelectedData] = useState('all');
   const [currentZipForDisplay, setCurrentZipForDisplay] = useState([]);
+
+
+  const [chartMainWidth, setChartMainWidth] = useState(window.innerWidth);
+  const [chartHeight, setChartHeight] = useState(400);
+  const [yAxisFontSize, setYAxisFontSize] = useState('13px');
+  const [xAxisFontSize, setXAxisFontSize] = useState('11px');
+
+
 
   const [filters, setFilters] = useState({
     "zip": '',
@@ -118,6 +127,18 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     setFormVisible(!formVisible);
   }
 
+  const complaintCardsRef = useRef(null);
+
+  const scrollToCardsRef = () => {
+    // Ensure the ref current is not null
+    if (complaintCardsRef.current) {
+      window.scrollTo({
+        top: complaintCardsRef.current.offsetTop, // Adjusts to the top position of the element
+        behavior: 'smooth' // Optional: Defines smooth scrolling
+      });
+    }
+  };
+
   const fetchComplaints = async (reset = false, applyFilters = false, resetPage = false) => {
 
     if (reset) {
@@ -131,8 +152,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     }
 
     // This if statement will take place if the user clicks "Apply Filters" or if there is a hard reload of the page
-    if(reset && !applyFilters && !resetPage){
-      setSelectedData(null);
+    if (reset && !applyFilters && !resetPage) {
+      setSelectedData('all');
+    }
+
+
+    // This if statement will take place when the user clicks the button inside of the bar graph and no bar has been been clicked 
+    if (reset && !applyFilters && resetPage && selectedData === "all") {
+      setLoading(false);
+      return
     }
 
 
@@ -148,7 +176,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           ...params_,
           zip: zipCodesArray,
           Borough: filters.Borough,
-          ComplaintType: filters.ComplaintType
+          ComplaintType: filters.ComplaintType === "all" ? "" : filters.ComplaintType// if filters.ComplaintType is equal to 'all' it means 
         }
       });
 
@@ -186,9 +214,9 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         }
 
         // if (!resetPage) {
-          setPage(prevPage => prevPage + 1);// increase page number when the data fetching process is not being made from the button in the bar graph. 
+        setPage(prevPage => prevPage + 1);// increase page number when the data fetching process is not being made from the button in the bar graph. 
         // }else{
-          // setPage(1)
+        // setPage(1)
         // }
 
       } else {
@@ -205,7 +233,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     }
   };
 
-
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setInitialLoad(false);
@@ -216,9 +243,27 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     if (initialLoad) {
       fetchComplaints(true, false);
     }
+
+    const handleResize = () => {
+      setChartMainWidth(window.innerWidth);
+      if (window.innerWidth < 1018) {
+        setChartHeight(300);
+        setYAxisFontSize('15px');
+        setXAxisFontSize('14px');
+      } else {
+        setChartHeight(400);
+        setYAxisFontSize('13px');
+        setXAxisFontSize('11px');
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial setup
+
+    return () => window.removeEventListener('resize', handleResize);
+
+
   }, [initialLoad]);
-
-
 
   const handleBarClick = (event) => {
     setFilters(prevFilters => ({
@@ -303,8 +348,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const barWidth = 100;
   const chartWidth = descriptorCountchartData.length * barWidth;
 
-
-
   return (
 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
@@ -377,25 +420,31 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div className='chartsContainer' >
 
+
+
+
         {selectedData && (
-          
-          <Button style={{width:"90%", margin:"auto"}} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true) }}>
-              See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
-              <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
-            </Button>
-         
+
+          <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
+            See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
+            <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
+          </Button>
+
         )}
 
-        <div style={{ width: '100%', overflowX: 'auto' }}>
-          <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={400}>
+
+
+
+        <div style={{ width: '100%', overflowX: 'auto', marginBottom:"15px" }}>
+          <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
             <BarChart
               width={chartWidth}
               data={descriptorCountchartData}
               margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" textAnchor="end" angle={-35} interval={0} style={{ fontSize: '11px' }} />
-              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35,dy:55, fontSize:"13px"}} />
+              <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
+              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
               <Tooltip />
 
               <Bar
@@ -413,7 +462,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       {/* Conditional rendering based on loading for the remaining content */}
       {!loading && (
         <>
-          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "white" }}>
+          <div ref={complaintCardsRef} style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "white" }}>
             {complaints.map((complaint, index) => (
               <Card className="Cards311" style={{ width: '18rem', margin: "20px" }} key={index}>
                 <ListGroup className="list-group-flush Cards_Group">
@@ -469,7 +518,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
               </div>
             </div>
           )}
-          
+
         </>
       )}
 
@@ -483,9 +532,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           </div>
         </div>
       )}
-
-
-
 
 
     </div>
