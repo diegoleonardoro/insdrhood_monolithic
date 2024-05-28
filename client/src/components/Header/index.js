@@ -41,6 +41,7 @@ function Header() {
     { label: "Questionnaire", to: "/questionnaire", useTransition: true },
     currentuser_ && { label: "Sign Out", onClick: handleSignOut },
     { label: "Shop", to: "/shop", useTransition: true },
+    { label: "311 Calls", to: "/311complaints", useTransition: true },
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, to, onClick, useTransition }, index) => {
@@ -52,13 +53,13 @@ function Header() {
           <Nav.Link
             key={index}
             onClick={() => startTransition(() => navigate(to))}
-            style={{ cursor: 'pointer', color:"white" }} // Add cursor pointer to indicate it's clickable
+            style={{ cursor: 'pointer', color:"white" , border:"1px solid white", margin:"3px"}} // Add cursor pointer to indicate it's clickable
           >
             {label}
           </Nav.Link>
         );
       } else {
-        return <Nav.Link style={{ cursor: 'pointer', color: "white" }}  key={index} as={Link} to={to}>{label}</Nav.Link>;
+        return <Nav.Link style={{ cursor: 'pointer', color: "white", border: "1px solid white", margin: "3px" }}  key={index} as={Link} to={to}>{label}</Nav.Link>;
       }
     });
 
