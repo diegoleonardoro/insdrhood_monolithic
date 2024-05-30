@@ -11,6 +11,7 @@ from pytz import utc
 import gzip
 from collections import Counter
 from datetime import datetime
+from collections import defaultdict
 
 load_dotenv()
 
@@ -164,8 +165,32 @@ def calls311():
         # Filter data with updated filters, including zip codes if provided
         filtered_data = filter_data(data, filters)
 
+        # Prepare descriptor counts
+        if zip_codes:
+            # Count by Complaint Type and Zip Code
+            descriptor_counts = defaultdict(lambda: defaultdict(int))
+            for item in filtered_data:
+                complaint_type = item['Complaint Type'].title()
+                item_zip = item.get('Incident Zip', 'Unknown')
+                descriptor_counts[complaint_type][item_zip] += 1
+            
+            # Convert dictionary to list format
+            descriptor_counts = [
+                {"name": complaint, **dict(zip_counts)} for complaint, zip_counts in descriptor_counts.items()
+            ]
+        else:
+            # Original counting method when no zip codes are provided
+            descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
+
+
+        print ('descriptor_counts', descriptor_counts)
+
+
         # Calculate counts of descriptors and times for the filtered data
-        descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
+        # descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
+
+
+
         hour_minute_counts = count_hour_minute(filtered_data)
 
         # Check if a valid limit is provided
@@ -255,3 +280,4 @@ if __name__ == '__main__':
   
 
 
+# la la la la la la la la la la la la

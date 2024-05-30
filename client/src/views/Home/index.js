@@ -74,7 +74,7 @@ function Home() {
 
       // here make a request to the server to fetch the blogs
       const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`)
-      console.log('blogsResponse', blogsResponse)
+   
       setBlogs(blogsResponse.data)
       setBlogsLoading(false);
       // setBlogs(blogsData);
@@ -186,9 +186,6 @@ function Home() {
 
   });
 
-
-
-console.log("blogss", blogs);
 
   const blogCards = blogs.map((blog) => {
 

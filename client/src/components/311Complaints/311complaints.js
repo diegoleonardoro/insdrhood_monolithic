@@ -15,8 +15,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import "./311complaints.css";
 
-
-
+// le le le le le le 
 
 const transformAndSortData = (dataObject) => {
   const transformedData = Object.keys(dataObject).map(key => ({
@@ -26,23 +25,32 @@ const transformAndSortData = (dataObject) => {
   return transformedData.sort((a, b) => b.value - a.value);
 };
 
-const generateColorPalette = (dataLength) => {
-  return chroma.scale(
-    [
-      "#003366",
-      "#014421",
-      "#800020",
-      "#002147",
-      "#8E4585",
-      "#E97451",
-      "#008080",
-      "#800000",
-      "#4B0082",
-      "#954535"
-    ]
+const processChartData = (data) => {
+  const aggregatedData = {};
+  data.forEach(item => {
+    if (!aggregatedData[item.name]) {
+      aggregatedData[item.name] = { name: item.name };
+    }
+    Object.keys(item).forEach(zip => {
+      if (zip !== 'name') {
+        if (!aggregatedData[item.name][zip]) {
+          aggregatedData[item.name][zip] = 0;
+        }
+        aggregatedData[item.name][zip] += item[zip];
+      }
+    });
+  });
+  const dataArray = Object.values(aggregatedData);
 
-  ).mode('lch').colors(dataLength);
+  // Sort by sum of all zip code values for each entry
+  return dataArray.sort((a, b) => {
+    const totalA = Object.keys(a).reduce((acc, key) => key !== 'name' ? acc + a[key] : acc, 0);
+    const totalB = Object.keys(b).reduce((acc, key) => key !== 'name' ? acc + b[key] : acc, 0);
+    return totalB - totalA;
+  });
 };
+
+
 
 function formatReadableDate(dateString) {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -68,7 +76,6 @@ const CustomBarShape = (props) => {
 };
 
 
-
 const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const [complaints, setComplaints] = useState([]);
@@ -89,7 +96,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [chartHeight, setChartHeight] = useState(400);
   const [yAxisFontSize, setYAxisFontSize] = useState('13px');
   const [xAxisFontSize, setXAxisFontSize] = useState('11px');
-
 
 
   const [filters, setFilters] = useState({
@@ -165,7 +171,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       return
     }
 
-
     const params_ = applyFilters ? filters : { limit: 10, page: resetPage ? 1 : page };
     const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
 
@@ -182,25 +187,27 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         }
       });
 
-      // ---- The following lines will create the "Other" category ----
-      //  const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
-      // const filteredData_descriptor_counts = filteredData_descriptor_counts.filter(item => item.value > valueThreshold);
-      // // Determine the entries that do not exceed the threshold
-      // const otherEntries = filteredData_descriptor_counts.filter(item => item.value <= valueThreshold);
-      // // Calculate the total count of 'Other' entries
-      // const otherDataSum = otherEntries.reduce((acc, item) => acc + item.value, 0);
-      // // Add 'Other' category only if there are more than 15 items in otherEntries. Pass this value to 'setDescriptorCountchartData' if you want to have an "Other" section
-      // const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
-      // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
       // the following lines of code should not take place when there state filters.complaintType has a value
+      // this block will take place when there is a hard reload of the page or when the user clicks Apply Filters
       if (filters.ComplaintType == '') {
+
+
         setMaxDate(formatReadableDate(response.data.max_date))
         setMinDate(formatReadableDate(response.data.min_date))
-        const sortedData_descriptor_counts = transformAndSortData(response.data.descriptor_counts);
-        setDescriptorCountchartData(sortedData_descriptor_counts);
         setComplaintsNumber(response.data.data_length);
+        // i only want to update the descriptorCountchartData state whenever the user hard loads or when they apply filters:
+        let chartData;
+
+        if (Array.isArray(response.data.descriptor_counts)) { //this means that there are filters being applied and the data is coming as an array of objs
+          console.log("hole")
+          chartData = processChartData(response.data.descriptor_counts);
+        } else {
+
+          console.log("hola")
+          chartData = transformAndSortData(response.data.descriptor_counts);
+        }
+        setDescriptorCountchartData(chartData);
+
       }
       //----------------------------------------------
 
@@ -215,7 +222,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           setComplaints(prev => [...prev, ...response.data.original_data]);
         }
         setPage(prevPage => prevPage + 1);// increase page number when the data fetching process is not being made from the button in the bar graph. 
-       
+
       } else {
         setHasMore(false);
       }
@@ -270,8 +277,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       ComplaintType: event.name
     }));
     setSelectedData(event.name);// this state is going to be used for displaying that complaint data was clicked by the use
-
   };
+
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -340,7 +347,18 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     ).join(' ');
   }
 
-  const colors = generateColorPalette(descriptorCountchartData.length);
+  const colors = [
+    "#6699CC", // Light blue
+    "#66CC66", // Light green
+    "#CC6666", // Soft red
+    "#336699", // Bluish
+    "#CC99CC",  // Pale purple
+    "#FF9966",  // Light orange
+    "#33CCCC",  // Soft teal
+    "#CC3333",  // Soft dark red
+    "#9999CC",  // Soft violet
+    "#FFCC99"   // Peach
+  ]
 
   // Define the width for each bar (e.g., 100px)  
   // Calculate the total width of the chart
@@ -421,7 +439,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
         {loadingBarChart && (
           <>
-            <div style={{ margin:"30px", textAlign:"center"}}>
+            <div style={{ margin: "30px", textAlign: "center" }}>
               Fetching data...
             </div>
           </>
@@ -433,29 +451,85 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             {selectedData && (
               <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
                 See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
-                <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }} >{currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"}</span> zipcode(s)
+               
+
+
+
+                {
+                  filters.zip ? (
+                    <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                      {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
+                    </span>
+                  ) : (
+                    <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+
+                        {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase():"the entire city."}
+                        
+                    </span>
+                  )
+                }
+
+             
+
+
+
+
+
+
+
               </Button>
             )}
 
             <div style={{ width: '100%', overflowX: 'auto', marginBottom: "15px" }}>
               <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
+                {/* {filters.ComplaintType === '' && initialLoad ? (
+                  <BarChart
+                    width={chartWidth}
+                    data={descriptorCountchartData}
+                    margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
+                    <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+                    <Tooltip />
+                    <Bar
+                      dataKey="value"
+                      // fill="#8884d8"
+                      shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[props.index % colors.length]} />}
+                    />
+                  </BarChart>
+                ) : ( */}
+
                 <BarChart
                   width={chartWidth}
                   data={descriptorCountchartData}
-                  margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
+                  margin={{ top: 20, right: 50, left: 50, bottom: 90 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
                   <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
-                  <Tooltip />
 
-                  <Bar
-                    dataKey="value"
-                    fill="#8884d8" // Default fill, not necessary unless you want a fallback color
-                    shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[props.index % colors.length]} />}
-                  />
+
+                  <Tooltip />
+                  <Legend />
+                  {
+                    descriptorCountchartData && descriptorCountchartData.length > 0 ? (
+                      Object.keys(descriptorCountchartData[0]).filter(key => key !== 'name').map((zip, idx) => (
+                        <Bar
+                          key={zip}
+                          dataKey={zip}
+                          stackId="a"
+                          fill={colors[idx % colors.length]}
+                          shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[idx % colors.length]} />}
+                        />
+                      ))
+                    ) : (
+                      <p>Loading data...</p> // Or some other placeholder content
+                    )
+                  }
 
                 </BarChart>
+                {/* // )} */}
               </ResponsiveContainer>
             </div>
           </>
@@ -549,3 +623,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 export default Complaints311;
 
+
+
+
+      // ---- The following lines will create the "Other" category ----
+      //  const valueThreshold = Object.values(filters).some(value => value !== '') ? 3 : 20
+      // const filteredData_descriptor_counts = filteredData_descriptor_counts.filter(item => item.value > valueThreshold);
+      // // Determine the entries that do not exceed the threshold
+      // const otherEntries = filteredData_descriptor_counts.filter(item => item.value <= valueThreshold);
+      // // Calculate the total count of 'Other' entries
+      // const otherDataSum = otherEntries.reduce((acc, item) => acc + item.value, 0);
+      // // Add 'Other' category only if there are more than 15 items in otherEntries. Pass this value to 'setDescriptorCountchartData' if you want to have an "Other" section
+      // const finalData_descriptor_counts = filteredData_descriptor_counts.concat(otherEntries.length > 15 ? { name: 'Other', value: otherDataSum } : otherEntries);
+      // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
