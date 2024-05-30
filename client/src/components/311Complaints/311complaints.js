@@ -239,7 +239,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   };
 
   const handleFilterSubmit = (e) => {
-    e.preventDefault();
+
+    if (e) {
+      e.preventDefault();
+    }
+
     setInitialLoad(false);
     fetchComplaints(true, false);
   };
@@ -269,6 +273,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
   }, []);
+
+
+
+  // This useEffect makes sure that there is a request fetched filtered data when the user clicks a borough.
+  useEffect(() => {
+    if (filters.Borough && filters.ComplaintType === '') {// this line makes sure that the request only takes places when when the borough changes and not when the user clicks a bar
+      handleFilterSubmit();
+    }
+  }, [filters]);
 
 
   const handleBarClick = (event) => {
@@ -302,6 +315,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         ComplaintType: ''
 
       }));
+
+
 
     } else {
       // For other fields, just update them as before
@@ -381,14 +396,31 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         }}
         className="zipBoroughFilterForm"
       >
+        
         <TextField
           id="demo-helper-text-aligned"
-          label="Incident Zip"
+          label="Enter one or more Zipcodes to compare"
           sx={{ width: "100%" }}
           name="zip"
           value={filters.zip}
           onChange={handleFilterChange}
         />
+        <MuiButton sx={{
+          color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
+          '&:hover': {
+            backgroundColor: 'white',
+            color: 'black',
+            border: "1px solid rgba(0, 0, 0, 0.87)",
+
+          },
+          marginBottom: "20px",
+          width: "20%",
+          cursor: "pointer",
+          height: "50px",
+          fontSize:"10px"
+        
+        }} variant="outlined" onClick={handleFilterSubmit}>Search Zipcode(s)
+        </MuiButton>
         <Select
           displayEmpty
           inputProps={{ 'aria-label': 'Name' }}
@@ -407,19 +439,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           <MenuItem value='STATEN ISLAND'>Staten Island</MenuItem>
 
         </Select>
-        <MuiButton sx={{
-          color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
-          '&:hover': {
-            backgroundColor: 'white',
-            color: 'black',
-            border: "1px solid rgba(0, 0, 0, 0.87)",
 
-          },
-          marginBottom: "20px",
-          width: "30%",
-          cursor: "pointer",
-          height: "50px"
-        }} variant="outlined" onClick={handleFilterSubmit}>Apply Filters</MuiButton>
+
       </Box>
 
       <div style={{
@@ -451,7 +472,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             {selectedData && (
               <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
                 See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
-               
+
 
 
 
@@ -463,13 +484,13 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                   ) : (
                     <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
 
-                        {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase():"the entire city."}
-                        
+                      {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase() : "the entire city."}
+
                     </span>
                   )
                 }
 
-             
+
 
 
 
