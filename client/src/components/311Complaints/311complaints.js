@@ -6,13 +6,17 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import chroma from 'chroma-js';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Rectangle } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Rectangle, LineChart, Line } from 'recharts';
 import MuiButton from '@mui/material/Button';
 import { styled } from '@mui/system';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+
+import ZipCodeBoroSelect from '../ZipCodeBoroInput/ZipCodeBoroInput';
+import BoroughSelect from '../MultipleBoroSelect/MultipleBoroSelect';
+
 import "./311complaints.css";
 
 // le le le le le le 
@@ -48,6 +52,24 @@ const processChartData = (data) => {
     const totalB = Object.keys(b).reduce((acc, key) => key !== 'name' ? acc + b[key] : acc, 0);
     return totalB - totalA;
   });
+};
+
+
+const transformDatForLineChart = (data) => {
+  let dates = {};
+  const validBoroughs = ["BROOKLYN", "QUEENS", "MANHATTAN", "BRONX", "STATEN ISLAND"];
+
+  // Loop through each borough data
+  data.forEach(borough => {
+    Object.entries(borough).forEach(([key, value]) => {
+      if (key !== "Borough" && validBoroughs.includes(borough.Borough)) {
+        if (!dates[key]) dates[key] = { date: key };
+        dates[key][borough.Borough] = value;
+      }
+    });
+  });
+
+  return Object.values(dates);
 };
 
 
@@ -89,14 +111,17 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [loadingLoadMore, setLoadingLoadMore] = useState(false);
   const [selectedData, setSelectedData] = useState('all');
   const [currentZipForDisplay, setCurrentZipForDisplay] = useState([]);
-
   const [loadingBarChart, setLoadingBarChart] = useState(false)
-
   const [chartMainWidth, setChartMainWidth] = useState(window.innerWidth);
   const [chartHeight, setChartHeight] = useState(400);
   const [yAxisFontSize, setYAxisFontSize] = useState('13px');
   const [xAxisFontSize, setXAxisFontSize] = useState('11px');
+  const [initialLoadDayDataCountCheck, setInitialLoadDayDataCountCheck] = useState(true)
+  const [dayCountData, setDayCountData] = useState([])
 
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
+  const [formVisible, setFormVisible] = useState(false); // Controls the form's visible state
 
   const [filters, setFilters] = useState({
     "zip": '',
@@ -106,9 +131,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     "CreatedDate": ''
   });
 
-  const [initialLoad, setInitialLoad] = useState(true);
-  const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
-  const [formVisible, setFormVisible] = useState(false); // Controls the form's visible state
+
+
 
   const [showNewsletterForm, setShowNewsletterForm] = useState(true)
 
@@ -153,23 +177,21 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     } else {
       setLoadingLoadMore(true)
     }
-
     if (resetPage) {
       setPage(1)
     }
-
-    // This if statement will take place if the user clicks "Apply Filters" or if there is a hard reload of the page
     if (reset && !applyFilters && !resetPage) {
+      // This if statement will take place if the user clicks "Apply Filters" or if there is a hard reload of the page
       setLoadingBarChart(true); // show the loading component for the bar chart area
       setSelectedData('all');
     }
-
-
-    // This if statement will take place when the user clicks the button inside of the bar graph and no bar has been been clicked 
     if (reset && !applyFilters && resetPage && selectedData === "all") {
+      // This if statement will take place when the user clicks the button inside of the bar graph and no bar has been been clicked 
       setLoading(false);
       return
     }
+
+
 
     const params_ = applyFilters ? filters : { limit: 10, page: resetPage ? 1 : page };
     const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
@@ -182,15 +204,14 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         params: {
           ...params_,
           zip: zipCodesArray,
-          Borough: filters.Borough,
+          Borough: filters.Borough ? [filters.Borough] : '',
           ComplaintType: filters.ComplaintType === "all" ? "" : filters.ComplaintType// if filters.ComplaintType is equal to 'all' it means 
         }
       });
 
-      // the following lines of code should not take place when there state filters.complaintType has a value
-      // this block will take place when there is a hard reload of the page or when the user clicks Apply Filters
       if (filters.ComplaintType == '') {
-
+        // the following lines of code should not take place when there state filters.complaintType has a value
+        // this block will take place when there is a hard reload of the page or when the user clicks Apply Filters
 
         setMaxDate(formatReadableDate(response.data.max_date))
         setMinDate(formatReadableDate(response.data.min_date))
@@ -199,20 +220,21 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         let chartData;
 
         if (Array.isArray(response.data.descriptor_counts)) { //this means that there are filters being applied and the data is coming as an array of objs
-          console.log("hole")
           chartData = processChartData(response.data.descriptor_counts);
         } else {
-
-          console.log("hola")
           chartData = transformAndSortData(response.data.descriptor_counts);
         }
         setDescriptorCountchartData(chartData);
 
       }
-      //----------------------------------------------
+
+      if (initialLoadDayDataCountCheck) {
+        // when we enter this if satement it means that there was a hard reload of the page in which case, we want to update the data_count_by_day coming from the server
+        const transFormedData = transformDatForLineChart(response.data.data_count_by_day)
+        setDayCountData(transFormedData)
+      }
 
       if (response.data.original_data.length > 0) {
-
         //it is important to set hasmMore to True here because every time the user fetches data with the bar graph button the previous value of hasMore is going to be preserved, and if it is "false" the no more complaints will be shown.
         setHasMore(true);
 
@@ -230,25 +252,24 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     } catch (error) {
       console.error("Error fetching complaints:", error);
     } finally {
-
       setLoading(false);
       setLoadingLoadMore(false);
       setLoadingBarChart(false);
-
     }
   };
 
   const handleFilterSubmit = (e) => {
-
     if (e) {
       e.preventDefault();
     }
-
     setInitialLoad(false);
     fetchComplaints(true, false);
   };
 
   useEffect(() => {
+
+    setInitialLoadDayDataCountCheck(false);
+
     if (initialLoad) {
       fetchComplaints(true, false);
     }
@@ -283,7 +304,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     }
   }, [filters]);
 
-
   const handleBarClick = (event) => {
     setFilters(prevFilters => ({
       ...prevFilters,
@@ -291,7 +311,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     }));
     setSelectedData(event.name);// this state is going to be used for displaying that complaint data was clicked by the use
   };
-
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -384,80 +403,78 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
 
-      {/** Filter form: */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          '& > :not(style)': { m: 1 },
-          width: "100%",
-          margin: '10px',
-          marginBottom: '0px'
-        }}
-        className="zipBoroughFilterForm"
-      >
-        
-        <TextField
-          id="demo-helper-text-aligned"
-          label="Enter one or more Zipcodes to compare"
-          sx={{ width: "100%" }}
-          name="zip"
-          value={filters.zip}
-          onChange={handleFilterChange}
-        />
-        <MuiButton sx={{
-          color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
-          '&:hover': {
-            backgroundColor: 'white',
-            color: 'black',
-            border: "1px solid rgba(0, 0, 0, 0.87)",
-
-          },
-          marginBottom: "20px",
-          width: "20%",
-          cursor: "pointer",
-          height: "50px",
-          fontSize:"10px"
-        
-        }} variant="outlined" onClick={handleFilterSubmit}>Search Zipcode(s)
-        </MuiButton>
-        <Select
-          displayEmpty
-          inputProps={{ 'aria-label': 'Name' }}
-          sx={{ width: "100%" }}
-          name="Borough"
-          value={filters.Borough}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="">
-            <em>Select Borough</em>
-          </MenuItem>
-          <MenuItem value='MANHATTAN'>Manhattan</MenuItem>
-          <MenuItem value='BROOKLYN'>Brooklyn</MenuItem>
-          <MenuItem value='QUEENS'>Queens</MenuItem>
-          <MenuItem value='BRONX'>Bronx</MenuItem>
-          <MenuItem value='STATEN ISLAND'>Staten Island</MenuItem>
-
-        </Select>
 
 
-      </Box>
 
-      <div style={{
-        borderRadius: '8px', // rounded corners
-        fontFamily: 'Arial, sans-serif', // font family
-        fontSize: '13px', // text size
-        color: '#333', // dark grey text color
-        alignSelf: 'start',
-        marginLeft: '10px',
-        margin: '20px'
-      }}>
-        Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
 
-      </div>
-
+      {/** Bar chart */}
       <div className='chartsContainer' >
+        {/** Filter form: */}
+        <div style={{
+          borderRadius: '8px', // rounded corners
+          fontFamily: 'Arial, sans-serif', // font family
+          fontSize: '13px', // text size
+          color: '#333', // dark grey text color
+          alignSelf: 'start',
+          marginLeft: '10px',
+          margin: '20px'
+        }}>
+          Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
+        </div>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            '& > :not(style)': { m: 1 },
+            width: "100%",
+            margin: '10px',
+            marginBottom: '0px'
+          }}
+          className="zipBoroughFilterForm"
+        >
+          <TextField
+            id="demo-helper-text-aligned"
+            label="Enter one or more Zipcodes to compare"
+            sx={{ width: "100%" }}
+            name="zip"
+            value={filters.zip}
+            onChange={handleFilterChange}
+          />
+          <MuiButton sx={{
+            color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
+            '&:hover': {
+              backgroundColor: 'white',
+              color: 'black',
+              border: "1px solid rgba(0, 0, 0, 0.87)",
 
+            },
+            marginBottom: "20px",
+            width: "20%",
+            cursor: "pointer",
+            height: "50px",
+            fontSize: "10px"
+
+          }} variant="outlined" onClick={handleFilterSubmit}>Search Zipcode(s)
+          </MuiButton>
+          <Select
+            displayEmpty
+            inputProps={{ 'aria-label': 'Name' }}
+            sx={{ width: "100%" }}
+            name="Borough"
+            value={filters.Borough}
+            onChange={handleFilterChange}
+          >
+            <MenuItem value="">
+              <em>Select Borough</em>
+            </MenuItem>
+            <MenuItem value='MANHATTAN'>Manhattan</MenuItem>
+            <MenuItem value='BROOKLYN'>Brooklyn</MenuItem>
+            <MenuItem value='QUEENS'>Queens</MenuItem>
+            <MenuItem value='BRONX'>Bronx</MenuItem>
+            <MenuItem value='STATEN ISLAND'>Staten Island</MenuItem>
+
+          </Select>
+        </Box>
         {loadingBarChart && (
           <>
             <div style={{ margin: "30px", textAlign: "center" }}>
@@ -467,15 +484,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         )}
 
         {!loadingBarChart && (
-
           <>
             {selectedData && (
               <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
                 See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
-
-
-
-
                 {
                   filters.zip ? (
                     <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
@@ -483,44 +495,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                     </span>
                   ) : (
                     <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
-
                       {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase() : "the entire city."}
-
                     </span>
                   )
                 }
-
-
-
-
-
-
-
-
-
               </Button>
             )}
 
             <div style={{ width: '100%', overflowX: 'auto', marginBottom: "15px" }}>
               <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
-                {/* {filters.ComplaintType === '' && initialLoad ? (
-                  <BarChart
-                    width={chartWidth}
-                    data={descriptorCountchartData}
-                    margin={{ top: 20, right: 50, bottom: 90, left: 50 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
-                    <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
-                    <Tooltip />
-                    <Bar
-                      dataKey="value"
-                      // fill="#8884d8"
-                      shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[props.index % colors.length]} />}
-                    />
-                  </BarChart>
-                ) : ( */}
-
                 <BarChart
                   width={chartWidth}
                   data={descriptorCountchartData}
@@ -556,8 +539,55 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           </>
 
         )}
-
       </div>
+
+
+      {/** Line chart */}
+
+
+      <div className='chartsContainer' >
+        <div style={{
+          borderRadius: '8px', // rounded corners
+          fontFamily: 'Arial, sans-serif', // font family
+          fontSize: '13px', // text size
+          color: '#333', // dark grey text color
+          alignSelf: 'start',
+          marginLeft: '10px',
+          margin: '20px',
+          marginTop: "20px"
+        }}>
+          Compare specific complaint types across different zip codes or boroughs:
+        </div>
+
+        <div className="zipBoroFilterSelect">
+          <ZipCodeBoroSelect></ZipCodeBoroSelect>
+          {/* <BoroughSelect></BoroughSelect> */}
+        </div>
+
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            width={500}
+            height={300}
+            data={dayCountData}
+            margin={{ top: 50, right: 50, left: 50, bottom: 50 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+
+            <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+            <Tooltip />
+            <Legend />
+            <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Line type="linear" dataKey="QUEENS" stroke="#82ca9d" />
+            <Line type="linear" dataKey="MANHATTAN" stroke="#ffc658" />
+            <Line type="linear" dataKey="BRONX" stroke="#ff7300" />
+            <Line type="linear" dataKey="STATEN ISLAND" stroke="#d0ed57" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+
+
 
       {/* Conditional rendering based on loading for the remaining content */}
       {!loading && (

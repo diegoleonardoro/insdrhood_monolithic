@@ -15,12 +15,20 @@
   /* background-color: #F4E1D2 ; */
 }
 
+.zipBoroFilterSelect{
+  display: flex;
+  width:100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
 .chartsContainer{
   display: flex;
   width:90%;
   flex-direction: column;
   border: 1px solid grey;
   position: relative;
+  margin-top: 40px;
 }
 
 .callsCountDisplay{
@@ -208,5 +216,9 @@
     margin-right:0px;
   } */
 
+
+  .zipBoroFilterSelect{
+    flex-direction: column;
+  }
 
 }

@@ -138,13 +138,14 @@ def hello_world():
 def calls311():
     filters = {
         # 'Incident Zip': request.args.get('IncidentZip', '').strip(),
-        'Borough': request.args.get('Borough', '').strip(),
+        # 'Borough': request.args.get('Borough', '').strip(),
         'Agency': request.args.get('Agency', '').strip(), 
         'Created Date': request.args.get('CreatedDate', '').strip()
     }
-
+    boroughs = request.args.getlist('Borough[]')
     zip_codes = request.args.getlist('zip[]')
     complaint_type = request.args.get('ComplaintType')
+
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 0))
     cached_data = redis.get('complaints_data') 
@@ -155,6 +156,9 @@ def calls311():
         data = decompress_data(cached_data)
         min_date = date_range.get(b'min_date').decode('utf-8')  # Ensure to handle byte keys if necessary
         max_date = date_range.get(b'max_date').decode('utf-8')
+
+        if boroughs:
+            filters['Borough'] = [borough.upper() for borough in boroughs] 
 
         if zip_codes:
             filters['Incident Zip'] = zip_codes
@@ -182,16 +186,32 @@ def calls311():
             # Original counting method when no zip codes are provided
             descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
 
-
-        print ('descriptor_counts', descriptor_counts)
-
-
         # Calculate counts of descriptors and times for the filtered data
         # descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
 
 
 
         hour_minute_counts = count_hour_minute(filtered_data)
+        data_count_by_day = [] 
+        # this will only take place in the first request:
+        if not zip_codes and not boroughs:
+
+            aggregated_data = defaultdict(lambda: defaultdict(int))
+            for item in filtered_data:
+                borough = item['Borough']
+                date_only = item['Created Date'][:10]  # Extract only the date part (YYYY-MM-DD)
+                aggregated_data[borough][date_only] += 1
+
+            # Formatting the output
+            
+            for borough, dates in aggregated_data.items():
+                response_entry = {"Borough": borough}
+                for date, count in dates.items():
+                    response_entry[date] = count
+                data_count_by_day.append(response_entry)
+
+        
+        print('data_count_by_day', data_count_by_day)
 
         # Check if a valid limit is provided
         if limit > 0:
@@ -209,7 +229,8 @@ def calls311():
                 "descriptor_counts":descriptor_counts,
                 "min_date": min_date,  # Add min date to response
                 "max_date": max_date, 
-                "data_length":len(filtered_data)
+                "data_length":len(filtered_data),
+                "data_count_by_day":data_count_by_day
         }
         return jsonify(response_data)
     else:
@@ -280,4 +301,4 @@ if __name__ == '__main__':
   
 
 
-# la la la la la la la la la la la la
+# le le le le le le le le 
