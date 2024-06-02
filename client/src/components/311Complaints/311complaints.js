@@ -86,13 +86,30 @@ function formatReadableDate(dateString) {
   });
 }
 
+
 function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  // Define a list of distinct colors that are clearly visible against a white background
+  const distinctColors = [
+    '#00429d', // Strong Blue
+    '#d70060', // Vivid Raspberry
+    '#005f73', // Dark Cyan
+    '#e59500', // Vivid Orange
+    '#ab2346', // Strong Reddish Pink
+    '#006837', // Dark Green
+    '#f13c20', // Vivid Red Orange
+    '#560088', // Strong Violet
+    '#d54062', // Strong Purplish Pink
+    '#6dac4f', // Moderate Lime Green
+    '#d85a7f', // Soft Thulian Pink
+    '#6a994e', // Earthy Green
+    '#ffba08', // Amber, vivid yellow-orange
+    '#7b2cbf', // Strong Violet
+    '#0077b6', // Strong Blue
+  ];
+
+  // Randomly pick a color from the list
+  const index = Math.floor(Math.random() * distinctColors.length);
+  return distinctColors[index];
 }
 
 const CustomBarShape = (props) => {
@@ -142,13 +159,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   });
 
 
-  const updateDayCountData=(data)=>{
-
-    console.log("dataaa", data)
+  const updateDayCountData = (data) => {
     setDayCountData(data)
-
-    // Object.keys(dataObject).filter(key => key !== 'date');
-
     setLinekeys(Object.keys(data[0]).filter(key => key !== 'date'))
   }
 
@@ -250,14 +262,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       if (initialLoadDayDataCountCheck) {
         // when we enter this if satement it means that there was a hard reload of the page in which case, we want to update the data_count_by_day coming from the server
-
-        console.log("datacount by day", response.data)
         const transFormedData = transformDatForLineChart(response.data.data_count_by_day)
         setDayCountData(transFormedData)
 
-
         setLinekeys(["BROOKLYN", "QUEENS", "MANHATTAN", "BRONX", "STATEN ISLAND"])
-
 
       }
 
@@ -429,207 +437,207 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
 
+      <div style={{
+        borderRadius: '8px', // rounded corners
+        fontFamily: 'Arial, sans-serif', // font family
+        fontSize: '13px', // text size
+        color: '#333', // dark grey text color
+        alignSelf: 'start',
+        marginLeft: '10px',
+        margin: '20px'
+      }}>
+        Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
+      </div>
 
       {/** Bar chart */}
-      <div className='chartsContainer' >
-        {/** Filter form: */}
-        <div style={{
-          borderRadius: '8px', // rounded corners
-          fontFamily: 'Arial, sans-serif', // font family
-          fontSize: '13px', // text size
-          color: '#333', // dark grey text color
-          alignSelf: 'start',
-          marginLeft: '10px',
-          margin: '20px'
-        }}>
-          Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
-        </div>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            '& > :not(style)': { m: 1 },
-            width: "100%",
-            margin: '10px',
-            marginBottom: '0px'
-          }}
-          className="zipBoroughFilterForm"
-        >
-          <TextField
-            id="demo-helper-text-aligned"
-            label="Enter one or more Zipcodes to compare"
-            sx={{ width: "100%" }}
-            name="zip"
-            value={filters.zip}
-            onChange={handleFilterChange}
-          />
-          <MuiButton sx={{
-            color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
-            '&:hover': {
-              backgroundColor: 'white',
-              color: 'black',
-              border: "1px solid rgba(0, 0, 0, 0.87)",
-            },
-            marginBottom: "20px",
-            width: "20%",
-            cursor: "pointer",
-            height: "50px",
-            fontSize: "10px"
 
-          }} variant="outlined" onClick={handleFilterSubmit}>Search Zipcode(s)
-          </MuiButton>
-          <Select
-            displayEmpty
-            inputProps={{ 'aria-label': 'Name' }}
-            sx={{ width: "100%" }}
-            name="Borough"
-            value={filters.Borough}
-            onChange={handleFilterChange}
+      <div style={{ width: "100%", backgroundColor: "#f7f7f7" }}>
+        <div className='chartsContainer' >
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              '& > :not(style)': { m: 1 },
+              width: "100%",
+              margin: '10px',
+              marginBottom: '0px'
+            }}
+            className="zipBoroughFilterForm"
           >
-            <MenuItem value="">
-              <em>Select Borough</em>
-            </MenuItem>
-            <MenuItem value='MANHATTAN'>Manhattan</MenuItem>
-            <MenuItem value='BROOKLYN'>Brooklyn</MenuItem>
-            <MenuItem value='QUEENS'>Queens</MenuItem>
-            <MenuItem value='BRONX'>Bronx</MenuItem>
-            <MenuItem value='STATEN ISLAND'>Staten Island</MenuItem>
+            <TextField
+              id="demo-helper-text-aligned"
+              label="Enter one or more Zipcodes to compare"
+              sx={{ width: "100%" }}
+              name="zip"
+              value={filters.zip}
+              onChange={handleFilterChange}
+            />
+            <MuiButton sx={{
+              color: "white", border: "1px solid rgba(0, 0, 0, 0.87)", backgroundColor: "black", backgroundColor: 'black',
+              '&:hover': {
+                backgroundColor: 'white',
+                color: 'black',
+                border: "1px solid rgba(0, 0, 0, 0.87)",
+              },
+              marginBottom: "20px",
+              width: "20%",
+              cursor: "pointer",
+              height: "50px",
+              fontSize: "10px"
 
-          </Select>
-        </Box>
-        {loadingBarChart && (
-          <>
-            <div style={{ margin: "30px", textAlign: "center" }}>
-              Fetching data...
-            </div>
-          </>
-        )}
+            }} variant="outlined" onClick={handleFilterSubmit}>Search Zipcode(s)
+            </MuiButton>
+            <Select
+              displayEmpty
+              inputProps={{ 'aria-label': 'Name' }}
+              sx={{ width: "100%" }}
+              name="Borough"
+              value={filters.Borough}
+              onChange={handleFilterChange}
+            >
+              <MenuItem value="">
+                <em>Select Borough</em>
+              </MenuItem>
+              <MenuItem value='MANHATTAN'>Manhattan</MenuItem>
+              <MenuItem value='BROOKLYN'>Brooklyn</MenuItem>
+              <MenuItem value='QUEENS'>Queens</MenuItem>
+              <MenuItem value='BRONX'>Bronx</MenuItem>
+              <MenuItem value='STATEN ISLAND'>Staten Island</MenuItem>
 
-        {!loadingBarChart && (
-          <>
-            {selectedData && (
-              <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
-                See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
-                {
-                  filters.zip ? (
-                    <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
-                      {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
-                    </span>
-                  ) : (
-                    <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
-                      {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase() : "the entire city."}
-                    </span>
-                  )
-                }
-              </Button>
-            )}
+            </Select>
+          </Box>
+          {loadingBarChart && (
+            <>
+              <div style={{ margin: "30px", textAlign: "center" }}>
+                Fetching data...
+              </div>
+            </>
+          )}
 
-            <div style={{ width: '100%', overflowX: 'auto', marginBottom: "15px" }}>
-              <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
-                <BarChart
-                  width={chartWidth}
-                  data={descriptorCountchartData}
-                  margin={{ top: 20, right: 50, left: 50, bottom: 90 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
-                  <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
-
-
-                  <Tooltip />
-                  <Legend />
+          {!loadingBarChart && (
+            <>
+              {selectedData && (
+                <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
+                  See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
                   {
-                    descriptorCountchartData && descriptorCountchartData.length > 0 ? (
-                      Object.keys(descriptorCountchartData[0]).filter(key => key !== 'name').map((zip, idx) => (
-                        <Bar
-                          key={zip}
-                          dataKey={zip}
-                          stackId="a"
-                          fill={colors[idx % colors.length]}
-                          shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[idx % colors.length]} />}
-                        />
-                      ))
+                    filters.zip ? (
+                      <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                        {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
+                      </span>
                     ) : (
-                      <p>Loading data...</p> // Or some other placeholder content
+                      <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                        {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase() : "the entire city."}
+                      </span>
                     )
                   }
+                </Button>
+              )}
 
-                </BarChart>
-                {/* // )} */}
-              </ResponsiveContainer>
-            </div>
-          </>
+              <div style={{ width: '100%', overflowX: 'auto', marginBottom: "15px" }}>
+                <ResponsiveContainer style={{ margin: 'auto' }} width={chartWidth} height={chartHeight}>
+                  <BarChart
+                    width={chartWidth}
+                    data={descriptorCountchartData}
+                    margin={{ top: 20, right: 50, left: 50, bottom: 90 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
+                    <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
 
-        )}
+
+                    <Tooltip />
+                    <Legend />
+                    {
+                      descriptorCountchartData && descriptorCountchartData.length > 0 ? (
+                        Object.keys(descriptorCountchartData[0]).filter(key => key !== 'name').map((zip, idx) => (
+                          <Bar
+                            key={zip}
+                            dataKey={zip}
+                            stackId="a"
+                            fill={colors[idx % colors.length]}
+                            shape={(props) => <CustomBarShape {...props} handleBarClick={handleBarClick} fill={colors[idx % colors.length]} />}
+                          />
+                        ))
+                      ) : (
+                        <p>Loading data...</p> // Or some other placeholder content
+                      )
+                    }
+
+                  </BarChart>
+                  {/* // )} */}
+                </ResponsiveContainer>
+              </div>
+            </>
+
+          )}
+        </div>
       </div>
 
 
       {/** Line chart */}
+      <div style={{ width: "100%", marginTop: "20px" }}>
+        <div className='chartsContainer' >
+          <div style={{
+            borderRadius: '8px', // rounded corners
+            fontFamily: 'Arial, sans-serif', // font family
+            fontSize: '13px', // text size
+            color: '#333', // dark grey text color
+            alignSelf: 'start',
+            marginLeft: '10px',
+            margin: '20px',
+            marginTop: "20px"
+          }}>
+            Compare specific complaint types across different zip codes or boroughs:
+          </div>
+
+          <div >
+            <ZipCodeBoroSelect updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
+          </div>
 
 
-      <div className='chartsContainer' >
-        <div style={{
-          borderRadius: '8px', // rounded corners
-          fontFamily: 'Arial, sans-serif', // font family
-          fontSize: '13px', // text size
-          color: '#333', // dark grey text color
-          alignSelf: 'start',
-          marginLeft: '10px',
-          margin: '20px',
-          marginTop: "20px"
-        }}>
-          Compare specific complaint types across different zip codes or boroughs:
-        </div>
-
-
-
-        <div >
-          <ZipCodeBoroSelect updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
-        </div>
-
-
-        <ResponsiveContainer style={{marginTop:"15px"}} width="100%" height={400}>
-          <LineChart
-            width={500}
-            height={300}
-            data={dayCountData}
-            margin={{ top: 50, right: 50, left: 50, bottom: 50 }}  // Adjust bottom margin as needed
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="date"
-              height={70}
-              tickFormatter={(tickItem) => moment(tickItem).format('MMM Do')}
-              angle={-20}
-              textAnchor="end"
-              interval={0}
-              style={{ fontSize: xAxisFontSize }}
-            />
-            <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
-            <Tooltip />
-            <Legend
-              wrapperStyle={{
-                padding: 10, // Adds padding around the legend items
-                margin: 20, // Adds margin outside the legend
-                justifyContent: 'space-around' // Spreads the legend items evenly
-              }}
-              layout="horizontal"
-              align="center"
-              verticalAlign="bottom"
-            />
-
-
-            {linekeys.map(key => (
-              <Line
-                key={key}
-                type="linear"
-                dataKey={key}
-                stroke={getRandomColor()} // Implement getRandomColor to assign colors or define a mapping
-                activeDot={{ r: 8 }}
+          <ResponsiveContainer style={{ marginTop: "15px" }} width="100%" height={400}>
+            <LineChart
+              width={500}
+              height={300}
+              data={dayCountData}
+              margin={{ top: 50, right: 50, left: 50, bottom: 50 }}  // Adjust bottom margin as needed
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date"
+                height={70}
+                tickFormatter={(tickItem) => moment(tickItem).format('MMM Do')}
+                angle={-20}
+                textAnchor="end"
+                interval={0}
+                style={{ fontSize: xAxisFontSize }}
               />
-            ))}
+              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+              <Tooltip />
+              <Legend
+                wrapperStyle={{
+                  padding: 10, // Adds padding around the legend items
+                  margin: 20, // Adds margin outside the legend
+                  justifyContent: 'space-around' // Spreads the legend items evenly
+                }}
+                layout="horizontal"
+                align="center"
+                verticalAlign="bottom"
+              />
 
-            {/* <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
+
+              {linekeys.map(key => (
+                <Line
+                  key={key}
+                  type="linear"
+                  dataKey={key}
+                  stroke={getRandomColor()} // Implement getRandomColor to assign colors or define a mapping
+                  activeDot={{ r: 8 }}
+                />
+              ))}
+
+              {/* <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
             <Line type="linear" dataKey="QUEENS" stroke="#82ca9d" />
             <Line type="linear" dataKey="MANHATTAN" stroke="#ffc658" />
             <Line type="linear" dataKey="BRONX" stroke="#ff7300" />
@@ -637,16 +645,30 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
 
-          </LineChart>
-        </ResponsiveContainer>
+            </LineChart>
+          </ResponsiveContainer>
 
+        </div>
       </div>
-
 
       {/* Conditional rendering based on loading for the remaining content */}
       {!loading && (
-        <>
-          <div ref={complaintCardsRef} style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "white" }}>
+        <div style={{ marginTop: "35px", backgroundColor: "#f7f7f7" }}>
+
+          <h5 style={{ textAlign: "center", margin:"30px" }}> All <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
+            {
+              filters.zip ? (
+                <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                  {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
+                </span>
+              ) : (
+                <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                  {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase() : "the entire city:"}
+                </span>
+              )
+            }</h5>
+
+          <div ref={complaintCardsRef} style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', backgroundColor: "#f7f7f7" }}>
             {complaints.map((complaint, index) => (
               <Card className="Cards311" style={{ width: '18rem', margin: "20px" }} key={index}>
                 <ListGroup className="list-group-flush Cards_Group">
@@ -703,7 +725,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             </div>
           )}
 
-        </>
+        </div>
       )}
 
       {/* Loading spinner that only appears when the content is being loaded */}
