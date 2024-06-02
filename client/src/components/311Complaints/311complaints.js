@@ -13,7 +13,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
+import moment from 'moment';
 import ZipCodeBoroSelect from '../ZipCodeBoroInput/ZipCodeBoroInput';
 import BoroughSelect from '../MultipleBoroSelect/MultipleBoroSelect';
 
@@ -86,6 +86,15 @@ function formatReadableDate(dateString) {
   });
 }
 
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 const CustomBarShape = (props) => {
   const { x, y, width, height, fill, payload, handleBarClick } = props;
   return (
@@ -122,6 +131,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [initialLoad, setInitialLoad] = useState(true);
   const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
   const [formVisible, setFormVisible] = useState(false); // Controls the form's visible state
+  const [linekeys, setLinekeys] = useState([])
 
   const [filters, setFilters] = useState({
     "zip": '',
@@ -131,6 +141,16 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     "CreatedDate": ''
   });
 
+
+  const updateDayCountData=(data)=>{
+
+    console.log("dataaa", data)
+    setDayCountData(data)
+
+    // Object.keys(dataObject).filter(key => key !== 'date');
+
+    setLinekeys(Object.keys(data[0]).filter(key => key !== 'date'))
+  }
 
 
 
@@ -230,8 +250,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       if (initialLoadDayDataCountCheck) {
         // when we enter this if satement it means that there was a hard reload of the page in which case, we want to update the data_count_by_day coming from the server
+
+        console.log("datacount by day", response.data)
         const transFormedData = transformDatForLineChart(response.data.data_count_by_day)
         setDayCountData(transFormedData)
+
+
+        setLinekeys(["BROOKLYN", "QUEENS", "MANHATTAN", "BRONX", "STATEN ISLAND"])
+
+
       }
 
       if (response.data.original_data.length > 0) {
@@ -294,7 +321,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
   }, []);
-
 
 
   // This useEffect makes sure that there is a request fetched filtered data when the user clicks a borough.
@@ -404,9 +430,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: "100vh", backgroundColor: 'white' }}>
 
 
-
-
-
       {/** Bar chart */}
       <div className='chartsContainer' >
         {/** Filter form: */}
@@ -446,7 +469,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
               backgroundColor: 'white',
               color: 'black',
               border: "1px solid rgba(0, 0, 0, 0.87)",
-
             },
             marginBottom: "20px",
             width: "20%",
@@ -559,34 +581,66 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           Compare specific complaint types across different zip codes or boroughs:
         </div>
 
-        <div className="zipBoroFilterSelect">
-          <ZipCodeBoroSelect></ZipCodeBoroSelect>
-          {/* <BoroughSelect></BoroughSelect> */}
+
+
+        <div >
+          <ZipCodeBoroSelect updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
         </div>
 
-        <ResponsiveContainer width="100%" height={400}>
+
+        <ResponsiveContainer style={{marginTop:"15px"}} width="100%" height={400}>
           <LineChart
             width={500}
             height={300}
             data={dayCountData}
-            margin={{ top: 50, right: 50, left: 50, bottom: 50 }}
+            margin={{ top: 50, right: 50, left: 50, bottom: 50 }}  // Adjust bottom margin as needed
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-
+            <XAxis
+              dataKey="date"
+              height={70}
+              tickFormatter={(tickItem) => moment(tickItem).format('MMM Do')}
+              angle={-20}
+              textAnchor="end"
+              interval={0}
+              style={{ fontSize: xAxisFontSize }}
+            />
             <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
             <Tooltip />
-            <Legend />
-            <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Legend
+              wrapperStyle={{
+                padding: 10, // Adds padding around the legend items
+                margin: 20, // Adds margin outside the legend
+                justifyContent: 'space-around' // Spreads the legend items evenly
+              }}
+              layout="horizontal"
+              align="center"
+              verticalAlign="bottom"
+            />
+
+
+            {linekeys.map(key => (
+              <Line
+                key={key}
+                type="linear"
+                dataKey={key}
+                stroke={getRandomColor()} // Implement getRandomColor to assign colors or define a mapping
+                activeDot={{ r: 8 }}
+              />
+            ))}
+
+            {/* <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
             <Line type="linear" dataKey="QUEENS" stroke="#82ca9d" />
             <Line type="linear" dataKey="MANHATTAN" stroke="#ffc658" />
             <Line type="linear" dataKey="BRONX" stroke="#ff7300" />
-            <Line type="linear" dataKey="STATEN ISLAND" stroke="#d0ed57" />
+            <Line type="linear" dataKey="STATEN ISLAND" stroke="#d0ed57" /> */}
+
+
+
           </LineChart>
         </ResponsiveContainer>
+
       </div>
-
-
 
 
       {/* Conditional rendering based on loading for the remaining content */}

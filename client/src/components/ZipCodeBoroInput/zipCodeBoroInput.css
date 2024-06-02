@@ -1,0 +1,43 @@
+.zipCodeBoroInputContainer{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.boroSelectInput{
+  width:33%;
+}
+
+.borocomplaint{
+  margin-top: 15px;
+}
+
+
+.buttonSubmitZipBoroSelect{
+  margin-top: 5px !important;
+  width:40% !important;
+  margin-right: 20px !important;
+  position:relative;
+  left:50%;
+  transform: translate(-50%, 0);
+  height:30px;
+}
+
+@media screen and (max-width: 904px) {
+  .zipCodeBoroInputContainer{
+    flex-direction: column;
+  }
+
+
+  .boroSelectInput{
+    margin-top: 5px;
+    width:95%;
+  }
+  .buttonSubmitZipBoroSelect{
+    margin-top: 5px !important;
+    width:90% !important;
+    height: 50px;
+  }
+
+
+}
