@@ -12,6 +12,7 @@ import gzip
 from collections import Counter
 from datetime import datetime
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -26,6 +27,7 @@ allowed_origins = [
 
 CORS(app, resources={
     r"/311calls": {"origins": allowed_origins},
+    r"/311calls_complaint_types_count": {"origins": allowed_origins},
     r"/dob_approved_permits": {"origins": allowed_origins}
 }, supports_credentials=True)
 
@@ -34,7 +36,6 @@ CORS(app, resources={
 redis_host = os.getenv("REDIS_HOST", "localhost")
 redis_port = int(os.getenv("REDIS_PORT", 6379))
 redis = Redis(host=redis_host, port=redis_port, db=0, decode_responses=False)  
-
 
 scheduler = BackgroundScheduler(timezone=utc)
 scheduler.start()
@@ -169,6 +170,7 @@ def calls311():
         # Filter data with updated filters, including zip codes if provided
         filtered_data = filter_data(data, filters)
 
+
         # Prepare descriptor counts
         if zip_codes:
             # Count by Complaint Type and Zip Code
@@ -189,8 +191,6 @@ def calls311():
         # Calculate counts of descriptors and times for the filtered data
         # descriptor_counts = Counter(item['Complaint Type'].title() for item in filtered_data)
 
-
-
         hour_minute_counts = count_hour_minute(filtered_data)
         data_count_by_day = [] 
         # this will only take place in the first request:
@@ -209,9 +209,6 @@ def calls311():
                 for date, count in dates.items():
                     response_entry[date] = count
                 data_count_by_day.append(response_entry)
-
-        
-        print('data_count_by_day', data_count_by_day)
 
         # Check if a valid limit is provided
         if limit > 0:
@@ -238,10 +235,51 @@ def calls311():
         fetch_and_cache_data("311calls")
 
 
+@app.route('/311calls_complaint_types_count', methods=['GET'])
+@cross_origin(origin='*', supports_credentials=True)
+def complaint_types_count():
+
+    boroughs = request.args.getlist('boroughs[]')
+    zip_codes = request.args.getlist('zipcodes[]')
+    complaint_types = request.args.getlist('complaint_types[]')
+
+
+    print ('boroughs', boroughs)
+    print ('zip_codes', zip_codes)
+    print ('complaint_types', complaint_types)
+
+    # Redis: Retrieve the date range
+    date_range = redis.hgetall('complaints_date_range')
+
+    start_date = date_range.get(b'min_date').decode('utf-8')  # Ensure to handle byte keys if necessary
+    end_date = date_range.get(b'max_date').decode('utf-8')
+    # start_date = date_range['min_date'].decode('utf-8')
+    # end_date = date_range['max_date'].decode('utf-8')
+
+    filters={}
+    if boroughs:
+        filter_type = 'Borough'
+        filter_keys = [borough.upper() for borough in boroughs]
+
+    if zip_codes:
+        filter_type = 'Incident Zip'
+        filter_keys = zip_codes
+
+
+
+    cached_data = redis.get('complaints_data') 
+    data = []
+    if cached_data:
+        data = decompress_data(cached_data)
+
+    chart_ready_data = format_data_for_chart(data, start_date, end_date, filter_type, filter_keys, complaint_types)
+
+    return jsonify(chart_ready_data)
+    
+    
 @app.route('/dob_approved_permits', methods=['GET'])
 @cross_origin(origin='*', supports_credentials=True)
 def dob_approved_permits():
-
     filters ={
         # 'Incident Zip': request.args.get('IncidentZip', '').strip(),
         # 'Borough': request.args.get('Borough', '').strip(),
@@ -281,6 +319,34 @@ def filter_data(data, filters):
     ]
     return filtered_data
 
+def format_data_for_chart(data, start_date, end_date, filter_type, filter_keys, complaint_types):
+    current_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f")
+    end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f")
+    date_format = "%Y-%m-%d"
+
+    # Create a list to hold the data in the required format for the chart
+    chart_data = []
+
+    # Initialize data structure for each day
+    while current_date <= end_date:
+        formatted_date = current_date.strftime(date_format)
+        day_data = {'date': formatted_date}
+        for key in filter_keys:
+            day_data[key] = 0  # Initialize each filter key count as 0 for this day
+        chart_data.append(day_data)
+        current_date += timedelta(days=1)
+
+    # Populate the data
+    for entry in data:
+        entry_date = datetime.strptime(entry['Created Date'], "%Y-%m-%dT%H:%M:%S.%f").strftime(date_format)
+        if entry[filter_type] in filter_keys and (not complaint_types or entry['Complaint Type'] in complaint_types):
+            for day_data in chart_data:
+                if day_data['date'] == entry_date:
+                    day_data[entry[filter_type]] += 1
+
+    return chart_data
+
+
 
 
 def count_hour_minute(data):
@@ -301,4 +367,4 @@ if __name__ == '__main__':
   
 
 
-# le le le le le le le le 
+# ki ki ki ki ki ki ki ki 
