@@ -137,7 +137,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [loadingLoadMore, setLoadingLoadMore] = useState(false);
   const [selectedData, setSelectedData] = useState('all');
   const [currentZipForDisplay, setCurrentZipForDisplay] = useState([]);
-  const [loadingBarChart, setLoadingBarChart] = useState(false)
+  const [loadingBarChart, setLoadingBarChart] = useState(false);
+  const [loadingLineChart, setLoadingLineChart] = useState(false);
   const [chartMainWidth, setChartMainWidth] = useState(window.innerWidth);
   const [chartHeight, setChartHeight] = useState(400);
   const [yAxisFontSize, setYAxisFontSize] = useState('13px');
@@ -159,11 +160,15 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   });
 
 
-  const updateDayCountData = (data) => {
+  const updateDayCountData = async (data) => {
     setDayCountData(data)
     setLinekeys(Object.keys(data[0]).filter(key => key !== 'date'))
+    setLoadingLineChart(false)
   }
 
+  const loadingLineChartonClick = () => {
+    setLoadingLineChart(true)
+  }
 
 
   const [showNewsletterForm, setShowNewsletterForm] = useState(true)
@@ -264,6 +269,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         // when we enter this if satement it means that there was a hard reload of the page in which case, we want to update the data_count_by_day coming from the server
         const transFormedData = transformDatForLineChart(response.data.data_count_by_day)
         setDayCountData(transFormedData)
+        setLoadingLineChart(false)
 
         setLinekeys(["BROOKLYN", "QUEENS", "MANHATTAN", "BRONX", "STATEN ISLAND"])
 
@@ -510,6 +516,12 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           {loadingBarChart && (
             <>
               <div style={{ margin: "30px", textAlign: "center" }}>
+                <div style={{ position: "relative" }}>
+                  <Spinner animation="grow" size="sm" className="spinner spinner1" />
+                  <Spinner animation="grow" className="spinner spinner2" />
+                  <Spinner animation="grow" style={{ height: "50px", width: "50px" }} className="spinner spinner3" />
+                </div>
+
                 Fetching data...
               </div>
             </>
@@ -577,6 +589,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       {/** Line chart */}
       <div style={{ width: "100%", marginTop: "20px" }}>
+
+  
+
+
         <div className='chartsContainer' >
           <div style={{
             borderRadius: '8px', // rounded corners
@@ -588,74 +604,93 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
             margin: '20px',
             marginTop: "20px"
           }}>
-            Compare specific complaint types across different zip codes or boroughs:
+            Compare specific complaint types across different zip codes or boroughs in the past week:
           </div>
 
           <div >
-            <ZipCodeBoroSelect updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
+            <ZipCodeBoroSelect loadingLineChartonClick={loadingLineChartonClick} updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
           </div>
 
+          {loadingLineChart && (
+            <>
+              <div style={{ margin: "100px", textAlign: "center" }}>
+                <div style={{ position: "relative" }}>
+                  <Spinner animation="grow" size="sm" className="spinner spinner1" />
+                  <Spinner animation="grow" className="spinner spinner2" />
+                  <Spinner animation="grow" style={{ height: "50px", width: "50px" }} className="spinner spinner3" />
+                </div>
 
-          <ResponsiveContainer style={{ marginTop: "15px" }} width="100%" height={400}>
-            <LineChart
-              width={500}
-              height={300}
-              data={dayCountData}
-              margin={{ top: 50, right: 50, left: 50, bottom: 50 }}  // Adjust bottom margin as needed
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                height={70}
-                tickFormatter={(tickItem) => moment(tickItem).format('MMM Do')}
-                angle={-20}
-                textAnchor="end"
-                interval={0}
-                style={{ fontSize: xAxisFontSize }}
-              />
-              <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
-              <Tooltip />
-              <Legend
-                wrapperStyle={{
-                  padding: 10, // Adds padding around the legend items
-                  margin: 20, // Adds margin outside the legend
-                  justifyContent: 'space-around' // Spreads the legend items evenly
-                }}
-                layout="horizontal"
-                align="center"
-                verticalAlign="bottom"
-              />
+                Fetching data...
+              </div>
+            </>
+          )}
 
 
-              {linekeys.map(key => (
-                <Line
-                  key={key}
-                  type="linear"
-                  dataKey={key}
-                  stroke={getRandomColor()} // Implement getRandomColor to assign colors or define a mapping
-                  activeDot={{ r: 8 }}
+          {!loadingLineChart && (
+
+            <ResponsiveContainer style={{ marginTop: "15px" }} width="100%" height={400}>
+              <LineChart
+                width={500}
+                height={300}
+                data={dayCountData}
+                margin={{ top: 50, right: 50, left: 50, bottom: 50 }}  // Adjust bottom margin as needed
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  height={70}
+                  tickFormatter={(tickItem) => moment(tickItem).format('MMM Do')}
+                  angle={-20}
+                  textAnchor="end"
+                  interval={0}
+                  style={{ fontSize: xAxisFontSize }}
                 />
-              ))}
+                <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+                <Tooltip />
+                <Legend
+                  wrapperStyle={{
+                    padding: 10, // Adds padding around the legend items
+                    margin: 20, // Adds margin outside the legend
+                    justifyContent: 'space-around' // Spreads the legend items evenly
+                  }}
+                  layout="horizontal"
+                  align="center"
+                  verticalAlign="bottom"
+                />
 
-              {/* <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
-            <Line type="linear" dataKey="QUEENS" stroke="#82ca9d" />
-            <Line type="linear" dataKey="MANHATTAN" stroke="#ffc658" />
-            <Line type="linear" dataKey="BRONX" stroke="#ff7300" />
-            <Line type="linear" dataKey="STATEN ISLAND" stroke="#d0ed57" /> */}
 
+                {linekeys.map(key => (
+                  <Line
+                    key={key}
+                    type="linear"
+                    dataKey={key}
+                    stroke={getRandomColor()} // Implement getRandomColor to assign colors or define a mapping
+                    activeDot={{ r: 8 }}
+                  />
+                ))}
 
+                {/* <Line type="linear" dataKey="BROOKLYN" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="linear" dataKey="QUEENS" stroke="#82ca9d" />
+                <Line type="linear" dataKey="MANHATTAN" stroke="#ffc658" />
+                <Line type="linear" dataKey="BRONX" stroke="#ff7300" />
+                <Line type="linear" dataKey="STATEN ISLAND" stroke="#d0ed57" /> */}
 
-            </LineChart>
-          </ResponsiveContainer>
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+
 
         </div>
+
+
+
       </div>
 
       {/* Conditional rendering based on loading for the remaining content */}
       {!loading && (
         <div style={{ marginTop: "35px", backgroundColor: "#f7f7f7" }}>
 
-          <h5 style={{ textAlign: "center", margin:"30px" }}> All <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
+          <h5 style={{ textAlign: "center", margin: "30px" }}> All <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
             {
               filters.zip ? (
                 <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
