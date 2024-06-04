@@ -172,6 +172,7 @@
   margin:30px;
   background-color: #fff5ea;
   border: 1px solid black;
+  position:relative;
 }
 
 .neighborhoodCard:hover {

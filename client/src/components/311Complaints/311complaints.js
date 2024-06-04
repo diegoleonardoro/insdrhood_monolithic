@@ -588,7 +588,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
       {/** Line chart */}
-      <div style={{ width: "100%", marginTop: "20px" }}>
+      <div className='lineChartMainContainer' >
 
   
 
