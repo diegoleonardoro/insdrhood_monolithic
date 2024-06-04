@@ -212,14 +212,13 @@ export class NewsletterRepository {
         console.log('No data found.');
         return { message: 'No data found', statusCode: 404 };
       }
-
       // Decode from base64 then decompress
       const buffer = Buffer.from(base64data, 'base64');
       const decompressAsync = promisify(gunzip);
       const decompressedData = await decompressAsync(buffer);
       const data = JSON.parse(decompressedData.toString('utf-8'));
 
-      
+
       console.log('Retrieved and processed data:', data);
       return { message: 'Data processed successfully', statusCode: 200 };
 
