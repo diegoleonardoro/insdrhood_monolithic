@@ -9,8 +9,6 @@ export class BlogRepository {
   private collectionName = 'blogs';
   private redisClient: RedisClientType;
 
-
-
   constructor() {
     this.db = connectToDatabase();
     this.redisClient = createClient({

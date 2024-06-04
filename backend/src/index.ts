@@ -12,7 +12,6 @@ import path from 'path';
 import { NeighborhoodRepository } from './database/repositories/neighborhoods';
 import { BlogRepository } from './database/repositories/blog';
 
-
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path.resolve(__dirname, '..', dotenvPath);
 dotenv.config({ path: envPath });
@@ -32,8 +31,6 @@ blogRepo.createIndexes();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-console.log('enb base url: ',process.env.BASE_URL?.split(" "));
 
 app.use(cors({
   origin: process.env.BASE_URL?.split(" "), // React client's URL

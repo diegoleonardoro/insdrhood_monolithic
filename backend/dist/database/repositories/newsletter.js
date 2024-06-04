@@ -10,10 +10,23 @@ const emailVerification_1 = require("../../services/emailVerification");
 const mail_1 = __importDefault(require("@sendgrid/mail"));
 const mongodb_1 = require("mongodb");
 const uuid_1 = require("uuid"); // For generating UUIDs
+const redis_1 = require("redis");
+const zlib_1 = require("zlib");
+const util_1 = require("util");
 class NewsletterRepository {
     constructor() {
         this.collectionName = 'newsletter';
+        this.cacheKey311Calls = "complaints_data";
         this.db = (0, index_1.connectToDatabase)();
+        this.redisClient = (0, redis_1.createClient)({
+            url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+        });
+        this.redisClient.connect().then(() => {
+            console.log('Successfully connected to Redis');
+        })
+            .catch(error => {
+            console.error('Failed to connect to Redis:', error);
+        });
     }
     ;
     async fetchSubscribers() {
@@ -76,7 +89,6 @@ class NewsletterRepository {
         await emailsCollection.updateMany({ _id: { $in: objectIds } }, { $set: { lastSent: new Date() } });
     }
     async subscribeToNewsletter(data) {
-        console.log("data", data);
         const db = await this.db;
         const { email, name = null, newsletter, zipCode, frequency = 'everyweek' } = data;
         const emailsCollection = db.collection(this.collectionName);
@@ -97,7 +109,6 @@ class NewsletterRepository {
     async sendNewsLetter() {
         try {
             const subscribers = await this.fetchSubscribers(); //data.frequency
-            console.log('subscribersss', subscribers);
             return ({ message: '', statusCode: 2 });
             // return await this.sendEmails(subscribers);
         }
@@ -158,6 +169,26 @@ class NewsletterRepository {
         }
     }
     ;
+    async geoBasedNewsLetter() {
+        try {
+            const base64data = await this.redisClient.get('complaints_data');
+            if (!base64data) {
+                console.log('No data found.');
+                return { message: 'No data found', statusCode: 404 };
+            }
+            // Decode from base64 then decompress
+            const buffer = Buffer.from(base64data, 'base64');
+            const decompressAsync = (0, util_1.promisify)(zlib_1.gunzip);
+            const decompressedData = await decompressAsync(buffer);
+            const data = JSON.parse(decompressedData.toString('utf-8'));
+            console.log('Retrieved and processed data:', data);
+            return { message: 'Data processed successfully', statusCode: 200 };
+        }
+        catch (error) {
+            console.error('An error occurred:', error);
+            return { message: 'Error during data retrieval and processing', statusCode: 500 };
+        }
+    }
     async getUserInfo(data) {
         const db = await this.db;
         const emailsCollection = db.collection(this.collectionName);

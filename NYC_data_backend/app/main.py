@@ -13,8 +13,11 @@ from collections import Counter
 from datetime import datetime
 from collections import defaultdict
 from datetime import datetime, timedelta
+import base64
 
 load_dotenv()
+
+# la la la la la la la la la 
 
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
@@ -44,16 +47,29 @@ def compress_data(data):
     # Ensure data is a JSON string and then compress
     if not isinstance(data, bytes):
         data = json.dumps(data).encode('utf-8')
-    return gzip.compress(data)
+    compressed_data = gzip.compress(data)
+    # Encode compressed data in base64 to store as string in Redis
+    base64_encoded_data = base64.b64encode(compressed_data).decode('utf-8')
+    return base64_encoded_data
+
 
 def decompress_data(data):
-    # Check if data needs decompression
+    print("Data:", data)
     try:
+        # Decode the data from base64
+        base64_decoded_data = base64.b64decode(data)
         # Attempt to decompress and decode
-        return json.loads(gzip.decompress(data).decode('utf-8'))
-    except (OSError, gzip.BadGzipFile):
-        # Fallback to plain JSON loading if data is not compressed
-        return json.loads(data)
+        decompressed_data = gzip.decompress(base64_decoded_data).decode('utf-8')
+        return json.loads(decompressed_data)
+    except (OSError, gzip.BadGzipFile, json.JSONDecodeError) as e:
+        # Fallback to plain JSON loading if data is not compressed or base64 encoded
+        print("Error during decompression or decoding:", e)
+        try:
+            # This assumes the data could be plain JSON text
+            return json.loads(data)
+        except json.JSONDecode0̣̣̣Error as json_error:
+            print("Final fallback, unable to decode JSON:", json_error)
+            return None
 
 
 # Background task to fetch data and cache in Redis
@@ -89,6 +105,7 @@ def fetch_and_cache_data(data_source):
             redis.expire("complaints_date_range", 86400)  # Set expiration to 24 hours
 
             compressed_data = compress_data(filtered_data)
+
             redis.setex('complaints_data', 86400, compressed_data)
             print("Data fetched and compressed and cached")
             return filtered_data

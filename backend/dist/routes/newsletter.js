@@ -15,8 +15,10 @@ function asyncHandler(fn) {
 }
 const router = express_1.default.Router();
 exports.newsletter = router;
+// base route: /api/newsletter
 router.post("/sendnewsletter", asyncHandler(newsletter_1.sendNewsLetter));
 router.post("/newsletterreferral", asyncHandler(newsletter_1.sendNewsLetterReferralEmail));
 router.put("/udpate", asyncHandler(newsletter_1.udpateNewsletterUsers));
 router.get("/getuserinfo/:identifier", asyncHandler(newsletter_1.getuserInfo));
+router.post("/sendGeoBasedNewsLetter", asyncHandler(newsletter_1.sendGeoBasedNewsLetter));
 //# sourceMappingURL=newsletter.js.map

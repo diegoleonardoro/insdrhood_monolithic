@@ -52,3 +52,18 @@ export const getuserInfo = async(req:Request, res:Response)=>{
   const {  statusCode , user} = await newsletterRepository.getUserInfo({ identifier })
   res.status(statusCode).send(user);
 }
+
+/**
+ * @description send newsletter
+ * @route POST /api/newsletter/getuserinfo 
+ * @access private
+*/
+export const sendGeoBasedNewsLetter = async(req:Request, res:Response)=>{
+
+  const newsletterRepository = new NewsletterRepository();
+
+  const { message, statusCode } = await newsletterRepository.geoBasedNewsLetter();
+
+  res.status(statusCode).send(message)
+
+}

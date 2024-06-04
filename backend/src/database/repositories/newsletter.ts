@@ -6,15 +6,31 @@ import sgMail from '@sendgrid/mail';
 import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid'; // For generating UUIDs
 import { Document } from 'mongodb';
+import { createClient, RedisClientType } from 'redis';
+import { gunzip } from 'zlib';
+import { promisify } from 'util';
+
 
 
 export class NewsletterRepository {
 
   private db: Promise<Db>;
   private collectionName = 'newsletter';
+  private cacheKey311Calls = "complaints_data";
+  private redisClient: RedisClientType;
+
 
   constructor() {
     this.db = connectToDatabase();
+    this.redisClient = createClient({
+      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+    })
+    this.redisClient.connect().then(() => {
+      console.log('Successfully connected to Redis');
+    })
+      .catch(error => {
+        console.error('Failed to connect to Redis:', error);
+      });
   };
 
   private async fetchSubscribers() {
@@ -40,6 +56,8 @@ export class NewsletterRepository {
     return newslettersToSend;
   };
 
+  
+
   private async sendEmails(subscribers: any[]) {
 
 
@@ -56,10 +74,10 @@ export class NewsletterRepository {
         to: [{ email: subscriber.email }],
         dynamic_template_data: {
           name: subscriber.name,
-        //   unsubscribeButton: `<a href="${process.env.BASE_URL?.split(" ")[0]}/newsletterpreferences?user_id=${subscriber.identifier}"
-        //   style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-        //   Click Here
-        // </a>`
+          //   unsubscribeButton: `<a href="${process.env.BASE_URL?.split(" ")[0]}/newsletterpreferences?user_id=${subscriber.identifier}"
+          //   style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+          //   Click Here
+          // </a>`
         }
       })),
       templateId: "d-a9c9d7ddcb51448e8c73e2e26f25b14d"
@@ -89,9 +107,7 @@ export class NewsletterRepository {
     );
   }
 
-  async subscribeToNewsletter(data: { email: string, name?: string, newsletter: boolean, frequency?: string, zipCode?:string }): Promise<{ message: string }> {
-
-    console.log("data",data)
+  async subscribeToNewsletter(data: { email: string, name?: string, newsletter: boolean, frequency?: string, zipCode?: string }): Promise<{ message: string }> {
 
     const db = await this.db;
     const { email, name = null, newsletter, zipCode, frequency = 'everyweek' } = data;
@@ -116,9 +132,7 @@ export class NewsletterRepository {
   async sendNewsLetter(): Promise<{ message: string, statusCode: number }> {
 
     try {
-
       const subscribers = await this.fetchSubscribers();//data.frequency
-      console.log('subscribersss', subscribers);
       return ({ message: '', statusCode: 2 });
       // return await this.sendEmails(subscribers);
 
@@ -191,6 +205,35 @@ export class NewsletterRepository {
   };
 
 
+  async geoBasedNewsLetter(): Promise<{ message: string, statusCode: number }> {
+    try {
+      const base64data = await this.redisClient.get('complaints_data');
+      if (!base64data) {
+        console.log('No data found.');
+        return { message: 'No data found', statusCode: 404 };
+      }
+
+      // Decode from base64 then decompress
+      const buffer = Buffer.from(base64data, 'base64');
+      const decompressAsync = promisify(gunzip);
+      const decompressedData = await decompressAsync(buffer);
+      const data = JSON.parse(decompressedData.toString('utf-8'));
+
+      
+      console.log('Retrieved and processed data:', data);
+      return { message: 'Data processed successfully', statusCode: 200 };
+
+    } catch (error) {
+      console.error('An error occurred:', error);
+      return { message: 'Error during data retrieval and processing', statusCode: 500 };
+    }
+  }
+
+
+
+
+
+
   async getUserInfo(data: { identifier: string }): Promise<{ user: Document, statusCode: number }> {
     const db = await this.db;
     const emailsCollection = db.collection(this.collectionName);
@@ -201,4 +244,7 @@ export class NewsletterRepository {
     };
     return ({ user: existingUser, statusCode: 200 })
   }
+
+
+
 }

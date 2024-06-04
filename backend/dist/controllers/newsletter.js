@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getuserInfo = exports.sendNewsLetterReferralEmail = exports.udpateNewsletterUsers = exports.sendNewsLetter = void 0;
+exports.sendGeoBasedNewsLetter = exports.getuserInfo = exports.sendNewsLetterReferralEmail = exports.udpateNewsletterUsers = exports.sendNewsLetter = void 0;
 const newsletter_1 = require("../database/repositories/newsletter");
 /**
  * @description send newsletter
@@ -51,4 +51,15 @@ const getuserInfo = async (req, res) => {
     res.status(statusCode).send(user);
 };
 exports.getuserInfo = getuserInfo;
+/**
+ * @description send newsletter
+ * @route POST /api/newsletter/getuserinfo
+ * @access private
+*/
+const sendGeoBasedNewsLetter = async (req, res) => {
+    const newsletterRepository = new newsletter_1.NewsletterRepository();
+    const { message, statusCode } = await newsletterRepository.geoBasedNewsLetter();
+    res.status(statusCode).send(message);
+};
+exports.sendGeoBasedNewsLetter = sendGeoBasedNewsLetter;
 //# sourceMappingURL=newsletter.js.map
