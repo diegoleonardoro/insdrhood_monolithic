@@ -276,9 +276,9 @@ export class NewsletterRepository {
       // --- --- --- --- --- --- --- --- --- 
 
       const results = subscribers.reduce<ProcessedData[]>((acc, subscriber) => {
-        if (subscriber.zipcode) {
+        if (subscriber.zipcodes) {
           // Explicitly type the parameter 'call' as Data311Call
-          const relevant311Calls = data311Calls.filter((call: Data311Call) => subscriber.zipcode!.includes(call['Incident Zip']));
+          const relevant311Calls = data311Calls.filter((call: Data311Call) => subscriber.zipcodes!.includes(call['Incident Zip']));
           acc.push({
             subscriber: subscriber.email,
             calls: relevant311Calls

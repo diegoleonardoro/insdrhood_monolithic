@@ -195,9 +195,9 @@ class NewsletterRepository {
             console.log("subscribers", subscribers);
             // --- --- --- --- --- --- --- --- --- 
             const results = subscribers.reduce((acc, subscriber) => {
-                if (subscriber.zipcode) {
+                if (subscriber.zipcodes) {
                     // Explicitly type the parameter 'call' as Data311Call
-                    const relevant311Calls = data311Calls.filter((call) => subscriber.zipcode.includes(call['Incident Zip']));
+                    const relevant311Calls = data311Calls.filter((call) => subscriber.zipcodes.includes(call['Incident Zip']));
                     acc.push({
                         subscriber: subscriber.email,
                         calls: relevant311Calls

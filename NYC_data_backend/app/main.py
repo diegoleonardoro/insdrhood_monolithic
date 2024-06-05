@@ -169,8 +169,6 @@ def calls311():
     cached_data = redis.get('complaints_data') 
     date_range = redis.hgetall('complaints_date_range')
 
-    redis.delete('complaints_data')
-
     if cached_data and date_range:
             
         data = decompress_data(cached_data)
