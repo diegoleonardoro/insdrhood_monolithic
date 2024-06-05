@@ -58,9 +58,9 @@ const sendEmail = async (emailOptions) => {
     }
     else {
         transporter = nodemailer.createTransport({
-            host: 'smtp-mail.outlook.com',
+            host: 'smtp-mail.outlook.com', // Example host for development
             port: 587,
-            secure: false,
+            secure: false, // Use TLS
             auth: {
                 user: process.env.Email,
                 pass: process.env.NODEMAILER_AUTH_PASS,

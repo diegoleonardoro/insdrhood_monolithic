@@ -26,7 +26,7 @@ blogRepo.createIndexes();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
 app.use((0, cors_1.default)({
-    origin: process.env.BASE_URL?.split(" "),
+    origin: process.env.BASE_URL?.split(" "), // React client's URL
     credentials: true,
 }));
 app.use((0, body_parser_1.json)({
