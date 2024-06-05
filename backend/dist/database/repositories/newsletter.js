@@ -50,6 +50,12 @@ class NewsletterRepository {
         return newslettersToSend;
     }
     ;
+    async fetchAllSubscribers() {
+        const db = await this.db;
+        const emailsCollection = db.collection(this.collectionName);
+        const users = await emailsCollection.find().toArray();
+        return users;
+    }
     async sendEmails(subscribers) {
         console.log("process.env.SENDGRID_API_KEY!", process.env.SENDGRID_API_KEY);
         mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
@@ -171,7 +177,7 @@ class NewsletterRepository {
     ;
     async geoBasedNewsLetter() {
         try {
-            // retreive 
+            // --- --- --- retreive 311 data --- --- --- 
             const base64data = await this.redisClient.get('complaints_data');
             if (!base64data) {
                 console.log('No data found.');
@@ -182,7 +188,25 @@ class NewsletterRepository {
             const decompressAsync = (0, util_1.promisify)(zlib_1.gunzip);
             const decompressedData = await decompressAsync(buffer);
             const data311Calls = JSON.parse(decompressedData.toString('utf-8'));
-            ;
+            console.log("data311Calls", data311Calls);
+            // --- --- --- --- --- --- --- --- --- 
+            // --- ---  retreive users from the users db --- ---
+            const subscribers = await this.fetchAllSubscribers();
+            console.log("subscribers", subscribers);
+            // --- --- --- --- --- --- --- --- --- 
+            const results = subscribers.reduce((acc, subscriber) => {
+                if (subscriber.zipcode) {
+                    // Explicitly type the parameter 'call' as Data311Call
+                    const relevant311Calls = data311Calls.filter((call) => subscriber.zipcode.includes(call['Incident Zip']));
+                    acc.push({
+                        subscriber: subscriber.email,
+                        calls: relevant311Calls
+                    });
+                }
+                return acc;
+            }, []);
+            console.log("Filtered results:", results);
+            console.log("Filtered results:", results.length);
             return { message: 'Data processed successfully', statusCode: 200 };
         }
         catch (error) {

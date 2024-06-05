@@ -12,6 +12,43 @@ import { promisify } from 'util';
 
 
 
+// Define the structure of a subscriber
+interface Subscriber {
+  _id: ObjectId;
+  email: string;
+  name?: string;
+  newsletter: boolean;
+  frequency?: string;
+  lastSent?: Date;
+  identifier: string;
+  zipcode?: string;
+}
+
+// Define the structure for the 311 call data
+interface Data311Call {
+  'Created Date': string;
+  Agency: string;
+  'Agency Name': string;
+  'Complaint Type': string;
+  Descriptor: string;
+  'Location Type': string;
+  'Incident Zip': string;
+  'Incident Address': string;
+  Borough: string;
+  Location: {
+    latitude: string;
+    longitude: string;
+    human_address: string;
+  };
+}
+
+// Define the result structure for processed data
+interface ProcessedData {
+  subscriber: string;
+  calls: Data311Call[];
+}
+
+
 export class NewsletterRepository {
 
   private db: Promise<Db>;
@@ -56,7 +93,14 @@ export class NewsletterRepository {
     return newslettersToSend;
   };
 
-  
+  private async fetchAllSubscribers (){
+    const db = await this.db;
+    const emailsCollection = db.collection(this.collectionName);
+    const users = await emailsCollection.find().toArray();
+    return users;
+  }
+
+
 
   private async sendEmails(subscribers: any[]) {
 
@@ -206,9 +250,11 @@ export class NewsletterRepository {
 
 
   async geoBasedNewsLetter(): Promise<{ message: string, statusCode: number }> {
+
     try {
 
-      // retreive 
+
+      // --- --- --- retreive 311 data --- --- --- 
       const base64data = await this.redisClient.get('complaints_data');
       if (!base64data) {
         console.log('No data found.');
@@ -220,7 +266,31 @@ export class NewsletterRepository {
       const decompressedData = await decompressAsync(buffer);
       const data311Calls = JSON.parse(decompressedData.toString('utf-8'));
 
-;
+      console.log("data311Calls", data311Calls)
+      // --- --- --- --- --- --- --- --- --- 
+
+
+      // --- ---  retreive users from the users db --- ---
+      const subscribers = await this.fetchAllSubscribers();
+      console.log("subscribers", subscribers);
+      // --- --- --- --- --- --- --- --- --- 
+
+      const results = subscribers.reduce<ProcessedData[]>((acc, subscriber) => {
+        if (subscriber.zipcode) {
+          // Explicitly type the parameter 'call' as Data311Call
+          const relevant311Calls = data311Calls.filter((call: Data311Call) => subscriber.zipcode!.includes(call['Incident Zip']));
+          acc.push({
+            subscriber: subscriber.email,
+            calls: relevant311Calls
+          });
+        }
+        return acc;
+      }, []);
+
+
+      console.log("Filtered results:", results);
+      console.log("Filtered results:", results.length);
+
 
       return { message: 'Data processed successfully', statusCode: 200 };
 
