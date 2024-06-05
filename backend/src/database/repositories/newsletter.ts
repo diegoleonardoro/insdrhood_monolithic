@@ -207,6 +207,8 @@ export class NewsletterRepository {
 
   async geoBasedNewsLetter(): Promise<{ message: string, statusCode: number }> {
     try {
+
+      // retreive 
       const base64data = await this.redisClient.get('complaints_data');
       if (!base64data) {
         console.log('No data found.');
@@ -216,10 +218,10 @@ export class NewsletterRepository {
       const buffer = Buffer.from(base64data, 'base64');
       const decompressAsync = promisify(gunzip);
       const decompressedData = await decompressAsync(buffer);
-      const data = JSON.parse(decompressedData.toString('utf-8'));
+      const data311Calls = JSON.parse(decompressedData.toString('utf-8'));
 
+;
 
-      console.log('Retrieved and processed data:', data);
       return { message: 'Data processed successfully', statusCode: 200 };
 
     } catch (error) {

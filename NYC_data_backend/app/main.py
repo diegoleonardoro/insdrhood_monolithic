@@ -67,7 +67,7 @@ def decompress_data(data):
         try:
             # This assumes the data could be plain JSON text
             return json.loads(data)
-        except json.JSONDecode0̣̣̣Error as json_error:
+        except json.JSONDecodeError as json_error:
             print("Final fallback, unable to decode JSON:", json_error)
             return None
 
