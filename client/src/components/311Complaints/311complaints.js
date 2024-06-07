@@ -461,6 +461,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     "#FFCC99"   // Peach
   ]
 
+  console.log("zip", zips)
+
   // Define the width for each bar (e.g., 100px)  
   // Calculate the total width of the chart
   const barWidth = 100;
@@ -567,7 +569,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                           {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
                         </span>) : (
                         <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
-                            {zips.join(",")} zipcode(s)
+                            {zips} zipcode(s)
                         </span>
                       )
 
