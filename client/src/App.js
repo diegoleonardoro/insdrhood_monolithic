@@ -116,8 +116,6 @@ function App() {
             <Route path='/311complaints' element={<Complaints311 />}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
             <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route>
-
-    
           </Routes>
           <Suspense />
         </div>

@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -23,9 +24,6 @@ const testFormatter = (str) => str ? str.toUpperCase() + " TEST" : '';
 
 const formatDate = (dateStr) => dateStr ? dateStr.split('T')[0] : '';
 const formatDollars = (num) => num ? `$${parseInt(num).toLocaleString()}` : '';
-
-
-
 
 // Styling for table cells
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -48,8 +46,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-
-
 // Custom styled row for zebra striping
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -58,6 +54,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 }));
 
+const useQuery = () => {
+  const location = useLocation();
+  return new URLSearchParams(location.search);
+};
 
 
 const columns = [
@@ -83,7 +83,15 @@ const DOBApprovedPermits = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  console.log("dataa", data)
+  const query = useQuery();
+  const cb = query.get('cb');
+
+  console.log("cb", cb)
+
+  if(cb){
+    console.log("hola")
+  }
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -98,9 +106,6 @@ const DOBApprovedPermits = () => {
     const fetchDOBApprovedPermits = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/dob_approved_permits`);
-
-        console.log("response.data", response.data)
-
         setData(response.data);
       } catch (error) {
         console.error('Failed to fetch data:', error);

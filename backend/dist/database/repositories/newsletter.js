@@ -13,6 +13,7 @@ const uuid_1 = require("uuid"); // For generating UUIDs
 const redis_1 = require("redis");
 const zlib_1 = require("zlib");
 const util_1 = require("util");
+const zipcodes_communityboards_1 = require("./zipcodes_communityboards");
 class NewsletterRepository {
     constructor() {
         this.collectionName = 'newsletter';
@@ -53,11 +54,10 @@ class NewsletterRepository {
     async fetchAllSubscribers() {
         const db = await this.db;
         const emailsCollection = db.collection(this.collectionName);
-        const users = await emailsCollection.find().toArray();
+        const users = await emailsCollection.find({ email: "diegoleoro@gmail.com" }).toArray();
         return users;
     }
     async sendEmails(subscribers) {
-        console.log("process.env.SENDGRID_API_KEY!", process.env.SENDGRID_API_KEY);
         mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
         if (subscribers.length === 0) {
             return { message: "No subscribers.", statusCode: 404 };
@@ -93,6 +93,102 @@ class NewsletterRepository {
         // Convert string array to ObjectId array
         const objectIds = ids.map(id => new mongodb_1.ObjectId(id));
         await emailsCollection.updateMany({ _id: { $in: objectIds } }, { $set: { lastSent: new Date() } });
+    }
+    getOrdinal(n) {
+        const s = ["th", "st", "nd", "rd"];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    }
+    formatCallToHTML(call) {
+        const date = new Date(call['Created Date']);
+        const day = date.getUTCDate();
+        // Separate the day number and suffix concatenation
+        const dayWithOrdinal = this.getOrdinal(day);
+        const formattedDate = date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'UTC'
+        }).replace(day.toString(), dayWithOrdinal); // Replace the numeric day with the day with its ordinal suffix
+        return `
+    <div style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #ffffff; margin-bottom: 12px; padding: 20px; font-family: 'Helvetica', 'Arial', sans-serif;">
+      <div style="background-color: #f2f4f8; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0;">
+        <h3 style="color: #333; font-size: 18px; font-weight: bold;">${call['Complaint Type']}</h3>
+      </div>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Date:</strong> <span style="color: #555;">${formattedDate}</span></p>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Agency:</strong> <span style="color: #555;">${call['Agency']}</span></p>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Descriptor:</strong> <span style="color: #555;">${call['Descriptor']}</span></p>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Location Type:</strong> <span style="color: #555;">${call['Location Type']}</span></p>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Zip:</strong> <span style="color: #555;">${call['Incident Zip']}</span></p>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Address:</strong> <span style="color: #555;">${call['Incident Address']}</span></p>
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Borough:</strong> <span style="color: #555;">${call['Borough']}</span></p>
+    </div>
+  `;
+    }
+    formatPermitToHTML(permit) {
+        const formatDOBDate = (dateString) => {
+            const date = new Date(dateString);
+            const day = date.getUTCDate();
+            const ordinalDay = this.getOrdinal(day);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'UTC'
+            });
+            return formattedDate.replace(day.toString(), ordinalDay); // Correctly replace the day with the day and its ordinal suffix
+        };
+        const estimatedCost = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2
+        }).format(Number(permit['Estimated Cost']));
+        const borough = permit.Borough.charAt(0).toUpperCase() + permit.Borough.slice(1).toLowerCase();
+        return `
+      <div style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #ffffff; margin-bottom: 12px; padding: 20px; font-family: 'Helvetica', 'Arial', sans-serif; text-align: left;">
+        <div style="background-color: #f2f4f8; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0; text-align: left;">
+          <h3 style="color: #333; font-size: 18px; font-weight: bold; text-align: left;">${permit['House Number']} ${permit['Street Name']}</h3>
+        </div>
+        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Borough:</strong> <span style="color: #555;">${borough}</span></p>
+        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Job Description:</strong> <span style="color: #555;">${permit['Job Description']}</span></p>
+        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Issued Date:</strong> <span style="color: #555;">${formatDOBDate(permit['Issued Date'])}</span></p>
+        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Expired Date:</strong> <span style="color: #555;">${formatDOBDate(permit['Expired Date'])}</span></p>
+        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Estimated Cost:</strong> <span style="color: #555;">${estimatedCost}</span></p>
+      </div>
+      `;
+    }
+    async fetchDataFromRedis(key) {
+        const base64Data = await this.redisClient.get(key);
+        if (!base64Data) {
+            console.log(`No data found for ${key}.`);
+            return { message: `No data found for ${key}`, statusCode: 404 };
+        }
+        const buffer = Buffer.from(base64Data, 'base64');
+        const decompressAsync = (0, util_1.promisify)(zlib_1.gunzip);
+        try {
+            const decompressedData = await decompressAsync(buffer);
+            return { data: JSON.parse(decompressedData.toString('utf-8')) };
+        }
+        catch (error) {
+            console.error(`Error processing data for ${key}: ${error}`);
+            return { message: `Error processing data for ${key}`, statusCode: 500 };
+        }
+    }
+    create311CallsButtonHTML(zipCodes) {
+        const baseUrlForEmailVerification = process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '';
+        const zipCodeParam = encodeURIComponent(zipCodes.join(','));
+        return `
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="${baseUrlForEmailVerification}/311complaints?zips=${zipCodeParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More 311 Calls</a>
+    </div>
+  `;
+    }
+    createDOBPermitsButtonHTML(communityBoards) {
+        const baseUrlForEmailVerification = process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '';
+        const communityBoardParam = encodeURIComponent(communityBoards.join(','));
+        return `
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="${baseUrlForEmailVerification}/DOBApprovedPermits?cb=${communityBoardParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More DOB Approved Permits</a>
+    </div>
+  `;
     }
     async subscribeToNewsletter(data) {
         const db = await this.db;
@@ -177,37 +273,87 @@ class NewsletterRepository {
     ;
     async geoBasedNewsLetter() {
         try {
-            // --- --- --- retreive 311 data --- --- --- 
-            const base64data = await this.redisClient.get('complaints_data');
-            if (!base64data) {
-                console.log('No data found.');
-                return { message: 'No data found', statusCode: 404 };
+            // --- --- retreive 311 calls and dob permits from redis --- --- 
+            const [data311Calls, dobPermits] = await Promise.all([
+                this.fetchDataFromRedis('complaints_data'),
+                this.fetchDataFromRedis('dob_approved_permits')
+            ]);
+            // Handle errors after both calls
+            if (data311Calls.statusCode) {
+                console.error('Failed to fetch 311 call data:', data311Calls.message);
+                return { message: `Failed to fetch 311 call data: ${data311Calls.message}`, statusCode: data311Calls.statusCode };
             }
-            // Decode from base64 then decompress
-            const buffer = Buffer.from(base64data, 'base64');
-            const decompressAsync = (0, util_1.promisify)(zlib_1.gunzip);
-            const decompressedData = await decompressAsync(buffer);
-            const data311Calls = JSON.parse(decompressedData.toString('utf-8'));
-            console.log("data311Calls", data311Calls);
+            if (dobPermits.statusCode) {
+                console.error('Failed to fetch DOB permits data:', dobPermits.message);
+                return { message: `Failed to fetch DOB permits data: ${dobPermits.message}`, statusCode: dobPermits.statusCode };
+            }
             // --- --- --- --- --- --- --- --- --- 
             // --- ---  retreive users from the users db --- ---
             const subscribers = await this.fetchAllSubscribers();
-            console.log("subscribers", subscribers);
             // --- --- --- --- --- --- --- --- --- 
-            const results = subscribers.reduce((acc, subscriber) => {
-                if (subscriber.zipcodes) {
-                    // Explicitly type the parameter 'call' as Data311Call
-                    const relevant311Calls = data311Calls.filter((call) => subscriber.zipcodes.includes(call['Incident Zip']));
-                    acc.push({
-                        subscriber: subscriber.email,
-                        calls: relevant311Calls
-                    });
+            // --- --- filter data311Calls according to the subscriber.zipcode
+            const formattedResults = subscribers.map(subscriber => {
+                const getCurrentDate = () => {
+                    const date = new Date();
+                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+                };
+                const dayOfWeek = () => {
+                    const date = new Date();
+                    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+                    return weekday.charAt(0).toUpperCase() + weekday.slice(1).toLowerCase();
+                };
+                // Map zip codes to community boards
+                const zipToBoard = Object.fromEntries(zipcodes_communityboards_1.zipcodesCommunityBoards.map(obj => [Object.values(obj)[0], Object.keys(obj)[0]]));
+                if (!subscriber.zipcodes || subscriber.zipcodes.length === 0) {
+                    return {
+                        to: [{ email: subscriber.email }],
+                        dynamic_template_data: {
+                            name: subscriber.name,
+                            complaintsHtml: "No relevant data available.", // Or handle this scenario differently
+                            currentDate: getCurrentDate(),
+                            day: dayOfWeek()
+                        }
+                    };
                 }
-                return acc;
-            }, []);
-            console.log("Filtered results:", results);
-            console.log("Filtered results:", results.length);
-            return { message: 'Data processed successfully', statusCode: 200 };
+                // Filter DOB approved permits based on community board
+                const communityBoards = subscriber.zipcodes.map((zip) => zipToBoard[zip]).filter(Boolean);
+                const relevantDOBPermits = dobPermits.data
+                    .filter((permit) => communityBoards.includes(permit['Community Board']))
+                    .slice(0, 5)
+                    .map((permit) => this.formatPermitToHTML(permit))
+                    .join('');
+                const permitsButtonHTML = this.createDOBPermitsButtonHTML(communityBoards);
+                // --- --- --- --- --- --- --- --- --- --- 
+                // filter 311 calls:
+                const relevant311Calls = data311Calls.data
+                    .filter((call) => subscriber.zipcodes.includes(call['Incident Zip']))
+                    .slice(0, 5)
+                    .map((call) => this.formatCallToHTML(call))
+                    .join('');
+                const calls311ButtonHTML = this.create311CallsButtonHTML(subscriber.zipcodes);
+                // --- --- --- --- --- --- --- --- --- --- 
+                return {
+                    to: [{ email: subscriber.email }],
+                    dynamic_template_data: {
+                        name: subscriber.name,
+                        complaintsHtml: relevant311Calls,
+                        relevantDOBPermits: relevantDOBPermits,
+                        currentDate: getCurrentDate(),
+                        day: dayOfWeek(),
+                        calls311ButtonHTML: calls311ButtonHTML,
+                        permitsButtonHTML: permitsButtonHTML
+                    }
+                };
+            });
+            // --- --- --- --- --- --- --- --- ---
+            const msg = {
+                from: { name: "Insider Hood", email: "admin@insiderhood.com" },
+                personalizations: formattedResults,
+                templateId: "d-6eb53e9e9d8a40e4bfa8150ec791cb7b"
+            };
+            mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
+            await mail_1.default.send(msg);
+            return { message: 'Newsletter Sent', statusCode: 200 };
         }
         catch (error) {
             console.error('An error occurred:', error);

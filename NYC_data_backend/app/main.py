@@ -54,7 +54,7 @@ def compress_data(data):
 
 
 def decompress_data(data):
-    print("Data:", data)
+  
     try:
         # Decode the data from base64
         base64_decoded_data = base64.b64decode(data)
@@ -114,7 +114,7 @@ def fetch_and_cache_data(data_source):
             return []
     elif data_source == "dob_approved_permits":
         # make the request to the dob approved permits:
-        response = requests.get('https://data.cityofnewyork.us/resource/rbx6-tga4.json')
+        response = requests.get('https://data.cityofnewyork.us/resource/rbx6-tga4.json?$limit=50000')
         if response.status_code == 200:
             raw_data = response.json()
             filtered_data = [
@@ -163,11 +163,15 @@ def calls311():
     boroughs = request.args.getlist('Borough[]')
     zip_codes = request.args.getlist('zip[]')
     complaint_type = request.args.get('ComplaintType')
+    initialLoad= request.args.get("initialLoad")
+
+    print('initialLoad', initialLoad)
 
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 0))
     cached_data = redis.get('complaints_data') 
     date_range = redis.hgetall('complaints_date_range')
+
 
     if cached_data and date_range:
             
@@ -178,6 +182,8 @@ def calls311():
         if boroughs:
             filters['Borough'] = [borough.upper() for borough in boroughs] 
 
+            print ('boroughs',boroughs)
+
         if zip_codes:
             filters['Incident Zip'] = zip_codes
 
@@ -185,6 +191,8 @@ def calls311():
             filters['Complaint Type'] = complaint_type
         
         # Filter data with updated filters, including zip codes if provided
+            
+       
         filtered_data = filter_data(data, filters)
 
 
@@ -210,22 +218,52 @@ def calls311():
 
         hour_minute_counts = count_hour_minute(filtered_data)
         data_count_by_day = [] 
+
+
         # this will only take place in the first request:
-        if not zip_codes and not boroughs:
+        if initialLoad:
+
+            print("boroughs", boroughs)
+            print("zip_codes", zip_codes)
 
             aggregated_data = defaultdict(lambda: defaultdict(int))
-            for item in filtered_data:
-                borough = item['Borough']
-                date_only = item['Created Date'][:10]  # Extract only the date part (YYYY-MM-DD)
-                aggregated_data[borough][date_only] += 1
+
 
             # Formatting the output
-            
-            for borough, dates in aggregated_data.items():
-                response_entry = {"Borough": borough}
-                for date, count in dates.items():
-                    response_entry[date] = count
-                data_count_by_day.append(response_entry)
+            data_count_by_day = []  # Ensure data_count_by_day is define
+
+            # Check if zip_codes is provided and filter items based on 'Incident Zip'
+            if zip_codes:
+                # Only process if zip_codes are provided
+                for item in filtered_data:
+                    zip_code = item['Incident Zip']
+                    if zip_code in zip_codes:
+                        date_only = item['Created Date'][:10]  # Extract only the date part (YYYY-MM-DD)
+                        aggregated_data[date_only][zip_code] += 1
+
+                # Reformat the output to be by date, with zip code counts
+                for date, zips in aggregated_data.items():
+                    response_entry = {"date": date}
+                    for zip_code, count in zips.items():
+                        response_entry[zip_code] = count
+                    data_count_by_day.append(response_entry)
+            else:
+                for item in filtered_data:
+                    borough = item['Borough']
+                    date_only = item['Created Date'][:10]  # Extract only the date part (YYYY-MM-DD)
+                    aggregated_data[borough][date_only] += 1
+
+                for borough, dates in aggregated_data.items():
+                    response_entry = {"Borough": borough}
+                    for date, count in dates.items():
+                        response_entry[date] = count
+                    data_count_by_day.append(response_entry)
+
+            print ('data_count_by_day', data_count_by_day)
+
+
+
+
 
         # Check if a valid limit is provided
         if limit > 0:
@@ -233,6 +271,7 @@ def calls311():
             end = start + limit
             paginated_data = filtered_data[start:end]
             response = paginated_data
+
         else:
                 # If limit is 0 or not provided, return all filtered data
             response = filtered_data
@@ -260,11 +299,6 @@ def complaint_types_count():
     zip_codes = request.args.getlist('zipcodes[]')
     complaint_types = request.args.getlist('complaint_types[]')
 
-
-    print ('boroughs', boroughs)
-    print ('zip_codes', zip_codes)
-    print ('complaint_types', complaint_types)
-
     # Redis: Retrieve the date range
     date_range = redis.hgetall('complaints_date_range')
 
@@ -290,6 +324,8 @@ def complaint_types_count():
         data = decompress_data(cached_data)
 
     chart_ready_data = format_data_for_chart(data, start_date, end_date, filter_type, filter_keys, complaint_types)
+
+    print ('chart_ready_data', chart_ready_data)
 
     return jsonify(chart_ready_data)
     

@@ -16,10 +16,13 @@ import MenuItem from '@mui/material/MenuItem';
 import moment from 'moment';
 import ZipCodeBoroSelect from '../ZipCodeBoroInput/ZipCodeBoroInput';
 import BoroughSelect from '../MultipleBoroSelect/MultipleBoroSelect';
-
+import { useLocation } from 'react-router-dom';
 import "./311complaints.css";
 
-// le le le le le le 
+const useQuery = () => {
+  const location = useLocation();
+  return new URLSearchParams(location.search);
+};
 
 const transformAndSortData = (dataObject) => {
   const transformedData = Object.keys(dataObject).map(key => ({
@@ -71,8 +74,6 @@ const transformDatForLineChart = (data) => {
 
   return Object.values(dates);
 };
-
-
 
 function formatReadableDate(dateString) {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -144,12 +145,18 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const [yAxisFontSize, setYAxisFontSize] = useState('13px');
   const [xAxisFontSize, setXAxisFontSize] = useState('11px');
   const [initialLoadDayDataCountCheck, setInitialLoadDayDataCountCheck] = useState(true)
-  const [dayCountData, setDayCountData] = useState([])
-
+  const [dayCountData, setDayCountData] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
   const [newsletter, setNewsletter] = useState({ email: '', zipCode: '' });
   const [formVisible, setFormVisible] = useState(false); // Controls the form's visible state
-  const [linekeys, setLinekeys] = useState([])
+  const [linekeys, setLinekeys] = useState([]);
+  // const 
+  const query = useQuery();
+  // let zips = query.get('zips');
+
+  const [zips, setZips] = useState(query.get('zips'))
+
+
 
   const [filters, setFilters] = useState({
     "zip": '',
@@ -158,7 +165,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     "ComplaintType": '',
     "CreatedDate": ''
   });
-
 
   const updateDayCountData = async (data) => {
     setDayCountData(data)
@@ -169,7 +175,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   const loadingLineChartonClick = () => {
     setLoadingLineChart(true)
   }
-
 
   const [showNewsletterForm, setShowNewsletterForm] = useState(true)
 
@@ -191,6 +196,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     }
 
   };
+
   const toggleForm = () => {
     setFormVisible(!formVisible);
   }
@@ -231,7 +237,12 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
     const params_ = applyFilters ? filters : { limit: 10, page: resetPage ? 1 : page };
-    const zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
+    let zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
+
+    // this if statement will change the value of zipCodesArray to whatever comes in url params if no zip code has been selected
+    if (zipCodesArray.length === 0 && zips) {
+      zipCodesArray = zips.split(",");
+    }
 
     try {
 
@@ -240,9 +251,10 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/311calls`, {
         params: {
           ...params_,
-          zip: zipCodesArray,
+          zip: zipCodesArray,// 
           Borough: filters.Borough ? [filters.Borough] : '',
-          ComplaintType: filters.ComplaintType === "all" ? "" : filters.ComplaintType// if filters.ComplaintType is equal to 'all' it means 
+          ComplaintType: filters.ComplaintType === "all" ? "" : filters.ComplaintType,// if filters.ComplaintType is equal to 'all' it means 
+          initialLoad: initialLoadDayDataCountCheck
         }
       });
 
@@ -266,12 +278,23 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       }
 
       if (initialLoadDayDataCountCheck) {
-        // when we enter this if satement it means that there was a hard reload of the page in which case, we want to update the data_count_by_day coming from the server
-        const transFormedData = transformDatForLineChart(response.data.data_count_by_day)
-        setDayCountData(transFormedData)
-        setLoadingLineChart(false)
+        
 
-        setLinekeys(["BROOKLYN", "QUEENS", "MANHATTAN", "BRONX", "STATEN ISLAND"])
+
+        // if there are zipcodes coming in the url, then set the linekeys with those zip codes
+
+        if (zips) {
+          updateDayCountData(response.data.data_count_by_day)
+          setLinekeys(zips.split(","));
+
+        } else {
+
+          // when we enter this if satement it means that there was a hard reload of the page in which case, we want to update the data_count_by_day coming from the server
+          const transFormedData = transformDatForLineChart(response.data.data_count_by_day)
+          setDayCountData(transFormedData);
+          setLoadingLineChart(false);
+          setLinekeys(["BROOKLYN", "QUEENS", "MANHATTAN", "BRONX", "STATEN ISLAND"]);
+        }
 
       }
 
@@ -308,6 +331,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   };
 
   useEffect(() => {
+
 
     setInitialLoadDayDataCountCheck(false);
 
@@ -353,10 +377,12 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
   };
 
   const handleFilterChange = (event) => {
+
     const { name, value } = event.target;
 
-    if (name === 'zip') {
+    setZips(null)// this will make sure that when there are zip codes in the url and the user wants to apply filters to the bar chart, the zips in the url will not be considered in the filtering process 
 
+    if (name === 'zip') {
       setFilters(prevFilters => ({
         ...prevFilters,
         [name]: value,
@@ -384,6 +410,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         [name]: value
       }));
     }
+
   };
 
   function formatDate(dateStr) {
@@ -589,8 +616,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       {/** Line chart */}
       <div className='lineChartMainContainer' >
-
-  
 
 
         <div className='chartsContainer' >
