@@ -14,6 +14,7 @@ const redis_1 = require("redis");
 const zlib_1 = require("zlib");
 const util_1 = require("util");
 const zipcodes_communityboards_1 = require("./zipcodes_communityboards");
+const newsLetterArticles_1 = require("./newsLetterArticles");
 class NewsletterRepository {
     constructor() {
         this.collectionName = 'newsletter';
@@ -54,7 +55,7 @@ class NewsletterRepository {
     async fetchAllSubscribers() {
         const db = await this.db;
         const emailsCollection = db.collection(this.collectionName);
-        const users = await emailsCollection.find({ email: "diegoleoro@gmail.com" }).toArray();
+        const users = await emailsCollection.find({ email: "dr2882@columbia.edu" }).toArray();
         return users;
     }
     async sendEmails(subscribers) {
@@ -177,16 +178,17 @@ class NewsletterRepository {
         const zipCodeParam = encodeURIComponent(zipCodes.join(','));
         return `
     <div style="text-align: center; margin-top: 20px;">
-      <a href="${baseUrlForEmailVerification}/311complaints?zips=${zipCodeParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More 311 Calls</a>
+      <a href="https://insiderhood.com/311complaints?zips=${zipCodeParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More 311 Calls</a>
     </div>
   `;
     }
+    ////${baseUrlForEmailVerification}
     createDOBPermitsButtonHTML(communityBoards) {
         const baseUrlForEmailVerification = process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '';
         const communityBoardParam = encodeURIComponent(communityBoards.join(','));
         return `
     <div style="text-align: center; margin-top: 20px;">
-      <a href="${baseUrlForEmailVerification}/DOBApprovedPermits?cb=${communityBoardParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More DOB Approved Permits</a>
+      <a href="https://insiderhood.com/DOBApprovedPermits?cb=${communityBoardParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More DOB Approved Permits</a>
     </div>
   `;
     }
@@ -311,7 +313,8 @@ class NewsletterRepository {
                             name: subscriber.name,
                             complaintsHtml: "No relevant data available.", // Or handle this scenario differently
                             currentDate: getCurrentDate(),
-                            day: dayOfWeek()
+                            day: dayOfWeek(),
+                            articlesNewsLetter: newsLetterArticles_1.articlesNewsLetter.join("")
                         }
                     };
                 }
@@ -319,7 +322,7 @@ class NewsletterRepository {
                 const communityBoards = subscriber.zipcodes.map((zip) => zipToBoard[zip]).filter(Boolean);
                 const relevantDOBPermits = dobPermits.data
                     .filter((permit) => communityBoards.includes(permit['Community Board']))
-                    .slice(0, 5)
+                    .slice(0, 4)
                     .map((permit) => this.formatPermitToHTML(permit))
                     .join('');
                 const permitsButtonHTML = this.createDOBPermitsButtonHTML(communityBoards);
@@ -327,7 +330,7 @@ class NewsletterRepository {
                 // filter 311 calls:
                 const relevant311Calls = data311Calls.data
                     .filter((call) => subscriber.zipcodes.includes(call['Incident Zip']))
-                    .slice(0, 5)
+                    .slice(0, 4)
                     .map((call) => this.formatCallToHTML(call))
                     .join('');
                 const calls311ButtonHTML = this.create311CallsButtonHTML(subscriber.zipcodes);
@@ -341,7 +344,8 @@ class NewsletterRepository {
                         currentDate: getCurrentDate(),
                         day: dayOfWeek(),
                         calls311ButtonHTML: calls311ButtonHTML,
-                        permitsButtonHTML: permitsButtonHTML
+                        permitsButtonHTML: permitsButtonHTML,
+                        articlesNewsLetter: newsLetterArticles_1.articlesNewsLetter.join("")
                     }
                 };
             });

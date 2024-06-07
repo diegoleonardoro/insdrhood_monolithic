@@ -278,7 +278,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       }
 
       if (initialLoadDayDataCountCheck) {
-        
+
 
 
         // if there are zipcodes coming in the url, then set the linekeys with those zip codes
@@ -560,10 +560,18 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                 <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
                   See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
                   {
-                    filters.zip ? (
-                      <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
-                        {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
-                      </span>
+                    filters.zip || zips ? (
+
+                      filters.zip ? (
+                        <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                          {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
+                        </span>) : (
+                        <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
+                            {zips.join(",")} zipcode(s)
+                        </span>
+                      )
+
+
                     ) : (
                       <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
                         {filters.Borough !== '' ? filters.Borough.charAt(0).toUpperCase() + filters.Borough.slice(1).toLowerCase() : "the entire city."}
