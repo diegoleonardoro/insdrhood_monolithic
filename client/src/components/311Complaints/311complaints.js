@@ -343,7 +343,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       setChartMainWidth(window.innerWidth);
       if (window.innerWidth < 1018) {
         setChartHeight(300);
-        setYAxisFontSize('15px');
+        setYAxisFontSize('13px');
         setXAxisFontSize('14px');
       } else {
         setChartHeight(400);
@@ -586,13 +586,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                   <BarChart
                     width={chartWidth}
                     data={descriptorCountchartData}
-                    margin={{ top: 20, right: 50, left: 10, bottom: 90 }}
+                    margin={{ top: 40, right: 50, left: 0, bottom: 90 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" textAnchor="end" angle={-40} interval={0} style={{ fontSize: xAxisFontSize }} />
-                    <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: 0, dy: 55, fontSize: yAxisFontSize }} />
-
-
+                    <YAxis label={{ value: 'Number of Complaints', position: 'top', dx: 55, dy: -15, fontSize: yAxisFontSize }} />
                     <Tooltip />
                     <Legend />
                     {
@@ -667,7 +665,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                   interval={0}
                   style={{ fontSize: xAxisFontSize }}
                 />
-                <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: 0, dy: 55, fontSize: yAxisFontSize }} />
+                <YAxis label={{ value: 'Number of Complaints', position: 'top', dx: 55, dy: -20, fontSize: yAxisFontSize }} />
                 <Tooltip />
                 <Legend
                   wrapperStyle={{
