@@ -15,6 +15,31 @@
   /* background-color: #F4E1D2 ; */
 }
 
+.chart-continuation {
+  display: flex;
+  align-items: center;
+  padding: 5px 12px;
+  font-size: 14px;
+  border-radius: 15px; /* Rounded corners */
+  font-family: Arial, sans-serif; /* Font styling */
+  width:10%;
+  justify-content: center;
+  position:relative;
+  right:-90%;
+}
+
+.continues-text {
+  margin-right: 5px;
+}
+
+.continues-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 10px;
+  border-color: transparent transparent transparent #00bfff; /* Create the arrow */
+}
+
 .lineChartMainContainer{
   width:70%;
   margin-top: 20px;
@@ -226,6 +251,11 @@
 
   .zipBoroFilterSelect{
     flex-direction: column;
+  }
+
+  .chart-continuation {
+    right: -40%;
+    width:70%;
   }
 
 }

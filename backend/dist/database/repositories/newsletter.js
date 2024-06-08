@@ -55,7 +55,7 @@ class NewsletterRepository {
     async fetchAllSubscribers() {
         const db = await this.db;
         const emailsCollection = db.collection(this.collectionName);
-        const users = await emailsCollection.find({ email: "dr2882@columbia.edu" }).toArray();
+        const users = await emailsCollection.find({ email: "drobayo@hdc.org" }).toArray();
         return users;
     }
     async sendEmails(subscribers) {

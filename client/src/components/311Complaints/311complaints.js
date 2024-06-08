@@ -612,6 +612,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                   </BarChart>
                   {/* // )} */}
                 </ResponsiveContainer>
+
+                <div className="chart-continuation">
+                  <span className="continues-text">Chart continues</span>
+                  <div className="continues-arrow"></div>
+                </div>
               </div>
             </>
 
