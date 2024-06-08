@@ -165,8 +165,6 @@ def calls311():
     complaint_type = request.args.get('ComplaintType')
     initialLoad= request.args.get("initialLoad")
 
-    print('initialLoad', initialLoad)
-
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 0))
     cached_data = redis.get('complaints_data') 
@@ -182,8 +180,6 @@ def calls311():
         if boroughs:
             filters['Borough'] = [borough.upper() for borough in boroughs] 
 
-            print ('boroughs',boroughs)
-
         if zip_codes:
             filters['Incident Zip'] = zip_codes
 
@@ -191,10 +187,7 @@ def calls311():
             filters['Complaint Type'] = complaint_type
         
         # Filter data with updated filters, including zip codes if provided
-            
-       
         filtered_data = filter_data(data, filters)
-
 
         # Prepare descriptor counts
         if zip_codes:
@@ -223,12 +216,7 @@ def calls311():
         # this will only take place in the first request:
         if initialLoad:
 
-            print("boroughs", boroughs)
-            print("zip_codes", zip_codes)
-
             aggregated_data = defaultdict(lambda: defaultdict(int))
-
-
             # Formatting the output
             data_count_by_day = []  # Ensure data_count_by_day is define
 
@@ -258,10 +246,6 @@ def calls311():
                     for date, count in dates.items():
                         response_entry[date] = count
                     data_count_by_day.append(response_entry)
-
-            print ('data_count_by_day', data_count_by_day)
-
-
 
 
 
@@ -316,16 +300,12 @@ def complaint_types_count():
         filter_type = 'Incident Zip'
         filter_keys = zip_codes
 
-
-
     cached_data = redis.get('complaints_data') 
     data = []
     if cached_data:
         data = decompress_data(cached_data)
 
     chart_ready_data = format_data_for_chart(data, start_date, end_date, filter_type, filter_keys, complaint_types)
-
-    print ('chart_ready_data', chart_ready_data)
 
     return jsonify(chart_ready_data)
     
@@ -342,7 +322,7 @@ def dob_approved_permits():
 
     cached_data = redis.get("dob_approved_permits")
     page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 0))
+    limit = int(request.args.get('limit', 20))
 
     if cached_data:
         data = decompress_data(cached_data)
@@ -356,7 +336,9 @@ def dob_approved_permits():
         else:
                  # If limit is 0 or not provided, return all filtered data
             response = make_response(jsonify(filtered_data))
-        return response #response
+
+        
+        return response 
     else:
         fetch_and_cache_data("dob_approved_permits")
 
@@ -412,12 +394,7 @@ def count_hour_minute(data):
 
 
 if __name__ == '__main__':
-    # This is used when running locally only. When deploying to Google Cloud Run,
-    # a webserver process such as Gunicorn will serve the app.
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
 
   
-
-
-# ki ki ki ki ki ki ki ki 

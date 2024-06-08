@@ -86,10 +86,8 @@ const DOBApprovedPermits = () => {
   const query = useQuery();
   const cb = query.get('cb');
 
-  console.log("cb", cb)
-
   if(cb){
-    console.log("hola")
+    console.log("cb comes in the url params")
   }
 
 

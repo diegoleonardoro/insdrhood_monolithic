@@ -5,7 +5,7 @@ exports.articlesNewsLetter = [
     `
     <div>
     <a href="https://www.6sqft.com/nyc-creates-map-of-public-restrooms-plans-to-build-more-bathrooms" style="text-decoration: underline;"">
-      <h3 style="color: #333; font-size: 18px; font-weight: bold;">
+      <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
         NYC creates map of public restrooms, announces plan to build more bathrooms
       </h3>
     </a>
@@ -19,7 +19,7 @@ exports.articlesNewsLetter = [
     <div>
 
     <a href="https://www.brickunderground.com/rent/notable-new-yorkers-back-broker-fee-bill-ilana-glazer" style="text-decoration: underline;">
-      <h3 style="color: #333; font-size: 18px; font-weight: bold;">
+      <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
         Notable New Yorkers join push for broker fee bill
       </h3>
     </a>
@@ -33,7 +33,7 @@ exports.articlesNewsLetter = [
     <div>
 
       <a href="https://www.timeout.com/newyork/news/puerto-rican-day-parade-in-nyc-what-you-need-to-know-060818" style="text-decoration: underline;">
-        <h3 style="color: #333; font-size: 18px; font-weight: bold;">
+        <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
          Puerto Rican Day Parade in NYC
         </h3>
       </a>
