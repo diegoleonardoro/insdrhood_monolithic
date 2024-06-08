@@ -486,7 +486,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div style={{ width: "100%", backgroundColor: "#f7f7f7" }}>
         <div className='chartsContainer' >
-          <h6 style={{ textAlign: "center", marginTop: "10px", backgroundColor:"#e4e4e4"}}>Explore 311 Calls by Location & Type</h6>
+          <h6 style={{ textAlign: "center", marginTop: "10px", backgroundColor:"#e4e4e4"}}>311 Calls by Location & Type</h6>
           <Box
             sx={{
               display: 'flex',
@@ -557,7 +557,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           {!loadingBarChart && (
             <>
               {selectedData && (
-                <Button style={{ width: "90%", margin: "auto" }} variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
+                <Button className='seeAllComplaintsLink'  variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
                   See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
                   {
                     filters.zip || zips ? (
