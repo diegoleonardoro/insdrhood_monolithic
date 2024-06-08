@@ -461,7 +461,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
     "#FFCC99"   // Peach
   ]
 
-  console.log("zip", zips)
 
   // Define the width for each bar (e.g., 100px)  
   // Calculate the total width of the chart
@@ -477,9 +476,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         fontFamily: 'Arial, sans-serif', // font family
         fontSize: '13px', // text size
         color: '#333', // dark grey text color
-        alignSelf: 'start',
-        marginLeft: '10px',
-        margin: '20px'
+        margin: '20px',
+        
       }}>
         Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
       </div>
@@ -488,7 +486,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       <div style={{ width: "100%", backgroundColor: "#f7f7f7" }}>
         <div className='chartsContainer' >
-
+          <h6 style={{ textAlign: "center", marginTop: "10px", backgroundColor:"#e4e4e4"}}>Explore 311 Calls by Location & Type</h6>
           <Box
             sx={{
               display: 'flex',
@@ -588,11 +586,11 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                   <BarChart
                     width={chartWidth}
                     data={descriptorCountchartData}
-                    margin={{ top: 20, right: 50, left: 50, bottom: 90 }}
+                    margin={{ top: 20, right: 50, left: 10, bottom: 90 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" textAnchor="end" angle={-20} interval={0} style={{ fontSize: xAxisFontSize }} />
-                    <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+                    <XAxis dataKey="name" textAnchor="end" angle={-40} interval={0} style={{ fontSize: xAxisFontSize }} />
+                    <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: 0, dy: 55, fontSize: yAxisFontSize }} />
 
 
                     <Tooltip />
@@ -629,18 +627,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
 
         <div className='chartsContainer' >
-          <div style={{
-            borderRadius: '8px', // rounded corners
-            fontFamily: 'Arial, sans-serif', // font family
-            fontSize: '13px', // text size
-            color: '#333', // dark grey text color
-            alignSelf: 'start',
-            marginLeft: '10px',
-            margin: '20px',
-            marginTop: "20px"
-          }}>
-            Compare specific complaint types across different zip codes or boroughs in the past week:
-          </div>
+          <h6 style={{ textAlign: "center", marginTop: "10px", backgroundColor: "#e4e4e4" }}>Track 311 Call Trends Over Time</h6>
 
           <div >
             <ZipCodeBoroSelect loadingLineChartonClick={loadingLineChartonClick} updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
@@ -668,19 +655,19 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                 width={500}
                 height={300}
                 data={dayCountData}
-                margin={{ top: 50, right: 50, left: 50, bottom: 50 }}  // Adjust bottom margin as needed
+                margin={{ top: 50, right: 50, left: 10, bottom: 50 }}  // Adjust bottom margin as needed
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="date"
                   height={70}
                   tickFormatter={(tickItem) => moment(tickItem).format('MMM Do')}
-                  angle={-20}
+                  angle={-40}
                   textAnchor="end"
                   interval={0}
                   style={{ fontSize: xAxisFontSize }}
                 />
-                <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: -35, dy: 55, fontSize: yAxisFontSize }} />
+                <YAxis label={{ value: 'Number of Complaints', angle: -90, position: 'insideLeft', dx: 0, dy: 55, fontSize: yAxisFontSize }} />
                 <Tooltip />
                 <Legend
                   wrapperStyle={{
@@ -769,7 +756,9 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
           </div>
 
-          {showRegisterFrom && showNewsletterForm && (
+
+          {/** Registration form: */}
+          {/* {showRegisterFrom && showNewsletterForm && (
             <div className={`newsletter-form ${formVisible ? 'expanded' : 'collapsed'}`} style={{ transition: 'height 0.3s ease-in-out', padding: "2px" }}>
               <div style={{ padding: "15px", paddingBottom: "30px" }}>
                 <p className='p_signup311Complaints'>Register for 311 Updates in your Zipcode:</p>
@@ -793,7 +782,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                 </Form>
               </div>
             </div>
-          )}
+          )} */}
 
         </div>
       )}

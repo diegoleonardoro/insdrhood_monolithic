@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import axios from "axios"
-import "./header.css";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -10,6 +9,7 @@ import { useEffect, useState } from 'react';
 import CartIcon from "../CartIcon/CartIcon";
 import { startTransition } from "react";
 import { useUserContext } from '../../contexts/UserContext';
+import "./header.css";
 
 function Header() {
   axios.defaults.withCredentials = true;
@@ -36,7 +36,7 @@ function Header() {
   }
 
   const links = [
-    !currentuser_ && { label: "Sign Up", to: "/signup" },
+    // !currentuser_ && { label: "Sign Up", to: "/signup" },
     !currentuser_ && { label: "Sign In", to: "/signin" },
     { label: "Questionnaire", to: "/questionnaire", useTransition: true },
     currentuser_ && { label: "Sign Out", onClick: handleSignOut },
@@ -67,7 +67,7 @@ function Header() {
   return (
     <>
       {!showHeader ? (
-        <Navbar style={{borderBottom:"1px solid", backgroundColor:"black"}}>
+        <Navbar className="main_header"style={{borderBottom:"1px solid", backgroundColor:"black"}}>
           <Container id="container_">
             <Navbar.Brand  style={{color:"white"}}id="navBrand" as={Link} to="/">
               Insdr Hood
