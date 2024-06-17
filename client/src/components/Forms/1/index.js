@@ -3492,7 +3492,7 @@ const FormComponent = () => {
             >
               {showUserDataAlert && sendInfoWithoutDataAlert}
 
-                <h3 style={{ fontWeight: 'bold', marginBottom: '40px' }}>Sign up for fresh insights and events!</h3>
+                <h5 style={{ fontWeight: 'bold', marginBottom: '40px' }}>Sign up to the newsletter for fresh NYC insights!</h5>
               <Form.Group as={Row} className="mb-3" controlId="formHorizontalFirstName">
                 <Form.Label column sm={2}>
                   First Name:
