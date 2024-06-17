@@ -469,7 +469,8 @@ const NeighborhoodEditableDiv = ({
       const explanation = object.hasOwnProperty('explanation') ? `, because ${object['explanation']}` : "";
       return (
         <div>
-          <p style={{ display: "inline", backgroundColor: "yellow", fontWeight: "bold", padding: "3px" }}>
+          <p style={{
+            display: "inline", backgroundColor: "#FFBF00", borderRadius:"20px", fontWeight: "bold", padding: "5px" }}>
             {
               `${assessmentsTexts[key][0]}${" "}${object["assessment"]}${assessmentsTexts[key][1] || ''}`
             }
@@ -540,7 +541,7 @@ const NeighborhoodEditableDiv = ({
 
         ) : (
 
-          <div className="adjectivesDiv" style={{ border: "1px dotted black", display: "flex", flexDirection: "column", alignItems: "start" }}>
+          <div className="adjectivesDiv" style={{  display: "flex", flexDirection: "column", alignItems: "start" }}>
             {isEditable ? (
 
               <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
@@ -591,7 +592,7 @@ const NeighborhoodEditableDiv = ({
                 }
 
                 return (
-                  <div key={index} style={{ border: "1px dotted black", marginTop: "15px", padding: "15px" }}>
+                  <div key={index} style={{ marginTop: "15px", padding: "15px" }}>
 
                     <OverlayTrigger
 
@@ -708,7 +709,7 @@ const NeighborhoodEditableDiv = ({
             </div>
 
           ) : (
-            <div style={{ border: "1px dotted black ", padding: "15px", display: "flex", flexDirection: "column" }}>
+            <div style={{ padding: "15px", display: "flex", flexDirection: "column" }}>
               {isEditable ? (
                 <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
               ) : null}
@@ -749,7 +750,7 @@ const NeighborhoodEditableDiv = ({
                             {index + 1 + "."}
                           </span>
 
-                          <div style={{ display: 'inline', backgroundColor: 'yellow', padding: '4px' }}>
+                          <div style={{ display: 'inline', backgroundColor: '#FFBF00', borderRadius:"20px", padding: '5px' }}>
                             {item.assessment} food.
                           </div>
                           {item.explanation && (
@@ -803,14 +804,15 @@ const NeighborhoodEditableDiv = ({
               </div>
             </div>
           ) : (
-            <div style={{ border: "1px dotted black ", padding: "15px", display: "flex" }}>
+            <div style={{  padding: "15px", display: "flex" }}>
               {isEditable ? (
                 <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
               ) : null}
               <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
                 {<>
                   {complementaryText[0]}
-                  <div style={{ fontWeight: "bold", display: "inline", backgroundColor: "yellow", padding: "4px" }}>
+                    <div style={{
+                      fontWeight: "bold", display: "inline", backgroundColor: "#FFBF00", borderRadius: "20px", padding: "5px" }}>
                     {removeTrailingPeriod(objectData_.assessment)}
                   </div>
                 </>
@@ -1031,7 +1033,7 @@ const NeighborhoodEditableDiv = ({
             </div>
           </div>
         ) : (
-          <div style={{ border: "1px dotted black ", padding: "15px", width: "100%" }} className="nhoodIntroItemList">
+          <div style={{  width: "100%" }} className="nhoodIntroItemList">
 
             <div className="nhoodAdjectivesDivSpanContainer">
               {
@@ -1081,7 +1083,7 @@ const NeighborhoodEditableDiv = ({
           </div>
         </div>
       ) : (
-        <div style={{ border: "1px dotted black ", padding: "15px" }}>
+        <div >
           {isEditable ? (
             <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
             // <svg onClick={handleEditClick} className="editSvg" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
@@ -1090,7 +1092,8 @@ const NeighborhoodEditableDiv = ({
 
           <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
             {complementaryText !== "" ? complementaryText : null} {
-              <p style={{ fontWeight: "bold", backgroundColor: "yellow", padding: "4px", display: "inline" }}>{text}</p>
+                <p style={{
+                  fontWeight: "bold", backgroundColor: "#FFBF00", borderRadius: "20px", padding: "5px", display: "inline" }}>{text}</p>
             }
           </div>
 

@@ -1,1 +1,1 @@
-{"version":3,"file":"newsLetterArticles.js","sourceRoot":"","sources":["../../../src/database/repositories/newsLetterArticles.ts"],"names":[],"mappings":";;;AAAa,QAAA,kBAAkB,GAAG;IAEhC;;;;;;;;;;;;GAYC;IAED;;;;;;;;;;;;;GAaC;IAGD;;;;;;;;;;;;;GAaC;CASF,CAAA"}
+{"version":3,"file":"newsLetterArticles.js","sourceRoot":"","sources":["../../../src/database/repositories/newsLetterArticles.ts"],"names":[],"mappings":";;;AAAa,QAAA,kBAAkB,GAAG;IAEhC;;;;;;;;;;;;GAYC;IAED;;;;;;;;;;;;;GAaC;IAID;;;;;;;;;;;;;GAaC;IAGD;;;;;;;;;;;;;GAaC;IAGD;;;;;;;;;;;;;GAaC;CASF,CAAA"}

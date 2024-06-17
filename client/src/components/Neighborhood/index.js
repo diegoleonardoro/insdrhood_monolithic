@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 const NeighborhoodProfile = () => {
 
-
   const { currentuser_, setCurrentUserDirectly } = useUserContext();
 
   const { neighborhoodid } = useParams();
@@ -28,7 +27,6 @@ const NeighborhoodProfile = () => {
 
   const getNeighorhoodData = async () => {
     try {
-
       const neighborhood = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhood/${neighborhoodid}`);
       const currentUser__ = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
       setNeighborhood(neighborhood.data);
@@ -49,17 +47,19 @@ const NeighborhoodProfile = () => {
 
     <div>
 
-      <div className="userProfileContainer" style={{ position: "relative", left: "50%", transform: "translate(-50%, 0)", border: "1px solid black" }}>
+      <div className="userProfileContainer">
 
         <div className="userIntroContainer"
           style={{ position: "relative" }}>
 
-          <div style={{ width: "100%", backgroundColor: "#FFFCEB" }} >
+          {/* <div style={{ width: "100%", backgroundColor: "#FFFCEB" }} >
             <img alt="profileImage" style={{ width: "100%", padding: "10px" }} src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-26%2011.59.19%20-%20A%20crisp%20and%20clear%20panoramic%20view%20of%20a%20classic%20New%20York%20City%20neighborhood%2C%20featuring%20brownstones%2C%20restaurants%2C%20and%20bodegas%2C%20all%20without%20people%20and%20with%20(3).jpg"></img>
-          </div>
+          </div> */}
 
           <div className="containerNhoodItems userInfo">
+
             <div className="userInfoSubContainer">
+
               <h1 style={{ textAlign: "center", position: "relative", top: "10px", display: "flex", justifyContent: "center", padding: "30px" }}>
                 <span style={{ marginRight: "5px" }}>
                   <b>{nhoodName ? (nhoodName) : ''}</b>
@@ -70,7 +70,9 @@ const NeighborhoodProfile = () => {
               </h1>
 
               {neighborhood && (
+
                 <div className="introContainer" >
+
                   <NeighborhoodEditableDiv complementaryText={"I have been living in " + nhoodName} isEditable={isEditable} neighborhoodid={neighborhoodid} content={neighborhood.timeLivingInNeighborhood.toLowerCase() + ". "} objectKey="timeLivingInNeighborhood" />
 
                   <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} complementaryText={nhoodName + " can be described as follows"} content={
@@ -110,15 +112,15 @@ const NeighborhoodProfile = () => {
           <div className="sectionContainer containerNhoodItems" >
             {neighborhood && (
               <div className="subContainerNhoodItems"  >
-                <div className="detailsContainer">
-
+                <div className="detailsContainer_">
+{/* 
                   <picture className="imageSectionContainer">
 
                     <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_residents%20.png' />
 
                     <img className="imageResidents" alt="residentsimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/residents%20.png" />
 
-                  </picture>
+                  </picture> */}
 
                   <div className="reisidentsSubContainer" >
                     <div className="residentesSubSubContainer">
@@ -154,14 +156,14 @@ const NeighborhoodProfile = () => {
 
                   </div>
                 </div>
-                <picture className="imageSectionContainer">
+                {/* <picture className="imageSectionContainer">
 
                   <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_food.png' />
 
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/DALL%C2%B7E%202023-12-25%2012.01.38%20-%20A%20minimalistic%20illustration%20using%20the%20specified%20color%20palette%20%23efe6ab%2C%20%23848fa8%2C%20%235f582b%2C%20%232961a1%2C%20%23b3d2d1%2C%20depicting%20the%20concept%20of%20'food%20in%20a%20restaur.png"></img>
 
 
-                </picture>
+                </picture> */}
               </div>
             )}
           </div>
@@ -171,10 +173,10 @@ const NeighborhoodProfile = () => {
           <div className="sectionContainer containerNhoodItems">
             {neighborhood && (
               <div className="nightLifeContainer">
-                <picture className="imageSectionContainer">
+                {/* <picture className="imageSectionContainer">
                   <source media="(max-width: 700px)" srcSet='https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/1_nightlife.jpg' />
                   <img className="recommendationsImage" alt="foodimage" src="https://raw.githubusercontent.com/diegoleonardoro/multi-k8s/main/nitelife.jpg"></img>
-                </picture>
+                </picture> */}
 
                 <div className="nightLifeEditableDivsContainer">
                   <div style={{ position: "relative", margin: "auto " }}>
@@ -202,6 +204,8 @@ const NeighborhoodProfile = () => {
 
           {/** STATEMENTS */}
           <div className="containerNhoodItems" >
+
+            <h1>Some Neighborhood Assessments:</h1>
             {neighborhood && (
               <div className="assessmentsContainer">
                 <NeighborhoodEditableDiv isEditable={isEditable} neighborhoodid={neighborhoodid} neighborhood={nhoodName} nestedObjects={neighborhood.statements} objectKey="statements" />

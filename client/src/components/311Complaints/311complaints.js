@@ -156,8 +156,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
   const [zips, setZips] = useState(query.get('zips'))
 
-
-
   const [filters, setFilters] = useState({
     "zip": '',
     "Borough": '',
@@ -278,7 +276,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       }
 
       if (initialLoadDayDataCountCheck) {
-
 
 
         // if there are zipcodes coming in the url, then set the linekeys with those zip codes
@@ -477,7 +474,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
         fontSize: '13px', // text size
         color: '#333', // dark grey text color
         margin: '20px',
-        
+
       }}>
         Showing data from <span style={{ fontWeight: "bold" }}>{minDate}</span> to <span style={{ fontWeight: "bold" }}>{maxDate}.</span> {complaintsNumber ? complaintsNumber.toLocaleString() : null} records.
       </div>
@@ -485,8 +482,9 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       {/** Bar chart */}
 
       <div style={{ width: "100%", backgroundColor: "#f7f7f7" }}>
+        <h4 style={{ textAlign: "center", marginTop: "10px", backgroundColor: "#e4e4e4" }}>311 Calls by Location & Type</h4>
         <div className='chartsContainer' >
-          <h6 style={{ textAlign: "center", marginTop: "10px", backgroundColor:"#e4e4e4"}}>311 Calls by Location & Type</h6>
+
           <Box
             sx={{
               display: 'flex',
@@ -557,7 +555,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
           {!loadingBarChart && (
             <>
               {selectedData && (
-                <Button className='seeAllComplaintsLink'  variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
+                <Button className='seeAllComplaintsLink' variant="link" color="info" onClick={() => { fetchComplaints(true, false, true); scrollToCardsRef() }}>
                   See all <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}> {selectedData} </span>complaints for
                   {
                     filters.zip || zips ? (
@@ -567,7 +565,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
                           {currentZipForDisplay.length > 0 ? currentZipForDisplay.join(', ') : "all"} zipcode(s)
                         </span>) : (
                         <span style={{ fontWeight: "bolder", marginLeft: "5px", marginRight: "5px", textDecoration: 'underline' }}>
-                            {zips} zipcode(s)
+                          {zips} zipcode(s)
                         </span>
                       )
 
@@ -627,11 +625,8 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 
       {/** Line chart */}
       <div className='lineChartMainContainer' >
-
-
+        <h4 style={{ textAlign: "center", marginTop: "10px", backgroundColor: "#e4e4e4" }}>311 Call Trends Over Time</h4>
         <div className='chartsContainer' >
-          <h6 style={{ textAlign: "center", marginTop: "10px", backgroundColor: "#e4e4e4" }}>Track 311 Call Trends Over Time</h6>
-
           <div >
             <ZipCodeBoroSelect loadingLineChartonClick={loadingLineChartonClick} updateDayCountData={updateDayCountData}></ZipCodeBoroSelect>
           </div>
@@ -813,6 +808,7 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
 export default Complaints311;
 
 
+// la la la
 
 
       // ---- The following lines will create the "Other" category ----

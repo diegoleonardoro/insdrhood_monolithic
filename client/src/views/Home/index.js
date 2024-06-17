@@ -74,12 +74,10 @@ function Home() {
 
       // here make a request to the server to fetch the blogs
       const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`)
-   
+
       setBlogs(blogsResponse.data)
       setBlogsLoading(false);
-      // setBlogs(blogsData);
-      // blogsCursorRef.current = blogsData[blogsData.length - 1]._id;
-      // setBlogsLoading(false);    
+
     };
     initialize();
   }, []);
@@ -223,32 +221,7 @@ function Home() {
     if (container) {
       container.style.transform = `translateX(-${shiftAmount}px)`;
     }
-
     if (!hasMoreBlogsRef.current) return;//|| !isTapAllowed
-
-    // setIsTapAllowed(false); // Disable further taps
-
-
-
-    // try {
-
-    //   const blogsResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blog/getblogs`, {
-    //     params: { cursor: blogsCursorRef.current, pageSize: blogsPerpage },
-    //   });
-
-    //   setBlogs(prevData => [...prevData, ...blogsResponse.data.blogs]);
-    //   blogsCursorRef.current = blogsResponse.data.nextCursor;
-
-    //   if (!blogsResponse.data.nextCursor || blogsResponse.data.blogs.length < blogsPerpage) {
-    //     hasMoreBlogsRef.current = false;
-    //   }
-    //   // setIsTapAllowed(true);
-    // } catch (error) {
-    //   console.error("Failed to fetch more blogs", error);
-    // }
-
-
-
 
   };
 
@@ -297,36 +270,41 @@ function Home() {
   }
   // backgroundColor: '#B2AC88',
   return (
-    <div style={{ width: '100%', margin: '60px auto auto auto' }}>
+    <div style={{ width: '100%', margin: 'auto auto auto auto' }}>
 
-      <div style={{ width: '100%', overflowX: "hidden", display: "flex", position: 'relative', borderBottom:"1px solid black" }}>
-        {!blogsLoading ? (
-          <>
-            <div className="arrowsContainer__" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
-              <svg className='blogArrows bi bi-arrow-left' style={{ fontSize: '100px', border: 'none', zIndex: '10', padding: "10px" }} width="56" height="56" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
-              </svg>
-            </div>
+      <div style={{ width: '100%', overflowX: "hidden", display: "flex", position: 'relative', borderBottom: "1px solid black" }}>
 
-            <div ref={blogContainerRef} className='articlesContainer' >
-              {blogCards}
-            </div>
+        <div className="mainBlogsContainer">
 
-            {/* Right Arrow */}
-            <div className="arrowsContainer__" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
+          {!blogsLoading ? (
+            <>
+              <div className="arrowsContainer__" onClick={showPreviousBlogs} style={{ cursor: 'pointer', position: "absolute", left: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black", borderRadius: "50px", padding: "10px", marginLeft: "20px" }}>
+                <svg className='blogArrows bi bi-arrow-left' style={{ fontSize: '100px', border: 'none', zIndex: '10', padding: "10px" }} width="56" height="56" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                  <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                </svg>
+              </div>
 
-              <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
-                <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
-              </svg>
-            </div>
-          </>
-        )
-          : (<div className="skeletonBlogs" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            {/* Mimic the structure of your blog card with skeleton loaders */}
-            <SkeletonLoader width="90%" height="200px" /> {/* For the image */}
-            <SkeletonLoader width="80%" height="20px" />  {/* For the title */}
-            <SkeletonLoader width="70%" height="20px" />  {/* For the button or small text */}
-          </div>)}
+              <div ref={blogContainerRef} className='articlesContainer' >
+                {blogCards}
+              </div>
+
+              {/* Right Arrow */}
+              <div className="arrowsContainer__" onClick={fetchMoreBlogs} style={{ cursor: 'pointer', position: "absolute", right: "0px", top: "50%", transform: "translate(0, -50%)", margin: "auto", zIndex: '10', border: "1px solid black", borderRadius: "50px", padding: "10px", marginRight: "20px" }}>
+
+                <svg className='blogArrows bi bi-arrow-right' style={{ fontSize: '100px', border: 'none', padding: "10px", }} xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" viewBox="0 0 16 16">
+                  <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                </svg>
+              </div>
+            </>
+          )
+            : (<div className="skeletonBlogs" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              {/* Mimic the structure of your blog card with skeleton loaders */}
+              <SkeletonLoader width="90%" height="200px" /> {/* For the image */}
+              <SkeletonLoader width="80%" height="20px" />  {/* For the title */}
+              <SkeletonLoader width="70%" height="20px" />  {/* For the button or small text */}
+            </div>)}
+
+        </div>
 
       </div>
 

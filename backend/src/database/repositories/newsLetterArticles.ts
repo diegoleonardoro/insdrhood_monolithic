@@ -2,13 +2,13 @@ export const articlesNewsLetter = [
 
   `
     <div>
-    <a href="https://www.6sqft.com/nyc-creates-map-of-public-restrooms-plans-to-build-more-bathrooms" style="text-decoration: underline;"">
+    <a href="https://www.6sqft.com/museum-mile-festival-is-back-offering-free-admission-at-nycs-best-museums/" style="text-decoration: underline;"">
       <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
-        NYC creates map of public restrooms, announces plan to build more bathrooms
+        Museum Mile Festival is back
       </h3>
     </a>
     <div>
-      New York City has launched "Ur in Luck," a new initiative led by Mayor Eric Adams to improve public restroom accessibility across the city. This program aims to construct 46 new public restrooms and renovate 36 existing ones over the next five years, with renovations including accessibility upgrades and additional stalls. Additionally, a new Google Maps layer has been added to help residents and visitors locate these facilities easily. This plan is in response to the city's recognition of the urgent need for more public restrooms to ensure equity and improve the quality of life.
+      The Museum Mile Festival in New York City returns for its 46th year, offering free admission to eight renowned museums along Fifth Avenue, enhanced by live performances and various art activities.
       </div>
     </div>
 
@@ -17,30 +17,63 @@ export const articlesNewsLetter = [
   `
     <div>
 
-    <a href="https://www.brickunderground.com/rent/notable-new-yorkers-back-broker-fee-bill-ilana-glazer" style="text-decoration: underline;">
+    <a href="https://www.6sqft.com/pickleball-dumbo-brooklyn-bridge-plaza/" style="text-decoration: underline;">
       <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
-        Notable New Yorkers join push for broker fee bill
+        Pickleball is coming next to the Brooklyn Bridge in Dumbo
       </h3>
     </a>
       <div>
-      In New York City, a new bill proposed by City Council member Chi Ossé seeks to alleviate financial pressures on renters by shifting the obligation to pay broker fees from renters to the landlords or others hiring brokers. Notable figures, including comedian Ilana Glazer and venture capitalist Bradley Tusk, have voiced their support, highlighting how this change could significantly benefit tenants by reducing the upfront costs of renting in the city.
+      Two parking lots under the Brooklyn Bridge in Dumbo will be transformed into a pickleball hub with twelve courts and other amenities like a dog run and food trucks, operated by CityPickle seasonally from March through November.
       </div>
     </div>
 
   `,
 
 
+
   `
     <div>
 
-      <a href="https://www.timeout.com/newyork/news/puerto-rican-day-parade-in-nyc-what-you-need-to-know-060818" style="text-decoration: underline;">
+      <a href="https://www.curbed.com/article/brokers-chi-osse-fees-rebny-rally-hearing.html" style="text-decoration: underline;">
         <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
-         Puerto Rican Day Parade in NYC
+        Brokers Are Ready to Fight for Their Fees
         </h3>
       </a>
       <div>
-      The National Puerto Rican Day Parade in NYC is a vibrant cultural celebration, featuring giant puppets, reggaeton bands, salsa dancers, and floats marching along Fifth Avenue from 44th to 79th Streets. Scheduled for a Sunday in June, it starts at 11 am and draws over a million attendees, making it the largest display of cultural pride in the nation. This year's theme, "Boricua de Corazón" (Puerto Rican at heart), highlights the community's contributions and history. Acclaimed salsa singer Tito Nieves serves as the Grand Marshal, and numerous street closures are planned around the parade route.
-      </div>
+    New York City real estate brokers rallied against Councilmember Chi Ossé's proposed bill that would shift the responsibility of broker fees from tenants to landlords, fearing the change could diminish their earnings and arguing that the system unfairly targets brokers.
+        </div>
+    </div>
+
+  `,
+
+
+  `
+    <div>
+
+      <a href="https://streeteasy.com/blog/inventory-climbs-but-rents-continue-to-rise/" style="text-decoration: underline;">
+        <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
+        Inventory Climbs, But Rents Continue to Rise in NYC
+        </h3>
+      </a>
+      <div>
+    Despite a modest increase in housing inventory, the median rent in New York City continues to rise, although at a slower pace compared to previous years, driven by strong demand and a long-term housing shortage.
+        </div>
+    </div>
+
+  `,
+
+
+  `
+    <div>
+
+      <a href="https://www.brownstoner.com/development/coney-island-casino-new-renderings-thor-equities/" style="text-decoration: underline;">
+        <h3 style="color: #333; font-size: 18px; font-weight: bold; margin-top:20px; margin-bottom:10px">
+        Fresh Renderings Show Glittering Proposed Coney Island Casino
+        </h3>
+      </a>
+      <div>
+    Thor Equities has unveiled new renderings for The Coney, a proposed casino in Coney Island, featuring a 500-room hotel, a 2,500-seat concert venue, upscale dining, and extensive meeting spaces, with plans to provide substantial local economic benefits and thousands of jobs.
+        </div>
     </div>
 
   `,

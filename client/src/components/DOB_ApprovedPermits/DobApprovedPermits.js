@@ -10,7 +10,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
-
+import Spinner from 'react-bootstrap/Spinner';
 
 
 // Helper functions for text formatting
@@ -65,7 +65,7 @@ const columns = [
   { id: 'Street Name', label: 'Street Name', minWidth: 170, formatter: capitalizeWords },
   { id: 'Borough', label: 'Borough', minWidth: 100, formatter: capitalizeFirstWord },
   { id: 'Community Board', label: 'Community Board', minWidth: 140, formatter: removeFirstDigit }, // Ensure this ID is exactly as it appears in your dataset
- // Typo is consistent with data
+  // Typo is consistent with data
 
   { id: 'Work Floor', label: 'Work Floor', minWidth: 100, formatter: capitalizeFirstWord },
   { id: 'Work Type', label: 'Work Type', minWidth: 120, formatter: capitalizeFirstWord },
@@ -82,11 +82,12 @@ const DOBApprovedPermits = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loadingTable, setLoadingTablet] = useState(false);
 
   const query = useQuery();
   const cb = query.get('cb');
 
-  if(cb){
+  if (cb) {
     console.log("cb comes in the url params")
   }
 
@@ -101,10 +102,13 @@ const DOBApprovedPermits = () => {
   };
 
   useEffect(() => {
+
+    setLoadingTablet(true)
     const fetchDOBApprovedPermits = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/dob_approved_permits`);
         setData(response.data);
+        setLoadingTablet(false);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -113,43 +117,70 @@ const DOBApprovedPermits = () => {
   }, []);
 
   return (
-    <Paper sx={{ width: '100%' }}>
-      <TableContainer sx={{ overflowX: 'auto' }}>
-        <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <StyledTableCell key={column.id} align='left'>{column.label}</StyledTableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-              <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
-                {columns.map((column) => {
-                  const value = row[column.id];
-                  return (
-                    <StyledTableCell key={column.id}>{column.formatter ? column.formatter(value) : value}</StyledTableCell>
-                  );
-                })}
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(event, newPage) => setPage(newPage)}
-        onRowsPerPageChange={(event) => {
-          setRowsPerPage(+event.target.value);
-          setPage(0);
-        }}
-      />
-    </Paper>
+
+
+    <>
+      {loadingTable && (
+        <>
+          <div style={{ margin: "30px", textAlign: "center" }}>
+            <div style={{ position: "relative" }}>
+              <Spinner animation="grow" size="sm" className="spinner spinner1" />
+              <Spinner animation="grow" className="spinner spinner2" />
+              <Spinner animation="grow" style={{ height: "50px", width: "50px" }} className="spinner spinner3" />
+            </div>
+
+            Fetching data...
+          </div>
+        </>
+      )}
+
+
+      {!loadingTable && (
+
+        <Paper sx={{ width: '100%' }}>
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <StyledTableCell key={column.id} align='left'>{column.label}</StyledTableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                  <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <StyledTableCell key={column.id}>{column.formatter ? column.formatter(value) : value}</StyledTableCell>
+                      );
+                    })}
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(event, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(+event.target.value);
+              setPage(0);
+            }}
+          />
+        </Paper>
+
+      )}
+
+
+    </>
+
+
   );
 }
 

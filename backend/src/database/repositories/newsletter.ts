@@ -116,7 +116,8 @@ export class NewsletterRepository {
   private async fetchAllSubscribers() {
     const db = await this.db;
     const emailsCollection = db.collection(this.collectionName);
-    const users = await emailsCollection.find({ email: "diegoinbox0@gmail.com"}).toArray();
+    const users = await emailsCollection.find().toArray();//{ email: "diegoinbox0@gmail.com"}
+
     return users;
   }
 
@@ -187,16 +188,15 @@ export class NewsletterRepository {
 
     return `
     <div style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #ffffff; margin-bottom: 12px; padding: 20px; font-family: 'Helvetica', 'Arial', sans-serif;">
-      <div style="background-color: #f2f4f8; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0;">
+      <div style="background-color: #f2f4f8; padding: 5px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0;">
         <h3 style="color: #333; font-size: 18px; font-weight: bold;">${call['Complaint Type']}</h3>
       </div>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Date:</strong> <span style="color: #555;">${formattedDate}</span></p>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Agency:</strong> <span style="color: #555;">${call['Agency']}</span></p>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Descriptor:</strong> <span style="color: #555;">${call['Descriptor']}</span></p>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Location Type:</strong> <span style="color: #555;">${call['Location Type']}</span></p>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Zip:</strong> <span style="color: #555;">${call['Incident Zip']}</span></p>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Address:</strong> <span style="color: #555;">${call['Incident Address']}</span></p>
-      <p style="margin: 5px 0; font-size: 16px;"><strong>Borough:</strong> <span style="color: #555;">${call['Borough']}</span></p>
+      <p style="margin: 3px 0; font-size: 16px;"><strong>Date:</strong> <span style="color: #555;">${formattedDate}</span></p>
+      <p style="margin: 3px 0; font-size: 16px;"><strong>Agency:</strong> <span style="color: #555;">${call['Agency']}</span></p>
+      <p style="margin: 3px 0; font-size: 16px;"><strong>Descriptor:</strong> <span style="color: #555;">${call['Descriptor']}</span></p>
+      <p style="margin: 3px 0; font-size: 16px;"><strong>Zip:</strong> <span style="color: #555;">${call['Incident Zip']}</span></p>
+      <p style="margin: 3px 0; font-size: 16px;"><strong>Address:</strong> <span style="color: #555;">${call['Incident Address']}</span></p>
+      <p style="margin: 3px 0; font-size: 16px;"><strong>Borough:</strong> <span style="color: #555;">${call['Borough']}</span></p>
     </div>
   `;
   }
@@ -225,14 +225,13 @@ export class NewsletterRepository {
 
     return `
       <div style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #ffffff; margin-bottom: 12px; padding: 20px; font-family: 'Helvetica', 'Arial', sans-serif; text-align: left;">
-        <div style="background-color: #f2f4f8; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0; text-align: left;">
+        <div style="background-color: #f2f4f8; padding: 5px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0; text-align: left;">
           <h3 style="color: #333; font-size: 18px; font-weight: bold; text-align: left;">${permit['House Number']} ${permit['Street Name']}</h3>
         </div>
-        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Borough:</strong> <span style="color: #555;">${borough}</span></p>
-        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Job Description:</strong> <span style="color: #555;">${permit['Job Description']}</span></p>
-        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Issued Date:</strong> <span style="color: #555;">${formatDOBDate(permit['Issued Date'])}</span></p>
-        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Expired Date:</strong> <span style="color: #555;">${formatDOBDate(permit['Expired Date'])}</span></p>
-        <p style="margin: 5px 0; font-size: 16px; text-align: left;"><strong>Estimated Cost:</strong> <span style="color: #555;">${estimatedCost}</span></p>
+        <p style="margin: 3px 0; font-size: 16px;"><strong>Borough:</strong> <span style="color: #555;">${borough}</span></p>
+        <p style="margin: 3px 0; font-size: 16px;"><strong>Job Description:</strong> <span style="color: #555;">${permit['Job Description'].charAt(0).toUpperCase() + permit['Job Description'].slice(1).toLowerCase()}</span></p>
+        <p style="margin: 3px 0; font-size: 16px;"><strong>Issued Date:</strong> <span style="color: #555;">${formatDOBDate(permit['Issued Date'])}</span></p>
+        <p style="margin: 3px 0; font-size: 16px;"><strong>Estimated Cost:</strong> <span style="color: #555;">${estimatedCost}</span></p>
       </div>
       `;
   }
@@ -257,26 +256,44 @@ export class NewsletterRepository {
 
   private create311CallsButtonHTML(zipCodes: string[]): string {
 
-    const baseUrlForEmailVerification = process.env.BASE_URL ?process.env.BASE_URL.split(" ")[0] : ''
+    const baseUrlForEmailVerification = process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
     const zipCodeParam = encodeURIComponent(zipCodes.join(','));
 
-    
-    
-    return `
-    <div style="text-align: center; margin-top: 20px;">
-      <a href="https://insiderhood.com/311complaints?zips=${zipCodeParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More 311 Calls</a>
-    </div>
+    if (zipCodes[0] === '') {
+      return `
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="https://insiderhood.com/311complaints" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More 311 Calls</a>
+      </div>
   `;
+
+    }else{
+      return `
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="https://insiderhood.com/311complaints?zips=${zipCodeParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More 311 Calls</a>
+      </div>
+  `;
+    }
+
+  
   }
-////${baseUrlForEmailVerification}
+  ////${baseUrlForEmailVerification}
   private createDOBPermitsButtonHTML(communityBoards: string[]): string {
     const baseUrlForEmailVerification = process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
     const communityBoardParam = encodeURIComponent(communityBoards.join(','));
-    return `
-    <div style="text-align: center; margin-top: 20px;">
-      <a href="https://insiderhood.com/DOBApprovedPermits?cb=${communityBoardParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More DOB Approved Permits</a>
-    </div>
-  `;
+
+    if (communityBoards[0] === '') {
+      return `
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="https://insiderhood.com/DOBApprovedPermits" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More DOB Approved Permits</a>
+        </div>
+      `;
+    }else{
+          return `
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="https://insiderhood.com/DOBApprovedPermits?cb=${communityBoardParam}" style="background-color: #000000; color: white; padding: 14px 20px; margin: 10px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">See More DOB Approved Permits</a>
+        </div>
+      `;
+    }
   }
 
   async subscribeToNewsletter(data: { email: string, name?: string, newsletter: boolean, frequency?: string, zipCode?: string }): Promise<{ message: string }> {
@@ -401,17 +418,19 @@ export class NewsletterRepository {
       // --- --- --- --- --- --- --- --- --- 
 
 
-
-
-
-
       // --- ---  retreive users from the users db --- ---
       const subscribers = await this.fetchAllSubscribers();
       // --- --- --- --- --- --- --- --- --- 
 
+      console.log("subss", subscribers)
+
 
       // --- --- filter data311Calls according to the subscriber.zipcode
       const formattedResults = subscribers.map(subscriber => {
+
+        console.log(subscriber.name)
+        console.log("subscriber", subscriber.email)
+        console.log("--------")
 
         const getCurrentDate = () => {
           const date = new Date();
@@ -428,14 +447,31 @@ export class NewsletterRepository {
         const zipToBoard: Record<string, string> = Object.fromEntries(zipcodesCommunityBoards.map(obj => [Object.values(obj)[0], Object.keys(obj)[0]]));
 
         if (!subscriber.zipcodes || subscriber.zipcodes.length === 0) {
+
+
+          const relevantDOBPermits = dobPermits.data
+            .slice(0, 4)
+            .map((permit: DOBPermit) => this.formatPermitToHTML(permit))
+            .join('');
+
+          const relevant311Calls = data311Calls.data
+            .slice(0, 4)
+            .map((call: Data311Call) => this.formatCallToHTML(call))
+            .join('');
+
+          const permitsButtonHTML = this.createDOBPermitsButtonHTML(['']);
+          const calls311ButtonHTML = this.create311CallsButtonHTML(['']);
           return {
             to: [{ email: subscriber.email }],
             dynamic_template_data: {
               name: subscriber.name,
-              complaintsHtml: "No relevant data available.", // Or handle this scenario differently
               currentDate: getCurrentDate(),
               day: dayOfWeek(),
-              articlesNewsLetter: articlesNewsLetter.join("")
+              articlesNewsLetter: articlesNewsLetter.join(""),
+              relevantDOBPermits: relevantDOBPermits,
+              complaintsHtml: relevant311Calls,
+              calls311ButtonHTML: calls311ButtonHTML,
+              permitsButtonHTML: permitsButtonHTML,
             }
           };
         }
@@ -451,7 +487,7 @@ export class NewsletterRepository {
           .join('');
 
         const permitsButtonHTML = this.createDOBPermitsButtonHTML(communityBoards);
-       
+
         // --- --- --- --- --- --- --- --- --- --- 
 
 
@@ -464,12 +500,8 @@ export class NewsletterRepository {
           .join('');
 
         const calls311ButtonHTML = this.create311CallsButtonHTML(subscriber.zipcodes);
-        
+
         // --- --- --- --- --- --- --- --- --- --- 
-
-
-
-
 
         return {
           to: [{ email: subscriber.email }],
@@ -497,8 +529,8 @@ export class NewsletterRepository {
         templateId: "d-6eb53e9e9d8a40e4bfa8150ec791cb7b"
       };
 
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-      await sgMail.send(msg);
+      // sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+      // await sgMail.send(msg);
 
       return { message: 'Newsletter Sent', statusCode: 200 };
 

@@ -3,6 +3,18 @@
 hr{
   margin: 0rem 0;
 }
+h2{
+  text-align: start;
+}
+.userProfileContainer{
+
+}
+
+.userIntroContainer{
+  width:80%;
+  left:50%;
+  transform: translate(-50%, 0 );
+}
 
 .containerNhoodItems{
   position:relative;
@@ -12,11 +24,15 @@ hr{
 
 .userInfo {
   position: relative;
-  background-color: #FFFCEB ;
+  /* background-color: #FFFCEB ; */
 }
 
 .userInfoSubContainer{
   /* padding:10px; */
+}
+
+h1{
+  text-align: start;
 }
 
 
@@ -24,7 +40,7 @@ hr{
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 65%;
+  /* width: 65%; */
   align-items: start;
   position: relative;
   left: 50%;
@@ -36,10 +52,10 @@ hr{
  }
 
  .subContainerNhoodItems{
-  width: 80%;
+  /* width: 100%; */
   position:relative;
-  left: 50%;
-  transform: translate(-50%, 0);
+  /* left: 50%;
+  transform: translate(-50%, 0); */
  }
 
 /* Images: */
@@ -55,24 +71,24 @@ hr{
 .containerFood{
   display:flex;
   /* flex-direction: row-reverse; */
-  width:80%;
+  width:100%;
   align-items: center;
   justify-content: center;
 }
 
 .residentesSubSubContainer{
-  width: 65%;
+  /* width: 65%; */
   position: relative;
-  margin: auto 
+  /* margin: auto  */
 }
 .nightLifeContainer{
  display:flex;
  align-items: center;
  justify-content: center;
- width:80%;
+ /* width:80%; */
  position: relative;
- left:50%;
- transform: translate(-50%,0);
+ /* left:50%;
+ transform: translate(-50%,0); */
 }
 .nightLifeEditableDivsContainer{
   width:100%
@@ -83,7 +99,7 @@ hr{
 }
 
 .foodEditableDivsContainer_{
-  width: 65%;
+  /* width: 65%; */
    position: relative;
     margin: auto 
 }
@@ -109,19 +125,17 @@ hr{
   display: flex;
   flex-direction: column;
   /* margin-left: 10px; */
-  width:30%;
-  justify-content: center;
+  /* width:30%; */
+  /* justify-content: center; */
 }
 
 .sectionContainer{
-  background-color: #FFFCEB ;
+  /* background-color: #FFFCEB ; */
+  margin-top: 50px;
 }
 
 .assessmentsContainer{
   position:relative;
-  width:65%;
-  left:50%;
-  transform: translate(-50%, 0);
   text-align: start;
 }
 
