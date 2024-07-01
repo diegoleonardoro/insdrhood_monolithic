@@ -27,6 +27,7 @@ import NewsLetterPreferences from './components/NewsletterPreferences/newsLetter
 import Complaints311 from './components/311Complaints/311complaints';
 import Dashboard from './components/Dashboard/Dashboard';
 import DOBApprovedPermits from './components/DOB_ApprovedPermits/DobApprovedPermits'
+import Footer from './components/Footer/footer'
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -118,6 +119,8 @@ function App() {
             <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route>
           </Routes>
           <Suspense />
+
+          <Footer/>
         </div>
       </NavigationHistoryProvider>
     </Router>

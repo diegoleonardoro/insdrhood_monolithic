@@ -1,0 +1,19 @@
+.footerStyle {
+  background: #DEA001;
+  text-align: center;
+  padding: 10px 20px;
+  width: 100%;
+  border-top: 1px solid #1a1a1a33;
+}
+
+.footerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.textStyle {
+  margin: 5px 0;
+  font-size: 12px;
+}

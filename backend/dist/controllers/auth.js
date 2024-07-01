@@ -5,7 +5,6 @@ const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
 const newsletter_1 = require("../database/repositories/newsletter");
-const mongodb_1 = require("mongodb");
 /**
  * @description registers a new user
  * @route POST /api/signup
@@ -166,20 +165,11 @@ exports.updateNeighborhoodData = updateNeighborhoodData;
  */
 const getAllNeighborhoods = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize, 10) || 10;
-    const cursorParam = req.query.cursor;
-    let cursor = undefined;
-    if (typeof cursorParam === 'string' && cursorParam !== '') {
-        try {
-            cursor = new mongodb_1.ObjectId(cursorParam);
-        }
-        catch (error) {
-            return res.status(400).json({ message: 'Invalid cursor format' });
-        }
-    }
+    const page = parseInt(req.query.page, 10) || 1;
     try {
         const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
-        const { neighborhoods, nextCursor } = await neighborhoodRepository.getAll({ cursor, pageSize });
-        res.status(200).json({ neighborhoods, nextCursor });
+        const { neighborhoods } = await neighborhoodRepository.getAll({ page, pageSize });
+        res.status(200).json({ neighborhoods });
     }
     catch (error) {
         console.error('Failed to fetch neighborhoods:', error);

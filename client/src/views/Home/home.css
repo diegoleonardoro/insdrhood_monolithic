@@ -20,9 +20,33 @@
   /* position: absolute; */
 }
 
+.main-banner {
+    padding: 35px;
+}
 
+.main-banner img.img-responsive.banner-img {
+    border-radius: 20px;
+    width: 100%;
+}
 
+h2.contain-txt {
+    width: 930px;
+    background: rgba(122, 52, 58, 0.80);
+    border-bottom-left-radius: 28px;
+    backdrop-filter: blur(5px);
+    padding: 29px 26px;
+    font-size: 49px;
+    font-family: Koulen;
+    font-weight: 400;
+    line-height: 42px;
+    word-wrap: break-word;
+    color: #fff;
+}
 
+.contain {
+    margin-top: -219px;
+    padding-left: 35px;
+}
 
 
 .skeleton-loader {
@@ -45,15 +69,13 @@
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.2);
 }
-.articlesContainer{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  scroll-behavior: smooth;
-  width:100%;
-  transition: transform 1s ease; 
 
+.articlesContainer{
+  width:80%;
+  margin:auto;
+  
+  /* width:100%;
+  transition: transform 1s ease;  */
 }
 
 .blogArrows{
@@ -61,50 +83,163 @@
 }
 
 /* This styles the scrollbar track */
-.articlesContainer::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Track background */
+/* .articlesContainer::-webkit-scrollbar-track {
+  background: #f1f1f1; 
 }
 
-/* This styles the actual scrollbar handle */
 .articlesContainer::-webkit-scrollbar-thumb {
-  background: #888; /* Scrollbar handle color */
+  background: #888; 
 }
-
-/* Handle on hover */
 .articlesContainer::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Scrollbar handle color on hover */
+  background: #555;
 }
-
 .articlesContainer::-webkit-scrollbar {
-  height: 12px; /* Height of the horizontal scrollbar */
-  width: 12px; /* Width of the vertical scrollbar */
-}
+  height: 12px; 
+  width: 12px;
+} */
 
 .residentsHeader{
-  position:relative;
-  font-family: "Roboto Slab", serif;
-  font-optical-sizing: auto;
-  margin:40px;
   text-align: center;
-  top:20px;
+  color: white;
+  /* font-size: 48px; */
+  font-family: Koulen;
+  font-weight: 400;
+  line-height: 42px;
+  word-wrap: break-word;
+}
+
+/* This ensures all columns are of the same height */
+.Col {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* This will make sure the column itself stretches */
+  
 }
 
 .blogsCard{
-
-  flex: 0 0 auto; /* Do not grow or shrink */
-  height: 500px; /* Fixed height */
-  width: 400px; /* Fixed width, adjust as needed */
+  width: 100%; /* Full width of the column */
   background-color: transparent;
-  margin: 10px !important;
-  border:1px solid black;
-
+  border: 1px #ffc107 solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  border-radius: 0;
 }
 
 .blogsCard img{
-  max-height: 300px;
+  width: 100%;
+  height: 300px; /* Fixed height for image */
   object-fit: cover;
 }
 
+.card-body {
+  flex-grow: 1;
+  padding:0px;
+}
+
+.card-footer {
+  padding: 0; /* Remove default padding */
+}
+
+.blogCardTitle{
+  /* margin-top: 10px !important;
+  margin-left: 10px !important; */
+
+  color: #DEA001;
+  font-size: 35px;
+  font-family: Koulen;
+  font-weight: 400;
+  line-height: 29px;
+  word-wrap: break-word;
+}
+
+.read-button {
+  /* background-color: rgb(255, 156, 85); */
+  background: #ECECEC;
+  border-radius: 8px;
+  border: 1px #333332 solid;
+  width: 100%;
+  font-size: 22px;
+  font-family: Koulen;
+  font-weight: 400;
+  position: relative;
+  left:50%;
+  transform: translate(-50%,0 );
+  color: black;
+  height: 60px;
+  border-radius: 10px;
+  
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
+  color: #DEA001;
+  font-size: 35px;
+  font-family: Koulen;
+  font-weight: 400;
+  line-height: 29px;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+  padding: 0px;
+}
+
+.nhoodsMainContainer{
+  margin-top: 110px;
+  background-color: #DEA001;
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.nhoodsSecondContainer{
+  width: 70%;
+  margin:auto
+}
+
+.card_button {
+  background-color: rgba(255, 151, 5, 0.221);
+  color: black;
+  border-radius: 0;
+}
+
+.cardNhood {
+  border: none; /* Removes the default card border */
+  padding: 25px;
+  margin-top: 20px;
+  border-radius: 0px;
+}
+
+.neighborhoodDescr{
+  color: black;
+  /* font-size: 18px; */
+  font-family: Inter;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.nhoodAuthor{
+  color: #DEA001;
+  font-size: 18px;
+  font-family: Koulen;
+  font-weight: 400;
+  line-height: 29px;
+  word-wrap: break-word;
+}
+
+.nhoodButton{
+  background: #ECECEC;
+  border-radius: 8px;
+  border: 1px #333332 solid;
+  padding: 10px;
+  text-align: center;
+  color: black;
+  font-size: 22px;
+  font-family: Koulen;
+  font-weight: 400;
+  word-wrap: break-word;
+  text-decoration: unset;
+}
 .nhoodsTable{
  border-collapse: collapse;
 }
@@ -159,7 +294,25 @@
   color:rgb(72, 72, 72);
   cursor: pointer;
 }
+.cardNhood {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.7s forwards; /* Animation to slide and fade in */
+}
 
+@keyframes slideIn {
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.neighborhoodsMainContainer{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  /* height:600px; */
+}
 .boroughSelect:focus {
     outline: none;
     box-shadow: 0px 9px 30px rgba(255, 151, 5, 0.221); /* Subtle change in border color */
@@ -282,6 +435,54 @@
   }
 }
 
+@media only screen and (max-width:875px) {
+
+  .banner{
+    margin:10px;
+  }
+
+  .main-banner {
+    padding:0px;
+  }
+
+  .articlesContainer{
+    width:100%;
+    margin:0
+  }
+  .main-banner img.img-responsive.banner-img {
+    border-radius: 10px;
+  }
+
+  h2.contain-txt {
+    font-size: 18px;
+    width: 100%;
+    line-height: 20px;
+    padding: 10px;
+    border-radius: 0;
+  }
+
+  .contain {
+    /* padding-right: 11px; */
+    margin-top: -21px;
+    padding-left: 0px;
+  }
+
+  .container p {
+    font-size: 16px;
+  }
+  
+  img.img-responsive {
+    width: 70px;
+  }
+
+  .nhoodsSecondContainer{
+    width:100%;
+  }
+  .residentsHeader {
+    font-size: 35px;
+  }
+}
+
 
 @media (max-width: 749px) {
   .searchByNhoodInput{
@@ -290,11 +491,6 @@
 
   .dropdownFilterByBorough{
      width:40%;
-  }
-
-  .blogsCard{
-    width:40%;
-     height: 500px;
   }
   .arrowsContainer__{
     display: none;
@@ -346,13 +542,9 @@
 }
 
 @media (max-width:500px){
-  .blogsCard{
-    width:60%;
-  }
+
 }
 
 @media (max-width:450px){
-  .blogsCard{
-    width:100%;
-  }
+ 
 }

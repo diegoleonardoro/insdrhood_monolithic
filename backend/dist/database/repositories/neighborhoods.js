@@ -30,28 +30,21 @@ class NeighborhoodRepository {
         await neighborhoodsCollection.createIndex({ neighborhoodDescription: 1 });
         await neighborhoodsCollection.createIndex({ user: 1 });
     }
-    async getAll({ cursor, pageSize }) {
+    async getAll({ page, pageSize }) {
         const db = await this.db;
         const neighborhoodsCollection = db.collection(this.collectionName);
         const projection = { neighborhoodDescription: 1, user: 1, borough: 1, neighborhood: 1 };
-        let query = {};
-        if (cursor) {
-            query = { '_id': { '$gt': new mongodb_1.ObjectId(cursor) } };
-        }
+        // Calculate the number of documents to skip
+        const skip = (page - 1) * pageSize;
         // Perform the query with pagination
         const neighborhoodsCursor = neighborhoodsCollection
-            .find(query)
+            .find({})
             .project(projection)
+            .skip(skip)
             .limit(pageSize)
             .sort({ '_id': 1 });
         const neighborhoods = await neighborhoodsCursor.toArray();
-        let nextCursor = null;
-        if (neighborhoods.length > 0) {
-            nextCursor = neighborhoods[neighborhoods.length - 1]._id;
-        }
-        // const executionPlan = await neighborhoodsCursor.explain('executionStats');
-        // console.log('executionPlan form responses', executionPlan);
-        return { neighborhoods, nextCursor: nextCursor?.toString() };
+        return { neighborhoods };
     }
     async getOne(neighborhoodId) {
         const db = await this.db;

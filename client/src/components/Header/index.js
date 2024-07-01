@@ -11,6 +11,12 @@ import { startTransition } from "react";
 import { useUserContext } from '../../contexts/UserContext';
 import "./header.css";
 
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+
+
 function Header() {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -53,31 +59,117 @@ function Header() {
           <Nav.Link
             key={index}
             onClick={() => startTransition(() => navigate(to))}
-            style={{ cursor: 'pointer', color:"white" , border:"1px solid white", margin:"3px"}} // Add cursor pointer to indicate it's clickable
+            style={{ cursor: 'pointer', color: "white", border: "1px solid white", margin: "3px" }} // Add cursor pointer to indicate it's clickable
           >
             {label}
           </Nav.Link>
         );
       } else {
-        return <Nav.Link style={{ cursor: 'pointer', color: "white", border: "1px solid white", margin: "3px" }}  key={index} as={Link} to={to}>{label}</Nav.Link>;
+        return <Nav.Link style={{ cursor: 'pointer', color: "white", border: "1px solid white", margin: "3px" }} key={index} as={Link} to={to}>{label}</Nav.Link>;
       }
     });
 
-    // bg="dark" data-bs-theme="dark"
+  // bg="dark" data-bs-theme="dark"
   return (
     <>
       {!showHeader ? (
-        <Navbar className="main_header"style={{borderBottom:"1px solid", backgroundColor:"black"}}>
-          <Container id="container_">
-            <Navbar.Brand  style={{color:"white"}}id="navBrand" as={Link} to="/">
-              Insdr Hood
-            </Navbar.Brand>
-            <Nav  className="me-auto">
-              {links}
-            </Nav>
-            <CartIcon />
-          </Container>
-        </Navbar>
+
+        <>
+        {/** nav bar for desktops */}
+          <Navbar className="main_header navbar-desktop">
+            <Container className="container_">
+
+              <Navbar.Brand className="navBrand" as={Link} to="/">
+                <img src="https://insiderhood.s3.amazonaws.com/assets/Insdrhood.png" alt="Logo" className="d-inline-block align-text-top" />
+              </Navbar.Brand>
+              <div className='menu-container'>
+                <ul className="navbar-nav">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/questionnaire">Questionnaire</a>
+                  </li>
+                  <li style={{ marginLeft: "20px" }} className="nav-item">
+                    <a className="nav-link" href="/shop">Shop</a>
+                  </li>
+                  <li style={{ marginLeft: "20px" }} className="nav-item">
+                    <a className="nav-link" href="/311complaints">311 Calls</a>
+                  </li>
+                  {!currentuser_ ? (
+                    <>
+                      <li style={{ marginLeft: "20px" }} className="nav-item">
+                        <a className="nav-link" href="/signin">Sign In</a>
+                      </li>
+                      <li style={{ marginLeft: "20px" }} className="nav-item create">
+                        <a className="nav-link" href="/signup">Create a account</a>
+                      </li>
+                    </>
+                  ) : (
+                    <li style={{ marginLeft: "20px" }} className="nav-item">
+                      <a className="nav-link" style={{ cursor: 'pointer' }} onClick={handleSignOut}>Sign Out</a>
+                    </li>
+                  )}
+
+                  <CartIcon />
+                </ul>
+              </div>
+            </Container>
+          </Navbar>
+
+          {/** nav bar for mobile screens */}
+          <Navbar className="main_header navbar-mobile" key='False' expand='False' >
+            <Container className="container_" fluid>
+
+              <Navbar.Brand className="navBrand" as={Link} to="/">
+                <img src="https://insiderhood.s3.amazonaws.com/assets/Insdrhood.png" alt="Logo" className="d-inline-block align-text-top" />
+              </Navbar.Brand>
+
+              <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-False`} />
+              <Navbar.Offcanvas
+                id={`offcanvasNavbar-expand-False`}
+                aria-labelledby={`offcanvasNavbarLabel-expand-False`}
+                placement="end"
+              >
+                <Offcanvas.Header closeButton>
+                  <Offcanvas.Title id={`offcanvasNavbarLabel-expand-False`}>
+                    {" "}
+                  </Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                  <Nav className="justify-content-end flex-grow-1 pe-3">
+                    <div className='menu-container'>
+
+                      <CartIcon/>
+                      <ul className="navbar-nav">
+                        <li style={{ marginLeft: "20px", marginTop:"20px" }}  className="nav-item">
+                          <a className="nav-link" href="/questionnaire">Questionnaire</a>
+                        </li>
+                        <li style={{ marginLeft: "20px" }} className="nav-item">
+                          <a className="nav-link" href="/shop">Shop</a>
+                        </li>
+                        <li style={{ marginLeft: "20px" }} className="nav-item">
+                          <a className="nav-link" href="/311complaints">311 Calls</a>
+                        </li>
+                        {!currentuser_ ? (
+                          <>
+                            <li style={{ marginLeft: "20px" }} className="nav-item">
+                              <a className="nav-link" href="/signin">Sign In</a>
+                            </li>
+                            <li style={{ marginLeft: "20px" }} className="nav-item create">
+                              <a className="nav-link" href="/signup">Create a account</a>
+                            </li>
+                          </>
+                        ) : (
+                          <li style={{ marginLeft: "20px" }} className="nav-item">
+                            <a className="nav-link" style={{ cursor: 'pointer' }} onClick={handleSignOut}>Sign Out</a>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  </Nav>
+                </Offcanvas.Body>
+              </Navbar.Offcanvas>
+            </Container>
+          </Navbar>
+        </>
       ) : null}
     </>
   )

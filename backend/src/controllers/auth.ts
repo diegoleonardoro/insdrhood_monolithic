@@ -184,20 +184,15 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
+
+
   const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
-  const cursorParam = req.query.cursor;
-  let cursor: ObjectId | undefined = undefined;
-  if (typeof cursorParam === 'string' && cursorParam !== '') {
-    try {
-      cursor = new ObjectId(cursorParam);
-    } catch (error) {
-      return res.status(400).json({ message: 'Invalid cursor format' });
-    }
-  }
+  const page = parseInt(req.query.page as string, 10) || 1;
+
   try {
     const neighborhoodRepository = new NeighborhoodRepository();
-    const { neighborhoods, nextCursor } = await neighborhoodRepository.getAll({ cursor, pageSize });
-    res.status(200).json({ neighborhoods, nextCursor });
+    const { neighborhoods } = await neighborhoodRepository.getAll({ page, pageSize });
+    res.status(200).json({ neighborhoods });
   } catch (error) {
     console.error('Failed to fetch neighborhoods:', error);
     res.status(500).json({ message: 'Failed to fetch neighborhoods' });
