@@ -9,6 +9,10 @@
     margin:20px;
 }
 
+.name-price{
+  background: #dea000;
+  padding: 20px;
+}
 
 
 .galleryParent .slick-slide { 

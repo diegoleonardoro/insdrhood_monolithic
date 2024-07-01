@@ -104,7 +104,7 @@ const FeaturedProduct = (props) => {
           <img key={index} className="imageprod" src={image}></img>
         ))}
       </Slider>
-      <div style={{ margin: '30px', textAlign: "start" }} className='name-price'>
+      <div  className='name-price'>
         <h3>{title}</h3>
         <p>${price}.00</p>
         <p >{description}</p>

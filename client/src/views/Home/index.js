@@ -104,7 +104,7 @@ function Home() {
   }, [blogsLoading]);
 
 
-  const itemsPerPage = window.innerWidth < 768 ? 1 : 6// neighborhoods 
+  const itemsPerPage = window.innerWidth < 768 ? 5 : 6// neighborhoods 
   const blogsPerpage = window.innerWidth < 768 ? 2 : 3 // blogs
 
   const handleNavigation = (path) => {

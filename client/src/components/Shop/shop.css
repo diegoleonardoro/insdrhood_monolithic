@@ -3,7 +3,12 @@
 }
 
 .galleryParent__{
-  border: 1px solid grey;
+  border: 1px #ffc107 solid
+}
+
+.name-price{
+  background: #dea000;
+  padding: 20px;
 }
 
 
@@ -16,7 +21,7 @@
 }
 
  .product-list div{
-  background-color: transparent;
+  /* background-color: transparent; */
  }
 
 
@@ -30,8 +35,11 @@
 
 
 .product-list-title {
-  margin-top: 5rem;
-  text-align: center;
+  color: #dea000;
+    font-size: 48px;
+    font-family: Koulen;
+    font-weight: 400;
+    word-wrap: break-word;
 }
  
 .product-list div{
