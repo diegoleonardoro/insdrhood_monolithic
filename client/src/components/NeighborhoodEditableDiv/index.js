@@ -113,7 +113,7 @@ const NeighborhoodEditableDiv = ({
           top: '50%',
           transform: 'translate(0, -50%)',
           //  backgroundColor:'#7575fb',
-          padding: '5px',
+
           borderRadius: '5px'
         }}>
         <path d="M512 256A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM231 127c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-71 71L376 232c13.3 0 24 10.7 24 24s-10.7 24-24 24l-182.1 0 71 71c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L119 273c-9.4-9.4-9.4-24.6 0-33.9L231 127z" />
@@ -133,7 +133,7 @@ const NeighborhoodEditableDiv = ({
           top: '50%',
           transform: 'translate(0, -50%)',
           //  backgroundColor:'#7575fb',
-          padding: '5px',
+
           borderRadius: '5px'
         }}
       >
@@ -194,7 +194,6 @@ const NeighborhoodEditableDiv = ({
 
   // the following function will enable editing functionality:
   const handleEditClick = () => {
-
     setIsEditing(true);
   };
 
@@ -278,6 +277,7 @@ const NeighborhoodEditableDiv = ({
 
   /** Function that will save the images */
   async function uploadImagesAndUpdateState(addImagesInput, neighborhood, imagesId, objectKey) {
+
     // Convert file list to array
     const newImages = Array.from(addImagesInput.current.files);
 
@@ -377,12 +377,10 @@ const NeighborhoodEditableDiv = ({
       };
 
       if (imgRefs.current.length !== nhoodImages.length) {
-
         // THIS MEANS THAT THE USER REMOVED A PHOTO AND CLICKED SAVE.
         // MAKE A REQUEST TO UPDATE NEIGHBORHOOD DATA WITH A SPECIFIC KEYNAME SO THAT IN THE BACK END WE KNOW THAT WE NEED TO 
         updateNeighborhoodData({ ['removeImages']: nhoodImages });
       }
-
     }
 
 
@@ -397,14 +395,11 @@ const NeighborhoodEditableDiv = ({
     }
 
 
-
-
     // user is editing a text-based section of the neighborhood profile:
     if (objectKey === 'timeLivingInNeighborhood' ||
       objectKey === 'neighborhoodDescription' ||
       objectKey === 'mostUniqueThingAboutNeighborhood' ||
       objectKey === 'peopleShouldVisitNeighborhoodIfTheyWant') {
-
       // content 
       setTextHistory(prevText => {
         if (prevText !== text) {
@@ -470,7 +465,8 @@ const NeighborhoodEditableDiv = ({
       return (
         <div>
           <p style={{
-            display: "inline", backgroundColor: "#FFBF00", borderRadius:"20px", fontWeight: "bold", padding: "5px" }}>
+            display: "inline", color: "#DEA001", borderRadius: "20px", fontWeight: "bold"
+          }}>
             {
               `${assessmentsTexts[key][0]}${" "}${object["assessment"]}${assessmentsTexts[key][1] || ''}`
             }
@@ -527,7 +523,7 @@ const NeighborhoodEditableDiv = ({
     // Return the constructed content
     return (
 
-      <div style={{ padding: "15px", width: "100%" }}>
+      <div style={{ width: "100%" }}>
 
         {isEditing ? (
 
@@ -541,7 +537,7 @@ const NeighborhoodEditableDiv = ({
 
         ) : (
 
-          <div className="adjectivesDiv" style={{  display: "flex", flexDirection: "column", alignItems: "start" }}>
+          <div className="adjectivesDiv" style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
             {isEditable ? (
 
               <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
@@ -560,10 +556,11 @@ const NeighborhoodEditableDiv = ({
   if (Array.isArray(recommendationsArrayOfObjects)) {
 
     return (
+
       <div>
 
-        {objectKey === 'recommendedFoodTypes' ? <h2 >Make sure to try:</h2> : <h2 >Make sure to visit:</h2>}
-        <div style={{ padding: "15px", width: "100%", position: "relative" }}>
+        {objectKey === 'recommendedFoodTypes' ? <h1 className='sectionHeader' >Make sure to try:</h1> : <h1 className='sectionHeader' >Make sure to visit:</h1>}
+        <div className='plainTextContainer' style={{ width: "100%", position: "relative" }}>
 
           {isEditing || (isEditable && recommendationsArrayOfObjectsHistory.length === 0) ? (
             <div style={{ marginTop: "20px" }}>
@@ -592,7 +589,7 @@ const NeighborhoodEditableDiv = ({
                 }
 
                 return (
-                  <div key={index} style={{ marginTop: "15px", padding: "15px" }}>
+                  <div key={index} style={{ marginTop: "15px" }}>
 
                     <OverlayTrigger
 
@@ -696,7 +693,7 @@ const NeighborhoodEditableDiv = ({
                 </tbody>
 
               </table>
-              <div onClick={addRow} id="addTableRowContainer" style={{ padding: "5px", cursor: "pointer" }}>
+              <div onClick={addRow} id="addTableRowContainer" style={{ cursor: "pointer" }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="rgb(120 120 120)" className="bi bi-plus-square" viewBox="0 0 16 16">
                   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
                   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
@@ -709,7 +706,7 @@ const NeighborhoodEditableDiv = ({
             </div>
 
           ) : (
-            <div style={{ padding: "15px", display: "flex", flexDirection: "column" }}>
+            <div className="recommendedFoods_">
               {isEditable ? (
                 <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
               ) : null}
@@ -741,24 +738,22 @@ const NeighborhoodEditableDiv = ({
                 }
 
                 return (
-                  <div key={index} style={{ textAlign: 'start' }} >
+                  <div className="recommendedFoodsChild" key={index}  >
                     {objectKey === 'recommendedFoodTypes' ? (
-                      <div>
-
-                        <div className='nhoodRecommendationText'>
-                          <span>
+                      <div >
+                        <div style={{ marginBottom: "0px" }} className='nhoodRecommendationText foodRecommendations'>
+                          <span style={{ display: 'inline', color: "#DEA001", fontWeight: "bold" }} >
                             {index + 1 + "."}
                           </span>
-
-                          <div style={{ display: 'inline', backgroundColor: '#FFBF00', borderRadius:"20px", padding: '5px' }}>
+                          <div style={{ display: 'inline', color: "#DEA001", fontWeight: "bold" }}>
                             {item.assessment} food.
                           </div>
                           {item.explanation && (
-                            <span className='nhoodRecommendationText' >
+                            <span style={{ color: "white" }} className='nhoodRecommendationText' >
                               {` GO to ${removeTrailingPeriod(item.explanation)}.`}
                             </span>
                           )}</div>
-                        <hr></hr>
+
                       </div>
                     ) : objectKey === 'nightLifeRecommendations' ? (
                       <div style={{ textAlign: "start" }}>
@@ -769,7 +764,6 @@ const NeighborhoodEditableDiv = ({
                             </span>
                           )}</p>
                       </div>
-
                     ) : null}
                   </div>
                 );
@@ -785,10 +779,10 @@ const NeighborhoodEditableDiv = ({
   if (typeof objectData_ === "object") {
 
     return (
-      <div style={{ padding: "15px", width: "100%", position: "relative" }}>
+      <div className='plainTextContainer' style={{ width: "100%", position: "relative" }}>
         {
 
-          (isEditing || (areValuesEmptyStrings(objectDataHistory) && isEditable) ) ? (
+          (isEditing || (areValuesEmptyStrings(objectDataHistory) && isEditable)) ? (
             <div>
               <div style={{ display: "flex", margin: "10px", flexDirection: "column" }}>
                 <p style={{ textAlign: "start" }}> {complementaryText[0] + ":"}</p>
@@ -804,15 +798,16 @@ const NeighborhoodEditableDiv = ({
               </div>
             </div>
           ) : (
-            <div style={{  padding: "15px", display: "flex" }}>
+            <div style={{ display: "flex" }}>
               {isEditable ? (
                 <Button onClick={handleEditClick} className="editSvg" size='sm' style={{ fontSize: "11px" }} >Edit</Button>
               ) : null}
               <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
                 {<>
                   {complementaryText[0]}
-                    <div style={{
-                      fontWeight: "bold", display: "inline", backgroundColor: "#FFBF00", borderRadius: "20px", padding: "5px" }}>
+                  <div style={{
+                    fontWeight: "bold", display: "inline", color: "#DEA001", borderRadius: "20px"
+                  }}>
                     {removeTrailingPeriod(objectData_.assessment)}
                   </div>
                 </>
@@ -1033,7 +1028,7 @@ const NeighborhoodEditableDiv = ({
             </div>
           </div>
         ) : (
-          <div style={{  width: "100%" }} className="nhoodIntroItemList">
+          <div style={{ width: "100%" }} className="nhoodIntroItemList">
 
             <div className="nhoodAdjectivesDivSpanContainer">
               {
@@ -1045,16 +1040,23 @@ const NeighborhoodEditableDiv = ({
               }
               <p style={{ marginBottom: "0px", margin: isEditable ? "0px" : "0px" }} className="nhoodRecommendationText">
                 {complementaryText !== "" ? complementaryText : null}
-                {
-                  adjectivesTextHistory.map((adjective, index) => {
-                    // const isLastItem = index === adjectivesText.length - 1;
-                    return (
-                      <span className="nhoodAdjectivesSpan" key={index}>
-                        {adjective.toLowerCase()}
-                      </span>
-                    )
-                  })
-                }
+
+                <div className="nhoodAdjsContainer">
+                  {
+
+
+                    adjectivesTextHistory.map((adjective, index) => {
+                      // const isLastItem = index === adjectivesText.length - 1;
+                      return (
+                        <span className="nhoodAdjectivesSpan" key={index}>
+                          {adjective.toLowerCase()}
+                        </span>
+                      )
+                    })
+
+                  }
+                </div>
+
               </p>
             </div>
           </div>
@@ -1066,7 +1068,7 @@ const NeighborhoodEditableDiv = ({
 
   /** When we only render plain text: */
   return (
-    <div style={{ padding: "15px", width: "100%", position: "relative" }}>
+    <div className="plainTextContainer" style={{ width: "100%", position: "relative" }}>
       {isEditing || (textHistory === "" && isEditable) ? (
         <div>
           {complementaryText !== "" ? (<p style={{ textAlign: "start" }}>{complementaryText}:</p>) : null}
@@ -1090,12 +1092,16 @@ const NeighborhoodEditableDiv = ({
 
           ) : null}
 
-          <div style={{ marginBottom: "0px", margin: isEditable ? "5px" : "0px" }} className="nhoodRecommendationText">
+          <div className="nhoodRecommendationText">
             {complementaryText !== "" ? complementaryText : null} {
-                <p style={{
-                  fontWeight: "bold", backgroundColor: "#FFBF00", borderRadius: "20px", padding: "5px", display: "inline" }}>{text}</p>
+              <p style={{
+                color: "#DEA001", display: "inline", fontWeight: "bold"
+              }}>{text}
+              </p>
             }
           </div>
+
+
 
         </div>
 

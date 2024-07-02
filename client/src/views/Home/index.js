@@ -145,7 +145,7 @@ function Home() {
             <Card.Text className="neighborhoodDescr">
               {neighborhood.neighborhoodDescription}
             </Card.Text>
-            <Card.Footer className="nhoodAuthor" style={{ backgroundColor: 'transparent', border: 'none' }}>
+            <Card.Footer className="nhoodAuthor__" style={{ backgroundColor: 'transparent', border: 'none' }}>
               - {neighborhood.user.name !== "" ? neighborhood.user.name : "Anonymous"}
             </Card.Footer>
           </Card.Body>

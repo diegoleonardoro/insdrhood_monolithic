@@ -50,8 +50,41 @@
 }
 
 .nhoodRecommendationText{
-  text-align:start;
-  margin-top: 20px;
+    font-size: 20px;
+    color: #000;
+    font-weight: 400;
+    /* margin-bottom: 20px; */
+    /* border-bottom: 1px solid #13131329; */
+    /* padding-bottom: 23px; */
+}
+
+.plainTextContainer{
+      font-size: 20px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #13131329;
+    padding-bottom: 23px
+}
+
+.recommendedFoods_ {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;  /* Manage spacing between items */
+    width: 100%;
+    position: relative;
+}
+
+.recommendedFoodsChild {
+    flex: 1 1 50%;  /* grow, shrink, and basis set to 50% */
+    box-sizing: border-box;
+    max-width: calc(50% - 10px);  /* Adjust the max-width to account for gap */
+    background: #2F2F2F;
+    border-radius: 5px;
+    padding: 20px;
+    font-size: 20px;
+    /* margin-bottom: 20px; */
+    
 }
 
 .editSvgRecommendedPlaces{
@@ -78,15 +111,35 @@
 
 /* neighborhood adjectives */
 .adjectivesDiv{
-  width: 100%;
-  padding-left:15px;
-  padding-bottom: 15px;
+  font-size: 20px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #13131329;
+    padding-bottom: 23px;
+}
+
+.nhoodAdjsContainer{
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .nhoodAdjectivesSpan{
-  padding: 5px;
+  padding: 10px;
+  border: 1px solid #dea000;
+  border-radius: 8px;
   margin:5px;
-  border: 1px solid rgb(121 121 121);
-  border-radius: 5px;
-  display: inline-block;
+  color:#dea000;
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+    .recommendedFoodsChild {
+        flex-basis: 100%;
+        max-width: 100%;  /* Full width */
+    }
+
+    .userIntroContainer{
+      width:90%;
+    }
 }

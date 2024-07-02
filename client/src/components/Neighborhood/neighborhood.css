@@ -6,19 +6,27 @@ hr{
 h2{
   text-align: start;
 }
-.userProfileContainer{
 
+.nhoodAuthor{
+  color: black;
+  font-size: 48px;
+  font-family: Koulen;
+  font-weight: 400;
+  word-wrap: break-word;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .userIntroContainer{
-  width:80%;
-  left:50%;
-  transform: translate(-50%, 0 );
+  width:70%;
+  margin:auto;
+  /* left:50%;
+  transform: translate(-50%, 0 ); */
 }
 
 .containerNhoodItems{
   position:relative;
-  text-align: center;
+  /* text-align: center; */
   /* padding:20px; */
 }
 
@@ -65,7 +73,7 @@ h1{
 }
 .containerNhoodItems{
   position:relative;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .containerFood{
@@ -131,12 +139,22 @@ h1{
 
 .sectionContainer{
   /* background-color: #FFFCEB ; */
-  margin-top: 50px;
+  /* margin-top: 30px; */
 }
 
 .assessmentsContainer{
   position:relative;
   text-align: start;
+}
+
+.sectionHeader{
+  color: #DEA001;
+  font-size: 35px;
+  font-family: Koulen;
+  font-weight: 400;
+  word-wrap: break-word;
+  margin-top: 60px;
+  margin-bottom: 30px;
 }
 
 @media only screen and (max-width: 1300px){
@@ -177,7 +195,7 @@ h1{
       top:-100px;
       background-color: white;
       padding:10px;
-      padding-top:40px;
+      /* padding-top:40px; */
       width:115%;
     }
 
@@ -218,6 +236,6 @@ h1{
     }
 
     .assessmentsContainer{
-      width:80%;
+      /* width:80%; */
     }
 }
