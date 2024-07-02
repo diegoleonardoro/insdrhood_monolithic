@@ -26,15 +26,15 @@
 }
 
 .name-price h3 {
-  font-size: 24px;
+  /* font-size: 24px;
   margin: 0;
-  color: #333;
+  color: #333; */
 }
 
 .name-price p {
-  font-size: 20px;
+  /* font-size: 20px;
   color: #666;
-  margin: 10px 0;
+  margin: 10px 0; */
 }
 
 .add-to-cart-btns{
@@ -94,10 +94,10 @@
 .imageprod{
   height: 400px; 
   object-fit: contain;
-  margin:20px;
+  margin-top:20px;
   width:80% !important;
   position: relative;
-  left:42% !important;
+  left:50% !important;
   transform: translate(-50%,0);
 }
 

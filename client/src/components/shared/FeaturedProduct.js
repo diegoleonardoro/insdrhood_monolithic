@@ -99,29 +99,33 @@ const FeaturedProduct = (props) => {
 
   return (
     <div className="galleryParent__" style={{ position: "relative" }}>
-      <Slider {...settings}>
+      <Slider style={{position:"relative", height:"60%"}} {...settings}>
         {imageUrl.map((image, index) => (
           <img key={index} className="imageprod" src={image}></img>
         ))}
       </Slider>
-      <div  className='name-price'>
-        <h3>{title}</h3>
-        <p>${price}.00</p>
-        <p >{description}</p>
-        {
-          !itemInCart &&
-          <Button style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
-        }
-        {
-          itemInCart &&
-          <Button style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} variant="primary" onClick={() => increase(product)} >ADD MORE</Button>
-        }
+      <div className='name-price'>
+        <h3 className="productTitle">{title}</h3>
+        <p className="productDescr" >{description}</p>
 
-        {cartItems.length > 0 &&
-          <Button variant="primary" style={{ margin: "20px 20px 0px 20px", width: "80%", borderRadius: '0', border: 'none', backgroundColor: '#333' }} onClick={() => navigate('/cart')}>
-            GO TO CART
-          </Button>
-        }
+        <div className="priceButtonContainer">
+
+          <p className="prodPrice">${price}.00</p>
+          {
+            !itemInCart &&
+            <Button className='prodActionButton' onClick={() => addProduct(product)} variant="primary">ADD TO CART</Button>
+          }
+          {
+            itemInCart &&
+            <Button className='prodActionButton' variant="primary" onClick={() => increase(product)} >ADD MORE</Button>
+          }
+
+          {cartItems.length > 0 &&
+            <Button className='prodActionButton' variant="primary" onClick={() => navigate('/cart')}>
+              GO TO CART
+            </Button>
+          }
+        </div>
 
 
 
