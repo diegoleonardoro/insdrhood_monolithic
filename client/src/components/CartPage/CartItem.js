@@ -97,13 +97,13 @@ const CartItem = (props) => {
   };
 
   return (
-    <div className='cart-item'>
+    <div className='cart-item_'>
 
       {imageUrl && (
-        <div className='galleryParent_Cart'>
+        <div className='galleryParent_Cart_'>
           <Slider {...settings}>
             {imageUrl.map((image, index) => (
-              <img key={index} alt="product" className="imageprodCart" src={image}></img>
+              <img key={index} alt="product" className="imageprodCart_" src={image}></img>
             ))}
           </Slider>
         </div>
@@ -124,8 +124,8 @@ const CartItem = (props) => {
           {`Color ${color}`}
         </p>
       )}
-      <div className="detailsContainer">
-        <div className='name-price'>
+      <div className="detailsContainer_">
+        <div className='name-price_'>
           {title && (
             <h4 >{title}</h4>
           )}
