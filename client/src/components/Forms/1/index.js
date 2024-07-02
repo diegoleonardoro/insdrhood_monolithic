@@ -649,7 +649,7 @@ const FormComponent = () => {
       for (let i = 0; i < advjectivesListDivs.length; i++) {
 
         if (advjectivesListDivs[i].dataset.option === option) {
-          advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
+          advjectivesListDivs[i].style.backgroundColor = "transparent";
         }
       }
       const updatedOptions = selectedOptions.filter((item) => item !== option);
@@ -663,7 +663,7 @@ const FormComponent = () => {
       const advjectivesListDivs = [...residentAdjectivesDivRef.current.children];
       for (let i = 0; i < advjectivesListDivs.length; i++) {
         if (advjectivesListDivs[i].dataset.option === option) {
-          advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
+          advjectivesListDivs[i].style.backgroundColor = "transparent";
         }
       }
       const updatedOptions = residentsAdjsSelectedOpts.filter((item) => item !== option);
@@ -678,7 +678,7 @@ const FormComponent = () => {
       const advjectivesListDivs = [...typesOfFoodRecommendationsRef.current.children];
       for (let i = 0; i < advjectivesListDivs.length; i++) {
         if (advjectivesListDivs[i].dataset.option === option) {
-          advjectivesListDivs[i].style.backgroundColor = "rgb(137, 207, 240)";
+          advjectivesListDivs[i].style.backgroundColor = "transparent";
         }
       }
 
@@ -1053,7 +1053,7 @@ const FormComponent = () => {
             >
               <label className="question">
                 What <span className="questionHighlight"> adjectives</span> describe
-                <span style={{ textDecoration: "underline" }} className="nhoodName"> {neighborhood}: </span>
+                <span className="questionHighlight"> {neighborhood}: </span>
               </label>
               {selectedOptions.length > 0 && (
                 <div ref={nehoodAdjectivesDivContainerDisplay} className="scrollbarContainer adjsNhoodContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #dea000', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
@@ -1483,11 +1483,12 @@ const FormComponent = () => {
             >
 
               <div className="question">
-                The most unique thing about {neighborhood} is:
+                The most unique thing about   <span className="questionHighlight nhoodName">{neighborhood}</span> is:
               </div>
 
               <input
                 className="textInput"
+                style={{ borderTop: "none", borderRight: "none", borderLeft: "none", textTransform: "lowercase" }}
                 onChange={
                   (e) => {
                     setFormData({
@@ -1499,7 +1500,7 @@ const FormComponent = () => {
 
                 }
 
-                style={{ textTransform: "lowercase" }}
+
 
               ></input>
               <div className="tooltip_">This information is relevant </div>
@@ -1514,7 +1515,7 @@ const FormComponent = () => {
               ref={ref => divRefs.current[5] = ref}
             >
               <div className="question">
-                People should visit {neighborhood} if they want:
+                People should visit <span className="questionHighlight nhoodName">{neighborhood}</span> if they want:
               </div>
 
               <input
@@ -1527,8 +1528,8 @@ const FormComponent = () => {
                     changeTooltipDisplay(e, "none");
                   }
                 }
+                style={{ borderTop: "none", borderRight: "none", borderLeft: "none", textTransform: "lowercase" }}
 
-                style={{ textTransform: "lowercase" }}
 
               ></input>
               <div className="tooltip_">This information is relevant </div>
@@ -1544,9 +1545,8 @@ const FormComponent = () => {
               }
               ref={ref => divRefs.current[6] = ref}
             >
-              <label className="question">
-                How would you describe
-                <span className="questionHighlight nhoodName">{neighborhood}</span> to someone who has never visited before?
+              <label className="question describeToFirstVisitorLabel">
+                How would you describe <span className="questionHighlight nhoodName">{neighborhood}</span> to someone who has never visited before?
               </label>
               <textarea
                 className="textarea_text"
@@ -1579,14 +1579,24 @@ const FormComponent = () => {
             >
 
               <label className="question">
-                <span className="questionHighlight">Adjectives that depict the typical resident</span> of
-                <span className="nhoodName"> {neighborhood}: </span>
+                Adjectives that depict the typical resident of <span className="questionHighlight"> {neighborhood}: </span>
               </label>
 
               {residentsAdjsSelectedOpts.length > 0 && (
                 <div ref={residentAdjectivesDivContainer} className="scrollbarContainer adjsResContainer" style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #dea000', padding: '5px', flexWrap: 'wrap', justifyContent: "space-evenly", height: "100px", overflow: "scroll" }}>
                   {residentsAdjsSelectedOpts.map((option, index) => (
-                    <div style={{ margin: '6px', cursor: 'pointer', border: '1px solid black', borderRadius: '10px', padding: '5px', backgroundColor: 'rgb(255, 156, 85)', display: 'flex' }} key={option} >
+                    <div
+                      style={{
+                        margin: "4px",
+                        cursor: "pointer",
+                        border: "1px solid #dea000",
+                        borderRadius: "10px",
+                        padding: "5px",
+                        display: "flex",
+                        color: "#dea000"
+                      }}
+
+                      key={option} >
                       {option}
                       <div
                         onClick={(e) => {
@@ -1620,16 +1630,16 @@ const FormComponent = () => {
                   }} >
 
                   {/** Type your own adjective */}
-                  <div style={{
-                    display: "flex",
+                  {/* <div style={{
+                    margin: "4px",
+                    cursor: "pointer",
                     border: "1px solid #dea000",
+                    borderRadius: "10px",
                     padding: "5px",
-                    marginTop: "15px",
-                    margin: '10px',
-                    borderRadius: '15px',
-                    justifyContent: 'center'
+                    display: "flex",
+                    color: "#dea000"
                   }} >
-                    {/* Input field for user to type an option */}
+                   
                     <input
                       className="foodTypeInput"
                       type="text"
@@ -1648,7 +1658,33 @@ const FormComponent = () => {
                     }} className="addButton">
                       Add
                     </button>
-                  </div>
+                  </div> */}
+
+                  {/** Type your own adjective */}
+
+                  <InputGroup style={{ width: "90%", margin: "10px" }} className="mb-3">
+                    <Form.Control
+                      placeholder="Type your own"
+                      // aria-label="Recipient's username"
+                      // aria-describedby="basic-addon2"
+                      className="foodTypeInput"
+                      style={{ top: "0px" }}
+                      onChange={(e) => {
+                        setResidentAdjective(e.target.value);
+                        changeTooltipDisplay(e, "none");
+                      }}
+                      value={residentAdjective}
+                    />
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleOptionSelect(residentAdjective, 'resident', e);
+                        setResidentAdjective('')
+                      }}
+                      variant="outline-secondary" id="button-addon2" className="addButton">
+                      Add
+                    </Button>
+                  </InputGroup>
 
                   <div onClick={(e) => {
                     handleOptionSelect('Friendly', 'resident', e);
@@ -1657,11 +1693,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Friendly"
                   >
@@ -1674,11 +1710,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Welcoming"
                   >
@@ -1691,11 +1727,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Harmonious"
                   >
@@ -1708,11 +1744,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Inclusive"
                   >
@@ -1725,11 +1761,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Active"
                   >
@@ -1742,11 +1778,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Caring"
                   >
@@ -1759,11 +1795,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Hospitable"
                   >
@@ -1776,11 +1812,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Collaborative"
                   >
@@ -1793,11 +1829,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Supportive"
                   >
@@ -1810,11 +1846,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Community-oriented"
                   >
@@ -1827,11 +1863,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Lively"
                   >
@@ -1844,11 +1880,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Neighborly"
                   >
@@ -1861,11 +1897,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Respectful"
                   >
@@ -1878,11 +1914,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Progressive"
                   >
@@ -1895,11 +1931,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Traditional"
                   >
@@ -1912,11 +1948,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="United"
                   >
@@ -1929,11 +1965,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Empowered"
                   >
@@ -1946,11 +1982,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Empathetic"
                   >
@@ -1963,11 +1999,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Cohesive"
                   >
@@ -1980,11 +2016,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Involved"
                   >
@@ -2016,7 +2052,7 @@ const FormComponent = () => {
               </div>
 
               <label className="question">
-                What food and restaurants should people try in <span className="nhoodName"> {neighborhood}? </span>
+                What food and restaurants should people try in <span className="questionHighlight"> {neighborhood}</span>?
               </label>
 
               <div className="scrollbarContainer" style={{ height: "150px", overflow: "scroll", marginTop: "20px", border: "1px solid #dea000" }}>
@@ -2029,6 +2065,49 @@ const FormComponent = () => {
                     justifyContent: 'center'
                   }} >
 
+
+                  {/* <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }} onChange={(e) => {
+                    changeTooltipDisplay(e, "none");
+                  }} >
+
+                    <input
+                      className="foodTypeInput"
+                      type="text"
+                      placeholder="Type another option..."
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      value={foodTypesInput}
+                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid  #dea000" }}
+                    />
+                    
+                    <button className="addButton" onClick={handleAddButton}>
+                      Add
+                    </button>
+
+                  </div> */}
+
+                  <InputGroup style={{ width: "90%", margin: "5px" }} className="mb-3" onChange={(e) => {
+                    changeTooltipDisplay(e, "none");
+                  }}>
+                    <Form.Control
+                      placeholder="Type another option..."
+                      className="foodTypeInput"
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      value={foodTypesInput}
+                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid  #dea000" }}
+                    />
+                    <Button
+                      className="addButton" onClick={handleAddButton}
+                      variant="outline-secondary" id="button-addon2" >
+                      Add
+                    </Button>
+                  </InputGroup>
+
+
+
+
+
+
+
                   <div onClick={(e) => {
                     handleOptionSelect('Italian', 'foodType', e);
                     changeTooltipDisplay(e, "none");
@@ -2036,11 +2115,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Italian"
                   >
@@ -2053,11 +2132,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Mexican"
                   >
@@ -2070,11 +2149,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Chinese"
                   >
@@ -2087,11 +2166,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Indian"
                   >
@@ -2104,11 +2183,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Japanese"
                   >
@@ -2121,11 +2200,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Mediterranean"
                   >
@@ -2138,11 +2217,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Thai"
                   >
@@ -2155,11 +2234,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="French"
                   >
@@ -2172,11 +2251,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="American"
                   >
@@ -2189,11 +2268,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Middle Eastern"
                   >
@@ -2206,11 +2285,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Greek"
                   >
@@ -2223,11 +2302,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Vietnamese"
                   >
@@ -2240,11 +2319,11 @@ const FormComponent = () => {
                     style={{
                       margin: "4px",
                       cursor: "pointer",
-                      border: "1px solid black",
+                      border: "1px solid #dea000",
                       borderRadius: "10px",
                       padding: "5px",
-                      backgroundColor: "rgb(255, 156, 85)",
-                      display: "flex"
+                      display: "flex",
+                      color: "#dea000"
                     }}
                     data-option="Korean"
                   >
@@ -2252,24 +2331,7 @@ const FormComponent = () => {
                   </div>
 
 
-                  <div style={{ display: "flex", border: "1px solid #dcd7d7", padding: "5px", marginTop: "10px" }} onChange={(e) => {
-                    changeTooltipDisplay(e, "none");
-                  }} >
-                    {/* Input field for user to type an option */}
-                    <input
-                      className="foodTypeInput"
-                      type="text"
-                      placeholder="Type another option..."
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      value={foodTypesInput}
-                      style={{ margin: "4px", padding: "5px", borderRadius: "10px", border: "1px solid  #dea000" }}
-                    />
-                    {/* Button to add the typed option */}
-                    <button className="addButton" onClick={handleAddButton}>
-                      Add
-                    </button>
 
-                  </div>
 
 
                 </div>
@@ -2393,13 +2455,17 @@ const FormComponent = () => {
 
             </div>
 
+
+
+
+
             {/**Food in {neighborhood} tends to be expensive, affordable or both */}
             <div className={"oncePlaceToEat agreeOrDisagreeFood foodPricesQuestion " +
               displayQuestion("foodPrice")}
               ref={ref => divRefs.current[10] = ref}
             >
 
-              <h3 style={{ marginBottom: '20px', fontWeight: 'bold' }}>Food in {neighborhood} tends to be: </h3>
+              <h3 style={{ marginBottom: '20px', fontWeight: 'bold' }}>Food in <span className="questionHighlight nhoodName">{neighborhood}</span> tends to be: </h3>
 
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div className="statementResponseContainer">
@@ -2510,6 +2576,11 @@ const FormComponent = () => {
               </div>
             </div>
 
+
+
+
+
+
             {/** Do you agree or disagree withe the following statements: 
            * "food in {neighborhood} is authentic"
           */}
@@ -2520,7 +2591,7 @@ const FormComponent = () => {
 
               <h3 style={{ textAlign: "center", marginBottom: '10px', fontWeight: 'bold' }}>Agree or disagree: </h3>
               <div>
-                <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"{neighborhood} is a good destination to explore diverse and authentic food" </label>
+                  <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"<span className="questionHighlight nhoodName">{neighborhood}</span> is a good destination to explore diverse and authentic food" </label>
 
                 <div style={{ height: "30px", width: "100%", borderBottom: "1px dotted black" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -2631,7 +2702,7 @@ const FormComponent = () => {
               </div>
 
               <div>
-                <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>How would you describe the night life of {neighborhood}:</label>
+                  <label className="question">How would you describe the night life of <span className="questionHighlight nhoodName">{neighborhood}</span>:</label>
 
                 <div style={{ height: "30px", borderBottom: "1px dotted black", position: "relative", left: "50%", transform: "translate(-50%,0)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -2893,7 +2964,7 @@ const FormComponent = () => {
                   >
                   </input>
 
-                  <p style={{ display: "inline" }}> because</p>
+                  <p style={{ display: "inline" }}> because </p>
                   <input style={{
                     width: '35%',
                     textTransform: "lowercase"

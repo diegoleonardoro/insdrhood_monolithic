@@ -49,7 +49,7 @@
 
 .form input:focus{
   /* border:1px solid rgb(255, 217, 19) */
-  box-shadow: 0 0 0 2px rgb(255, 217, 19), 4px 4px 0 0 rgb(255, 217, 19);
+  box-shadow: 0 0 0 2px #dea000, 4px 4px 0 0 #dea000;
 }
 
 .form input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -70,7 +70,7 @@
 
 .form textarea:focus{
   /* border:1px solid rgb(255, 217, 19) */
-  box-shadow: 0 0 0 2px rgb(255, 217, 19), 3px 3px 0 0 rgb(255, 217, 19);
+  box-shadow: 0 0 0 2px #dea000, 3px 3px 0 0 #dea000;
 }
 
 form textarea::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -100,7 +100,7 @@ form textarea::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 }
 
 .form select:focus{
-  box-shadow: 0 0 0 2px rgb(255, 217, 19), 8px 8px 0 0 rgb(255, 217, 19);
+  box-shadow: 0 0 0 2px #dea000, 8px 8px 0 0 #dea000;
 }
 
 
@@ -179,7 +179,7 @@ textarea::placeholder{
   margin: 10px 0;
   position: relative;
   width: 70%;
-  border: 1px solid;
+  border: 1px solid #dea000;
   padding: 1px;
 }
 
@@ -189,6 +189,7 @@ textarea::placeholder{
 #liveNYCLabel {
   margin-bottom: 0%;
 }
+
 
 .inputGroup label {
   padding: 12px 20px;
@@ -317,9 +318,12 @@ textarea::placeholder{
 
 /*What neighborhood do you live in*/
 .questionHighlight{
-  background-color: rgb(255, 156, 85);
-  padding:4px;
+  /* background-color: rgb(255, 156, 85);
+  padding:4px; */
+  color:#dea000;
 }
+
+
 .question{
     text-align: center;
     color: black;
@@ -327,7 +331,15 @@ textarea::placeholder{
     font-family: Inter;
     font-weight: 600;
     word-wrap: break-word;
+    
 }
+
+
+.describeToFirstVisitorLabel{
+  width:60%
+}
+
+
 .textInput {
   width:100%;
   border-style: solid;
@@ -420,17 +432,16 @@ input:focus{
 
 /*In general, how would you describe the neighborhood*/
 .textarea_text {
-  width: 110%;
+  width: 50%;
   height: 40px;
-  border-width: 1px;
-  border-style: solid;
-  margin-top:10px;
   background-color: transparent;
   outline-width: 0;
   padding-left: 20px;
   padding-bottom: 0px;
   outline: none;
   resize: none;
+  margin-top: 20px;
+  border: 1px solid #dea000;;
 }
 
 #nhoodDescription{
@@ -460,11 +471,11 @@ input:focus{
 }
 
 .nhoodEvalLabelTrue{
-  background-color: #F4E1D2;
+  background-color: white;
 }
 
 .nhoodEvalLabelFalse{
-  background-color: #F4E1D2;
+  background-color: white;
 }
 
 .statementResponseContainerInput:checked + .nhoodEvalLabelTrue {
@@ -479,7 +490,7 @@ input:focus{
 
 
 .nightLifeDescription{
-  background-color: #F4E1D2;
+  background-color: white;
 }
 
 .nightLifeDescription:checked + .nightLifeDescription {
@@ -694,7 +705,7 @@ input:focus{
   margin-top: 50px;
   margin-bottom: 30px;
   position:relative;
-  width:100%;
+  width:50%;
 }
 
 .arrowsContainer svg {
@@ -715,7 +726,7 @@ input:focus{
   width:100%;
   height:100%;
   z-index: 9;
-  background-color: #F4E1D2;
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -726,14 +737,15 @@ input:focus{
   z-index: 9;
   width:110%;
   height:100%;
-  background-color: #F4E1D2;
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .footTypesSelectedOpts{
-   box-shadow: 0 0 0 2px rgb(255, 217, 19), 4px 4px 0 0 rgb(255, 217, 19);
+   /* box-shadow: 0 0 0 2px rgb(255, 217, 19), 4px 4px 0 0 rgb(255, 217, 19); */
+   box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
 }
 
 /* media queries: */
@@ -742,6 +754,13 @@ input:focus{
     width: 90%; /* Adjust width to 90% */
     /* max-width: 90%; */
   }
+  .arrowsContainer{
+    width:100%;
+  }
+
+.describeToFirstVisitorLabel{
+  width:90%
+}
 }
 
 @media screen and (max-width: 560px) {
