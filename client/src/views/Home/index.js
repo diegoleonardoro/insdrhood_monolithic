@@ -273,7 +273,7 @@ function Home() {
           <img src="https://insiderhood.s3.amazonaws.com/assets/img11.png" className="img-responsive banner-img" />
         </div>
         <div className="contain">
-          <h2 className="contain-txt">Insider Hood: A platform offering insights to deepen your understanding of New York City's neighborhoods.</h2>
+          <h2 className="contain-txt">A platform offering insights to deepen your understanding of New York City's neighborhoods.</h2>
         </div>
       </div>
 
