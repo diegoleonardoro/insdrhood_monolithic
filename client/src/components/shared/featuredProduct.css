@@ -3,7 +3,7 @@
 }
 
 .galleryParent__ {
-  width:30%;
+  /* width:30%; */
   margin:20px;
   height:650px;
 }
@@ -94,13 +94,13 @@
 .imageprod{
   /* height: 400px;  */
   object-fit: contain;
-  margin:20px;
+  /* margin:20px; */
   width:80% !important;
   position: relative;
-  left:45.7%;
-  transform: translate(-50%,0);
+  /* left:45.7%;
+  transform: translate(-50%,0); */
   position: relative;
-  height: 70%;
+  height: 90%;
 }
 
 @media only screen and (max-width: 1300px) {

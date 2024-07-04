@@ -25,7 +25,8 @@
   display: flex;
   flex-flow: wrap;
   height: 100%;
-  align-items: stretch;
+  align-items: center;
+  justify-content: center;
 }
 
  .product-list div{
