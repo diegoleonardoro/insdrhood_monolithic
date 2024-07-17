@@ -28,6 +28,7 @@ import Complaints311 from './components/311Complaints/311complaints';
 import Dashboard from './components/Dashboard/Dashboard';
 import DOBApprovedPermits from './components/DOB_ApprovedPermits/DobApprovedPermits'
 import Footer from './components/Footer/footer'
+import NeighborhoodReport from "./components/NeighborhoodReport/neighborhoodReport"
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -117,6 +118,8 @@ function App() {
             <Route path='/311complaints' element={<Complaints311 />}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
             <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route>
+            <Route path='/NeighborhoodReport' element={<NeighborhoodReport />}></Route>
+            
           </Routes>
           <Suspense />
 

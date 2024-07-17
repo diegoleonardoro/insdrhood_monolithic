@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNeighborhood = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
+exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
 const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
@@ -177,6 +177,25 @@ const getAllNeighborhoods = async (req, res) => {
     }
 };
 exports.getAllNeighborhoods = getAllNeighborhoods;
+/**
+ * @description gets a specific neighborhood
+ * @route GET/api/neighborhoods
+ * @access public
+*/
+const getSingleNeighborhoodData = async (req, res) => {
+    console.log("holalala");
+    const { neighborhood } = req.params;
+    try {
+        const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+        const neighborhoodCollections = await neighborhoodRepository.getNeighbohoodData(neighborhood);
+        res.status(200).send(neighborhoodCollections);
+    }
+    catch (error) {
+        console.error('Failed to fetch neighborhoods:', error);
+        res.status(500).json({ message: 'Failed to fetch neighborhoods' });
+    }
+};
+exports.getSingleNeighborhoodData = getSingleNeighborhoodData;
 /**
  * @description get a specific neighborhood
  * @route /api/neighborhood/:neighborhoodid

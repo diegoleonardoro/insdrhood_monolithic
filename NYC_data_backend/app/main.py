@@ -14,13 +14,17 @@ from datetime import datetime
 from collections import defaultdict
 from datetime import datetime, timedelta
 import base64
+from collections import Counter
 
 load_dotenv()
 
-# la la la la la la la la la 
+
 
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
+
+with open('nyc_cb_neighborhoods.json', 'r') as file:
+    community_boards = json.load(file)
 
 allowed_origins = [
     base_url, 
@@ -31,8 +35,11 @@ allowed_origins = [
 CORS(app, resources={
     r"/311calls": {"origins": allowed_origins},
     r"/311calls_complaint_types_count": {"origins": allowed_origins},
-    r"/dob_approved_permits": {"origins": allowed_origins}
+    r"/dob_approved_permits": {"origins": allowed_origins},
+    r"/neighborhood_report_data": {"origins": allowed_origins}
 }, supports_credentials=True)
+
+
 
 
 # Use environment variables for Redis host and port
@@ -90,7 +97,8 @@ def fetch_and_cache_data(data_source):
                     'Incident Zip': item.get('incident_zip', 'Not specified'),
                     'Incident Address': item.get('incident_address', 'Not specified'),
                     'Borough': item.get('borough', 'Not specified'),
-                    'Location': item.get('location', {'latitude': 'Not specified', 'longitude': 'Not specified'})
+                    'Location': item.get('location', {'latitude': 'Not specified', 'longitude': 'Not specified'}),
+                    'Community Board':item.get('community_board', 'Not specified'),
                 } for item in raw_data
             ]
 
@@ -285,11 +293,8 @@ def complaint_types_count():
 
     # Redis: Retrieve the date range
     date_range = redis.hgetall('complaints_date_range')
-
-    start_date = date_range.get(b'min_date').decode('utf-8')  # Ensure to handle byte keys if necessary
+    start_date = date_range.get(b'min_date').decode('utf-8')  
     end_date = date_range.get(b'max_date').decode('utf-8')
-    # start_date = date_range['min_date'].decode('utf-8')
-    # end_date = date_range['max_date'].decode('utf-8')
 
     filters={}
     if boroughs:
@@ -342,6 +347,40 @@ def dob_approved_permits():
     else:
         fetch_and_cache_data("dob_approved_permits")
 
+
+@app.route('/neighborhood_report_data', methods=['GET'])
+@cross_origin(origin='*', supports_credentials=True)
+def neighborhood_report_data():
+
+    neighborhood = request.args.get('neighborhood')
+
+    # retreive data date range:
+    date_range = redis.hgetall('complaints_date_range')
+    start_date = date_range.get(b'min_date').decode('utf-8')  # Ensure to handle byte keys if necessary
+    end_date = date_range.get(b'max_date').decode('utf-8')
+
+    cached_data = redis.get('complaints_data') 
+    data = []
+    if cached_data:
+        data = decompress_data(cached_data)
+
+  
+    # Convert dictionaries to dictionary format required for analysis
+    documents = process_dictionaries(data)
+
+    # Get the community boards of the chosen neighborhood 
+    cbs = find_community_boards(community_boards, neighborhood)
+    
+    # select the documents that include the community boards
+    documents_filtered_by_cb = filter_documents_by_cb(documents, cbs)
+
+    analyzed_data = analyze_complaints(documents_filtered_by_cb)
+
+
+    return analyzed_data
+
+
+# ----- HELPER FUNCTIONS:
         
 def filter_data(data, filters):
     filtered_data = [
@@ -381,9 +420,6 @@ def format_data_for_chart(data, start_date, end_date, filter_type, filter_keys, 
 
     return chart_data
 
-
-
-
 def count_hour_minute(data):
     # Extract 'hour:minute' and count occurrences
     hour_minute_list = [
@@ -392,6 +428,101 @@ def count_hour_minute(data):
     ]
     return dict(Counter(hour_minute_list))
 
+def process_dictionaries(data):
+   
+    documents = [
+        {
+            "page_content": f"Date: {entry['Created Date']}, Agency: {entry['Agency']}, Complaint: {entry['Complaint Type']}, Location: {entry['Location Type']}, Zip: {entry['Incident Zip']}, Address: {entry['Incident Address']}, Borough: {entry['Borough']}, CB:{entry['Community Board']}, Descriptor:{entry['Descriptor']}"
+        } for entry in data
+    ]
+    return documents
+
+def find_community_boards(data, neighborhood):
+    boards_with_neighborhood = []
+    for borough, communities in data.items():
+        for board, areas in communities.items():
+            if neighborhood.lower() in areas.lower():
+                boards_with_neighborhood.append(f"{board}")
+    return boards_with_neighborhood
+
+def filter_documents_by_cb(documents, cb_list):
+    # Normalize all community board entries and format them
+    cb_normalized = [f"CB:{cb}".upper().strip() for cb in cb_list]
+
+    # Filter documents to include those containing any of the normalized community board strings
+    return [doc for doc in documents if any(cb in doc['page_content'].upper() for cb in cb_normalized)]
+
+def analyze_complaints(data):
+    
+    # Parsing documents from dictionaries
+    parsed_data = [parse_document(doc['page_content']) for doc in data]  # Access dictionary with key
+
+    # Most Common Complaint and its frequency
+    complaints = Counter(doc['Complaint'] for doc in parsed_data)
+    complaints_in_order = complaints.most_common()
+
+    # Adding top 3 addresses to each complaint type in complaints_in_order
+    complaints_with_addresses = []
+    for complaint, count in complaints_in_order:
+        top_addresses = [doc['Address'] for doc in parsed_data if doc['Complaint'] == complaint]
+        address_frequency = Counter(top_addresses)
+        top_three_addresses = [address for address, count in address_frequency.most_common(3)]
+        complaints_with_addresses.append({
+            "complaint": complaint,
+            "count": count,
+            "top_addresses": top_three_addresses
+        })
+
+    # Most Common Complaint - deduce from the sorted list
+    most_common_complaint = complaints_with_addresses[0]['complaint']
+    top_addresses_for_common_complaint = complaints_with_addresses[0]['top_addresses']
+
+    
+
+    # Most Repeated Addresses
+    addresses = Counter(doc['Address'] for doc in parsed_data)
+    most_common_addresses = addresses.most_common()
+
+    address_to_complaints = {}
+    for address, _ in most_common_addresses:
+        address_to_complaints[address] = [doc['Descriptor'] for doc in parsed_data if doc['Address'] == address]
+
+    address_to_complaints = sorted(address_to_complaints.items(), key=lambda item: len(item[1]), reverse=True)
+
+
+    # Most Repeated Responding Agencies
+    agencies = Counter(doc['Agency'] for doc in parsed_data)
+    agency_info = {
+        agency: [(doc['Complaint'], doc['Address']) for doc in parsed_data if doc['Agency'] == agency]
+        for agency, _ in agencies.most_common()
+    }
+
+    return {
+        "common_complaints": {
+            "most_common": most_common_complaint,
+            "count": complaints[most_common_complaint],
+            "top_addresses": top_addresses_for_common_complaint
+        },
+        "complaints_by_frequency": complaints_with_addresses,
+        "addresses_with_complaints": address_to_complaints,
+        "agencies_and_complaints": agency_info
+    }
+
+def parse_document(document):
+    """Extract key information from the document string."""
+    info = {}
+    entries = document.split(", ")
+    for entry in entries:
+        parts = entry.split(":", 1)
+        if len(parts) == 2:
+            key, value = parts[0].strip(), parts[1].strip()
+            info[key.strip()] = value.strip()
+        else:
+            # Handle the case where no ":" is found
+            # Optionally log this or handle it in another suitable way
+            continue
+    # print('infoo', info)
+    return info
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))

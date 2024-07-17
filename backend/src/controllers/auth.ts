@@ -184,8 +184,6 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
  * @access public 
  */
 export const getAllNeighborhoods = async (req: Request, res: Response) => {
-
-
   const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
   const page = parseInt(req.query.page as string, 10) || 1;
 
@@ -193,6 +191,28 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
     const neighborhoodRepository = new NeighborhoodRepository();
     const { neighborhoods } = await neighborhoodRepository.getAll({ page, pageSize });
     res.status(200).json({ neighborhoods });
+  } catch (error) {
+    console.error('Failed to fetch neighborhoods:', error);
+    res.status(500).json({ message: 'Failed to fetch neighborhoods' });
+  }
+
+}
+
+
+/**
+ * @description gets a specific neighborhood 
+ * @route GET/api/neighborhoods
+ * @access public 
+*/
+export const getSingleNeighborhoodData = async (req: Request, res: Response) => {
+
+  console.log("holalala");
+  const { neighborhood } = req.params;
+
+  try {
+    const neighborhoodRepository = new NeighborhoodRepository();
+    const neighborhoodCollections = await neighborhoodRepository.getNeighbohoodData(neighborhood)
+    res.status(200).send(neighborhoodCollections);
   } catch (error) {
     console.error('Failed to fetch neighborhoods:', error);
     res.status(500).json({ message: 'Failed to fetch neighborhoods' });

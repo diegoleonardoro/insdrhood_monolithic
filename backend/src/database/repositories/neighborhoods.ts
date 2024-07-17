@@ -87,6 +87,18 @@ export class NeighborhoodRepository {
     return neighborhood;
   }
 
+
+  async getNeighbohoodData(neighborhood: string): Promise<any>{
+
+    const db = await this.db;
+    const neighborhoodsCollection = db.collection(this.collectionName);
+    const neighborhoodCollections = await neighborhoodsCollection.find({ neighborhood: neighborhood }).toArray();
+    return neighborhoodCollections;
+
+  }
+
+
+
   async updateNeighborhoodData(id: string, updates: UpdateData): Promise<any> {
 
     const db = await this.db;
@@ -169,7 +181,6 @@ export class NeighborhoodRepository {
 
 
   async generateUploadUrlForForm(neighborhood: string, randomUUID: string, user: UserData | null): Promise<{ key: string; url: string }> {
-
 
     const randomUUID_imageIdentifier = uuidv4();
     const key = `places/${user ? user!.id

@@ -1,0 +1,46 @@
+.__mainContainer{
+  width:80%;
+  margin:auto;
+  top:30px;
+  position: relative;
+  min-height: 100vh;
+}
+
+.sectionContainer{
+  border-bottom: 1px solid #13131329;
+  margin-bottom: 20px;
+  padding-bottom: 23px;
+
+}
+
+.sectionContainer__{
+   display: flex;         
+    flex-wrap: wrap;      
+    justify-content: space-between
+}
+.sectionContainer__ div{
+    flex-basis: 48%;      
+    background-color: #000000; 
+    margin-bottom: 20px;   
+    padding: 10px;        
+    box-sizing: border-box
+}
+
+
+.neighborhoodDataHeader{
+  font-family: Koulen;
+  color:black;
+  margin-bottom: 30px;
+}
+
+.neighborhoodDataSubHeader{
+  font-family: Koulen;
+  color:#DEA001;
+}
+
+@media only screen and (max-width: 999px) {
+  .sectionContainer__ div{
+     flex-basis: 100%;
+  }
+  
+}

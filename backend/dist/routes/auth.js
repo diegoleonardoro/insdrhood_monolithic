@@ -40,4 +40,5 @@ router.post("/neighborhood/savedata", authentication_validator_1.authenticationV
 router.put("/updateneighborhood/:id", authentication_validator_1.authenticationValidator, auth_1.updateNeighborhoodData);
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
 router.get("/neighborhood/:neighborhoodid", auth_1.getNeighborhood);
+router.get("/neighborhoodData/:neighborhood", auth_1.getSingleNeighborhoodData);
 //# sourceMappingURL=auth.js.map
