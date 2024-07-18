@@ -30,14 +30,13 @@ const NeighborhoodReport = () => {
           neighborhood: "Mott Haven"
         }
       });
+
       // Store the response data in state
       setData(response.data);
 
       const neighborhoodData = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/Williamsburg`);
 
       const data = neighborhoodData.data;
-
-     
 
       const uniqueThings = data.map(item => item.mostUniqueThingAboutNeighborhood);
 
@@ -47,13 +46,9 @@ const NeighborhoodReport = () => {
       })));
 
       const neighborhoodDescriptions = data.map(item => item.neighborhoodDescription);
-
       const peopleShouldVisitIfTheyWant = data.map(item => item.peopleShouldVisitNeighborhoodIfTheyWant);
-
       const neighborhoodImages = data.map(item => item.neighborhoodImages);
-
       const nightLifeRecommendations_ = data.map(item => item.nightLifeRecommendations[0])
-
 
       setMostUniqueThings(uniqueThings);
       setRecommendedFoodTypes(foodTypes.filter(item => item.explanation !== undefined));
@@ -89,8 +84,6 @@ const NeighborhoodReport = () => {
 
     return `${capitalizedSentence}.`;
   }
-
-  console.log(hoodImages)
 
   return (
     <div className="__mainContainer">
@@ -143,9 +136,12 @@ const NeighborhoodReport = () => {
 
       {hoodImages.length > 0 ? (<div className="sectionContainer">
         <h2 className="neighborhoodDataSubHeader">Some Images of Williamsburg:</h2>
-        {hoodImages.map((src, index) => {
-          return <img src={"https://insiderhood.s3.amazonaws.com/" + src.image} key={index} />
-        })}
+
+        {hoodImages.map((images, index) => (
+          images.length > 0 ? <img  style={{width:"30%"}}src={"https://insiderhood.s3.amazonaws.com/" + images[0]?.image} key={index} /> : null
+        ))}
+
+
       </div>) : null}
 
 

@@ -23,6 +23,8 @@ load_dotenv()
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
 
+print("base_urlbase_url", base_url)
+
 with open('nyc_cb_neighborhoods.json', 'r') as file:
     community_boards = json.load(file)
 
