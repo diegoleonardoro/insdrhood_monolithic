@@ -35,9 +35,7 @@ h2{
   /* background-color: #FFFCEB ; */
 }
 
-.userInfoSubContainer{
-  /* padding:10px; */
-}
+
 
 h1{
   text-align: start;
@@ -49,7 +47,7 @@ h1{
   justify-content: center;
   flex-direction: column;
   /* width: 65%; */
-  align-items: start;
+  align-items: flex-start;
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);
@@ -89,6 +87,7 @@ h1{
   position: relative;
   /* margin: auto  */
 }
+
 .nightLifeContainer{
  display:flex;
  align-items: center;
@@ -118,16 +117,8 @@ h1{
   justify-content: center;
 }
 
-/*recommendations images: */
-.imageResidents{
 
-}
 
-.recommendationsImage{
-  /* height:250px;
-  margin-top:15px; */
-
-}
 
 .imageSectionContainer{
   display: flex;
@@ -137,10 +128,7 @@ h1{
   /* justify-content: center; */
 }
 
-.sectionContainer{
-  /* background-color: #FFFCEB ; */
-  /* margin-top: 30px; */
-}
+
 
 .assessmentsContainer{
   position:relative;
@@ -235,7 +223,5 @@ h1{
       padding-bottom: 50px;
     }
 
-    .assessmentsContainer{
-      /* width:80%; */
-    }
+    
 }
