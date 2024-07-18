@@ -1,8 +1,8 @@
-# Build stage
-FROM node:alpine as build-stage
+# Build stage with a specific Node version
+FROM node:16-alpine as build-stage
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm cache clean --force && npm install --verbose
 COPY . .
 RUN npm run build
 
