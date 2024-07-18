@@ -19,11 +19,9 @@ from collections import Counter
 load_dotenv()
 
 
-
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
 
-print("base_urlbase_url", base_url)
 
 with open('nyc_cb_neighborhoods.json', 'r') as file:
     community_boards = json.load(file)
@@ -40,7 +38,6 @@ CORS(app, resources={
     r"/dob_approved_permits": {"origins": allowed_origins},
     r"/neighborhood_report_data": {"origins": allowed_origins}
 }, supports_credentials=True)
-
 
 
 
@@ -289,6 +286,8 @@ def calls311():
 @cross_origin(origin='*', supports_credentials=True)
 def complaint_types_count():
 
+    print("base_urlbase_url", base_url)
+    
     boroughs = request.args.getlist('boroughs[]')
     zip_codes = request.args.getlist('zipcodes[]')
     complaint_types = request.args.getlist('complaint_types[]')
