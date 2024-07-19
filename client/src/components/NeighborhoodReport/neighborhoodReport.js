@@ -67,7 +67,6 @@ const NeighborhoodReport = () => {
       setHoodImages(neighborhoodImages);
       setNightLifeRecommendations(nightLifeRecommendations_);
       setUserIds(userIds)
-
     };
     fetchData();
   }, []);
