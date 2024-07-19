@@ -1,6 +1,6 @@
 import "./neighborhoodReport.css"
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
@@ -19,6 +19,15 @@ const NeighborhoodReport = () => {
   const [recommendedFoodTypes, setRecommendedFoodTypes] = useState([]); // 4
   const [nightLifeRecommendations, setNightLifeRecommendations] = useState([]); //5
   const [hoodImages, setHoodImages] = useState([]); // 5
+  const [userIds, setUserIds] = useState([]);
+
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    startTransition(() => {
+      navigate(path);
+    });
+  };
 
 
 
@@ -48,7 +57,8 @@ const NeighborhoodReport = () => {
       const neighborhoodDescriptions = data.map(item => item.neighborhoodDescription);
       const peopleShouldVisitIfTheyWant = data.map(item => item.peopleShouldVisitNeighborhoodIfTheyWant);
       const neighborhoodImages = data.map(item => item.neighborhoodImages);
-      const nightLifeRecommendations_ = data.map(item => item.nightLifeRecommendations[0])
+      const nightLifeRecommendations_ = data.map(item => item.nightLifeRecommendations[0]);
+      const userIds = data.map(item => item._id);
 
       setMostUniqueThings(uniqueThings);
       setRecommendedFoodTypes(foodTypes.filter(item => item.explanation !== undefined));
@@ -56,10 +66,13 @@ const NeighborhoodReport = () => {
       setPplShouldVisitIfTheyWant(peopleShouldVisitIfTheyWant);
       setHoodImages(neighborhoodImages);
       setNightLifeRecommendations(nightLifeRecommendations_);
+      setUserIds(userIds)
 
     };
     fetchData();
   }, []);
+
+  console.log("userIds", userIds)
 
 
   function capitalizeAndEnd(sentence) {
@@ -93,21 +106,21 @@ const NeighborhoodReport = () => {
       <div className="sectionContainer">
         <h2 className="neighborhoodDataSubHeader" >Williamsburg can be described as:</h2>
         {nhoodDescriptions.map((description, index) => {
-          return <p key={index}>{capitalizeAndEnd(description)}</p>
+          return <a href={`/neighborhood/${userIds[index]}`} className="hyperlink"> <p key={index}>{capitalizeAndEnd(description)}</p></a>
         })}
       </div>
 
       <div className="sectionContainer">
         <h2 className="neighborhoodDataSubHeader">The Most Unique Thing About Williamsburg is:</h2>
         {mostUniqueThings.map((description, index) => {
-          return <p key={index}>{capitalizeAndEnd(description)}</p>
+          return <a href={`/neighborhood/${userIds[index]}`} className="hyperlink"><p key={index}>{capitalizeAndEnd(description)}</p></a>
         })}
       </div>
 
       <div className="sectionContainer">
         <h2 className="neighborhoodDataSubHeader">People Shouls Visit Williamsburg if they want:</h2>
         {pplShouldVisitIfTheyWant.map((description, index) => {
-          return <p key={index}>{capitalizeAndEnd(description)}</p>
+          return <a href={`/neighborhood/${userIds[index]}`} className="hyperlink"><p key={index}>{capitalizeAndEnd(description)}</p></a>
         })}
       </div>
 
@@ -115,7 +128,7 @@ const NeighborhoodReport = () => {
         <h2 className="neighborhoodDataSubHeader">Recommended Food in Williamsburg:</h2>
         <div className="sectionContainer__">
           {recommendedFoodTypes.map((description, index) => {
-            return <div key={index}> <span style={{ color: "#DEA001" }}>{index + 1 + ". " + capitalize(description.explanation)} </span> <span style={{ color: "white" }}>{" " + capitalize(description.type)}</span> </div>
+            return <div key={index}> <span style={{ color: "#DEA001" }}>{index + 1 + ". " + capitalize(description.explanation)} </span> <a href={`/neighborhood/${userIds[index]}`} className="hyperlink_"><span style={{ color: "white" }}>{" " + capitalize(description.type)}</span></a> </div>
           })}
         </div>
       </div>
@@ -127,7 +140,7 @@ const NeighborhoodReport = () => {
           {nightLifeRecommendations.map((description, index) => {
             return <div key={index}> <span style={{ color: "#DEA001" }}>
               {index + 1 + ". " + capitalize(description.assessment)} </span>
-              <span style={{ color: "white" }}>{" " + capitalize(description.explanation)}</span>
+              <a className="hyperlink_"> <span style={{ color: "white" }}>{" " + capitalize(description.explanation)}</span></a>
             </div>
           })}
         </div>
