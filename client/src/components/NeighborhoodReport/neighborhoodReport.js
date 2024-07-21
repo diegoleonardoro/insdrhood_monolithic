@@ -66,12 +66,12 @@ const NeighborhoodReport = () => {
       setPplShouldVisitIfTheyWant(peopleShouldVisitIfTheyWant);
       setHoodImages(neighborhoodImages);
       setNightLifeRecommendations(nightLifeRecommendations_);
-      setUserIds(userIds)
+      setUserIds(userIds);
+
     };
     fetchData();
   }, []);
 
-  console.log("userIds", userIds)
 
 
   function capitalizeAndEnd(sentence) {
