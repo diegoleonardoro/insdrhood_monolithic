@@ -13,7 +13,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { Row, Col, Container, Form } from 'react-bootstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-
+import Footer from "../../components/Footer/footer"
 
 function Home() {
 
@@ -364,6 +364,7 @@ function Home() {
         </Stack>
 
       </div>
+      <Footer/>
     </div>
   );
 
