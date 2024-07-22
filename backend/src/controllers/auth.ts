@@ -206,7 +206,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
 */
 export const getSingleNeighborhoodData = async (req: Request, res: Response) => {
 
-  console.log("holalala");
   const { neighborhood } = req.params;
 
   try {

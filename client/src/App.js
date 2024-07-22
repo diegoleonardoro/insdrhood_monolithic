@@ -125,7 +125,7 @@ function App() {
           </Routes>
           <Suspense />
 
-          <Footer/>
+          {/* <Footer/> */}
         </div>
       </NavigationHistoryProvider>
     </Router>

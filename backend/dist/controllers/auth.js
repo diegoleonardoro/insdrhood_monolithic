@@ -183,7 +183,6 @@ exports.getAllNeighborhoods = getAllNeighborhoods;
  * @access public
 */
 const getSingleNeighborhoodData = async (req, res) => {
-    console.log("holalala");
     const { neighborhood } = req.params;
     try {
         const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();

@@ -1,15 +1,17 @@
 import "./neighborhoodSearch.css";
 import React, { useState, useRef, useEffect } from 'react';
-
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { TextField, Box, createTheme, ThemeProvider } from '@mui/material';
+import NeighborhoodReport from "../NeighborhoodReport/neighborhoodReport"
 
 const SearchBar = () => {
+
   const [input, setInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const suggestionRefs = useRef([]);
+  const [nhoodData, setNhoodData] = useState([])
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -27,10 +29,16 @@ const SearchBar = () => {
     setActiveIndex(-1);
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setInput(suggestion);
+  const makeRequest = async (nhood) => {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/${nhood}`);
+    setNhoodData(response.data);
+  }
+
+  const handleSuggestionClick = async (nhood) => {
+    setInput(nhood);
     setSuggestions([]);
     setActiveIndex(-1);
+    makeRequest(nhood)
   };
 
   const handleKeyDown = (event) => {
@@ -97,6 +105,8 @@ const SearchBar = () => {
           )}
         </Box>
       </ThemeProvider>
+
+      <NeighborhoodReport nhoodData={nhoodData} neighborhood={input}></NeighborhoodReport>
     </div>
   );
 };

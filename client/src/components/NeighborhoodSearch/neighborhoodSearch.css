@@ -2,6 +2,94 @@
   margin: auto;
   min-height: 82vh;
   position: relative;
-
   width: 80%;
+  top:30px;
+}
+
+.__mainContainer{
+  width:80%;
+  margin:auto;
+  top:80px;
+  position: relative;
+  min-height: 100vh;
+}
+
+.sectionContainer{
+  border-bottom: 1px solid #13131329;
+  margin-bottom: 20px;
+  padding-bottom: 23px;
+
+}
+
+.sectionContainer__{
+   display: flex;         
+    flex-wrap: wrap;      
+    justify-content: space-between
+}
+.sectionContainer__ div{
+    flex-basis: 48%;      
+    background-color: #000000; 
+    margin-bottom: 20px;   
+    padding: 10px;        
+    box-sizing: border-box
+}
+
+
+.neighborhoodDataHeader{
+  font-family: Koulen;
+  color:black;
+  margin-bottom: 30px;
+}
+
+.neighborhoodDataSubHeader{
+  font-family: Koulen;
+  color:#DEA001;
+}
+
+.hyperlink {
+    text-decoration: underline; /* Underline the link */
+    cursor: pointer; /* Change cursor on hover */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+    position: relative; /* For positioning the icon */
+    display: flex;
+    text-decoration: none; 
+     color: inherit;
+}
+
+.hyperlink_ {
+    text-decoration: underline; /* Underline the link */
+    cursor: pointer; /* Change cursor on hover */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+    position: relative; /* For positioning the icon */
+    text-decoration: none; 
+    color: inherit;
+}
+
+.hyperlink:hover { 
+    text-decoration: none; /* Optionally remove underline on hover */
+    background-color: lightgray; /* Optional background change on hover */
+}
+
+.hyperlink::after {
+    content: '🔗'; /* Link icon */
+    margin-left: 5px; /* Space between text and icon */
+    font-size: 0.9em; /* Adjust icon size */
+}
+
+.hyperlink_:hover { 
+    text-decoration: none; /* Optionally remove underline on hover */
+    background-color: lightgray; /* Optional background change on hover */
+}
+
+.hyperlink_::after {
+    content: '🔗'; /* Link icon */
+    margin-left: 5px; /* Space between text and icon */
+    font-size: 0.9em; /* Adjust icon size */
+}
+
+@media only screen and (max-width: 999px) {
+  .sectionContainer__ div{
+     flex-basis: 100%;
+  }
+  
 }
