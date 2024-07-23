@@ -759,7 +759,7 @@ const NeighborhoodEditableDiv = ({
                       <div style={{ textAlign: "start" }}>
                         <p className='nhoodRecommendationText_'>{text + item.assessment.trimEnd()}
                           {item.explanation && (
-                            <span className='nhoodRecommendationText'  >
+                              <span style={{ color: "#DEA001", fontWeight: "bold" }}className='nhoodRecommendationText'  >
                               {`, because ${item.explanation}.`}
                             </span>
                           )}</p>

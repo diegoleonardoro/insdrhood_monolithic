@@ -133,6 +133,10 @@
   font-weight: 700;
 }
 
+.nhoodRecommendationText_{
+  color:white;
+}
+
 @media (max-width: 800px) {
     .recommendedFoodsChild {
         flex-basis: 100%;
