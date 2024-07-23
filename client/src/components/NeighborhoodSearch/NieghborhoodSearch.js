@@ -3,7 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { TextField, Box, createTheme, ThemeProvider } from '@mui/material';
-import NeighborhoodReport from "../NeighborhoodReport/neighborhoodReport"
+import NeighborhoodReport from "../NeighborhoodReport/neighborhoodReport";
+import Spinner from 'react-bootstrap/Spinner';
+
 
 const SearchBar = () => {
 
@@ -13,7 +15,7 @@ const SearchBar = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const suggestionRefs = useRef([]);
   const [nhoodData, setNhoodData] = useState([]);
-  const [waitingForData, setWaitingForData]= useState(false)
+  const [waitingForData, setWaitingForData] = useState(false)
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -66,8 +68,10 @@ const SearchBar = () => {
   }, [activeIndex]);
 
 
-  if (waitingForData){
-    return <>holala</>
+  if (waitingForData) {
+    return (<>
+      <Spinner animation="border" variant="warning" />
+    </>)
   }
 
   return (
