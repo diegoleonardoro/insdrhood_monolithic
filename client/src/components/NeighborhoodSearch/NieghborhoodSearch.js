@@ -44,7 +44,8 @@ const SearchBar = () => {
     setInput(nhood);
     setSuggestions([]);
     setActiveIndex(-1);
-    makeRequest(nhood)
+    makeRequest(nhood);
+    setNhood(suggestions[activeIndex]);
   };
 
   const handleKeyDown = (event) => {
@@ -54,7 +55,7 @@ const SearchBar = () => {
       setActiveIndex(prevIndex => prevIndex - 1);
     } else if (event.key === 'Enter' && activeIndex >= 0) {
       handleSuggestionClick(suggestions[activeIndex]);
-      setNhood(suggestions[activeIndex]);
+      
     }
   };
 
