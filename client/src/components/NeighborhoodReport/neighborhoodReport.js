@@ -31,14 +31,15 @@ const NeighborhoodReport = ({ nhoodData, neighborhood  }) => {
     if (!nhoodData) return; // Check if nhoodData is an empty list
 
     const fetchData = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/neighborhood_report_data`, {
-        params: {
-          neighborhood: "Mott Haven"
-        }
-      });
+      
+      // const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/neighborhood_report_data`, {
+      //   params: {
+      //     neighborhood: "Mott Haven"
+      //   }
+      // });
 
-      // Assuming you need to use the fetched data instead of nhoodData for some reason
-      setData(response.data);
+      // // Assuming you need to use the fetched data instead of nhoodData for some reason
+      // setData(response.data);
 
       const uniqueThings = nhoodData.map(item => item.mostUniqueThingAboutNeighborhood);
       const foodTypes = nhoodData.flatMap(item => item.recommendedFoodTypes.map(ft => ({
