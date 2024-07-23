@@ -56,6 +56,7 @@ class NeighborhoodRepository {
         const db = await this.db;
         const neighborhoodsCollection = db.collection(this.collectionName);
         const neighborhoodCollections = await neighborhoodsCollection.find({ neighborhood: neighborhood }).toArray();
+        console.log('neighborhoodCollections', neighborhoodCollections);
         return neighborhoodCollections;
     }
     async updateNeighborhoodData(id, updates) {

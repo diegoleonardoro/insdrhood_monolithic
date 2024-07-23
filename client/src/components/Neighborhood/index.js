@@ -64,7 +64,7 @@ const NeighborhoodProfile = () => {
                 {nhoodName ? nhoodName : ''}
                 {neighborhood?.user?.name
                   ? <span style={{ color: "#DEA001" }}> by {neighborhood.user.name}:</span>
-                  : <span style={{ color: "#DEA001" }}>by anonymous</span>}
+                  : <span style={{ color: "#DEA001" }}> by anonymous</span>}
               </h1>
 
               {neighborhood && (

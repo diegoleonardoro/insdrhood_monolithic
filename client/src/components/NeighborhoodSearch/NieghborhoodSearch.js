@@ -8,10 +8,12 @@ import NeighborhoodReport from "../NeighborhoodReport/neighborhoodReport"
 const SearchBar = () => {
 
   const [input, setInput] = useState('');
+  const [nhood, setNhood] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const suggestionRefs = useRef([]);
-  const [nhoodData, setNhoodData] = useState([])
+  const [nhoodData, setNhoodData] = useState([]);
+  const [waitingForData, setWaitingForData]= useState(false)
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -30,8 +32,10 @@ const SearchBar = () => {
   };
 
   const makeRequest = async (nhood) => {
+    setWaitingForData(true)
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/${nhood}`);
     setNhoodData(response.data);
+    setWaitingForData(false)
   }
 
   const handleSuggestionClick = async (nhood) => {
@@ -48,6 +52,7 @@ const SearchBar = () => {
       setActiveIndex(prevIndex => prevIndex - 1);
     } else if (event.key === 'Enter' && activeIndex >= 0) {
       handleSuggestionClick(suggestions[activeIndex]);
+      setNhood(suggestions[activeIndex]);
     }
   };
 
@@ -59,6 +64,11 @@ const SearchBar = () => {
       });
     }
   }, [activeIndex]);
+
+
+  if (waitingForData){
+    return <>holala</>
+  }
 
   return (
     <div className="neighborhoodSearchContainer">
@@ -106,7 +116,7 @@ const SearchBar = () => {
         </Box>
       </ThemeProvider>
 
-      <NeighborhoodReport nhoodData={nhoodData} neighborhood={input}></NeighborhoodReport>
+      <NeighborhoodReport nhoodData={nhoodData} neighborhood={nhood}></NeighborhoodReport>
     </div>
   );
 };
