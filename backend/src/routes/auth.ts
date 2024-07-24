@@ -16,7 +16,8 @@ import {
   getNeighborhood,
   uploadBlogFiles, 
   newsLetterSignUp,
-  getSingleNeighborhoodData
+  getSingleNeighborhoodData,
+  neighborhoodResponsesCount
 } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
@@ -58,6 +59,7 @@ router.put("/updateneighborhood/:id", authenticationValidator, updateNeighborhoo
 router.get("/neighborhoods", getAllNeighborhoods);
 router.get("/neighborhood/:neighborhoodid", getNeighborhood);
 router.get("/neighborhoodData/:neighborhood", getSingleNeighborhoodData);
+router.get("/neighborhoodDataCount", authenticationValidator, neighborhoodResponsesCount);
 
 
 export { router as auth }

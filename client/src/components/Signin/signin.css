@@ -1,22 +1,37 @@
 .signinFormContainer{
-     display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    background-color: #F4E1D2;
-    z-index: -1;
+    /* height: 100vh;
+    position: absolute; */
+    /* top: 0; */
+    /* background-color: #F4E1D2; */
+    /* z-index: -1; */
     width: 100%;
 }
 
 .signinform{
-  padding:30px;
+  padding:50px;
   border: 1px solid #f2eeee;
-  border-radius: 15px 
+  border-radius: 15px;
+  width:40%;
+  position: relative;
+  top:130px;
 }
 
 .signinbutton{
   margin-top: 10px;
   width: 100%;
+}
+
+.signinform div{
+  margin-bottom: 30px !important;
+}
+
+@media only screen and (max-width: 900px) {
+  .signinform{
+    width:90%;
+    padding:30px;
+    top:100px;
+  }
 }

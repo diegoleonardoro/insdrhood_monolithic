@@ -30,6 +30,7 @@ import DOBApprovedPermits from './components/DOB_ApprovedPermits/DobApprovedPerm
 import Footer from './components/Footer/footer'
 import NeighborhoodReport from "./components/NeighborhoodReport/neighborhoodReport"
 import SearchBar from "./components/NeighborhoodSearch/NieghborhoodSearch";
+import FormResponsesCount from "./components/FormResponsesCount/FormResponsesCount"
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -121,7 +122,7 @@ function App() {
             <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route>
             <Route path='/NeighborhoodReport' element={<NeighborhoodReport />}></Route>
             <Route path='/neighborhoodsearch' element={<SearchBar />}></Route>
-           
+            <Route path='/FormResponsesCount' element={<FormResponsesCount />}></Route>
           </Routes>
           <Suspense />
 

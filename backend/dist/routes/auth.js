@@ -41,4 +41,5 @@ router.put("/updateneighborhood/:id", authentication_validator_1.authenticationV
 router.get("/neighborhoods", auth_1.getAllNeighborhoods);
 router.get("/neighborhood/:neighborhoodid", auth_1.getNeighborhood);
 router.get("/neighborhoodData/:neighborhood", auth_1.getSingleNeighborhoodData);
+router.get("/neighborhoodDataCount", authentication_validator_1.authenticationValidator, auth_1.neighborhoodResponsesCount);
 //# sourceMappingURL=auth.js.map

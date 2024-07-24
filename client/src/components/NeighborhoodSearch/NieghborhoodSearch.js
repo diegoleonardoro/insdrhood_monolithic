@@ -55,7 +55,6 @@ const SearchBar = () => {
       setActiveIndex(prevIndex => prevIndex - 1);
     } else if (event.key === 'Enter' && activeIndex >= 0) {
       handleSuggestionClick(suggestions[activeIndex]);
-      
     }
   };
 

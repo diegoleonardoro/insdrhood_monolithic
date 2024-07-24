@@ -8,6 +8,7 @@ const mongodb_1 = require("mongodb");
 const index_1 = require("../index");
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const uuid_1 = require("uuid");
+const neighborhoodNames_1 = __importDefault(require("./neighborhoodNames"));
 class NeighborhoodRepository {
     static saveFormData(body, user) {
         throw new Error("Method not implemented.");
@@ -144,6 +145,20 @@ class NeighborhoodRepository {
         const users = db.collection("users");
         const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
         return {};
+    }
+    async neighborhoodResponsesCount() {
+        const db = await this.db;
+        const neighborhoodsCollection = db.collection(this.collectionName);
+        const nhoodDocuments = await neighborhoodsCollection.find().toArray();
+        const neighborhoodsCount_ = { ...neighborhoodNames_1.default };
+        nhoodDocuments.forEach(doc => {
+            const neighborhood = doc.neighborhood;
+            if (neighborhoodsCount_.hasOwnProperty(neighborhood)) {
+                neighborhoodsCount_[neighborhood]++;
+            }
+        });
+        console.log('neighborhoodsCount', neighborhoodNames_1.default);
+        return neighborhoodsCount_;
     }
 }
 exports.NeighborhoodRepository = NeighborhoodRepository;

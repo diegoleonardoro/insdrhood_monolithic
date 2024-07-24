@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
+exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
 const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
@@ -206,4 +206,15 @@ const getNeighborhood = async (req, res) => {
     res.status(200).send(neighborhood);
 };
 exports.getNeighborhood = getNeighborhood;
+/**
+ * @description get a count
+ * @route /api/neighborhood/:neighborhoodid
+ * @access public
+ */
+const neighborhoodResponsesCount = async (req, res) => {
+    const neighborhoodRepository = new neighborhoods_1.NeighborhoodRepository();
+    const nhoodResponsesCount = await neighborhoodRepository.neighborhoodResponsesCount();
+    res.status(200).send(nhoodResponsesCount);
+};
+exports.neighborhoodResponsesCount = neighborhoodResponsesCount;
 //# sourceMappingURL=auth.js.map

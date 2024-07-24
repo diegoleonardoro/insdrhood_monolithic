@@ -229,3 +229,14 @@ export const getNeighborhood = async (req: Request, res: Response) => {
   const neighborhood = await neighborhoodRepository.getOne(req.params.neighborhoodid);
   res.status(200).send(neighborhood);
 }
+
+/**
+ * @description get a count 
+ * @route /api/neighborhood/:neighborhoodid
+ * @access public 
+ */
+export const neighborhoodResponsesCount = async (req: Request, res:Response)=>{
+  const neighborhoodRepository = new NeighborhoodRepository();
+  const nhoodResponsesCount = await neighborhoodRepository.neighborhoodResponsesCount()
+  res.status(200).send(nhoodResponsesCount);
+}

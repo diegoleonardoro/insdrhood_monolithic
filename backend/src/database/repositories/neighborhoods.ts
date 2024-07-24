@@ -2,7 +2,7 @@ import { ObjectId, Db } from 'mongodb';
 import { connectToDatabase } from '../index';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
-
+import neighborhoodsCount from "./neighborhoodNames"
 
 interface updateQuery {
   $set?: any,
@@ -54,9 +54,9 @@ export class NeighborhoodRepository {
     await neighborhoodsCollection.createIndex({ neighborhoodDescription: 1 });
     await neighborhoodsCollection.createIndex({ user: 1 });
   }
-  
 
-  async getAll({ page, pageSize }: { page: number , pageSize: number }): Promise<{ neighborhoods: any[], nextCursor?: string }> {
+
+  async getAll({ page, pageSize }: { page: number, pageSize: number }): Promise<{ neighborhoods: any[], nextCursor?: string }> {
 
     const db = await this.db;
     const neighborhoodsCollection = db.collection(this.collectionName);
@@ -88,7 +88,7 @@ export class NeighborhoodRepository {
   }
 
 
-  async getNeighbohoodData(neighborhood: string): Promise<any>{
+  async getNeighbohoodData(neighborhood: string): Promise<any> {
 
     const db = await this.db;
     const neighborhoodsCollection = db.collection(this.collectionName);
@@ -97,7 +97,6 @@ export class NeighborhoodRepository {
     return neighborhoodCollections;
 
   }
-
 
 
   async updateNeighborhoodData(id: string, updates: UpdateData): Promise<any> {
@@ -180,7 +179,6 @@ export class NeighborhoodRepository {
     }
   }
 
-
   async generateUploadUrlForForm(neighborhood: string, randomUUID: string, user: UserData | null): Promise<{ key: string; url: string }> {
 
     const randomUUID_imageIdentifier = uuidv4();
@@ -204,7 +202,6 @@ export class NeighborhoodRepository {
 
   }
 
-
   async verifyemail(emailtoken: string): Promise<{}> {
 
     const db = await this.db;
@@ -212,9 +209,30 @@ export class NeighborhoodRepository {
 
     const user = await users.findOne({ emailToken: { $in: [emailtoken] } });
 
-
-
     return {}
+  }
+
+  async neighborhoodResponsesCount(): Promise<{}> {
+    const db = await this.db;
+
+    const neighborhoodsCollection = db.collection(this.collectionName);
+
+    const nhoodDocuments = await neighborhoodsCollection.find().toArray()
+
+    const neighborhoodsCount_ = { ...neighborhoodsCount };
+
+
+    nhoodDocuments.forEach(doc => {
+      const neighborhood = doc.neighborhood as string;
+      if (neighborhoodsCount_.hasOwnProperty(neighborhood)) {
+        (neighborhoodsCount_ as any)[neighborhood]++;
+      }
+    });
+
+
+    console.log('neighborhoodsCount', neighborhoodsCount);
+    return neighborhoodsCount_;
+
   }
 
 
