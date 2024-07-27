@@ -89,13 +89,18 @@ export class NeighborhoodRepository {
 
 
   async getNeighbohoodData(neighborhood: string): Promise<any> {
-
     const db = await this.db;
     const neighborhoodsCollection = db.collection(this.collectionName);
     const neighborhoodCollections = await neighborhoodsCollection.find({ neighborhood: neighborhood }).toArray();
-    console.log('neighborhoodCollections', neighborhoodCollections)
-    return neighborhoodCollections;
+    const neighborhood_summaries = db.collection("neighborhood_summaries")
+    const neighborhood_summariesCollections = await neighborhood_summaries.findOne({ neighborhood: neighborhood });
+    console.log("neighborhood_summariesCollections", neighborhood_summariesCollections)
 
+
+    return {
+      userInputs: neighborhoodCollections,
+      neighborhood_summariesCollections: neighborhood_summariesCollections
+    };
   }
 
 

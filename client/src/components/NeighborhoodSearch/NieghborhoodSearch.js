@@ -15,7 +15,8 @@ const SearchBar = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const suggestionRefs = useRef([]);
   const [nhoodData, setNhoodData] = useState([]);
-  const [waitingForData, setWaitingForData] = useState(false)
+  const [waitingForData, setWaitingForData] = useState(false);
+  const [nhoodDescriptions , setNhoodDescriptions]=useState({})
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -25,6 +26,7 @@ const SearchBar = () => {
       const filtered = neighborhoods.filter(neighborhood =>
         neighborhood.toLowerCase().includes(value.toLowerCase())
       );
+
       setSuggestions(filtered);
       suggestionRefs.current = new Array(filtered.length).fill().map((_, i) => suggestionRefs.current[i] || React.createRef());
     } else {
@@ -36,16 +38,22 @@ const SearchBar = () => {
   const makeRequest = async (nhood) => {
     setWaitingForData(true)
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/${nhood}`);
-    setNhoodData(response.data);
-    setWaitingForData(false)
+    setNhoodData(response.data.userInputs);
+    if (response.data && response.data.neighborhood_summariesCollections && response.data.neighborhood_summariesCollections.response) {
+      setNhoodDescriptions(response.data.neighborhood_summariesCollections.response);
+      console.log(response.data.neighborhood_summariesCollections.response)
+    } else {
+      setNhoodDescriptions({});  // Optionally reset to an empty object if data is not available
+    }
+    setWaitingForData(false);
   }
 
   const handleSuggestionClick = async (nhood) => {
     setInput(nhood);
     setSuggestions([]);
-    setActiveIndex(-1);
     makeRequest(nhood);
     setNhood(suggestions[activeIndex]);
+    setActiveIndex(-1);
   };
 
   const handleKeyDown = (event) => {
@@ -73,6 +81,7 @@ const SearchBar = () => {
       <Spinner animation="border" variant="warning" />
     </>)
   }
+
 
   return (
     <div className="neighborhoodSearchContainer">
@@ -120,10 +129,11 @@ const SearchBar = () => {
         </Box>
       </ThemeProvider>
 
-      <NeighborhoodReport nhoodData={nhoodData} neighborhood={nhood}></NeighborhoodReport>
+      <NeighborhoodReport nhoodData={nhoodData} nhoodsNarrative={nhoodDescriptions}neighborhood={nhood}></NeighborhoodReport>
     </div>
   );
 };
+
 
 const theme = createTheme({
   components: {
@@ -150,6 +160,7 @@ const theme = createTheme({
 
 
 var neighborhoods = [
+  "Albemarle",
   "St. Albans",
   "Van Cortlandt Village",
   "South Ozone Park",
@@ -426,6 +437,26 @@ var neighborhoods = [
   "Brighton Beach",
   "Homecrest",
   "Steinway",
+  "Bedford-Stuyvesant",
+  "Brooklyn Navy Yard",
+  "Dyker Beach Park",
+  "Fort Hamilton",
+  "Greenwood Cemetery",
+  "Greenwood Heights",
+  "Highland Park",
+  "Los Sures - Southside",
+  "Mapleton",
+  "Mill Island",
+  "New Lots",
+  "North Williamsburg",
+  "Paerdegat",
+  "Parkville",
+  "Prospect Park",
+  "Prospect Park South",
+  "Sea Gate",
+  "South Slope",
+  "South Williamsburg",
+  "Victorian Flatbush"
 ];
 
 
