@@ -50,10 +50,10 @@ const SearchBar = () => {
 
   const handleSuggestionClick = async (nhood) => {
     setInput(nhood);
+    setNhood(nhood); // Move this here to ensure it updates immediately with the correct value
     setSuggestions([]);
-    makeRequest(nhood);
-    setNhood(suggestions[activeIndex]);
     setActiveIndex(-1);
+    await makeRequest(nhood);
   };
 
   const handleKeyDown = (event) => {
@@ -63,6 +63,7 @@ const SearchBar = () => {
       setActiveIndex(prevIndex => prevIndex - 1);
     } else if (event.key === 'Enter' && activeIndex >= 0) {
       handleSuggestionClick(suggestions[activeIndex]);
+    
     }
   };
 
@@ -491,7 +492,68 @@ var neighborhoods = [
   "Theater District (Times Square)",
   "Tudor City",
   "Two Bridges",
-  "World Trade Center"
+  "World Trade Center",
+  "Indian Village",
+  "Jerome Park",
+  "Laconia",
+  "Locust Point",
+  "Silver Beach",
+  "Alley Pond Park",
+  "Astoria Heights",
+  "Bay Terrace",
+  "Bayside Hills",
+  "Beechhurst",
+  "Bellaire",
+  "Belle Harbor",
+  "Bellerose Manor",
+  "Broad Channel",
+  "Broadway-Flushing",
+  "Brookville Park",
+  "Cambria Heights",
+  "Cunningham Park",
+  "Ditmars-Steinway",
+  "Douglas Manor",
+  "Downtown Flushing",
+  "Floral Park",
+  "Flushing Heights",
+  "Flushing Meadows Corona Park",
+  "Forest Hills Gardens",
+  "Forest Park",
+  "Fort Tilden-Jacob Riis Parks",
+  "Fresh Meadows",
+  "Glen Oaks",
+  "Glendale",
+  "Hamilton Beach",
+  "Hillcrest",
+  "The Hole",
+  "Hollis Hills",
+  "Holliswood",
+  "Hunter's Point",
+  "Jamaica Center",
+  "Jamaica Estates",
+  "Jamaica Hills",
+  "Kissena",
+  "Kissena Park",
+  "Linden Hill",
+  "Locust Manor",
+  "Malba",
+  "Meadowmere",
+  "Middle Village",
+  "Murray Hill",
+  "Neponsit",
+  "Old Howard Beach",
+  "Pomonok",
+  "Queensboro Hill",
+  "Richmond Hill East",
+  "Rochdale",
+  "Rockaway Beach",
+  "Rockaway Park",
+  "Roxbury",
+  "South Richmond Hill",
+  "Utopia",
+  "Whitestone",
+  "Willet's Point"
+
 ];
 
 
