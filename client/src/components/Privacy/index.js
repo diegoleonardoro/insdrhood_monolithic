@@ -76,9 +76,9 @@ const PrivacyNotice = () => {
           We may update this privacy notice from time to time. We will notify you about significant changes by sending a notice to the primary email address specified in your account or by placing a prominent notice on our site.
 
         </div>
-        <hr></hr>
+        {/* <hr></hr> */}
 
-        <div style={{ margin: "20px" }}>
+        {/* <div style={{ margin: "20px" }}>
           <h3>Contact Us</h3>
           If you have any questions regarding this privacy notice, you may contact us using the information below:
           <br></br>
@@ -86,7 +86,7 @@ const PrivacyNotice = () => {
           <br></br>
           Thank you for choosing Insiderhood.com. We are committed to protecting your privacy and ensuring a secure online experience.
 
-        </div>
+        </div> */}
       </div>
     </div>
   )
