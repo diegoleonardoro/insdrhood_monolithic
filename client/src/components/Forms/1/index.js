@@ -201,7 +201,7 @@ const FormComponent = () => {
       setTimeout(() => {
         setLiveinNYCSign("yes");
         // make request to send user to the home page:
-        navigate("/shop")
+        navigate("/home")
       }, 1000);
 
     }
