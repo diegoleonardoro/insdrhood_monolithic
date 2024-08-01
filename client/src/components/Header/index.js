@@ -79,7 +79,7 @@ function Header() {
           <Navbar className="main_header navbar-desktop">
             <Container className="container_">
 
-              <Navbar.Brand className="navBrand" as={Link} to="/">
+              <Navbar.Brand className="navBrand" as={Link} to="/home">
                 <img src="https://insiderhood.s3.amazonaws.com/assets/Insdrhood.png" alt="Logo" className="d-inline-block align-text-top" />
               </Navbar.Brand>
               <div className='menu-container'>

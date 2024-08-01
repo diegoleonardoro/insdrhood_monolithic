@@ -134,7 +134,7 @@ const FormComponent = () => {
       navigate(-1);
     } else {
       // Handle the case when there's no previous intra-app route
-      navigate("/")
+      navigate("/home")
     }
   };
 
