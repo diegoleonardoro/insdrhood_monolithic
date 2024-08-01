@@ -13,7 +13,7 @@
   /* margin-bottom: 50px; */
   /* max-height: calc(100vh - 100px); */
   overflow-y: auto;
-  height: 100vh;
+  height: 90vh;
   overflow: hidden;
 }
 
@@ -776,7 +776,11 @@ input:focus{
 
 @media screen and (max-width: 1600px) {
   .scrollbarContainer {
-    width: 100%;;
+    width: 100%;
+  }
+  .mainContainer{
+    height:auto;
+    top:55px;
   }
 }
 
