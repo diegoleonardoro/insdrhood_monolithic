@@ -2591,7 +2591,7 @@ const FormComponent = () => {
 
               <h3 style={{ textAlign: "center", marginBottom: '10px', fontWeight: 'bold' }}>Agree or disagree: </h3>
               <div>
-                  <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"<span className="questionHighlight nhoodName">{neighborhood}</span> is a good destination to explore diverse and authentic food" </label>
+                <label style={{ fontWeight: "normal", left: "50%", transform: "translate(-50%, 0)", marginBottom: "30px", marginTop: "25px" }}>"<span className="questionHighlight nhoodName">{neighborhood}</span> is a good destination to explore diverse and authentic food" </label>
 
                 <div style={{ height: "30px", width: "100%", borderBottom: "1px dotted black" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -2702,7 +2702,7 @@ const FormComponent = () => {
               </div>
 
               <div>
-                  <label className="question">How would you describe the night life of <span className="questionHighlight nhoodName">{neighborhood}</span>:</label>
+                <label className="question">How would you describe the night life of <span className="questionHighlight nhoodName">{neighborhood}</span>:</label>
 
                 <div style={{ height: "30px", borderBottom: "1px dotted black", position: "relative", left: "50%", transform: "translate(-50%,0)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -3630,6 +3630,23 @@ const FormComponent = () => {
           </form>
           <p style={{ position: "relative", textAlign: "center" }}>
             {Math.floor(progressPercentage)}% completed
+          </p>
+          <p style={{ position: "relative", textAlign: "center" }}>
+            <a href="/privacy"
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              position: "relative", textAlign: "center", position: 'relative',
+              textAlign: 'center',
+              textDecoration: 'none',
+              color: '#007bff',
+              fontWeight: "bold",
+              /* padding: 10px 15px; */
+              borderBottom: ' 2px solid #007bff',
+              /* border-radius: 5px; */
+              transition: 'all 0.3s ease'
+            }}>
+              Privacy
+            </a>
           </p>
         </div >
       )}
