@@ -21,6 +21,8 @@ declare global {
   }
 }
 
+
+
 // Add the "currentUser" property to the request body if there is a currently logged in user:
 export const authenticationValidator = async (
   req: Request,

@@ -96,6 +96,9 @@ function Header() {
                   <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/neighborhoodsearch">Neighborhoods</a>
                   </li> 
+                  <li style={{ marginLeft: "20px" }} className="nav-item">
+                    <a className="nav-link" href="/privacy">Privacy</a>
+                  </li> 
                   {!currentuser_ ? (
                     <>
                       <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -142,15 +145,23 @@ function Header() {
 
                       <CartIcon/>
                       <ul className="navbar-nav">
+
                         <li style={{ marginLeft: "20px", marginTop:"20px" }}  className="nav-item">
                           <a className="nav-link" href="/questionnaire">Questionnaire</a>
                         </li>
+                        <li style={{ marginLeft: "20px" }} className="nav-item">
+                          <a className="nav-link" href="/neighborhoodsearch">Neighborhoods</a>
+                        </li> 
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/shop">Shop</a>
                         </li>
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/311complaints">311 Calls</a>
                         </li>
+                        <li style={{ marginLeft: "20px" }} className="nav-item">
+                          <a className="nav-link" href="/privacy">Privacy</a>
+                        </li>
+
                         {!currentuser_ ? (
                           <>
                             <li style={{ marginLeft: "20px" }} className="nav-item">

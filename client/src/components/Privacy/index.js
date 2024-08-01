@@ -15,7 +15,7 @@ const PrivacyNotice = () => {
           <h3> 1. Collection of Information</h3>
           <span style={{}}>Registration Information:</span>  when you register on our site, we collect your email address. This is used to create your unique user profile.
           <br></br>
-          <span>Questionnaire Responses: </span> when you respond to our questionnaire, we collect and store your responses. Once you register with your email, your responses are associated with your registered profile.
+          <span>Questionnaire Responses: </span> when you respond to our questionnaire, we collect and store your responses. Once you register with your email, your responses are associated with your registered profile. These resposnes will be public.
         </div>
         <hr></hr>
 
