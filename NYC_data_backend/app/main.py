@@ -15,14 +15,14 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import base64
 from collections import Counter
+from llm import run_llm
+
+
 
 load_dotenv()
 
-
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
-
-
 
 
 allowed_origins = [
@@ -35,7 +35,8 @@ CORS(app, resources={
     r"/311calls": {"origins": allowed_origins},
     r"/311calls_complaint_types_count": {"origins": allowed_origins},
     r"/dob_approved_permits": {"origins": allowed_origins},
-    r"/neighborhood_report_data": {"origins": allowed_origins}
+    r"/neighborhood_report_data": {"origins": allowed_origins},
+    r"/chat": {"origins": allowed_origins}
 }, supports_credentials=True)
 
 
@@ -384,6 +385,21 @@ def neighborhood_report_data():
 
 
     return analyzed_data
+
+
+@app.route('/chat', methods=['POST'])
+@cross_origin(origin='*', supports_credentials=True)
+def chat():
+    data = request.get_json()
+    prompt = data['prompt']
+
+    # chat_history = data.get('chat_history', []) 
+
+    generated_response = run_llm(query=prompt) # , chat_history=chat_history
+
+    return generated_response
+
+    # generated_response = run_llm(query=prompt, chat_history=chat_history)
 
 
 # ----- HELPER FUNCTIONS:
