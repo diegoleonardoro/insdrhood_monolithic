@@ -26,7 +26,7 @@ const Chat = () => {
     const message = { text: newMessage, is_user: true };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8080/chat', {
+      const response = await axios.post(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/chat`, {
         message: newMessage,
         chatHistory: messages
       });
