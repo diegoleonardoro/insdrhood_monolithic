@@ -5,15 +5,43 @@ import axios from "axios";
 
 
 const Chat = () => {
+
   const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages] = useState([]);
 
-  const [messages, setMessages]= useState([])
+  useEffect(() => {
+    // THE FOLLOWING IS NOT NECESSARY:
+    // Fetch initial chat history if needed
+    // const fetchHistory = async () => {
+    //   // const response = await axios.get('http://localhost:5000/messages');
+    //   const response = []
+    //   setMessages(response); //.data.messages
+    // };
+    // fetchHistory();
+  }, []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!newMessage.trim()) return;
-    // onSendMessage(newMessage);
+    const message = { text: newMessage, is_user: true };
+    setMessages([...messages, message]);
     setNewMessage('');
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8080/chat', {
+        message: newMessage,
+        chatHistory: messages
+      });
+      
+      setMessages(messages => [
+        ...messages,
+        message, // update messages with the AI's response
+        { text: response.data.answer, is_user: false }]
+      );
+
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   return (
