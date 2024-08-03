@@ -232,8 +232,6 @@ const Complaints311 = ({ showRegisterFrom = true }) => {
       return
     }
 
-
-
     const params_ = applyFilters ? filters : { limit: 10, page: resetPage ? 1 : page };
     let zipCodesArray = filters.zip.split(/\s*,\s*|\s+/).filter(zip => zip !== '');
 

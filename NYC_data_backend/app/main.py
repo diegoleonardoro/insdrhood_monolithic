@@ -390,22 +390,14 @@ def neighborhood_report_data():
 @app.route('/chat', methods=['POST'])
 @cross_origin(origin='*', supports_credentials=True)
 def chat():
-
     # data = request.get_json()
     # prompt = data['prompt']
     user_message = request.json["message"]
     chat_history = request.json["chatHistory"]
-
-    print ('1',user_message)
-    print ('2', chat_history)
-    # chat_history = data.get('chat_history', [])
-     
-    # generated_response = run_llm(query=user_message, chat_history=chat_history)
-    
+    generated_response = run_llm(query=user_message, chat_history=chat_history)
     # return generated_response
-    return 'Hi Jica, how are you. I like your green outfit, and yellow jacket. What are you doing with Diego today '
+    return generated_response['answer']
 
-    # generated_response = run_llm(query=prompt, chat_history=chat_history)
 
 
 # ----- HELPER FUNCTIONS:
