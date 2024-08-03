@@ -19,6 +19,7 @@ from llm import run_llm
 
 
 
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -390,13 +391,14 @@ def neighborhood_report_data():
 @app.route('/chat', methods=['POST'])
 @cross_origin(origin='*', supports_credentials=True)
 def chat():
+  
     # data = request.get_json()
     # prompt = data['prompt']
     user_message = request.json["message"]
     chat_history = request.json["chatHistory"]
     generated_response = run_llm(query=user_message, chat_history=chat_history)
     # return generated_response
-    return generated_response['answer']
+    return jsonify(generated_response['answer'])
 
 
 
