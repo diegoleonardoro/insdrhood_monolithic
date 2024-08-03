@@ -24,20 +24,19 @@ const Chat = () => {
     event.preventDefault();
     if (!newMessage.trim()) return;
     const message = { text: newMessage, is_user: true };
-    setMessages([...messages, message]);
-    setNewMessage('');
 
     try {
       const response = await axios.post('http://127.0.0.1:8080/chat', {
         message: newMessage,
         chatHistory: messages
       });
-      
+
       setMessages(messages => [
         ...messages,
-        message, // update messages with the AI's response
-        { text: response.data.answer, is_user: false }]
-      );
+        message, // Add user message here
+        { text: response.data, is_user: false } // AI's response
+      ]);
+      setNewMessage('');
 
     } catch (error) {
       console.error('Failed to send message:', error);
