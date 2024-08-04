@@ -67,7 +67,9 @@ CORS(app, resources={
 
 
 PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME') 
-data_dir = os.environ.get('DATA_DIR', './data')  # Default to './data' if not set
+data_dir = os.environ.get('DATA_DIR', './app/data')  # Default to './data' if not set
+print("data_dir==>>>", data_dir)
+
 file_path = os.path.join(data_dir, 'nyc_cb_neighborhoods.json')
 
 with open(file_path, 'r') as file:
