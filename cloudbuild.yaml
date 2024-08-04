@@ -39,7 +39,7 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: ['run', 'deploy', 'open-data-backend', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', '--region', 'us-central1', 
-    '--set-env-vars', 'REDIS_HOST=10.230.226.147,REDIS_PORT=6379,BASE_URL=https://insiderhood.com', 
+    '--set-env-vars', 'REDIS_HOST=10.230.226.147,REDIS_PORT=6379,BASE_URL=https://insiderhood.com, ENVIRONMENT=production', 
     '--vpc-connector', 'nycopendata', '--allow-unauthenticated']
     id: 'deploy-python-backend'
 
