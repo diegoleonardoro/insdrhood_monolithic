@@ -4,13 +4,16 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 import os
-import sys
-print(sys.path)
+
 from typing import List
 from typing import Dict
 from typing import Any
 from dotenv import load_dotenv
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
+
+
+import sys
+print("Current PYTHONPATH:", sys.path)
 
 load_dotenv()
 
