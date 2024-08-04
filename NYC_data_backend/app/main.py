@@ -17,10 +17,15 @@ import base64
 from collections import Counter
 import sys
 
+
+MODULE_PATH = '.'
+
 if os.getenv('ENVIRONMENT') == 'production':
-    module_path = '/app'  # Adjust if your production path differs
-    if module_path not in sys.path:
-        sys.path.append(module_path)
+    MODULE_PATH = '/app'
+
+sys.path.append(MODULE_PATH)
+
+print('sys path ==>>',sys.path )
 
 from llm import run_llm
 
