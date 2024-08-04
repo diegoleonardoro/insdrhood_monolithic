@@ -59,7 +59,7 @@ CORS(app, resources={
 }, supports_credentials=True)
 
 
-data_dir = os.environ.get('DATA_DIR', '.')  # Default to '.' if not set
+data_dir = os.environ.get('DATA_DIR', './data')  # Default to './data' if not set
 file_path = os.path.join(data_dir, 'nyc_cb_neighborhoods.json')
 
 with open(file_path, 'r') as file:
