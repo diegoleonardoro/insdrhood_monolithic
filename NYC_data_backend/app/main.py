@@ -25,9 +25,19 @@ if os.getenv('ENVIRONMENT') == 'production':
 
 sys.path.append(MODULE_PATH)
 
-print('sys path ==>>',sys.path )
 
-from llm import run_llm
+
+
+print("Environment:", os.getenv('ENVIRONMENT'))
+
+try:
+    from llm import run_llm
+except ImportError as e:
+    print("Import error:", e)
+except Exception as e:
+    print("General error during import:", e)
+
+# from llm import run_llm
 
 
 load_dotenv()
