@@ -17,9 +17,7 @@ PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME')
 
 def run_llm (query:str, chat_history: List [Dict[str, Any]]=[]):
 
-  
   embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
- 
   docsearch = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
 
   chat = ChatOpenAI(verbose=True, temperature=0)

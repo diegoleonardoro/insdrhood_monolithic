@@ -15,30 +15,36 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import base64
 from collections import Counter
-import sys
+load_dotenv()
+#----------------------------------------------
+from langchain.chains.retrieval import create_retrieval_chain
+from langchain import hub
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_pinecone import PineconeVectorStore
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+import os
+from typing import List
+from typing import Dict
+from typing import Any
+from langchain.chains.history_aware_retriever import create_history_aware_retriever
+#----------------------------------------------
 
 
-MODULE_PATH = '.'
 
-if os.getenv('ENVIRONMENT') == 'production':
-    MODULE_PATH = '/app'
-
-sys.path.append(MODULE_PATH)
-
-
-print("Environment:", os.getenv('ENVIRONMENT'))
-
-try:
-    from llm import run_llm
-except ImportError as e:
-    print("Import error:", e)
-except Exception as e:
-    print("General error during import:", e)
-
+# MODULE_PATH = '.'
+# if os.getenv('ENVIRONMENT') == 'production':
+#     MODULE_PATH = '/app'
+# sys.path.append(MODULE_PATH)
+# print("Environment:", os.getenv('ENVIRONMENT'))
+# try:
+#     from llm import run_llm
+# except ImportError as e:
+#     print("Import error:", e)
+# except Exception as e:
+#     print("General error during import:", e)
 # from llm import run_llm
 
 
-load_dotenv()
 
 app = Flask(__name__)
 base_url = os.environ.get("BASE_URL", "http://localhost:3000")
@@ -59,6 +65,8 @@ CORS(app, resources={
 }, supports_credentials=True)
 
 
+
+PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME') 
 data_dir = os.environ.get('DATA_DIR', './data')  # Default to './data' if not set
 file_path = os.path.join(data_dir, 'nyc_cb_neighborhoods.json')
 
@@ -562,6 +570,37 @@ def parse_document(document):
             continue
     # print('infoo', info)
     return info
+
+def run_llm (query:str, chat_history: List [Dict[str, Any]]=[]):
+
+  embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+  docsearch = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
+
+  chat = ChatOpenAI(verbose=True, temperature=0)
+ 
+  retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
+  
+  stuff_documents_chain = create_stuff_documents_chain(chat, 
+  retrieval_qa_chat_prompt)
+
+  rephrase_prompt = hub.pull("langchain-ai/chat-langchain-rephrase") 
+
+  history_aware_retriever = create_history_aware_retriever(
+    llm=chat, retriever=docsearch.as_retriever(), prompt=rephrase_prompt
+  )
+
+  history_aware_retriever = create_history_aware_retriever(
+    llm=chat, retriever=docsearch.as_retriever(), prompt=rephrase_prompt
+  )
+
+  qa = create_retrieval_chain(
+    retriever=history_aware_retriever, combine_docs_chain=stuff_documents_chain
+  )
+
+  result = qa.invoke(input={"input": query, "chat_history": chat_history})
+
+  return result
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
