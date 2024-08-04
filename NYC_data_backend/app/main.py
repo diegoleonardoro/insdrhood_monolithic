@@ -15,9 +15,14 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import base64
 from collections import Counter
+import sys
+
+if os.getenv('ENVIRONMENT') == 'production':
+    module_path = '/app'  # Adjust if your production path differs
+    if module_path not in sys.path:
+        sys.path.append(module_path)
+
 from llm import run_llm
-
-
 
 
 load_dotenv()
@@ -391,7 +396,6 @@ def neighborhood_report_data():
 @app.route('/chat', methods=['POST'])
 @cross_origin(origin='*', supports_credentials=True)
 def chat():
-  
     # data = request.get_json()
     # prompt = data['prompt']
     user_message = request.json["message"]
