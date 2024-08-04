@@ -13,13 +13,15 @@ from langchain.chains.history_aware_retriever import create_history_aware_retrie
 
 
 import sys
-print("Current PYTHONPATH:", sys.path)
+
 
 load_dotenv()
 
 PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME') 
 
 def run_llm (query:str, chat_history: List [Dict[str, Any]]=[]):
+  
+  print("Current PYTHONPATH:", sys.path)
   
   embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
  
