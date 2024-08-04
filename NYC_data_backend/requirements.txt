@@ -10,3 +10,4 @@ pytz
 langchain
 langchain_pinecone
 langchain_openai
+langchainhub
