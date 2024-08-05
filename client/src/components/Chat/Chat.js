@@ -1,11 +1,13 @@
 
+
 import "./chat.css";
 import React, { useState, useRef, useEffect } from 'react';
 import axios from "axios";
 
 const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+  // Initialize messages with a welcome message
+  const [messages, setMessages] = useState([{ content: "Welcome to the NYC Neighborhood Chat! Ask questions and get insights directly from residents and various sources.", role: 'ai' }]);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -64,7 +66,7 @@ const Chat = () => {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="Ask about NYC neighborhoods..."
         />
         <button type="submit">Send</button>
       </form>

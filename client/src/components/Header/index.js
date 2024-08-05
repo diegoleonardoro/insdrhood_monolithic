@@ -97,6 +97,9 @@ function Header() {
                     <a className="nav-link" href="/neighborhoodsearch">Neighborhoods</a>
                   </li> 
                   <li style={{ marginLeft: "20px" }} className="nav-item">
+                    <a className="nav-link" href="/chat">AI Tour Guide Chat</a>
+                  </li> 
+                  <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/privacy">Privacy</a>
                   </li> 
                   {!currentuser_ ? (
@@ -155,6 +158,9 @@ function Header() {
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/shop">Shop</a>
                         </li>
+                        <li style={{ marginLeft: "20px" }} className="nav-item">
+                          <a className="nav-link" href="/chat">AI Tour Guide Chat</a>
+                        </li> 
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/311complaints">311 Calls</a>
                         </li>
