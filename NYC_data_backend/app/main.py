@@ -434,22 +434,46 @@ def chat():
                 llm_response = llm_response["answer"]
                 response_dict = {
                     'llm_response': llm_response,
-                    'message':"What part of Manhattan do you want to explore?",
-                    'additional_option': {"description": "manhattan_section" ,"options":["Uptown", "Midtown", "Downtown", "Lower Manhattan"]}
+                    'message': "Manhattan can be divided in the following sections. Which are you interested in exploring?",
+                    'additional_option': {
+                        "description": "manhattan_section",
+                        "options": ["Uptown", "Midtown", "Downtown", "Lower Manhattan"],
+                        "setNumber": 2  
+                    }
                 }
                 return jsonify(response_dict)
             
             # there should be other if statements that check for other boroughts. elif bronx 
             elif user_message == "Brooklyn":
-                # Handle other boroughs or default response if needed
+               
                 query = f"Give me an explanation of {user_message}."
                 llm_response = run_llm(query=query, chat_history=chat_history)
                 llm_response = llm_response["answer"]
 
                 response_dict = {
                     'llm_response': llm_response,
-                    # 'message':"What part of Manhattan do you want to explore?",
-                    'additional_option': {"description": "manhattan_section" ,"options":["Uptown", "Midtown", "Downtown", "Lower Manhattan"]}
+                    'message':"The followoing are some of the most iconic neighborhoods in Brooklyn. Are you interested in any of the following?",
+                    'additional_option': {
+                        "description": "brooklyn_section",
+                        "options": ["Brooklyn Heights", "DUMBO", "Williamsburg", "Greenpoint", "Fort Greene"],
+                        "setNumber": 2  
+                    }
+                }
+                return jsonify(response_dict)
+            elif user_message == "Queens":
+                query = f"Give me an explanation of {user_message}."
+                llm_response = run_llm(query=query, chat_history=chat_history)
+                llm_response = llm_response["answer"]
+
+                response_dict = {
+                    'llm_response': llm_response,
+                    'message':"The followoing are some of the most iconic neighborhoods in Queens. Are you interested in any of the following?",
+                    'additional_option': {
+                        "description": "queens_section",
+                        "options": ["Long Island City", "Astoria", "Jackson Heights", "Flushing"],
+                        "setNumber": 2  
+                    },
+                   
                 }
                 return jsonify(response_dict)
             

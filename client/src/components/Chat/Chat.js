@@ -25,10 +25,10 @@ const Chat = () => {
     scrollToBottom();
   }, []); // Only run once on component mount
 
-  
   useEffect(() => {
     scrollToBottom();  // Ensure that the scrollToBottom is called every time messages are updated
   }, [messages]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -61,15 +61,12 @@ const Chat = () => {
             role: 'options'
           });
 
-          const newOptionSet = response.data.additional_option.options;
-          const newSetNumber = Math.max(...Object.values(optionMapping)) + 1;
-
+          // Use set number from backend to update the mapping
+          const setNumber = response.data.additional_option.setNumber;
           setOptionMapping(prevMapping => {
             const updatedMapping = { ...prevMapping };
-            newOptionSet.forEach(option => {
-              if (!updatedMapping.hasOwnProperty(option)) {
-                updatedMapping[option] = newSetNumber;
-              }
+            response.data.additional_option.options.forEach(option => {
+              updatedMapping[option] = setNumber;
             });
             return updatedMapping;
           });
