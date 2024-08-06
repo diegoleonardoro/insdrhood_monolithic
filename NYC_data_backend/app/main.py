@@ -419,13 +419,60 @@ def neighborhood_report_data():
 @app.route('/chat', methods=['POST'])
 @cross_origin(origin='*', supports_credentials=True)
 def chat():
-    # data = request.get_json()
-    # prompt = data['prompt']
+   
     user_message = request.json["message"]
     chat_history = request.json["chatHistory"]
-    generated_response = run_llm(query=user_message, chat_history=chat_history)
+    from_option = request.json.get("fromOption")
+
+    if from_option:
+        print('from_option', from_option)
+        # Check if the option relates to a specific query about boroughs
+        if from_option == "question-1":
+            if user_message == "Manhattan":
+                query = "Give me an explanation of how Manhattan is divided."
+                llm_response = run_llm(query=query, chat_history=chat_history)
+                llm_response = llm_response["answer"]
+                response_dict = {
+                    'llm_response': llm_response,
+                    'message':"What part of Manhattan do you want to explore?",
+                    'additional_option': {"description": "manhattan_section" ,"options":["Uptown", "Midtown", "Downtown", "Lower Manhattan"]}
+                }
+                return jsonify(response_dict)
+            
+            # there should be other if statements that check for other boroughts. elif bronx 
+            elif user_message == "Brooklyn":
+                # Handle other boroughs or default response if needed
+                query = f"Give me an explanation of {user_message}."
+                llm_response = run_llm(query=query, chat_history=chat_history)
+                llm_response = llm_response["answer"]
+
+                response_dict = {
+                    'llm_response': llm_response,
+                    # 'message':"What part of Manhattan do you want to explore?",
+                    'additional_option': {"description": "manhattan_section" ,"options":["Uptown", "Midtown", "Downtown", "Lower Manhattan"]}
+                }
+                return jsonify(response_dict)
+            
+        # there should be other if statements that check for other questions.
+        elif from_option == "question-2":
+            query = f"Give me an explanation of {user_message}."
+            llm_response = run_llm(query=query, chat_history=chat_history)
+            llm_response = llm_response["answer"]
+            response_dict = {
+                'llm_response': llm_response,
+                # 'message':"What part of Manhattan do you want to explore?",
+                'additional_option':None
+            }
+            return jsonify(response_dict)
+            
+    llm_response = run_llm(query=user_message, chat_history=chat_history)
+    response_dict = {
+        'llm_response': llm_response["answer"],
+        'additional_option': None
+    }
+
     # return generated_response
-    return jsonify(generated_response['answer'])
+    return jsonify(response_dict)
 
 
 
