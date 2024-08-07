@@ -434,10 +434,10 @@ def chat():
                 llm_response = llm_response["answer"]
                 response_dict = {
                     'llm_response': llm_response,
-                    'message': "Manhattan can be divided in the following sections. Which are you interested in exploring?",
+                    'message': "he followoing are some iconic neighborhoods in Manhattan. Are you interested in any of the following?",
                     'additional_option': {
                         "description": "manhattan_section",
-                        "options": ["Uptown", "Midtown", "Downtown", "Lower Manhattan"],
+                        "options": ["Upper East Side", "Upper West Side", "Harlem", "Greenwich Village", "Tribeca", "East Village", "Chelsea", "Financial District", "Midtown", "Times Square", "Little Italy", "Chinatown"],
                         "setNumber": 2  
                     }
                 }
@@ -452,10 +452,10 @@ def chat():
 
                 response_dict = {
                     'llm_response': llm_response,
-                    'message':"The followoing are some of the most iconic neighborhoods in Brooklyn. Are you interested in any of the following?",
+                    'message':"The followoing are some iconic neighborhoods in Brooklyn. Are you interested in any of the following?",
                     'additional_option': {
                         "description": "brooklyn_section",
-                        "options": ["Brooklyn Heights", "DUMBO", "Williamsburg", "Greenpoint", "Fort Greene"],
+                        "options": ["Brooklyn Heights", "DUMBO", "Williamsburg", "Greenpoint", "Fort Greene", "Downtown Brooklyn", "Bushwick", "Park Slope", "Prospect Park", "Sunset Park"],
                         "setNumber": 2  
                     }
                 }
@@ -470,25 +470,74 @@ def chat():
                     'message':"The followoing are some of the most iconic neighborhoods in Queens. Are you interested in any of the following?",
                     'additional_option': {
                         "description": "queens_section",
-                        "options": ["Long Island City", "Astoria", "Jackson Heights", "Flushing"],
+                        "options": ["Long Island City", "Astoria", "Jackson Heights", "Flushing", "Kew Gardens", "Sunnyside", "Forest Hills", "The Rockaways"],
+                        "setNumber": 2  
+                    },
+                   
+                }
+                return jsonify(response_dict)
+            elif user_message == "The Bronx":
+                query = f"Give me an explanation of {user_message}."
+                llm_response = run_llm(query=query, chat_history=chat_history)
+                llm_response = llm_response["answer"]
+
+                response_dict = {
+                    'llm_response': llm_response,
+                    'message':"The followoing are some of the most iconic neighborhoods in The Bronx. Are you interested in any of the following?",
+                    'additional_option': {
+                        "description": "bronx_section",
+                        "options": ["Mott Haven", "Kingsbridge", "Fordham", "Parkchester", "Woodlawn", "Bedford Park", "Riverdale", "Baychester", "Concourse", "Co-op City"],
+                        "setNumber": 2  
+                    },
+                   
+                }
+                return jsonify(response_dict)
+            elif user_message == "Staten Island =":
+                query = f"Give me an explanation of {user_message}."
+                llm_response = run_llm(query=query, chat_history=chat_history)
+                llm_response = llm_response["answer"]
+
+                response_dict = {
+                    'llm_response': llm_response,
+                    'message':"The followoing are some of the most iconic neighborhoods in Staten Island. Are you interested in any of the following?",
+                    'additional_option': {
+                        "description": "bronx_section",
+                        "options": ["Huguenot", "St. George", "New Dorp", "Todt Hill", "West New Brighton", "Livingston"],
                         "setNumber": 2  
                     },
                    
                 }
                 return jsonify(response_dict)
             
-        # there should be other if statements that check for other questions.
+        # question-2 means that the user selected any of the suggested neighborhoods
         elif from_option == "question-2":
-            query = f"Give me an explanation of {user_message}."
+            query = f"Give me a concise explanation of {user_message}."
             llm_response = run_llm(query=query, chat_history=chat_history)
             llm_response = llm_response["answer"]
             response_dict = {
                 'llm_response': llm_response,
-                # 'message':"What part of Manhattan do you want to explore?",
-                'additional_option':None
+                'message':f"What are you interested to explore in{user_message}?",
+                 'additional_option': {
+                        "description": "places_section",
+                        "options": ["Restaurants", "Museums", "Public Spaces", "Parks", "Nighclubs", "Everything"],
+                        "setNumber": 3  
+                },
             }
             return jsonify(response_dict)
+        # question-3 means that the user has asked for places recommendations in a specific neighborhood
+        elif from_option == "question-3":
+            print("holisss")
+            query = f"Recommend me some {user_message} in the neighborhood I just mentioned"
+            llm_response = run_llm(query=query, chat_history=chat_history)
+            response_dict = {
+                'llm_response': llm_response["answer"],
+                'additional_option': None
+            }
+
+            # return generated_response
+            return jsonify(response_dict)
             
+    # this will take place when user sends text
     llm_response = run_llm(query=user_message, chat_history=chat_history)
     response_dict = {
         'llm_response': llm_response["answer"],
