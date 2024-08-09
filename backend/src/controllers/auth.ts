@@ -118,7 +118,6 @@ export const verifyemail = async (req: Request, res: Response) => {
   res.status(200).send(userInfo);
 }
 
-
 /**
  * @description makes request to aws S3 to get signed url
  * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID
@@ -133,8 +132,6 @@ export const uploadFile = async (req: Request, res: Response) => {
   res.send(signedKeyUrl);
 
 }
-
-
 
 /**
  * @description makes request to aws S3 to get signed url for blog images
@@ -163,7 +160,6 @@ export const saveNeighborhoodData = async (req: Request, res: Response) => {
   const newNeighborhood = await neighborhoodRepository.saveFormData(req.body, user)
   res.status(201).send(newNeighborhood);
 }
-
 
 /**
  * @description updates neighborhood data
@@ -197,7 +193,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
   }
 
 }
-
 
 /**
  * @description gets a specific neighborhood 

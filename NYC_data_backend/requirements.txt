@@ -11,3 +11,4 @@ langchain
 langchain_pinecone
 langchain_openai
 langchainhub
+pandas

@@ -12,6 +12,13 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const [optionMapping, setOptionMapping] = useState({});
 
+  const [visibleLinks, setVisibleLinks] = useState(6);
+
+  const handleShowMore = () => {
+    setVisibleLinks(prevLinks => prevLinks + 3);  // Show 3 more links on click
+  };
+
+
   useEffect(() => {
     // Initialize the mapping for the first set of options on component mount
     const initialOptions = messages.find(msg => msg.role === 'options')?.content;
@@ -49,9 +56,25 @@ const Chat = () => {
 
       setMessages(currentMessages => {
         let newMessages = currentMessages.slice(0, -1);
+
+        // handle raw text
         newMessages.push({ content: response.data.llm_response, role: "ai", loading: false });
 
+        // handle promotions links
+        if (response.data.additional_option && response.data.additional_option.links) {
+          newMessages.push({
+            content: response.data.promotions_message,
+            role: "ai"
+          });
+          newMessages.push({
+            content: response.data.additional_option.links,
+            role: 'promotion_links'
+          });
+
+        }
+        // handle options
         if (response.data.additional_option && response.data.additional_option.options) {
+
           newMessages.push({
             content: response.data.message,
             role: "ai"
@@ -70,9 +93,11 @@ const Chat = () => {
             });
             return updatedMapping;
           });
+
         }
 
         return newMessages;
+
       });
 
     } catch (error) {
@@ -96,6 +121,9 @@ const Chat = () => {
     processMessage(newMessage);
   };
 
+
+  console.log("messages=>>", messages)
+
   return (
     <div className="chat-container">
       <ul className="messages-list">
@@ -104,10 +132,33 @@ const Chat = () => {
             {msg.role === 'options' ? (
               <div className="options-container">
                 {msg.content.map(option => (
-                  <button className="buttonOptionChat" key={option} onClick={() => handleOptionClick(option)}>{option}</button>
+                  <button className="buttonOptionChat" key={`${option}-${index}`} onClick={() => handleOptionClick(option)}>{option}</button>
                 ))}
               </div>
-            ) : msg.loading ? <div className="loading-spinner"></div> : msg.content}
+            ) : msg.role === 'promotion_links' ? (
+              <div className="promotion-links-container">
+                {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
+                  <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
+                    <div style={{ color: "white", margin: "15px", borderBottom: "1px solid white" }}>
+                      <div style={{ backgroundColor: "#007bff", display: "inline-block", paddingLeft: "7px", paddingRight: "7px", borderRadius: "10px", marginBottom: "10px" }}>{promotion['Tour Title']}</div>
+                      <div>Category: {promotion['Category']}</div>
+                    </div>
+                  </a>
+                ))}
+                {visibleLinks < msg.content.length && (
+                  <button className="buttonOptionChat" onClick={handleShowMore}>Show More</button>
+                )}
+              </div>
+            )
+              : msg.loading ? (
+                <div className="loading-spinner"></div>
+              )
+
+                :
+                msg.content.structured_data ? (<div>Include some logic to handle structured data</div>)
+                  : (
+                      msg.content.info ? (msg.content.info) : (msg.content)
+                  )}
           </li>
         ))}
         <div ref={messagesEndRef} />

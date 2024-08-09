@@ -47,6 +47,18 @@
     color: white;
     width: fit-content;
     max-width: 80%;  /* Limit maximum width */
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message.user {

@@ -28,6 +28,7 @@ from typing import Dict
 from typing import Any
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
 #----------------------------------------------
+import pandas as pd
 
 
 
@@ -68,9 +69,18 @@ CORS(app, resources={
 
 PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME') 
 data_dir = os.environ.get('DATA_DIR', './app/data')  # Default to './data' if not set
-print("data_dir==>>>", data_dir)
 
+
+
+# promotions dataframe load:
 file_path = os.path.join(data_dir, 'nyc_cb_neighborhoods.json')
+promotions_file_path = os.path.join(data_dir, 'Deals&Promotions.csv')
+promotions_df = pd.read_csv(promotions_file_path)
+
+# boroughs information load
+boroughs_info_path = os.path.join(data_dir, 'boroughs_information.json')
+with open(boroughs_info_path, 'r') as file:
+    boroughs_info= json.load(file)
 
 with open(file_path, 'r') as file:
     community_boards = json.load(file)
@@ -95,7 +105,6 @@ def compress_data(data):
 
 
 def decompress_data(data):
-  
     try:
         # Decode the data from base64
         base64_decoded_data = base64.b64decode(data)
@@ -320,8 +329,6 @@ def calls311():
 @app.route('/311calls_complaint_types_count', methods=['GET'])
 @cross_origin(origin='*', supports_credentials=True)
 def complaint_types_count():
-
-    print("base_urlbase_url", base_url)
     
     boroughs = request.args.getlist('boroughs[]')
     zip_codes = request.args.getlist('zipcodes[]')
@@ -425,18 +432,26 @@ def chat():
     from_option = request.json.get("fromOption")
 
     if from_option:
-        print('from_option', from_option)
+        
         # Check if the option relates to a specific query about boroughs
         if from_option == "question-1":
             if user_message == "Manhattan":
                 query = "Give me an explanation of how Manhattan is divided."
-                llm_response = run_llm(query=query, chat_history=chat_history)
-                llm_response = llm_response["answer"]
+            
+                manhattan_promotions = filter_promotions_by_borough(promotions_df, 'Manhattan')
+                   
+                # llm_response = run_llm(query=query, chat_history=chat_history)
+                # llm_response = llm_response["answer"]
+
+                # boroughs_info["Manhattan"]
                 response_dict = {
-                    'llm_response': llm_response,
-                    'message': "he followoing are some iconic neighborhoods in Manhattan. Are you interested in any of the following?",
+                    'llm_response': {'info':"Manhattan, one of New York City's five boroughs, serves as a global hub for culture, finance, and media. It's structured into distinct areas: Downtown (Lower Manhattan) is the financial core with neighborhoods like Tribeca; Midtown features major tourist attractions like Times Square and the Empire State Building; the Upper East Side is known for its luxury living and museums along Museum Mile; the Upper West Side offers a more relaxed vibe near Central Park; Harlem celebrates African American culture with its rich history in jazz and arts; and Washington Heights and Inwood are noted for their strong Dominican community and scenic parks. Each neighborhood contributes to Manhattan's dynamic and diverse character." , "structured_data":False},
+                    'identifier':"boroughs_info",
+                    'message': "The following are some iconic neighborhoods in Manhattan. Are you interested in any of the following?",
+                    'promotions_message':"Here are some activities you can do in Manhattan:",
                     'additional_option': {
                         "description": "manhattan_section",
+                        "links":manhattan_promotions,
                         "options": ["Upper East Side", "Upper West Side", "Harlem", "Greenwich Village", "Tribeca", "East Village", "Chelsea", "Financial District", "Midtown", "Times Square", "Little Italy", "Chinatown"],
                         "setNumber": 2  
                     }
@@ -447,14 +462,20 @@ def chat():
             elif user_message == "Brooklyn":
                
                 query = f"Give me an explanation of {user_message}."
-                llm_response = run_llm(query=query, chat_history=chat_history)
-                llm_response = llm_response["answer"]
+
+                brooklyn_promotions = filter_promotions_by_borough(promotions_df, 'Brooklyn')
+
+                # llm_response = run_llm(query=query, chat_history=chat_history)
+                # llm_response = llm_response["answer"]
 
                 response_dict = {
-                    'llm_response': llm_response,
+                    'llm_response': {'info': "Brooklyn, one of New York City's five boroughs, offers a vibrant mix of neighborhoods each with its own unique personality. Downtown Brooklyn serves as the commercial heart and is rapidly growing with new developments. Williamsburg is known for its trendy vibe, bustling with arts, music, and nightlife. Park Slope features beautiful brownstones and proximity to Prospect Park, making it family-friendly. Brooklyn Heights offers stunning views of the Manhattan skyline and historic architecture. Bushwick is popular for its artistic community, street art, and eclectic dining scene. Coney Island provides a seaside escape with its famous boardwalk and amusement park. Each area of Brooklyn showcases its distinct charm, contributing to the borough's diverse and eclectic atmosphere.", "structured_data":False},
+                    'identifier':"boroughs_info",
                     'message':"The followoing are some iconic neighborhoods in Brooklyn. Are you interested in any of the following?",
+                    'promotions_message':"Here are some activities you can do in Brooklyn:",
                     'additional_option': {
                         "description": "brooklyn_section",
+                        "links":brooklyn_promotions,
                         "options": ["Brooklyn Heights", "DUMBO", "Williamsburg", "Greenpoint", "Fort Greene", "Downtown Brooklyn", "Bushwick", "Park Slope", "Prospect Park", "Sunset Park"],
                         "setNumber": 2  
                     }
@@ -462,14 +483,19 @@ def chat():
                 return jsonify(response_dict)
             elif user_message == "Queens":
                 query = f"Give me an explanation of {user_message}."
-                llm_response = run_llm(query=query, chat_history=chat_history)
-                llm_response = llm_response["answer"]
+
+                queens_promotions = filter_promotions_by_borough(promotions_df, 'Queens')
+
+                # llm_response = run_llm(query=query, chat_history=chat_history)
+                # llm_response = llm_response["answer"]
 
                 response_dict = {
-                    'llm_response': llm_response,
+                    'llm_response': {'info': "Queens, one of New York City's five boroughs, is celebrated for its incredible diversity, hosting vibrant neighborhoods each with distinct characteristics. Astoria is renowned for its eclectic dining scene, particularly strong in Greek and Middle Eastern cuisines. Flushing is a bustling hub with one of the largest Asian communities in the U.S., famous for its authentic Chinese and Korean eateries. Long Island City blends industrial heritage with modern developments, offering parks with stunning Manhattan views and a thriving arts community. Jackson Heights showcases a melting pot of cultures with a plethora of ethnic restaurants and shops. The Rockaways provide a beach getaway with boardwalks and surf spots. Each neighborhood in Queens offers a unique slice of the world, reflecting the borough's rich cultural tapestry.", "structured_data":False},
                     'message':"The followoing are some of the most iconic neighborhoods in Queens. Are you interested in any of the following?",
+                    'promotions_message':"Here are some activities you can do in Queens:",
                     'additional_option': {
                         "description": "queens_section",
+                        "links":queens_promotions,
                         "options": ["Long Island City", "Astoria", "Jackson Heights", "Flushing", "Kew Gardens", "Sunnyside", "Forest Hills", "The Rockaways"],
                         "setNumber": 2  
                     },
@@ -478,30 +504,35 @@ def chat():
                 return jsonify(response_dict)
             elif user_message == "The Bronx":
                 query = f"Give me an explanation of {user_message}."
-                llm_response = run_llm(query=query, chat_history=chat_history)
-                llm_response = llm_response["answer"]
 
+                bronx_promotions = filter_promotions_by_borough(promotions_df, 'Bronx')
+                # llm_response = run_llm(query=query, chat_history=chat_history)
+                # llm_response = llm_response["answer"]
                 response_dict = {
-                    'llm_response': llm_response,
+                    'llm_response': {'info': "The Bronx, one of New York City's five boroughs, is rich in cultural diversity and historical landmarks. South Bronx is known for its vibrant street art and as the birthplace of hip-hop. Riverdale offers a more suburban feel with spacious homes and an affluent atmosphere. Fordham is bustling with students from Fordham University and features a lively shopping district. The Grand Concourse, inspired by Parisian boulevards, showcases art deco architecture and the Bronx Museum of the Arts. City Island resembles a quaint New England fishing village, popular for its seafood restaurants and maritime charm. The Bronx also hosts the New York Botanical Garden and the Bronx Zoo, two of the city's largest and most renowned green spaces. Each neighborhood contributes to the Bronx's unique character and resilience.", "structured_data":False},
                     'message':"The followoing are some of the most iconic neighborhoods in The Bronx. Are you interested in any of the following?",
+                    'promotions_message':"Here are some activities you can do in The Bronx:",
                     'additional_option': {
                         "description": "bronx_section",
+                        "links":bronx_promotions,
                         "options": ["Mott Haven", "Kingsbridge", "Fordham", "Parkchester", "Woodlawn", "Bedford Park", "Riverdale", "Baychester", "Concourse", "Co-op City"],
                         "setNumber": 2  
                     },
                    
                 }
                 return jsonify(response_dict)
-            elif user_message == "Staten Island =":
+            elif user_message == "Staten Island":
                 query = f"Give me an explanation of {user_message}."
-                llm_response = run_llm(query=query, chat_history=chat_history)
-                llm_response = llm_response["answer"]
-
+                # llm_response = run_llm(query=query, chat_history=chat_history)
+                # llm_response = llm_response["answer"]
+                staten_island_promotions = filter_promotions_by_borough(promotions_df, 'Staten Island')
                 response_dict = {
-                    'llm_response': llm_response,
+                    'llm_response': {'info': "Staten Island, the least populated and most suburban of New York City's five boroughs, offers a unique blend of urban and suburban lifestyles. North Shore is known for its cultural diversity, featuring the Staten Island Ferry and the developing St. George waterfront. Mid-Island boasts quiet residential neighborhoods and the expansive Greenbelt, a network of parks and trails. South Shore features more suburban settings with larger homes and newer developments. Historic Richmond Town provides a glimpse into 17th-century life with well-preserved buildings and reenactments. The borough is also home to the Staten Island Zoo and the Snug Harbor Cultural Center and Botanical Garden, adding cultural and recreational depth. Staten Island's distinct areas provide a more relaxed pace compared to the rest of New York City.", "structured_data":False},
                     'message':"The followoing are some of the most iconic neighborhoods in Staten Island. Are you interested in any of the following?",
+                    'promotions_message':"Here are some activities you can do in Staten Island:",
                     'additional_option': {
-                        "description": "bronx_section",
+                        "description": "staten_island_section",
+                        "links":staten_island_promotions,
                         "options": ["Huguenot", "St. George", "New Dorp", "Todt Hill", "West New Brighton", "Livingston"],
                         "setNumber": 2  
                     },
@@ -512,10 +543,12 @@ def chat():
         # question-2 means that the user selected any of the suggested neighborhoods
         elif from_option == "question-2":
             query = f"Give me a concise explanation of {user_message}."
+            
             llm_response = run_llm(query=query, chat_history=chat_history)
             llm_response = llm_response["answer"]
+
             response_dict = {
-                'llm_response': llm_response,
+                'llm_response': {'info': llm_response, "structured_data":False},
                 'message':f"What are you interested to explore in{user_message}?",
                  'additional_option': {
                         "description": "places_section",
@@ -524,9 +557,11 @@ def chat():
                 },
             }
             return jsonify(response_dict)
+        
+
         # question-3 means that the user has asked for places recommendations in a specific neighborhood
         elif from_option == "question-3":
-            print("holisss")
+           
             query = f"Recommend me some {user_message} in the neighborhood I just mentioned"
             llm_response = run_llm(query=query, chat_history=chat_history)
             response_dict = {
@@ -693,35 +728,75 @@ def parse_document(document):
     # print('infoo', info)
     return info
 
+
+def filter_promotions_by_borough(dataframe, borough):
+    """
+    Filter promotions based on a specific borough, remove unnecessary columns, and convert to a list of dictionaries.
+
+    Parameters:
+        dataframe (pd.DataFrame): The DataFrame containing promotion data.
+        borough (str): The borough to filter by.
+
+    Returns:
+        list[dict]: A list of dictionaries representing the filtered promotions.
+    """
+    # Filter the DataFrame for entries containing the specified borough in the 'Location' column
+    filtered_promotions = dataframe[dataframe['Location'].str.contains(borough, na=False)]
+    
+    # Drop unnecessary columns
+    columns_to_drop = ['Tour ID', 'Area/State', 'Country', 'AVG Rating', 'Reviews', 'Save up to', 'From', 'Price from', 'City']
+    filtered_promotions = filtered_promotions.drop(columns=columns_to_drop)
+    
+    # Convert the DataFrame to a list of dictionaries
+    filtered_promotions = filtered_promotions.to_dict(orient="records")
+    
+    return filtered_promotions
+
+def preprocess_chat_history(chat_history):
+    new_history = []
+    for entry in chat_history:
+        if isinstance(entry['content'], dict) and 'info' in entry['content']:
+            # Convert dictionary to a descriptive string
+            # This is a simple example, adjust it according to your needs
+            description = entry['content']['info']['Manhattan']['description']
+            new_history.append({'content': description, 'role': entry['role']})
+        else:
+            # Append the entry if it's already a string
+            new_history.append(entry)
+    return new_history
+
+
 def run_llm (query:str, chat_history: List [Dict[str, Any]]=[]):
-
-  embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-  docsearch = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
-
-  chat = ChatOpenAI(verbose=True, temperature=0)
- 
-  retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
   
-  stuff_documents_chain = create_stuff_documents_chain(chat, 
-  retrieval_qa_chat_prompt)
 
-  rephrase_prompt = hub.pull("langchain-ai/chat-langchain-rephrase") 
+    try:
+        chat_history = preprocess_chat_history(chat_history)
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        docsearch = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
 
-  history_aware_retriever = create_history_aware_retriever(
-    llm=chat, retriever=docsearch.as_retriever(), prompt=rephrase_prompt
-  )
+        chat = ChatOpenAI(verbose=True, temperature=0)
+        retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 
-  history_aware_retriever = create_history_aware_retriever(
-    llm=chat, retriever=docsearch.as_retriever(), prompt=rephrase_prompt
-  )
+        stuff_documents_chain = create_stuff_documents_chain(chat, retrieval_qa_chat_prompt)
+        rephrase_prompt = hub.pull("langchain-ai/chat-langchain-rephrase") 
 
-  qa = create_retrieval_chain(
-    retriever=history_aware_retriever, combine_docs_chain=stuff_documents_chain
-  )
+        history_aware_retriever = create_history_aware_retriever(
+            llm=chat, retriever=docsearch.as_retriever(), prompt=rephrase_prompt
+        )
 
-  result = qa.invoke(input={"input": query, "chat_history": chat_history})
+        qa = create_retrieval_chain(
+            retriever=history_aware_retriever, combine_docs_chain=stuff_documents_chain
+        )
 
-  return result
+        result = qa.invoke(input={"input": query, "chat_history": chat_history})
+
+        
+
+    except Exception as e:
+        print("An error occurred:", e)
+        raise e  # Rethrow the exception if you need to handle it further up the call stack
+
+    return result
 
 
 if __name__ == '__main__':
