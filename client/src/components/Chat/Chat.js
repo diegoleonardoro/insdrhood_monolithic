@@ -15,6 +15,9 @@ const Chat = () => {
 
   const [visibleLinks, setVisibleLinks] = useState(6);
 
+  const [visibleOptions, setVisibleOptions] = useState({}); 
+
+ 
   const handleShowMore = () => {
     setVisibleLinks(prevLinks => prevLinks + 3);  // Show 3 more links on click
   };
@@ -30,11 +33,22 @@ const Chat = () => {
       setOptionMapping(initialMapping);
     }
     scrollToBottom();
+
+    messages.forEach((msg, index) => {
+      if (msg.role === 'options') {
+        setVisibleOptions(prev => ({ ...prev, [index]: 5 })); 
+      }
+    });
+
   }, []); // Only run once on component mount
 
   useEffect(() => {
     scrollToBottom();  // Ensure that the scrollToBottom is called every time messages are updated
   }, [messages]);
+
+  const handleShowMoreOptions = (index) => {
+    setVisibleOptions(prev => ({ ...prev, [index]: (prev[index] || 4) + 4 })); // Increment by 4 more options
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -153,16 +167,17 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-
-
       <ul className="messages-list">
         {messages.map((msg, index) => (
           <li key={index} className={`message ${msg.role === 'human' ? 'user' : 'bot'}`}>
             {msg.role === 'options' ? (
               <div className="options-container">
-                {msg.content.map(option => (
+                {msg.content.slice(0, visibleOptions[index] || 5).map(option => (
                   <button className="buttonOptionChat" key={`${option}-${index}`} onClick={() => handleOptionClick(option)}>{option}</button>
                 ))}
+                {msg.content.length > (visibleOptions[index] || 5) && (
+                  <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(index)}>Show More</button>
+                )}
               </div>
             ) : msg.role === 'promotion_links' ? (
               <div className="promotion-links-container">
