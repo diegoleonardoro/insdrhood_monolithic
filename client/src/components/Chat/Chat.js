@@ -11,13 +11,13 @@ const Chat = () => {
   ]);
   const messagesEndRef = useRef(null);
   const [optionMapping, setOptionMapping] = useState({});
+  const [expanded, setExpanded] = useState({});
 
   const [visibleLinks, setVisibleLinks] = useState(6);
 
   const handleShowMore = () => {
     setVisibleLinks(prevLinks => prevLinks + 3);  // Show 3 more links on click
   };
-
 
   useEffect(() => {
     // Initialize the mapping for the first set of options on component mount
@@ -122,10 +122,39 @@ const Chat = () => {
   };
 
 
-  console.log("messages=>>", messages)
+  const MAX_LENGTH = 180;
+
+  // Function to render text content with "Show More/Less" logic
+  const renderTextContent = (content, index) => {
+    const isExpanded = expanded[index];
+    if (content.length > MAX_LENGTH && !isExpanded) {
+      return (
+        <>
+          {content.substring(0, MAX_LENGTH)}...
+          <button onClick={() => toggleExpand(index)} className="buttonLikeText show-more">Show More</button>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {content}
+          {content.length > MAX_LENGTH && (
+            <button onClick={() => toggleExpand(index)} className="buttonLikeText show-less">Show Less</button>
+          )}
+        </>
+      );
+    }
+  };
+
+  // Toggle function to expand or collapse the message text
+  const toggleExpand = index => {
+    setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
+  };
 
   return (
     <div className="chat-container">
+
+
       <ul className="messages-list">
         {messages.map((msg, index) => (
           <li key={index} className={`message ${msg.role === 'human' ? 'user' : 'bot'}`}>
@@ -146,23 +175,21 @@ const Chat = () => {
                   </a>
                 ))}
                 {visibleLinks < msg.content.length && (
-                  <button className="buttonOptionChat" onClick={handleShowMore}>Show More</button>
+                  <button className="buttonLikeText buttonOptionChat" onClick={handleShowMore}>Show More</button>
                 )}
               </div>
-            )
-              : msg.loading ? (
-                <div className="loading-spinner"></div>
-              )
-
-                :
-                msg.content.structured_data ? (<div>Include some logic to handle structured data</div>)
-                  : (
-                      msg.content.info ? (msg.content.info) : (msg.content)
-                  )}
+            ) : msg.loading ? (
+              <div className="loading-spinner"></div>
+            ) : (
+              <div>
+                {msg.content.info ? renderTextContent(msg.content.info, index) : renderTextContent(msg.content, index)}
+              </div>
+            )}
           </li>
         ))}
         <div ref={messagesEndRef} />
       </ul>
+
       <form onSubmit={handleSubmit} className="message-form">
         <input
           type="text"
