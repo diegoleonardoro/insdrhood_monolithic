@@ -447,7 +447,7 @@ def chat():
                 response_dict = {
                     'llm_response': {'info':"Manhattan, one of New York City's five boroughs, serves as a global hub for culture, finance, and media. It's structured into distinct areas: Downtown (Lower Manhattan) is the financial core with neighborhoods like Tribeca; Midtown features major tourist attractions like Times Square and the Empire State Building; the Upper East Side is known for its luxury living and museums along Museum Mile; the Upper West Side offers a more relaxed vibe near Central Park; Harlem celebrates African American culture with its rich history in jazz and arts; and Washington Heights and Inwood are noted for their strong Dominican community and scenic parks. Each neighborhood contributes to Manhattan's dynamic and diverse character." , "structured_data":False},
                     'identifier':"boroughs_info",
-                    'message': "The following are some iconic neighborhoods in Manhattan. Are you interested in any of the following?",
+                    'message': "The following are some iconic neighborhoods in Manhattan. Select a neighborhood to learn more about it",
                     'promotions_message':"Here are some activities you can do in Manhattan:",
                     'additional_option': {
                         "description": "manhattan_section",
@@ -471,7 +471,7 @@ def chat():
                 response_dict = {
                     'llm_response': {'info': "Brooklyn, one of New York City's five boroughs, offers a vibrant mix of neighborhoods each with its own unique personality. Downtown Brooklyn serves as the commercial heart and is rapidly growing with new developments. Williamsburg is known for its trendy vibe, bustling with arts, music, and nightlife. Park Slope features beautiful brownstones and proximity to Prospect Park, making it family-friendly. Brooklyn Heights offers stunning views of the Manhattan skyline and historic architecture. Bushwick is popular for its artistic community, street art, and eclectic dining scene. Coney Island provides a seaside escape with its famous boardwalk and amusement park. Each area of Brooklyn showcases its distinct charm, contributing to the borough's diverse and eclectic atmosphere.", "structured_data":False},
                     'identifier':"boroughs_info",
-                    'message':"The followoing are some iconic neighborhoods in Brooklyn. Are you interested in any of the following?",
+                    'message':"The followoing are some iconic neighborhoods in Brooklyn. Select a neighborhood to learn more about it",
                     'promotions_message':"Here are some activities you can do in Brooklyn:",
                     'additional_option': {
                         "description": "brooklyn_section",
@@ -493,7 +493,7 @@ def chat():
 
                 response_dict = {
                     'llm_response': {'info': "Queens, one of New York City's five boroughs, is celebrated for its incredible diversity, hosting vibrant neighborhoods each with distinct characteristics. Astoria is renowned for its eclectic dining scene, particularly strong in Greek and Middle Eastern cuisines. Flushing is a bustling hub with one of the largest Asian communities in the U.S., famous for its authentic Chinese and Korean eateries. Long Island City blends industrial heritage with modern developments, offering parks with stunning Manhattan views and a thriving arts community. Jackson Heights showcases a melting pot of cultures with a plethora of ethnic restaurants and shops. The Rockaways provide a beach getaway with boardwalks and surf spots. Each neighborhood in Queens offers a unique slice of the world, reflecting the borough's rich cultural tapestry.", "structured_data":False},
-                    'message':"The followoing are some of the most iconic neighborhoods in Queens. Are you interested in any of the following?",
+                    'message':"The followoing are some of the most iconic neighborhoods in Queens. Select a neighborhood to learn more about it",
                     'promotions_message':"Here are some activities you can do in Queens:",
                     'additional_option': {
                         "description": "queens_section",
@@ -515,7 +515,7 @@ def chat():
                 # llm_response = llm_response["answer"]
                 response_dict = {
                     'llm_response': {'info': "The Bronx, one of New York City's five boroughs, is rich in cultural diversity and historical landmarks. South Bronx is known for its vibrant street art and as the birthplace of hip-hop. Riverdale offers a more suburban feel with spacious homes and an affluent atmosphere. Fordham is bustling with students from Fordham University and features a lively shopping district. The Grand Concourse, inspired by Parisian boulevards, showcases art deco architecture and the Bronx Museum of the Arts. City Island resembles a quaint New England fishing village, popular for its seafood restaurants and maritime charm. The Bronx also hosts the New York Botanical Garden and the Bronx Zoo, two of the city's largest and most renowned green spaces. Each neighborhood contributes to the Bronx's unique character and resilience.", "structured_data":False},
-                    'message':"The followoing are some of the most iconic neighborhoods in The Bronx. Are you interested in any of the following?",
+                    'message':"The followoing are some of the most iconic neighborhoods in The Bronx. Select a neighborhood to learn more about it",
                     'promotions_message':"Here are some activities you can do in The Bronx:",
                     'additional_option': {
                         "description": "bronx_section",
@@ -536,7 +536,7 @@ def chat():
                 staten_island_promotions = filter_promotions_by_borough(promotions_df, 'Staten Island')
                 response_dict = {
                     'llm_response': {'info': "Staten Island, the least populated and most suburban of New York City's five boroughs, offers a unique blend of urban and suburban lifestyles. North Shore is known for its cultural diversity, featuring the Staten Island Ferry and the developing St. George waterfront. Mid-Island boasts quiet residential neighborhoods and the expansive Greenbelt, a network of parks and trails. South Shore features more suburban settings with larger homes and newer developments. Historic Richmond Town provides a glimpse into 17th-century life with well-preserved buildings and reenactments. The borough is also home to the Staten Island Zoo and the Snug Harbor Cultural Center and Botanical Garden, adding cultural and recreational depth. Staten Island's distinct areas provide a more relaxed pace compared to the rest of New York City.", "structured_data":False},
-                    'message':"The followoing are some of the most iconic neighborhoods in Staten Island. Are you interested in any of the following?",
+                    'message':"The followoing are some of the most iconic neighborhoods in Staten Island. Select a neighborhood to learn more about it",
                     'promotions_message':"Here are some activities you can do in Staten Island:",
                     'additional_option': {
                         "description": "staten_island_section",
@@ -560,7 +560,7 @@ def chat():
 
             response_dict = {
                 'llm_response': {'info': llm_response, "structured_data":False},
-                'message':f"What are you interested to explore in{user_message}?",
+                'message':f"What are you interested to explore in {user_message}?",
                  'additional_option': {
                         "description": "places_section",
                         "options": ["Restaurants", "Museums", "Public Spaces", "Parks", "Nighclubs", "Everything"],
