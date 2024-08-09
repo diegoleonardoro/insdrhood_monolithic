@@ -452,7 +452,7 @@ def chat():
                     'additional_option': {
                         "description": "manhattan_section",
                         "links":manhattan_promotions,
-                        "options": ["Upper East Side", "Upper West Side", "Harlem", "Greenwich Village", "Tribeca", "East Village", "Chelsea", "Financial District", "Midtown", "Times Square", "Little Italy", "Chinatown"],
+                        "options": {"downtown":["Little Italy", "Chinatown"] , "Midtown": ["Chelsea", "Soho"]},
                         "setNumber": 2  
                     }
                 }
@@ -755,16 +755,29 @@ def filter_promotions_by_borough(dataframe, borough):
 def preprocess_chat_history(chat_history):
     new_history = []
     for entry in chat_history:
-        if isinstance(entry['content'], dict) and 'info' in entry['content']:
-            # Convert dictionary to a descriptive string
-            # This is a simple example, adjust it according to your needs
-            description = entry['content']['info']['Manhattan']['description']
-            new_history.append({'content': description, 'role': entry['role']})
+        if isinstance(entry['content'], dict):
+            if 'info' in entry['content']:
+                # Check for nested structure and extract description
+                try:
+                    if isinstance(entry['content']['info'], dict):
+                        for key, value in entry['content']['info'].items():
+                            if 'description' in value:
+                                description = value['description']
+                                new_history.append({'content': description, 'role': entry['role']})
+                    else:
+                        # If 'info' is not a dictionary, use it directly if it's a string
+                        new_history.append({'content': entry['content']['info'], 'role': entry['role']})
+                except KeyError as e:
+                    print(f"Key error: {e} in entry: {entry}")
+                    # Handle the case where the expected keys are not found
+                    new_history.append({'content': "Error in data format.", 'role': entry['role']})
+            else:
+                # If 'info' key is not in the dictionary, append a placeholder or log an error
+                new_history.append({'content': "Info not found in entry.", 'role': entry['role']})
         else:
-            # Append the entry if it's already a string
+            # Append the entry as is if it's not a dictionary
             new_history.append(entry)
     return new_history
-
 
 def run_llm (query:str, chat_history: List [Dict[str, Any]]=[]):
   

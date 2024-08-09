@@ -86,29 +86,43 @@ const Chat = () => {
           });
 
         }
+
         // handle options
         if (response.data.additional_option && response.data.additional_option.options) {
-
           newMessages.push({
             content: response.data.message,
             role: "ai"
           });
+
+          const options = response.data.additional_option.options;
+          const setNumber = response.data.additional_option.setNumber;
+
           newMessages.push({
-            content: response.data.additional_option.options,
+            content: options,
             role: 'options'
           });
 
-          // Use set number from backend to update the mapping
-          const setNumber = response.data.additional_option.setNumber;
+          // Update the mapping for options
           setOptionMapping(prevMapping => {
             const updatedMapping = { ...prevMapping };
-            response.data.additional_option.options.forEach(option => {
-              updatedMapping[option] = setNumber;
-            });
+            if (Array.isArray(options)) {
+              // When options is an array
+              options.forEach(option => {
+                updatedMapping[option] = setNumber;
+              });
+            } else if (typeof options === 'object') {
+              // When options is an object of arrays
+              Object.values(options).forEach(subOptions => {
+                subOptions.forEach(option => {
+                  updatedMapping[option] = setNumber;
+                });
+              });
+            }
             return updatedMapping;
           });
-
         }
+
+
 
         return newMessages;
 
@@ -165,21 +179,42 @@ const Chat = () => {
     setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
   };
 
+
+
   return (
     <div className="chat-container">
       <ul className="messages-list">
         {messages.map((msg, index) => (
           <li key={index} className={`message ${msg.role === 'human' ? 'user' : 'bot'}`}>
             {msg.role === 'options' ? (
+
               <div className="options-container">
-                {msg.content.slice(0, visibleOptions[index] || 5).map(option => (
-                  <button className="buttonOptionChat" key={`${option}-${index}`} onClick={() => handleOptionClick(option)}>{option}</button>
-                ))}
-                {msg.content.length > (visibleOptions[index] || 5) && (
+                {Array.isArray(msg.content) ? (
+                  // Handling options as a simple array
+                  msg.content.slice(0, visibleOptions[index] || 5).map(option => (
+                    <button className="buttonOptionChat" key={`${option}-${index}`} onClick={() => handleOptionClick(option)}>{option}</button>
+                  ))
+                ) : (
+                  // Handling options as a dictionary of arrays
+                  Object.entries(msg.content).map(([section, options], sectionIndex) => (
+                    <div key={sectionIndex}>
+                      <div className="section-title">{section}</div>
+                      {options.slice(0, visibleOptions[`${section}-${index}`] || 5).map(option => (
+                        <button className="buttonOptionChat" key={`${option}-${index}-${section}`} onClick={() => handleOptionClick(option, section)}>{option}</button>
+                      ))}
+                      {options.length > (visibleOptions[`${section}-${index}`] || 5) && (
+                        <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(`${section}-${index}`)}>Show More</button>
+                      )}
+                    </div>
+                  ))
+                )}
+                {Array.isArray(msg.content) && msg.content.length > (visibleOptions[index] || 5) && (
                   <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(index)}>Show More</button>
                 )}
               </div>
-            ) : msg.role === 'promotion_links' ? (
+            )
+            
+            : msg.role === 'promotion_links' ? (
               <div className="promotion-links-container">
                 {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
                   <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
