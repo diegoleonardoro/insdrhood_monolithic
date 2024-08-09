@@ -125,12 +125,12 @@ const Chat = () => {
           if (Array.isArray(options)) {
             setVisibleOptions(prev => ({
               ...prev,
-              [newMessages.length - 1]: 5  // Assuming index based on new message insertion
+              [newMessages.length - 1]: 3  // Assuming index based on new message insertion
             }));
           } else {
             const newVisibility = {};
             Object.keys(options).forEach(section => {
-              newVisibility[section] = 5; // Initialize with 5 visible items per section
+              newVisibility[section] = 3; // Initialize with 5 visible items per section
             });
             setVisibleOptions(newVisibility);
           }
@@ -210,10 +210,10 @@ const Chat = () => {
                   Object.entries(msg.content).map(([section, options], sectionIndex) => (
                     <div key={sectionIndex}>
                       <div className="section-title">{section}</div>
-                      {options.slice(0, visibleOptions[section] || 5).map((option, optionIndex) => (
+                      {options.slice(0, visibleOptions[section] || 3).map((option, optionIndex) => (
                         <button className="buttonOptionChat" key={`${option}-${sectionIndex}-${optionIndex}`} onClick={() => handleOptionClick(option, section)}>{option}</button>
                       ))}
-                      {options.length > (visibleOptions[section] || 5) && (
+                      {options.length > (visibleOptions[section] || 3) && (
                         <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(section)}>Show More</button>
                       )}
                     </div>

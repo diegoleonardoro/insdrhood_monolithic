@@ -452,7 +452,7 @@ def chat():
                     'additional_option': {
                         "description": "manhattan_section",
                         "links":manhattan_promotions,
-                        "options": {"downtown":["Little Italy", "Chinatown", "yoyoyo", "hihi"] , "Midtown": ["Chelsea", "Soho", "holala", ]},
+                        "options": {"Downtown":["Little Italy", "Chinatown", "Battery City Park", "Financial District"] , "Midtown": ["Times Square", "Soho", "Hell’s Kitchen", "Chelsea", "Flatiron District", "Soho","Koreatown","Herald Square" , "Diamond District", "Gramercy" ], "Uptown Manhattan & Upper Manhattan":["Upper East Side","Upper West Side", "Harlem", "Morningside Heights", "Washington Heights", "Inwood" ]},
                         "setNumber": 2  
                     }
                 }
@@ -476,7 +476,9 @@ def chat():
                     'additional_option': {
                         "description": "brooklyn_section",
                         "links":brooklyn_promotions,
-                        "options": ["Brooklyn Heights", "DUMBO", "Williamsburg", "Greenpoint", "Fort Greene", "Downtown Brooklyn", "Bushwick", "Park Slope", "Prospect Park", "Sunset Park"],
+                        "options": {"North Brooklyn":["Williamsburg", "Greenpoint", "Bushwick", "DUMBO","Brooklyn Heights", "Fort Greene"] , 
+                                    "Central Brooklyn": ["Bed-Stuy", "Crown Heights",  "Park Slope", "Prospect Heights", "Flatbush","Prospect Lefferts Gardens" ], 
+                                    "South Brooklyn":["Bay Ridge","Bensonhurst", "Coney Island", "Brighton Beach", "Sunset Park", "Sheepshead Bay" ]},
                         "setNumber": 2  
                     }
                 }
@@ -496,7 +498,10 @@ def chat():
                     'additional_option': {
                         "description": "queens_section",
                         "links":queens_promotions,
-                        "options": ["Long Island City", "Astoria", "Jackson Heights", "Flushing", "Kew Gardens", "Sunnyside", "Forest Hills", "The Rockaways"],
+                        "options": {
+                            "Western Queens":["Astoria", "Long Island City (LIC)", "Sunnyside", "Woodside","Jackson Heights", "Flushing"] , 
+                            "Central Queens": ["Forest Hills", "Kew Gardens", "Rego Park", "Middle Village", "Elmhurst", "Corona" ], 
+                            "Eastern Queens":["Bayside","Floral Park", "Fresh Meadows", "Hollis", "Queens Village", "St. Albans" ]},
                         "setNumber": 2  
                     },
                    
@@ -515,7 +520,10 @@ def chat():
                     'additional_option': {
                         "description": "bronx_section",
                         "links":bronx_promotions,
-                        "options": ["Mott Haven", "Kingsbridge", "Fordham", "Parkchester", "Woodlawn", "Bedford Park", "Riverdale", "Baychester", "Concourse", "Co-op City"],
+                         "options": {
+                            "South Bronx":["Mott Haven", "Port Morris", "Melrose", "Hunts Point","Morrisania", "Highbridge"] , 
+                            "Central Bronx": ["Fordham", "Belmont", "Kingsbridge", "University Heights", "Norwood", "Bedford Park" ], 
+                            "North Bronx":["Riverdale","Woodlawn", "Wakefield", "Baychester", "City Island", "Co-op City" ]},
                         "setNumber": 2  
                     },
                    
@@ -533,7 +541,10 @@ def chat():
                     'additional_option': {
                         "description": "staten_island_section",
                         "links":staten_island_promotions,
-                        "options": ["Huguenot", "St. George", "New Dorp", "Todt Hill", "West New Brighton", "Livingston"],
+                        "options": {
+                            "North Shore":["St. George", "Tompkinsville", "Stapleton", "West Brighton","Port Richmond", "Mariners Harbor"] , 
+                            "Mid-Island": ["New Springville", "Willowbrook", "Bulls Head", "Todt Hill", "Emerson Hill", "Grant City" ], 
+                            "South Shore":["Tottenville","Great Kills", "Eltingville", "Annadale", "Huguenot", "Rossville" ]},
                         "setNumber": 2  
                     },
                    

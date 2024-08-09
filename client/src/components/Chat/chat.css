@@ -9,6 +9,13 @@
     width:50%;
     margin-top:30px;
 }
+.section-title{
+  color: white;
+  margin: 15px;
+  border-bottom: 1px solid white;
+  font-family: "Koulen", sans-serif;
+  font-size: 20px !important;
+}
 
 .buttonOptionChat{
   background-color: #007bff;
