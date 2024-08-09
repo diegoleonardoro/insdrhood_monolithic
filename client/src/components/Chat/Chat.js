@@ -16,6 +16,7 @@ const Chat = () => {
   const [visibleLinks, setVisibleLinks] = useState(6);
 
   const [visibleOptions, setVisibleOptions] = useState({}); 
+  
 
  
   const handleShowMore = () => {
@@ -102,16 +103,15 @@ const Chat = () => {
             role: 'options'
           });
 
-          // Update the mapping for options
+
+
           setOptionMapping(prevMapping => {
             const updatedMapping = { ...prevMapping };
             if (Array.isArray(options)) {
-              // When options is an array
               options.forEach(option => {
                 updatedMapping[option] = setNumber;
               });
-            } else if (typeof options === 'object') {
-              // When options is an object of arrays
+            } else {
               Object.values(options).forEach(subOptions => {
                 subOptions.forEach(option => {
                   updatedMapping[option] = setNumber;
@@ -120,6 +120,20 @@ const Chat = () => {
             }
             return updatedMapping;
           });
+
+          // Update visible options state based on the structure received
+          if (Array.isArray(options)) {
+            setVisibleOptions(prev => ({
+              ...prev,
+              [newMessages.length - 1]: 5  // Assuming index based on new message insertion
+            }));
+          } else {
+            const newVisibility = {};
+            Object.keys(options).forEach(section => {
+              newVisibility[section] = 5; // Initialize with 5 visible items per section
+            });
+            setVisibleOptions(newVisibility);
+          }
         }
 
 
@@ -187,29 +201,23 @@ const Chat = () => {
         {messages.map((msg, index) => (
           <li key={index} className={`message ${msg.role === 'human' ? 'user' : 'bot'}`}>
             {msg.role === 'options' ? (
-
               <div className="options-container">
                 {Array.isArray(msg.content) ? (
-                  // Handling options as a simple array
                   msg.content.slice(0, visibleOptions[index] || 5).map(option => (
                     <button className="buttonOptionChat" key={`${option}-${index}`} onClick={() => handleOptionClick(option)}>{option}</button>
                   ))
                 ) : (
-                  // Handling options as a dictionary of arrays
                   Object.entries(msg.content).map(([section, options], sectionIndex) => (
                     <div key={sectionIndex}>
                       <div className="section-title">{section}</div>
-                      {options.slice(0, visibleOptions[`${section}-${index}`] || 5).map(option => (
-                        <button className="buttonOptionChat" key={`${option}-${index}-${section}`} onClick={() => handleOptionClick(option, section)}>{option}</button>
+                      {options.slice(0, visibleOptions[section] || 5).map((option, optionIndex) => (
+                        <button className="buttonOptionChat" key={`${option}-${sectionIndex}-${optionIndex}`} onClick={() => handleOptionClick(option, section)}>{option}</button>
                       ))}
-                      {options.length > (visibleOptions[`${section}-${index}`] || 5) && (
-                        <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(`${section}-${index}`)}>Show More</button>
+                      {options.length > (visibleOptions[section] || 5) && (
+                        <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(section)}>Show More</button>
                       )}
                     </div>
                   ))
-                )}
-                {Array.isArray(msg.content) && msg.content.length > (visibleOptions[index] || 5) && (
-                  <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(index)}>Show More</button>
                 )}
               </div>
             )

@@ -452,7 +452,7 @@ def chat():
                     'additional_option': {
                         "description": "manhattan_section",
                         "links":manhattan_promotions,
-                        "options": {"downtown":["Little Italy", "Chinatown"] , "Midtown": ["Chelsea", "Soho"]},
+                        "options": {"downtown":["Little Italy", "Chinatown", "yoyoyo", "hihi"] , "Midtown": ["Chelsea", "Soho", "holala", ]},
                         "setNumber": 2  
                     }
                 }
