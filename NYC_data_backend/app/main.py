@@ -71,10 +71,8 @@ PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME')
 data_dir = os.environ.get('DATA_DIR', './app/data')  # Default to './data' if not set
 
 
-
 # promotions dataframe load:
-file_path = os.path.join(data_dir, 'nyc_cb_neighborhoods.json')
-promotions_file_path = os.path.join(data_dir, 'Deals&Promotions.csv')
+promotions_file_path = os.path.join(data_dir, 'Deals&promotions.csv')
 promotions_df = pd.read_csv(promotions_file_path)
 
 # boroughs information load
@@ -82,6 +80,8 @@ boroughs_info_path = os.path.join(data_dir, 'boroughs_information.json')
 with open(boroughs_info_path, 'r') as file:
     boroughs_info= json.load(file)
 
+
+file_path = os.path.join(data_dir, 'nyc_cb_neighborhoods.json')
 with open(file_path, 'r') as file:
     community_boards = json.load(file)
 
