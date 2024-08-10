@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from "axios";
 import "./chat.css";
 
+// hola le le le le 
+
 const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState([
@@ -9,53 +11,73 @@ const Chat = () => {
     { content: "What borough do you want to explore?", role: 'ai' },
     { content: ['Manhattan', 'Brooklyn', 'Queens', 'The Bronx', 'Staten Island'], role: 'options' }
   ]);
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef([]);
+  const chatContainerRef = useRef(null);  // Ref for the chat container to track scroll
+  const [lastMessageIndex, setLastMessageIndex] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(true);  // State to track if the user is at the bottom
+
   const [optionMapping, setOptionMapping] = useState({});
   const [expanded, setExpanded] = useState({});
 
   const [visibleLinks, setVisibleLinks] = useState(6);
+  const [visibleOptions, setVisibleOptions] = useState({});
 
-  const [visibleOptions, setVisibleOptions] = useState({}); 
-  
 
- 
   const handleShowMore = () => {
     setVisibleLinks(prevLinks => prevLinks + 3);  // Show 3 more links on click
   };
 
   useEffect(() => {
-    // Initialize the mapping for the first set of options on component mount
+    const chatContainer = chatContainerRef.current;
+
+    const onScroll = () => {
+      const atBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 10;
+      setIsAtBottom(atBottom);
+    };
+
+    chatContainer.addEventListener('scroll', onScroll);
+
+    // Initial options and scrollToBottom logic
     const initialOptions = messages.find(msg => msg.role === 'options')?.content;
     if (initialOptions) {
       const initialMapping = initialOptions.reduce((acc, option) => {
-        acc[option] = 1; // Set the count for the initial options
+        acc[option] = 1;
         return acc;
       }, {});
       setOptionMapping(initialMapping);
     }
     scrollToBottom();
-
     messages.forEach((msg, index) => {
       if (msg.role === 'options') {
-        setVisibleOptions(prev => ({ ...prev, [index]: 5 })); 
+        setVisibleOptions(prev => ({ ...prev, [index]: 5 }));
       }
     });
 
-  }, []); // Only run once on component mount
+    return () => {
+      messagesEndRef.current = [];
+      chatContainer.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();  // Ensure that the scrollToBottom is called every time messages are updated
   }, [messages]);
 
+  const scrollToBottom = () => {
+    if (isAtBottom) {
+      messagesEndRef.current[lastMessageIndex + 1]?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const handleShowMoreOptions = (index) => {
     setVisibleOptions(prev => ({ ...prev, [index]: (prev[index] || 4) + 4 })); // Increment by 4 more options
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+ 
 
   const processMessage = async (message, role = 'human', fromOption = null) => {
+
+    setLastMessageIndex(messages.length - 1);
     const userMessage = { content: message, role: role };
     setMessages(currentMessages => [...currentMessages, userMessage, { content: "", role: "ai", loading: true }]);
     setNewMessage('');
@@ -163,7 +185,6 @@ const Chat = () => {
     processMessage(newMessage);
   };
 
-
   const MAX_LENGTH = 180;
 
   // Function to render text content with "Show More/Less" logic
@@ -194,12 +215,11 @@ const Chat = () => {
   };
 
 
-
   return (
-    <div className="chat-container">
+    <div className="chat-container" ref={chatContainerRef}>
       <ul className="messages-list">
         {messages.map((msg, index) => (
-          <li key={index} className={`message ${msg.role === 'human' ? 'user' : 'bot'}`}>
+          <li key={index} className={`message ${msg.role === 'human' ? 'user' : 'bot'}`} ref={el => messagesEndRef.current[index] = el}>
             {msg.role === 'options' ? (
               <div className="options-container">
                 {Array.isArray(msg.content) ? (
@@ -221,31 +241,33 @@ const Chat = () => {
                 )}
               </div>
             )
-            
-            : msg.role === 'promotion_links' ? (
-              <div className="promotion-links-container">
-                {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
-                  <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
-                    <div style={{ color: "white", margin: "15px", borderBottom: "1px solid white" }}>
-                      <div style={{ backgroundColor: "#007bff", display: "inline-block", paddingLeft: "7px", paddingRight: "7px", borderRadius: "10px", marginBottom: "10px" }}>{promotion['Tour Title']}</div>
-                      <div>Category: {promotion['Category']}</div>
-                    </div>
-                  </a>
-                ))}
-                {visibleLinks < msg.content.length && (
-                  <button className="buttonLikeText buttonOptionChat" onClick={handleShowMore}>Show More</button>
-                )}
-              </div>
-            ) : msg.loading ? (
-              <div className="loading-spinner"></div>
-            ) : (
-              <div>
-                {msg.content.info ? renderTextContent(msg.content.info, index) : renderTextContent(msg.content, index)}
-              </div>
-            )}
+
+              : msg.role === 'promotion_links' ? (
+                <div className="promotion-links-container">
+                  {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
+                    <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
+                      <div style={{ color: "white", margin: "15px", borderBottom: "1px solid white" }}>
+                        <div style={{ backgroundColor: "#007bff", display: "inline-block", paddingLeft: "7px", paddingRight: "7px", borderRadius: "10px", marginBottom: "10px" }}>{promotion['Tour Title']}</div>
+                        <div>Category: {promotion['Category']}</div>
+                      </div>
+                    </a>
+                  ))}
+                  {visibleLinks < msg.content.length && (
+                    <button className="buttonLikeText buttonOptionChat" onClick={handleShowMore}>Show More</button>
+                  )}
+                </div>
+              ) : msg.loading ? (
+                <div className="loading-spinner"></div>
+              ) : (
+                <div>
+                  {msg.content.info ? renderTextContent(msg.content.info, index) : renderTextContent(msg.content, index)}
+                </div>
+              )}
           </li>
         ))}
-        <div ref={messagesEndRef} />
+        {!isAtBottom && (
+          <div className="scroll-indicator">More messages below</div>
+        )}
       </ul>
 
       <form onSubmit={handleSubmit} className="message-form">
