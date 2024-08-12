@@ -4,20 +4,20 @@ exports.BlogRepository = void 0;
 const mongodb_1 = require("mongodb");
 const index_1 = require("../index");
 const bad_request_error_1 = require("../../errors/bad-request-error");
-const redis_1 = require("redis");
 class BlogRepository {
+    // private redisClient: RedisClientType;
     constructor() {
         this.collectionName = 'blogs';
         this.db = (0, index_1.connectToDatabase)();
-        this.redisClient = (0, redis_1.createClient)({
-            url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
-        });
-        this.redisClient.connect().then(() => {
-            console.log('Successfully connected to Redis');
-        })
-            .catch(error => {
-            console.error('Failed to connect to Redis:', error);
-        });
+        // this.redisClient = createClient({
+        //   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+        // });
+        // this.redisClient.connect().then(() => {
+        //   console.log('Successfully connected to Redis');
+        // })
+        //   .catch(error => {
+        //     console.error('Failed to connect to Redis:', error);
+        //   });
     }
     async createIndexes() {
         try {
@@ -37,11 +37,11 @@ class BlogRepository {
     async getAllBlogs({ cursor, pageSize }) {
         const cacheKey = 'blogs';
         try {
-            const cachedBlogs = await this.redisClient.get(cacheKey);
-            if (cachedBlogs) {
-                console.log("SERVING CACHED BLOGS ", JSON.parse(cachedBlogs));
-                return JSON.parse(cachedBlogs);
-            }
+            // const cachedBlogs = await this.redisClient.get(cacheKey);
+            // if (cachedBlogs) {
+            //   console.log("SERVING CACHED BLOGS ", JSON.parse(cachedBlogs))
+            //   return JSON.parse(cachedBlogs);
+            // }
             const db = await this.db;
             const blogsCollection = db.collection(this.collectionName);
             const projection = { title: 1, coverImageUrl: 1 };
@@ -58,10 +58,12 @@ class BlogRepository {
             // if (blogs.length > 0) {
             //   nextCursor = blogs[blogs.length - 1]._id.toString();
             // } 
+            console.log("blogss", blogs);
             const result = { blogs }; //nextCursor
             // Cache the result in Redis
-            await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs)); // Expiry time is set to 3600 seconds (1 hour)
-            console.log("SERVING UNCACHED DATA ", result);
+            // await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs));  // Expiry time is set to 3600 seconds (1 hour)
+            // console.log("SERVING UNCACHED DATA ", result)
+            console.log("blogsss", blogs);
             return blogs;
         }
         catch (error) {
@@ -85,20 +87,20 @@ class BlogRepository {
         }
     }
     async saveBlogPost(blogData) {
-        try {
-            const db = await this.db;
-            const blogsCollection = db.collection(this.collectionName);
-            // const newBlog = await blogsCollection.insertOne(blogData);
-            const cacheKey = 'blogs';
-            const blogs = await blogsCollection.find({}).toArray();
-            await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs));
-            console.log('JSON.stringify(blogs)==>>>', JSON.stringify(blogs));
-            return 'newBlog'; // Return the result of the insertion
-        }
-        catch (error) {
-            // Error handling for blog post saving operation
-            throw new bad_request_error_1.BadRequestError('Failed to save the blog post');
-        }
+        // try {
+        //   const db = await this.db;
+        //   const blogsCollection = db.collection(this.collectionName);
+        //   // const newBlog = await blogsCollection.insertOne(blogData);
+        //   const cacheKey = 'blogs';
+        //   const blogs = await blogsCollection.find({}).toArray();
+        //   await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs)); 
+        //   console.log('JSON.stringify(blogs)==>>>', JSON.stringify(blogs))
+        //   return 'newBlog'; // Return the result of the insertion
+        // } catch (error) {
+        //   // Error handling for blog post saving operation
+        //   throw new BadRequestError('Failed to save the blog post');
+        // }
+        return '';
     }
     async updateBlog(blogId, updateData) {
         try {

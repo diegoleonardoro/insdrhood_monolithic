@@ -426,23 +426,22 @@ def neighborhood_report_data():
 @app.route('/chat', methods=['POST'])
 @cross_origin(origin='*', supports_credentials=True)
 def chat():
-   
     user_message = request.json["message"]
     chat_history = request.json["chatHistory"]
     from_option = request.json.get("fromOption")
+
+    print ("promotions_df-->>", promotions_df)
 
     if from_option:
         
         # Check if the option relates to a specific query about boroughs
         if from_option == "question-1":
             if user_message == "Manhattan":
-                query = "Give me an explanation of how Manhattan is divided."
-            
                 manhattan_promotions = filter_promotions_by_borough(promotions_df, 'Manhattan')
-                   
+
+                # query = "Give me an explanation of how Manhattan is divided."   
                 # llm_response = run_llm(query=query, chat_history=chat_history)
                 # llm_response = llm_response["answer"]
-
                 # boroughs_info["Manhattan"]
                 response_dict = {
                     'llm_response': {'info':"Manhattan, one of New York City's five boroughs, serves as a global hub for culture, finance, and media. It's structured into distinct areas: Downtown (Lower Manhattan) is the financial core with neighborhoods like Tribeca; Midtown features major tourist attractions like Times Square and the Empire State Building; the Upper East Side is known for its luxury living and museums along Museum Mile; the Upper West Side offers a more relaxed vibe near Central Park; Harlem celebrates African American culture with its rich history in jazz and arts; and Washington Heights and Inwood are noted for their strong Dominican community and scenic parks. Each neighborhood contributes to Manhattan's dynamic and diverse character." , "structured_data":False},

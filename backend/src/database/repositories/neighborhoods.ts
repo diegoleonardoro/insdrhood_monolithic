@@ -56,6 +56,8 @@ export class NeighborhoodRepository {
   }
 
 
+  
+
   async getAll({ page, pageSize }: { page: number, pageSize: number }): Promise<{ neighborhoods: any[], nextCursor?: string }> {
 
     const db = await this.db;

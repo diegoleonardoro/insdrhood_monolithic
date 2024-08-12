@@ -22,7 +22,6 @@ function Home() {
   const [blogs, setBlogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBorough, setSelectedBorough] = useState('All');
-
   const [neighborhoodsData, setNeighborhoodsData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(19);

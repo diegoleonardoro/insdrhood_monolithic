@@ -174,6 +174,10 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
   res.status(200).send(neighborhood);
 }
 
+
+
+
+
 /**
  * @description gets all neighbohoods data submitted from the form 
  * @route GET/api/neighborhoods
@@ -193,6 +197,12 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
   }
 
 }
+
+
+
+
+
+
 
 /**
  * @description gets a specific neighborhood 
