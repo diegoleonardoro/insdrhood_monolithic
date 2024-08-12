@@ -447,10 +447,10 @@ def chat():
                     'llm_response': {'info':"Manhattan, one of New York City's five boroughs, serves as a global hub for culture, finance, and media. It's structured into distinct areas: Downtown (Lower Manhattan) is the financial core with neighborhoods like Tribeca; Midtown features major tourist attractions like Times Square and the Empire State Building; the Upper East Side is known for its luxury living and museums along Museum Mile; the Upper West Side offers a more relaxed vibe near Central Park; Harlem celebrates African American culture with its rich history in jazz and arts; and Washington Heights and Inwood are noted for their strong Dominican community and scenic parks. Each neighborhood contributes to Manhattan's dynamic and diverse character." , "structured_data":False},
                     'identifier':"boroughs_info",
                     'message': "The following are some iconic neighborhoods in Manhattan. Select a neighborhood to learn more about it",
-                    # 'promotions_message':"Here are some activities you can do in Manhattan:",
+                    'promotions_message':"Here are some activities you can do in Manhattan:",
                     'additional_option': {
                         "description": "manhattan_section",
-                        # "links":manhattan_promotions,
+                        "links":manhattan_promotions,
                         "options": {"Downtown":["Little Italy", "Chinatown", "Battery City Park", "Financial District"] , "Midtown": ["Times Square", "Soho", "Hell’s Kitchen", "Chelsea", "Flatiron District", "Soho","Koreatown","Herald Square" , "Diamond District", "Gramercy" ], "Uptown Manhattan & Upper Manhattan":["Upper East Side","Upper West Side", "Harlem", "Morningside Heights", "Washington Heights", "Inwood" ]},
                         "setNumber": 2  
                     }
