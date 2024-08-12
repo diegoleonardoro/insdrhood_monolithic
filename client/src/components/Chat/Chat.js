@@ -18,12 +18,21 @@ const Chat = () => {
   const [optionMapping, setOptionMapping] = useState({});
   const [expanded, setExpanded] = useState({});
 
-  const [visibleLinks, setVisibleLinks] = useState(6);
+  const [visibleLinks, setVisibleLinks] = useState(1);
   const [visibleOptions, setVisibleOptions] = useState({});
 
+  const [totalVisibleChars, setTotalVisibleChars] = useState(50);
+
+  const [visibleEntries, setVisibleEntries] = useState({});
+
+  const [visibleCharLimits, setVisibleCharLimits] = useState({});
 
   const handleShowMore = () => {
     setVisibleLinks(prevLinks => prevLinks + 3);  // Show 3 more links on click
+  };
+
+  const handleShowMoreEntries = (index) => {
+    setVisibleEntries(prev => ({ ...prev, [index]: (prev[index] || 200) + 200 }));
   };
 
   useEffect(() => {
@@ -71,8 +80,6 @@ const Chat = () => {
   const handleShowMoreOptions = (index) => {
     setVisibleOptions(prev => ({ ...prev, [index]: (prev[index] || 4) + 4 })); // Increment by 4 more options
   };
-
- 
 
   const processMessage = async (message, role = 'human', fromOption = null) => {
 
@@ -213,8 +220,71 @@ const Chat = () => {
     setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
   };
 
+  const renderSectionOptions = (msg, msgIndex) => {
+    let currentChars = 0;
+    let sectionsRendered = [];
+    let hasMoreContent = false; // Flag to determine if "Show More" should be displayed
 
-  return (
+    const totalVisibleChars = visibleCharLimits[msgIndex] || 50; // Default to 200 or use the stored limit
+    const entries = Object.entries(msg.content);
+
+    for (let i = 0; i < entries.length; i++) {
+      const [section, options] = entries[i];
+      let sectionChars = section.length + 2; // Include space for ": " or similar
+      let optionsRendered = [];
+      let displayedAllOptions = true;
+
+      for (let option of options) {
+        let optionChars = option.length + 2; // Include space for a comma or space
+        if (currentChars + sectionChars + optionChars <= totalVisibleChars) {
+          optionsRendered.push(
+            <button className="buttonOptionChat" key={`${option}-${msgIndex}-${i}`} onClick={() => handleOptionClick(option, section)}>
+              {option}
+            </button>
+          );
+          sectionChars += optionChars;
+        } else {
+          displayedAllOptions = false;
+          hasMoreContent = true; // There are still options not shown
+          break; // Stop adding more options if the limit is exceeded
+        }
+      }
+
+      if (optionsRendered.length > 0) {
+        sectionsRendered.push(
+          <div key={i}>
+            <div className="section-title">{section}</div>
+            {optionsRendered}
+          </div>
+        );
+        currentChars += sectionChars;
+      }
+
+      if (!displayedAllOptions) {
+        break; // Stop rendering further sections if limit reached within a section
+      }
+    }
+
+    return (
+      <>
+        {sectionsRendered}
+        {hasMoreContent && (
+          <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreChars(msgIndex)}>
+            Show More
+          </button>
+        )}
+      </>
+    );
+  };
+
+  const handleShowMoreChars = (msgIndex) => {
+    setVisibleCharLimits(prevLimits => ({
+      ...prevLimits,
+      [msgIndex]: (prevLimits[msgIndex] || 200) + 200
+    }));
+  };
+
+  return(
     <div className="chat-container" ref={chatContainerRef}>
       <ul className="messages-list">
         {messages.map((msg, index) => (
@@ -223,56 +293,44 @@ const Chat = () => {
               <div className="options-container">
                 {Array.isArray(msg.content) ? (
                   msg.content.slice(0, visibleOptions[index] || 5).map(option => (
-                    <button className="buttonOptionChat" key={`${option}-${index}`} onClick={() => handleOptionClick(option)}>{option}</button>
+                    <button className="buttonOptionChat" key={option} onClick={() => handleOptionClick(option)}>
+                      {option}
+                    </button>
                   ))
-                ) : (
-                  Object.entries(msg.content).map(([section, options], sectionIndex) => (
-                    <div key={sectionIndex}>
-                      <div className="section-title">{section}</div>
-                      {options.slice(0, visibleOptions[section] || 3).map((option, optionIndex) => (
-                        <button className="buttonOptionChat" key={`${option}-${sectionIndex}-${optionIndex}`} onClick={() => handleOptionClick(option, section)}>{option}</button>
-                      ))}
-                      {options.length > (visibleOptions[section] || 3) && (
-                        <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreOptions(section)}>Show More</button>
-                      )}
+                ) : renderSectionOptions(msg, index)}
+              </div>
+            ) : msg.role === 'promotion_links' ? (
+              <div className="promotion-links-container">
+                {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
+                  <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
+                    <div style={{ color: "white", margin: "15px", borderBottom: "1px solid white" }}>
+                      <div style={{ backgroundColor: "#007bff", display: "inline-block", paddingLeft: "7px", paddingRight: "7px", borderRadius: "10px", marginBottom: "10px" }}>{promotion['Tour Title']}</div>
+                      <div>Category: {promotion['Category']}</div>
                     </div>
-                  ))
+                  </a>
+                ))}
+                {visibleLinks < msg.content.length && (
+                  <button className="buttonLikeText buttonOptionChat" onClick={handleShowMore}>Show More</button>
                 )}
               </div>
-            )
+            ) : msg.loading ? (
+              <div className="loading-typing">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            ) : (
+              <div>
+                {msg.content.info ? renderTextContent(msg.content.info, index) : renderTextContent(msg.content, index)}
+              </div>
+            )}
 
-              : msg.role === 'promotion_links' ? (
-                <div className="promotion-links-container">
-                  {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
-                    <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
-                      <div style={{ color: "white", margin: "15px", borderBottom: "1px solid white" }}>
-                        <div style={{ backgroundColor: "#007bff", display: "inline-block", paddingLeft: "7px", paddingRight: "7px", borderRadius: "10px", marginBottom: "10px" }}>{promotion['Tour Title']}</div>
-                        <div>Category: {promotion['Category']}</div>
-                      </div>
-                    </a>
-                  ))}
-                  {visibleLinks < msg.content.length && (
-                    <button className="buttonLikeText buttonOptionChat" onClick={handleShowMore}>Show More</button>
-                  )}
-                </div>
-              ) : msg.loading ? (
-                  <div className="loading-typing">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-              ) : (
-                <div>
-                  {msg.content.info ? renderTextContent(msg.content.info, index) : renderTextContent(msg.content, index)}
-                </div>
-              )}
           </li>
         ))}
-        {!isAtBottom && (
-          <div className="scroll-indicator">More messages below</div>
-        )}
       </ul>
-
+      {!isAtBottom && (
+        <div className="scroll-indicator">More messages below</div>
+      )}
       <form onSubmit={handleSubmit} className="message-form">
         <input
           type="text"
@@ -285,5 +343,6 @@ const Chat = () => {
     </div>
   );
 }
+
 
 export default Chat;
