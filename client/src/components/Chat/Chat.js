@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from "axios";
 import "./chat.css";
 
-// hola le le le le 
 
 const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
@@ -257,7 +256,11 @@ const Chat = () => {
                   )}
                 </div>
               ) : msg.loading ? (
-                <div className="loading-spinner"></div>
+                  <div className="loading-typing">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
               ) : (
                 <div>
                   {msg.content.info ? renderTextContent(msg.content.info, index) : renderTextContent(msg.content, index)}

@@ -26,13 +26,38 @@
   color:white;
 }
 
-.loading-spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #f3f3f3; /* Light grey */
-  border-top: 3px solid #3498db; /* Blue */
+.loading-typing {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 50px;
+}
+
+.loading-typing div {
+  width: 8px;
+  height: 8px;
+  background-color: white; /* Blue */
   border-radius: 50%;
-  animation: spin 2s linear infinite;
+  animation: typing 0.6s infinite alternate;
+}
+
+.loading-typing div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-typing div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes spin {
