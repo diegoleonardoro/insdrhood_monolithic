@@ -7,8 +7,8 @@ python-dotenv
 redis==3.5.3
 APScheduler==3.6.3
 pytz
-langchain
+langchain==0.2.13
 langchain_pinecone
 langchain_openai
-langchainhub
+langchainhub==0.1.21
 pandas
