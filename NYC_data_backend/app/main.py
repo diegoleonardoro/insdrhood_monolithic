@@ -451,7 +451,7 @@ def chat():
                     'additional_option': {
                         "description": "manhattan_section",
                         "links":manhattan_promotions,
-                        "options": {"Downtown":["Little Italy", "Chinatown", "Battery City Park", "Financial District"] , "Midtown": ["Times Square", "Soho", "Hell’s Kitchen", "Chelsea", "Flatiron District", "Soho","Koreatown","Herald Square" , "Diamond District", "Gramercy" ], "Uptown Manhattan & Upper Manhattan":["Upper East Side","Upper West Side", "Harlem", "Morningside Heights", "Washington Heights", "Inwood" ]},
+                        "options": {"Downtown":["Little Italy", "Chinatown", "Tribeca", "Financial District"] , "Midtown": ["Times Square", "Soho", "Hell’s Kitchen", "Chelsea", "Flatiron District", "Soho","Koreatown","Herald Square" , "Diamond District", "Gramercy" ], "Uptown Manhattan & Upper Manhattan":["Upper East Side","Upper West Side", "Harlem", "Morningside Heights", "Washington Heights", "Inwood" ]},
                         "setNumber": 2  
                     }
                 }
