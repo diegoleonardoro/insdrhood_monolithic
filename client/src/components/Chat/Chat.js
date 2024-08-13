@@ -21,7 +21,7 @@ const Chat = () => {
   const [visibleLinks, setVisibleLinks] = useState(1);
   const [visibleOptions, setVisibleOptions] = useState({});
 
-  const [totalVisibleChars, setTotalVisibleChars] = useState(50);
+  
 
   const [visibleEntries, setVisibleEntries] = useState({});
 
@@ -269,7 +269,7 @@ const Chat = () => {
       <>
         {sectionsRendered}
         {hasMoreContent && (
-          <button className="buttonLikeText buttonOptionChat" onClick={() => handleShowMoreChars(msgIndex)}>
+          <button className="buttonLikeText buttonOptionChat show-more" onClick={() => handleShowMoreChars(msgIndex)}>
             Show More
           </button>
         )}
@@ -303,14 +303,14 @@ const Chat = () => {
               <div className="promotion-links-container">
                 {msg.content.slice(0, visibleLinks).map((promotion, promotionIndex) => (
                   <a href={promotion['Activity URL']} className="promotionLink" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer" key={promotion['Activity URL']}>
-                    <div style={{ color: "white", margin: "15px", borderBottom: "1px solid white" }}>
+                    <div style={{ color: "white", marginTop: "15px", borderBottom: "1px solid white" }}>
                       <div style={{ backgroundColor: "#007bff", display: "inline-block", paddingLeft: "7px", paddingRight: "7px", borderRadius: "10px", marginBottom: "10px" }}>{promotion['Tour Title']}</div>
                       <div>Category: {promotion['Category']}</div>
                     </div>
                   </a>
                 ))}
                 {visibleLinks < msg.content.length && (
-                  <button className="buttonLikeText buttonOptionChat" onClick={handleShowMore}>Show More</button>
+                    <button className="buttonLikeText buttonOptionChat show-more" onClick={handleShowMore}>Show More</button>
                 )}
               </div>
             ) : msg.loading ? (
