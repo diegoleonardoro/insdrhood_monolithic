@@ -31,6 +31,18 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
   useEffect(() => {
     if (!nhoodData) return; // Check if nhoodData is an empty list
 
+
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+      webPageRoute: '/NeighborhoodReport',
+      payLoad: JSON.stringify(validChatHistory)
+    })
+      .then(response => {
+        console.log('vistig notification');
+      })
+      .catch(error => {
+        console.error('Error sending chat info:', error);
+      });
+
     const fetchData = async () => {
 
       // const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/neighborhood_report_data`, {

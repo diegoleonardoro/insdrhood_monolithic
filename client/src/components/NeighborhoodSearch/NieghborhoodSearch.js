@@ -63,11 +63,23 @@ const SearchBar = () => {
       setActiveIndex(prevIndex => prevIndex - 1);
     } else if (event.key === 'Enter' && activeIndex >= 0) {
       handleSuggestionClick(suggestions[activeIndex]);
-    
     }
   };
 
   useEffect(() => {
+
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+      webPageRoute: '/neighborhoodsearch',
+      payLoad: JSON.stringify(validChatHistory)
+    })
+      .then(response => {
+        console.log('vistig notification');
+      })
+      .catch(error => {
+        console.error('Error sending chat info:', error);
+      });
+
+
     if (activeIndex >= 0 && activeIndex < suggestions.length) {
       suggestionRefs.current[activeIndex].current?.scrollIntoView({
         behavior: 'smooth',

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import FeaturedProduct from '../../components/shared/FeaturedProduct';
 import TShirtCustomizer from '../TshirtCustomizer/tshirtCustomizer';
 import { ProductsContext } from '../../contexts/products-context';
@@ -7,6 +7,19 @@ import { Row, Col, Card } from 'react-bootstrap';
 import "./shop.css";
 
 const Shop = () => {
+
+  useEffect(()=>{
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+      webPageRoute: '/shop',
+      payLoad: JSON.stringify(validChatHistory)
+    })
+      .then(response => {
+        console.log('vistig notification');
+      })
+      .catch(error => {
+        console.error('Error sending chat info:', error);
+      });
+  }, [])
 
   const { products } = useContext(ProductsContext);
   const allProducts = products.map(product => {

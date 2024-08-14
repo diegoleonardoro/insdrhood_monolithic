@@ -91,7 +91,7 @@ const Chat = () => {
         payLoad: JSON.stringify(validChatHistory)
       })
         .then(response => {
-          console.log('Response received', response.data);
+          console.log('vistig notification');
         })
         .catch(error => {
           console.error('Error sending chat info:', error);

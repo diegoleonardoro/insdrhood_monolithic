@@ -118,15 +118,15 @@ const FormComponent = () => {
 
   useEffect(() => {
 
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
-      webPageRoute: '/form',
-    })
-      .then(response => {
-        console.log('Response received', response.data);
-      })
-      .catch(error => {
-        console.error('Error sending chat info:', error);
-      });
+    // axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+    //   webPageRoute: '/form',
+    // })
+    //   .then(response => {
+    //     console.log('vistig notification');
+    //   })
+    //   .catch(error => {
+    //     console.error('Error sending chat info:', error);
+    //   });
 
 
 

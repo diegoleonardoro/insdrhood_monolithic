@@ -48,6 +48,17 @@ function Home() {
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
 
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+      webPageRoute: '/home',
+      payLoad: JSON.stringify(validChatHistory)
+    })
+      .then(response => {
+        console.log('vistig notification');
+      })
+      .catch(error => {
+        console.error('Error sending chat info:', error);
+      });
+
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
