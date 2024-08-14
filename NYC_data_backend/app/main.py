@@ -430,8 +430,6 @@ def chat():
     chat_history = request.json["chatHistory"]
     from_option = request.json.get("fromOption")
 
-    print ("promotions_df-->>", promotions_df)
-
     if from_option:
         
         # Check if the option relates to a specific query about boroughs
