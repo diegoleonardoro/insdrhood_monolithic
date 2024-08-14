@@ -15,6 +15,8 @@ dotenv_1.default.config();
 const SendChatNotifications = async (req, res) => {
     const { webPageRoute, payLoad } = req.body;
     const emailNotify = new emailNotifications_1.sendEmailNotifications(webPageRoute, process.env.Email ? process.env.Email : '');
+    console.log('webPageRoute-->', webPageRoute);
+    console.log('payLoad-->', payLoad);
     emailNotify.sendEmail(JSON.stringify(payLoad))
         .then(result => console.log('Email sending initiated', result))
         .catch(error => console.error('Error sending email', error));
