@@ -3,6 +3,7 @@ import FeaturedProduct from '../../components/shared/FeaturedProduct';
 import TShirtCustomizer from '../TshirtCustomizer/tshirtCustomizer';
 import { ProductsContext } from '../../contexts/products-context';
 import { Row, Col, Card } from 'react-bootstrap';
+import axios from 'axios';
 
 import "./shop.css";
 
@@ -11,7 +12,7 @@ const Shop = () => {
   useEffect(()=>{
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
       webPageRoute: '/shop',
-      payLoad: JSON.stringify(validChatHistory)
+
     })
       .then(response => {
         console.log('vistig notification');

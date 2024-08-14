@@ -70,7 +70,6 @@ const SearchBar = () => {
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
       webPageRoute: '/neighborhoodsearch',
-      payLoad: JSON.stringify(validChatHistory)
     })
       .then(response => {
         console.log('vistig notification');

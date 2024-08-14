@@ -50,7 +50,7 @@ function Home() {
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
       webPageRoute: '/home',
-      payLoad: JSON.stringify(validChatHistory)
+      
     })
       .then(response => {
         console.log('vistig notification');

@@ -34,7 +34,6 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
       webPageRoute: '/NeighborhoodReport',
-      payLoad: JSON.stringify(validChatHistory)
     })
       .then(response => {
         console.log('vistig notification');
