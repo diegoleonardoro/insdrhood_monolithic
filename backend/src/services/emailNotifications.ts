@@ -22,31 +22,42 @@ export class sendEmailNotifications {
       <mj-head>
         <mj-title>New Visit Notification</mj-title>
         <mj-attributes>
-          <mj-all font-family="Roboto, Arial, sans-serif" />
+          <mj-all font-family="Helvetica, Arial, sans-serif" />
           <mj-text font-size="16px" line-height="24px" />
           <mj-section padding="20px" />
         </mj-attributes>
         <mj-styles>
-          <style type="text/css">
-            .title { font-size: 20px; font-weight: bold; color: #333333; }
-            .content { font-size: 16px; color: #555555; }
-            .highlight { font-size: 16px; font-weight: bold; color: #1070ca; }
-            .footer { font-size: 14px; color: #999999; padding-top: 20px; }
+          <style type="text/css">            
+            .content {
+              font-size: 16px;
+              color: #555;
+              margin-top: 10px; /* added margin for spacing */
+            }
+            .highlight {
+              font-weight: bold;
+              color: #1070ca;
+            }
+            .footer {
+              font-size: 14px;
+              color: #888;
+              padding-top: 10px;
+              text-align: center;
+            }
+            
           </style>
         </mj-styles>
       </mj-head>
-      <mj-body background-color="#f7f7f7">
-        <mj-section background-color="#ffffff" padding="40px">
-          <mj-column>
-            
-            <mj-image src="https://insiderhood.s3.amazonaws.com/blog/70ad7596-d4aa-494f-ae01-38a7a18f1b75/74c92db8-a989-45fe-880d-01fac4e99e17" alt="Insider Hood" width="200px"></mj-image>
-            
-            <mj-text css-class="title" padding-top="20px">New Visit Detected!</mj-text>
-            <mj-text css-class="content" padding-top="10px">The following route was visited: <span class="highlight">${this.webPageRoute}</span></mj-text>
-            
-            ${additionalText ? `<mj-text css-class="content" padding-top="10px">Additional Payload Details:<br/><span class="highlight">${additionalText}</span></mj-text>` : ""}
-            
-            <mj-text css-class="footer">Thank you for using Insider Hood. If you have any questions, feel free to reply to this email.</mj-text>
+      <mj-body background-color="#ffffff">
+        <mj-section>
+          <mj-column css-class="card">
+            <mj-text css-class="content">The following route was visited:</mj-text>
+            <mj-text css-class="highlight">${this.webPageRoute}</mj-text>
+            ${additionalText ? `
+              <mj-section css-class="footer">
+                <mj-text css-class="content">Payload Details:</mj-text>
+                <mj-text css-class="highlight">${additionalText}</mj-text>
+              </mj-section>
+            ` : ""}
           </mj-column>
         </mj-section>
       </mj-body>
@@ -55,9 +66,11 @@ export class sendEmailNotifications {
   }
 
 
+
+
   async sendEmail(body?: string): Promise<string> {
 
-    
+
     this.mjmlContent = this.createMJMLContent(body);  // Update the email content when sending
 
     const emailOptions = {

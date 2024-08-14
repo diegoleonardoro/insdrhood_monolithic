@@ -118,6 +118,18 @@ const FormComponent = () => {
 
   useEffect(() => {
 
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+      webPageRoute: '/form',
+    })
+      .then(response => {
+        console.log('Response received', response.data);
+      })
+      .catch(error => {
+        console.error('Error sending chat info:', error);
+      });
+
+
+
     if (loggedUser === null) {
       checkCurrentUser()
     };
@@ -148,7 +160,6 @@ const FormComponent = () => {
     }
   }
 
-
   //  function that makes request to save the form data:
   async function sendFormData() {
     try {
@@ -167,9 +178,7 @@ const FormComponent = () => {
 
   // function that will save the new user's data if they had not registered before
   const registerNewUser = async (data) => {
-    // request to save new user's data:
-    // make try catch block here to handle possible error of email alredy being registered.
-    // request to update the neighborhood's data with the new user data:
+
     try {
       // this request saves a new user. If the user did not send his email or name. Those fields will be SAVED AS EMPTY STRINGS.
       const newuser = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signup`,
@@ -180,11 +189,9 @@ const FormComponent = () => {
       navigate(`/neighborhood/${neighborhoodId}`);
       return;
     } catch (error) {
-      console.log('errrrr', error);
+      console.log(error);
     }
   }
-
-
 
   // The following function will check if the user is a NYC resident. If not, it will close the form and direct the user to the home page. If yes, it will continue showing the form to the user:
   const nycResidentChecker = (value) => {
@@ -3633,18 +3640,18 @@ const FormComponent = () => {
           </p>
           <p style={{ position: "relative", textAlign: "center" }}>
             <a href="/privacy"
-            target="_blank" rel="noopener noreferrer"
-            style={{
-              position: "relative", textAlign: "center", position: 'relative',
-              textAlign: 'center',
-              textDecoration: 'none',
-              color: '#007bff',
-              fontWeight: "bold",
-              /* padding: 10px 15px; */
-              borderBottom: ' 2px solid #007bff',
-              /* border-radius: 5px; */
-              transition: 'all 0.3s ease'
-            }}>
+              target="_blank" rel="noopener noreferrer"
+              style={{
+                position: "relative", textAlign: "center", position: 'relative',
+                textAlign: 'center',
+                textDecoration: 'none',
+                color: '#007bff',
+                fontWeight: "bold",
+                /* padding: 10px 15px; */
+                borderBottom: ' 2px solid #007bff',
+                /* border-radius: 5px; */
+                transition: 'all 0.3s ease'
+              }}>
               Privacy
             </a>
           </p>
