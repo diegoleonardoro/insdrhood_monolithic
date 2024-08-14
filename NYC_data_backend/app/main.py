@@ -580,6 +580,8 @@ def chat():
             # return generated_response
             return jsonify(response_dict)
             
+
+
     # this will take place when user sends text
     llm_response = run_llm(query=user_message, chat_history=chat_history)
     response_dict = {
@@ -587,12 +589,23 @@ def chat():
         'additional_option': None
     }
 
+
+
+
     # return generated_response
     return jsonify(response_dict)
 
 
 
 # ----- HELPER FUNCTIONS:
+
+def send_user_():
+    url = 'https://example.com/api'
+    payload = {'key1': 'value1', 'key2': 'value2'}  # your data to send
+    headers = {'Content-Type': 'application/json'}  # or other headers as needed
+
+    response = requests.post(url, json=payload, headers=headers)
+    return response.json()
         
 def filter_data(data, filters):
     filtered_data = [
@@ -735,7 +748,6 @@ def parse_document(document):
             continue
     # print('infoo', info)
     return info
-
 
 def filter_promotions_by_borough(dataframe, borough):
     """

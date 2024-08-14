@@ -17,6 +17,7 @@ const promotions_1 = require("./routes/promotions");
 const path_1 = __importDefault(require("path"));
 const neighborhoods_1 = require("./database/repositories/neighborhoods");
 const blog_2 = require("./database/repositories/blog");
+const chat_1 = require("./routes/chat");
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path_1.default.resolve(__dirname, '..', dotenvPath);
 dotenv_1.default.config({ path: envPath });
@@ -50,6 +51,7 @@ app.use("/api/blog", blog_1.blog);
 app.use("/api/payments", payments_1.payments);
 app.use("/api/newsletter", newsletter_1.newsletter);
 app.use("/api/promotions", promotions_1.promotions);
+app.use("/api/chat", chat_1.chat);
 app.use("/api", auth_1.auth);
 app.use(error_handler_1.errorHandler);
 app.get('/', (req, res) => {

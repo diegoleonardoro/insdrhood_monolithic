@@ -14,11 +14,7 @@ dotenv.config();
 export const insertsPromotionsToDb = async (req: Request, res: Response) => {
   const promotionsRepo = new PromotionsRepository();
   const promotions: any[] = [];
-
-  // const absolutePath =  '/Users/diegoleoro/monolith_insider_hood/backend/src/controllers/Deals&promotions.csv'
-
   const absolutePath = process.env.NODE_ENV === "development" ? '/Users/diegoleoro/monolith_insider_hood/backend/src/controllers/Deals&promotions.csv' : "/app/src/controllers/Deals&promotions.csv"
-
   // Create a read stream directly using the file name
   fs.createReadStream(absolutePath)
     .pipe(csv())

@@ -134,7 +134,6 @@ export const sendVerificationMail = (user: User) => {
 
 }
 
-
 interface Email {
   email: string;
   baseUrlForEmailVerification: string

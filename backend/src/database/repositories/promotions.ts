@@ -1,8 +1,5 @@
-import { ObjectId, Db } from 'mongodb';
+import { Db } from 'mongodb';
 import { connectToDatabase } from '../index';
-import { BadRequestError } from '../../errors/bad-request-error';
-import { Password } from '../../services/password';
-
 
 export class PromotionsRepository {
 

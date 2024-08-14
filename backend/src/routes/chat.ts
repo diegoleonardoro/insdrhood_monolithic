@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { authenticationValidator } from "../middlewares/authentication-validator";
-import { insertsPromotionsToDb }from"../controllers/promotions";
+import { SendChatNotifications } from "../controllers/chat"
 
 const router = express.Router();
 
@@ -12,9 +12,7 @@ function asyncHandler(fn: Function) {
   }
 }
 
-// base route: /api/promotions
-router.post("/addPromotions", authenticationValidator, asyncHandler(insertsPromotionsToDb));
+// base route: /api/chat
+router.post("/sendChatInfo", authenticationValidator, asyncHandler(SendChatNotifications));
 
-
-
-export { router as promotions }
+export { router as chat }

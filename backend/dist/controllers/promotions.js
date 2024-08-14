@@ -17,7 +17,6 @@ dotenv_1.default.config();
 const insertsPromotionsToDb = async (req, res) => {
     const promotionsRepo = new promotions_1.PromotionsRepository();
     const promotions = [];
-    // const absolutePath =  '/Users/diegoleoro/monolith_insider_hood/backend/src/controllers/Deals&promotions.csv'
     const absolutePath = process.env.NODE_ENV === "development" ? '/Users/diegoleoro/monolith_insider_hood/backend/src/controllers/Deals&promotions.csv' : "/app/src/controllers/Deals&promotions.csv";
     // Create a read stream directly using the file name
     fs_1.default.createReadStream(absolutePath)

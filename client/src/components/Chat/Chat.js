@@ -14,16 +14,10 @@ const Chat = () => {
   const chatContainerRef = useRef(null);  // Ref for the chat container to track scroll
   const [lastMessageIndex, setLastMessageIndex] = useState(0);
   const [isAtBottom, setIsAtBottom] = useState(true);  // State to track if the user is at the bottom
-
   const [optionMapping, setOptionMapping] = useState({});
   const [expanded, setExpanded] = useState({});
-
   const [visibleLinks, setVisibleLinks] = useState(1);
   const [visibleOptions, setVisibleOptions] = useState({});
-
-  
-
-  const [visibleEntries, setVisibleEntries] = useState({});
 
   const [visibleCharLimits, setVisibleCharLimits] = useState({});
 
@@ -31,9 +25,6 @@ const Chat = () => {
     setVisibleLinks(prevLinks => prevLinks + 3);  // Show 3 more links on click
   };
 
-  const handleShowMoreEntries = (index) => {
-    setVisibleEntries(prev => ({ ...prev, [index]: (prev[index] || 200) + 200 }));
-  };
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
@@ -77,9 +68,6 @@ const Chat = () => {
     }
   };
 
-  const handleShowMoreOptions = (index) => {
-    setVisibleOptions(prev => ({ ...prev, [index]: (prev[index] || 4) + 4 })); // Increment by 4 more options
-  };
 
   const processMessage = async (message, role = 'human', fromOption = null) => {
 
@@ -96,6 +84,19 @@ const Chat = () => {
         fromOption: fromOption,
         chatHistory: validChatHistory
       });
+
+      // make request to send chat visit notification:
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+        webPageRoute:'/chat',
+        payLoad: JSON.stringify(validChatHistory)
+      })
+        .then(response => {
+          console.log('Response received', response.data);
+        })
+        .catch(error => {
+          console.error('Error sending chat info:', error);
+        });
+
 
       setMessages(currentMessages => {
         let newMessages = currentMessages.slice(0, -1);
@@ -284,7 +285,7 @@ const Chat = () => {
     }));
   };
 
-  return(
+  return (
     <div className="chat-container" ref={chatContainerRef}>
       <ul className="messages-list">
         {messages.map((msg, index) => (
@@ -310,7 +311,7 @@ const Chat = () => {
                   </a>
                 ))}
                 {visibleLinks < msg.content.length && (
-                    <button className="buttonLikeText buttonOptionChat show-more" onClick={handleShowMore}>Show More</button>
+                  <button className="buttonLikeText buttonOptionChat show-more" onClick={handleShowMore}>Show More</button>
                 )}
               </div>
             ) : msg.loading ? (

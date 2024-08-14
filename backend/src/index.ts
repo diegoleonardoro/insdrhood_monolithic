@@ -12,6 +12,7 @@ import { promotions } from "./routes/promotions"
 import path from 'path';
 import { NeighborhoodRepository } from './database/repositories/neighborhoods';
 import { BlogRepository } from './database/repositories/blog';
+import {chat} from "./routes/chat"
 
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path.resolve(__dirname, '..', dotenvPath);
@@ -24,9 +25,6 @@ declare global {
     }
   }  
 }
-
-
-
 
 
 const neighborhoodRepo = new NeighborhoodRepository();
@@ -66,6 +64,7 @@ app.use("/api/blog", blog);
 app.use("/api/payments", payments);
 app.use("/api/newsletter", newsletter)
 app.use("/api/promotions", promotions)
+app.use("/api/chat", chat)
 app.use("/api", auth);
 
 
