@@ -206,7 +206,7 @@ export class sendEmailNotifications {
 
   }
 
-  async sendChatSummary(chatHistory: any, email: string): Promise<string> {
+  async sendChatSummary(chatHistory: any, emailTo: string): Promise<string> {
   
     const messagesForEmail = chatHistory.filter((msg: { sendToEmail: boolean; content: any }) => {
       return msg.sendToEmail === true &&
@@ -217,7 +217,7 @@ export class sendEmailNotifications {
 
     const emailOptions = {
       from: `Insider Hood <${this.email}>`,
-      to: 'diego@insiderhood.com',
+      to: emailTo,
       subject: `Chat History`,
       html: emailBody,
       text: "Chat History"

@@ -195,7 +195,7 @@ class sendEmailNotifications {
             throw new Error(`Failed to send email: ${error}`);
         }
     }
-    async sendChatSummary(chatHistory, email) {
+    async sendChatSummary(chatHistory, emailTo) {
         const messagesForEmail = chatHistory.filter((msg) => {
             return msg.sendToEmail === true &&
                 (!(typeof msg.content === 'string' && msg.content.includes("email address")));
@@ -203,7 +203,7 @@ class sendEmailNotifications {
         const emailBody = createEmailBody(messagesForEmail);
         const emailOptions = {
             from: `Insider Hood <${this.email}>`,
-            to: 'diego@insiderhood.com',
+            to: emailTo,
             subject: `Chat History`,
             html: emailBody,
             text: "Chat History"
