@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.chat = void 0;
 const express_1 = __importDefault(require("express"));
-const authentication_validator_1 = require("../middlewares/authentication-validator");
 const chat_1 = require("../controllers/chat");
 const router = express_1.default.Router();
 exports.chat = router;
@@ -17,5 +16,6 @@ function asyncHandler(fn) {
     };
 }
 // base route: /api/chat
-router.post("/sendChatInfo", authentication_validator_1.authenticationValidator, asyncHandler(chat_1.SendChatNotifications));
+router.post("/sendChatInfo", asyncHandler(chat_1.SendChatNotifications));
+router.post("/chatSummary", chat_1.SendChatHistory);
 //# sourceMappingURL=chat.js.map

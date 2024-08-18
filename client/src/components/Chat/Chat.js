@@ -18,7 +18,7 @@ const Chat = () => {
   const [expanded, setExpanded] = useState({});
   const [visibleLinks, setVisibleLinks] = useState(1);
   const [visibleOptions, setVisibleOptions] = useState({});
-
+  const [email, setEmail] = useState('');
   const [visibleCharLimits, setVisibleCharLimits] = useState({});
 
   const handleShowMore = () => {
@@ -87,7 +87,7 @@ const Chat = () => {
 
       // make request to send chat visit notification:
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
-        webPageRoute:'/chat',
+        webPageRoute: '/chat',
         payLoad: JSON.stringify(validChatHistory)
       })
         .then(response => {
@@ -102,7 +102,7 @@ const Chat = () => {
         let newMessages = currentMessages.slice(0, -1);
 
         // handle raw text
-        newMessages.push({ content: response.data.llm_response, role: "ai", loading: false });
+        newMessages.push({ content: response.data.llm_response, role: "ai", loading: false, sendToEmail: true });
 
         // handle promotions links
         if (response.data.additional_option && response.data.additional_option.links) {
@@ -112,7 +112,8 @@ const Chat = () => {
           });
           newMessages.push({
             content: response.data.additional_option.links,
-            role: 'promotion_links'
+            role: 'promotion_links',
+            sendToEmail: true
           });
 
         }
@@ -131,8 +132,6 @@ const Chat = () => {
             content: options,
             role: 'options'
           });
-
-
 
           setOptionMapping(prevMapping => {
             const updatedMapping = { ...prevMapping };
@@ -163,9 +162,8 @@ const Chat = () => {
             });
             setVisibleOptions(newVisibility);
           }
+
         }
-
-
 
         return newMessages;
 
@@ -190,6 +188,24 @@ const Chat = () => {
     event.preventDefault();
     if (!newMessage.trim()) return;
     processMessage(newMessage);
+
+    if (isValidEmail(email)) {
+      // make request with the email and the chat history  
+
+      console.log("Valid email:", email);
+
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/chatSummary`, {
+        email: email,
+        chatHistory: messages
+      })
+        .then(response => {
+          console.log("responsee", response)
+        })
+        .catch(error => {
+          console.error('Error sending chat info:', error);
+        });
+    }
+
   };
 
   const MAX_LENGTH = 180;
@@ -285,6 +301,13 @@ const Chat = () => {
     }));
   };
 
+  function isValidEmail(email) {
+    const regexPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regexPattern.test(email);
+    
+  }
+
+
   return (
     <div className="chat-container" ref={chatContainerRef}>
       <ul className="messages-list">
@@ -336,7 +359,7 @@ const Chat = () => {
         <input
           type="text"
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e) => { setNewMessage(e.target.value); setEmail(e.target.value) }}
           placeholder="Type your message or select an option..."
         />
         <button type="submit">Send</button>

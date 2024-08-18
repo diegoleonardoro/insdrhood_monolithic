@@ -450,7 +450,8 @@ def chat():
                         "description": "manhattan_section",
                         "links":manhattan_promotions,
                         "options": {"Downtown":["Little Italy", "Chinatown", "Tribeca", "Financial District"] , "Midtown": ["Times Square", "Soho", "Hell’s Kitchen", "Chelsea", "Flatiron District", "Soho","Koreatown","Herald Square" , "Diamond District", "Gramercy" ], "Uptown Manhattan & Upper Manhattan":["Upper East Side","Upper West Side", "Harlem", "Morningside Heights", "Washington Heights", "Inwood" ]},
-                        "setNumber": 2  
+                        "setNumber": 2, 
+                         
                     }
                 }
                 return jsonify(response_dict)
@@ -560,25 +561,50 @@ def chat():
                 'message':f"What are you interested to explore in {user_message}?",
                  'additional_option': {
                         "description": "places_section",
-                        "options": ["Restaurants", "Museums", "Public Spaces", "Parks", "Nighclubs", "Everything"],
+                        "options": ["Restaurants", "Museums", "Public Spaces", "Bars", "Everything"],
                         "setNumber": 3  
                 },
             }
             return jsonify(response_dict)
         
-
         # question-3 means that the user has asked for places recommendations in a specific neighborhood
         elif from_option == "question-3":
            
             query = f"Recommend me some {user_message} in the neighborhood I just mentioned"
             llm_response = run_llm(query=query, chat_history=chat_history)
+            
             response_dict = {
                 'llm_response': llm_response["answer"],
-                'additional_option': None
+                'message': "Do you want me to send this information to your email?",
+                'additional_option': {
+                        "description": "places_section",
+                        "options":  ["Yes", "No"],
+                        "setNumber": 4 
+                },
             }
 
             # return generated_response
             return jsonify(response_dict)
+
+        elif from_option == "question-4":
+            if user_message == "Yes":
+                text = "Great, what is your email address?"
+            else:
+                text = "That is ok. Is there anything else you want to know about NYC?"
+            response_dict = {
+                'llm_response': text,
+                "setNumber": 5,
+                'additional_option': None
+            }
+            return jsonify(response_dict)
+        
+        elif from_option == "question-5":
+             
+            response_dict = {
+                'llm_response': user_message,
+                "setNumber": 5,
+                'additional_option': None
+            }
             
 
 

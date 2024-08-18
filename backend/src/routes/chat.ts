@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { authenticationValidator } from "../middlewares/authentication-validator";
-import { SendChatNotifications } from "../controllers/chat"
+import { SendChatNotifications, SendChatHistory } from "../controllers/chat"
 
 const router = express.Router();
 
@@ -13,6 +13,7 @@ function asyncHandler(fn: Function) {
 }
 
 // base route: /api/chat
-router.post("/sendChatInfo", authenticationValidator, asyncHandler(SendChatNotifications));
+router.post("/sendChatInfo",  asyncHandler(SendChatNotifications));
+router.post("/chatSummary",  SendChatHistory);
 
 export { router as chat }

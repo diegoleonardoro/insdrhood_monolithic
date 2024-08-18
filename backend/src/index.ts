@@ -60,11 +60,12 @@ app.use(
     // maxAge: 24 * 60 * 60 * 1000,
   })
 );
+
+app.use("/api/chat", chat)
 app.use("/api/blog", blog);
 app.use("/api/payments", payments);
 app.use("/api/newsletter", newsletter)
 app.use("/api/promotions", promotions)
-app.use("/api/chat", chat)
 app.use("/api", auth);
 
 
