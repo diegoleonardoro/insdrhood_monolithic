@@ -27,7 +27,6 @@ exports.SendChatNotifications = SendChatNotifications;
  * @access public
 */
 const SendChatHistory = async (req, res) => {
-    console.log('route hit');
     const { email, chatHistory } = req.body;
     const emailNotify = new emailNotifications_1.sendEmailNotifications('', process.env.Email ? process.env.Email : '');
     emailNotify.sendChatSummary(chatHistory, email);

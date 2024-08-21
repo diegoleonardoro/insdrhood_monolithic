@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
 
-
   const [data, setData] = useState({
     common_complaints: null,
     complaints_by_frequency: [],
@@ -20,6 +19,9 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
   const [hoodImages, setHoodImages] = useState([]);
   const [userIds, setUserIds] = useState([]);
 
+  const [displayCount, setDisplayCount] = useState(4);
+
+
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
@@ -32,26 +34,17 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
     if (!nhoodData) return; // Check if nhoodData is an empty list
 
 
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
-      webPageRoute: '/NeighborhoodReport',
-    })
-      .then(response => {
-        console.log('vistig notification');
-      })
-      .catch(error => {
-        console.error('Error sending chat info:', error);
-      });
+    // axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+    //   webPageRoute: '/NeighborhoodReport',
+    // })
+    //   .then(response => {
+    //     console.log('vistig notification');
+    //   })
+    //   .catch(error => {
+    //     console.error('Error sending chat info:', error);
+    //   });
 
     const fetchData = async () => {
-
-      // const response = await axios.get(`${process.env.REACT_APP_NYC_DATA_BACKEND_URL}/neighborhood_report_data`, {
-      //   params: {
-      //     neighborhood: "Mott Haven"
-      //   }
-      // });
-
-      // // Assuming you need to use the fetched data instead of nhoodData for some reason
-      // setData(response.data);
 
       const uniqueThings = nhoodData.map(item => item.mostUniqueThingAboutNeighborhood);
       const foodTypes = nhoodData.flatMap(item =>
@@ -61,18 +54,19 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
           _id: item._id
         }))
       );
+
       const neighborhoodDescriptions = nhoodData.map(item => item.neighborhoodDescription);
       const peopleShouldVisitIfTheyWant = nhoodData.map(item => item.peopleShouldVisitNeighborhoodIfTheyWant);
       const neighborhoodImages = nhoodData.map(item => item.neighborhoodImages);
       const nightLifeRecommendations_ = nhoodData.map(item => item.nightLifeRecommendations[0]);
       const userIds = nhoodData.map(item => item._id);
+
       setMostUniqueThings(uniqueThings);
       setRecommendedFoodTypes(foodTypes.filter(item => item.explanation !== undefined));
       setNhoodDescriptions(neighborhoodDescriptions);
       setPplShouldVisitIfTheyWant(peopleShouldVisitIfTheyWant);
       setHoodImages(neighborhoodImages);
       setNightLifeRecommendations(nightLifeRecommendations_);
-
       setUserIds(userIds);
     };
 
@@ -102,21 +96,28 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
   return (
     <div className="__mainContainer">
 
-      {Object.keys(nhoodsNarrative).length > 0 && (
-        <>
-          <h1 className="neighborhoodDataHeader">{neighborhood}:</h1>
-          <div>
-            {Object.entries(nhoodsNarrative).map(([key, value], index) => (
-              <div className="sectionContainer" key={index}>
-                <h2 className="neighborhoodDataSubHeader"  >{key}:</h2>
-                <p>{value}</p>
-              </div>
-            ))}
-          </div>
-        </>
+
+      {Object.entries(nhoodsNarrative).slice(0, displayCount).map(([key, value], index) => (
+        <div className="sectionContainer" key={index}>
+          <h2 className="neighborhoodDataSubHeader">{key}:</h2>
+          <p>{value}</p>
+        </div>
+      ))}
+
+      {Object.keys(nhoodsNarrative).length > displayCount && (
+        <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+          onClick={() => setDisplayCount(Object.keys(nhoodsNarrative).length)}>
+          Show More
+        </span>
+      )}
+      {displayCount > 4 && (
+        <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline', marginLeft: '10px' }}
+          onClick={() => setDisplayCount(4)}>
+          Show Less
+        </span>
       )}
 
-
+      
       {nhoodData && nhoodData.length > 0 && (
         <>
           <h1 style={{ marginTop: "60px" }} className="neighborhoodDataHeader"> According to the Residents:</h1>

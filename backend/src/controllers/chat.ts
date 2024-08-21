@@ -26,18 +26,11 @@ export const SendChatNotifications = async (req: Request, res: Response) => {
  * @route POST /api/chat/sendCharSummary
  * @access public
 */
-
 export const SendChatHistory = async (req: Request, res: Response) => {
 
-  console.log('route hit')
-
-  
   const { email, chatHistory } = req.body;
-
   const emailNotify = new sendEmailNotifications('', process.env.Email ? process.env.Email : '');
-
-  emailNotify.sendChatSummary(chatHistory, email)
-
+  emailNotify.sendChatSummary(chatHistory, email);
   res.status(202).json({ message: 'Notification process initiated' });
 
 }
