@@ -1,6 +1,7 @@
 import React, { useState, useEffect, startTransition } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import "./neighborhoodReport.css"
 
 const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSuggestions }) => {
 
@@ -91,8 +92,12 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
   // if ((!nhoodData || nhoodData.length === 0) && Object.keys(nhoodsNarrative).length === 0) {
   //   return null
   // }
-
-
+  const formatSuggestions = (suggestions) => {
+    return suggestions.map(suggestion => {
+      const [name, description] = suggestion.split(':');
+      return { name: name?.trim(), description: description?.trim() };
+    });
+  };
   return (
     <div className="__mainContainer">
 
@@ -131,7 +136,14 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
           <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Night Life'); }}>Night Life</a>
         </nav>
         {nhoodSuggestions && nhoodSuggestions[activeSection] && (
-          <p>{nhoodSuggestions[activeSection]}</p>
+          <div className="restaurantSuggestions">
+            {formatSuggestions(nhoodSuggestions[activeSection]).map((suggestion, index) => (
+              <div key={index} className="restaurantSuggestion">
+                <h5 className="restaurantSuggestionHeader">{suggestion.name}</h5>
+                <p>{suggestion.description}</p>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
@@ -217,6 +229,8 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
 
 
   );
+
+
 }
 export default NeighborhoodReport
 

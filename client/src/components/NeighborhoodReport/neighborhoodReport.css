@@ -13,6 +13,15 @@
 
 }
 
+.restaurantSuggestion{
+  display: flex;
+}
+.restaurantSuggestionHeader{
+  white-space: nowrap;
+   /* Optional: prevents text from spilling out */
+ 
+}
+
 .sectionContainer__{
    display: flex;         
     flex-wrap: wrap;      
