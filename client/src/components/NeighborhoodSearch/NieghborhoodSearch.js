@@ -16,7 +16,8 @@ const SearchBar = () => {
   const suggestionRefs = useRef([]);
   const [nhoodData, setNhoodData] = useState([]);
   const [waitingForData, setWaitingForData] = useState(false);
-  const [nhoodDescriptions , setNhoodDescriptions]=useState({})
+  const [nhoodDescriptions, setNhoodDescriptions] = useState({})
+  const [nhoodSuggestions, setNhoodSuggestions] = useState({})
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -41,7 +42,7 @@ const SearchBar = () => {
     setNhoodData(response.data.userInputs);
     if (response.data && response.data.neighborhood_summariesCollections && response.data.neighborhood_summariesCollections.response) {
       setNhoodDescriptions(response.data.neighborhood_summariesCollections.response);
-      console.log(response.data.neighborhood_summariesCollections.response)
+      setNhoodSuggestions(response.data.neighbohood_suggestions_collections.categories);
     } else {
       setNhoodDescriptions({});  // Optionally reset to an empty object if data is not available
     }
@@ -65,6 +66,8 @@ const SearchBar = () => {
       handleSuggestionClick(suggestions[activeIndex]);
     }
   };
+
+  console.log("nhoodSuggestions", nhoodSuggestions)
 
   useEffect(() => {
 
@@ -140,7 +143,7 @@ const SearchBar = () => {
         </Box>
       </ThemeProvider>
 
-      <NeighborhoodReport nhoodData={nhoodData} nhoodsNarrative={nhoodDescriptions}neighborhood={nhood}></NeighborhoodReport>
+      <NeighborhoodReport nhoodData={nhoodData} nhoodsNarrative={nhoodDescriptions} neighborhood={nhood} nhoodSuggestions={nhoodSuggestions}></NeighborhoodReport>
     </div>
   );
 };

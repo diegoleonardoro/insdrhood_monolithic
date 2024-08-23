@@ -2,7 +2,7 @@ import React, { useState, useEffect, startTransition } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
+const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSuggestions }) => {
 
   const [data, setData] = useState({
     common_complaints: null,
@@ -18,8 +18,8 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
   const [nightLifeRecommendations, setNightLifeRecommendations] = useState([]);
   const [hoodImages, setHoodImages] = useState([]);
   const [userIds, setUserIds] = useState([]);
-
   const [displayCount, setDisplayCount] = useState(4);
+  const [activeSection, setActiveSection] = useState('Restaurants');
 
 
   const navigate = useNavigate();
@@ -96,96 +96,121 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood }) => {
   return (
     <div className="__mainContainer">
 
+      {Object.keys(nhoodsNarrative).length > 0 && (
+        <div className='sectionDiv'>
+          
+          {Object.entries(nhoodsNarrative).slice(0, displayCount).map(([key, value], index) => (
+            <div className="sectionContainer" key={index}>
+              <h2 className="neighborhoodDataSubHeader">{key}:</h2>
+              <p>{value}</p>
+            </div>
+          ))}
 
-      {Object.entries(nhoodsNarrative).slice(0, displayCount).map(([key, value], index) => (
-        <div className="sectionContainer" key={index}>
-          <h2 className="neighborhoodDataSubHeader">{key}:</h2>
-          <p>{value}</p>
+          {Object.keys(nhoodsNarrative).length > displayCount && (
+            <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+              onClick={() => setDisplayCount(Object.keys(nhoodsNarrative).length)}>
+              Show More
+            </span>
+          )}
+          {displayCount > 4 && (
+            <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline', marginLeft: '10px' }}
+              onClick={() => setDisplayCount(4)}>
+              Show Less
+            </span>
+          )}
+
         </div>
-      ))}
-
-      {Object.keys(nhoodsNarrative).length > displayCount && (
-        <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
-          onClick={() => setDisplayCount(Object.keys(nhoodsNarrative).length)}>
-          Show More
-        </span>
-      )}
-      {displayCount > 4 && (
-        <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline', marginLeft: '10px' }}
-          onClick={() => setDisplayCount(4)}>
-          Show Less
-        </span>
       )}
 
-      
+      <div className='sectionDiv'>
+        <h1 className="neighborhoodDataHeader">Where to go</h1>
+        <nav className="navigation">
+          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Restaurants'); }}>Restaurants</a>
+          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Museums'); }}>Museums</a>
+          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Public Spaces'); }}>Public Spaces</a>
+          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Night Life'); }}>Night Life</a>
+        </nav>
+        {nhoodSuggestions && nhoodSuggestions[activeSection] && (
+          <p>{nhoodSuggestions[activeSection]}</p>
+        )}
+      </div>
+
+
+
+
+
       {nhoodData && nhoodData.length > 0 && (
-        <>
-          <h1 style={{ marginTop: "60px" }} className="neighborhoodDataHeader"> According to the Residents:</h1>
-          <div className="sectionContainer">
-            <h2 className="neighborhoodDataSubHeader" >{neighborhood} can be described as:</h2>
-            {nhoodDescriptions.map((description, index) => {
-              return <a target="_blank" rel="noopener noreferrer" href={`/neighborhood/${userIds[index]}`} key={index} className="hyperlink"> <p key={index}>{capitalizeAndEnd(description)}</p></a>
-            })}
-          </div>
-          <div className="sectionContainer">
-            <h2 className="neighborhoodDataSubHeader">The Most Unique Thing About {neighborhood} is:</h2>
-            {mostUniqueThings.map((description, index) => {
-              return <a target="_blank" rel="noopener noreferrer" key={index} href={`/neighborhood/${userIds[index]}`} className="hyperlink"><p key={index}>{capitalizeAndEnd(description)}</p></a>
-            })}
-          </div>
-          <div className="sectionContainer">
-            <h2 className="neighborhoodDataSubHeader">People Should Visit {neighborhood} if they want:</h2>
-            {pplShouldVisitIfTheyWant.map((description, index) => {
-              return <a target="_blank" rel="noopener noreferrer" key={index} href={`/neighborhood/${userIds[index]}`} className="hyperlink"><p key={index}>{capitalizeAndEnd(description)}</p></a>
-            })}
-          </div>
-          <div className="sectionContainer">
-            <h2 className="neighborhoodDataSubHeader">Recommended Food in {neighborhood}:</h2>
-            <div className="sectionContainer__">
-              {recommendedFoodTypes.map((description, index) => {
-                return <div key={index}> <span style={{ color: "#DEA001" }}>{index + 1 + ". " + capitalize(description.explanation)} </span> <a target="_blank" rel="noopener noreferrer" href={`/neighborhood/${description._id}`} className="hyperlink_"><span style={{ color: "white" }}>{" " + capitalize(description.type)}</span></a> </div>
+        <div className='sectionDiv'>
+          <>
+            <h1 style={{ marginTop: "30px" }} className="neighborhoodDataHeader"> According to the Residents:</h1>
+            <div className="sectionContainer">
+              <h2 className="neighborhoodDataSubHeader" >{neighborhood} can be described as:</h2>
+              {nhoodDescriptions.map((description, index) => {
+                return <a target="_blank" rel="noopener noreferrer" href={`/neighborhood/${userIds[index]}`} key={index} className="hyperlink"> <p key={index}>{capitalizeAndEnd(description)}</p></a>
               })}
             </div>
-          </div>
-          {nightLifeRecommendations[0] ? (
             <div className="sectionContainer">
-              <h2 className="neighborhoodDataSubHeader">Night Life Recommendations:</h2>
+              <h2 className="neighborhoodDataSubHeader">The Most Unique Thing About {neighborhood} is:</h2>
+              {mostUniqueThings.map((description, index) => {
+                return <a target="_blank" rel="noopener noreferrer" key={index} href={`/neighborhood/${userIds[index]}`} className="hyperlink"><p key={index}>{capitalizeAndEnd(description)}</p></a>
+              })}
+            </div>
+            <div className="sectionContainer">
+              <h2 className="neighborhoodDataSubHeader">People Should Visit {neighborhood} if they want:</h2>
+              {pplShouldVisitIfTheyWant.map((description, index) => {
+                return <a target="_blank" rel="noopener noreferrer" key={index} href={`/neighborhood/${userIds[index]}`} className="hyperlink"><p key={index}>{capitalizeAndEnd(description)}</p></a>
+              })}
+            </div>
+            <div className="sectionContainer">
+              <h2 className="neighborhoodDataSubHeader">Recommended Food in {neighborhood}:</h2>
               <div className="sectionContainer__">
-                {nightLifeRecommendations.map((description, index) => {
-                  return (
-                    <div key={index}>
-                      {description.assessment ? (
-                        <>
-                          <span style={{ color: "#DEA001" }}>
-                            {index + 1 + ". " + capitalize(description.assessment)}
-                          </span>
-                          <a target="_blank" rel="noopener noreferrer" href={`/neighborhood/${userIds[index]}`} className="hyperlink_">
-                            <span style={{ color: "white" }}>{" " + capitalize(description.explanation)}</span>
-                          </a>
-                        </>
-                      ) : (
-                        <span style={{ color: "#DEA001" }}>
-                          {index + 1 + ". "} {/* Optionally handle the case where assessment is undefined */}
-                        </span>
-                      )}
-                    </div>
-                  );
+                {recommendedFoodTypes.map((description, index) => {
+                  return <div key={index}> <span style={{ color: "#DEA001" }}>{index + 1 + ". " + capitalize(description.explanation)} </span> <a target="_blank" rel="noopener noreferrer" href={`/neighborhood/${description._id}`} className="hyperlink_"><span style={{ color: "white" }}>{" " + capitalize(description.type)}</span></a> </div>
                 })}
               </div>
             </div>
-          ) : null}
-          {hoodImages.length > 0 ? (<div className="sectionContainer">
-            <h2 className="neighborhoodDataSubHeader">Some Images of {neighborhood}:</h2>
-            {hoodImages.map((images, index) => (
-              images.length > 0 ? <img style={{ width: "30%" }} src={"https://insiderhood.s3.amazonaws.com/" + images[0]?.image} key={index} /> : null
-            ))}
-          </div>) : null}
+            {nightLifeRecommendations[0] ? (
+              <div className="sectionContainer">
+                <h2 className="neighborhoodDataSubHeader">Night Life Recommendations:</h2>
+                <div className="sectionContainer__">
+                  {nightLifeRecommendations.map((description, index) => {
+                    return (
+                      <div key={index}>
+                        {description.assessment ? (
+                          <>
+                            <span style={{ color: "#DEA001" }}>
+                              {index + 1 + ". " + capitalize(description.assessment)}
+                            </span>
+                            <a target="_blank" rel="noopener noreferrer" href={`/neighborhood/${userIds[index]}`} className="hyperlink_">
+                              <span style={{ color: "white" }}>{" " + capitalize(description.explanation)}</span>
+                            </a>
+                          </>
+                        ) : (
+                          <span style={{ color: "#DEA001" }}>
+                            {index + 1 + ". "} {/* Optionally handle the case where assessment is undefined */}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+            {hoodImages.length > 0 ? (<div className="sectionContainer">
+              <h2 className="neighborhoodDataSubHeader">Some Images of {neighborhood}:</h2>
+              {hoodImages.map((images, index) => (
+                images.length > 0 ? <img style={{ width: "30%" }} src={"https://insiderhood.s3.amazonaws.com/" + images[0]?.image} key={index} /> : null
+              ))}
+            </div>) : null}
 
-        </>
+          </>
+
+        </div>
       )}
 
-    </div>
 
+
+    </div>
 
 
 

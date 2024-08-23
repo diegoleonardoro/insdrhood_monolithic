@@ -92,16 +92,22 @@ export class NeighborhoodRepository {
 
   async getNeighbohoodData(neighborhood: string): Promise<any> {
     const db = await this.db;
+    // 1
     const neighborhoodsCollection = db.collection(this.collectionName);
     const neighborhoodCollections = await neighborhoodsCollection.find({ neighborhood: neighborhood }).toArray();
+    // 2 
     const neighborhood_summaries = db.collection("neighborhood_summaries")
     const neighborhood_summariesCollections = await neighborhood_summaries.findOne({ neighborhood: neighborhood });
-    console.log("neighborhood_summariesCollections", neighborhood_summariesCollections)
+
+    // 3.
+    const neighbohood_suggestions = db.collection("nhood_suggestions")
+    const neighbohood_suggestions_collections = await neighbohood_suggestions.findOne({ neighborhood: neighborhood });
 
 
     return {
       userInputs: neighborhoodCollections,
-      neighborhood_summariesCollections: neighborhood_summariesCollections
+      neighborhood_summariesCollections: neighborhood_summariesCollections,
+      neighbohood_suggestions_collections: neighbohood_suggestions_collections
     };
   }
 
