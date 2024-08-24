@@ -110,5 +110,9 @@
   .sectionContainer__ div{
      flex-basis: 100%;
   }
+
+  .__mainContainer{
+    width:100%;
+  }
   
 }
