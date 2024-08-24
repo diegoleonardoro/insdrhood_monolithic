@@ -13,13 +13,52 @@
 
 }
 
-.restaurantSuggestion{
-  display: flex;
+.restaurantSuggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adds space between each suggestion */
+    margin: 20px; /* Spacing from container edges */
 }
-.restaurantSuggestionHeader{
-  white-space: nowrap;
-   /* Optional: prevents text from spilling out */
- 
+
+/* Styling for each restaurant suggestion block */
+.restaurantSuggestion {
+    display: flex;
+    flex-direction: column; /* Stack h5 and p vertically */
+    background: #fff; /* Light background for each suggestion */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for 3D effect */
+    padding: 15px; /* Padding inside each suggestion box */
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    transition: transform 0.3s ease; /* Smooth transform on hover */
+}
+
+.restaurantSuggestion:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+}
+
+/* Header styling */
+.restaurantSuggestionHeader {
+    font-size: 1.2em; /* Larger font size for headers */
+    color: #333; /* Dark color for text */
+    font-weight: bold; /* Bold font for emphasis */
+    margin-bottom: 8px; /* Space between header and paragraph */
+    white-space: nowrap; /* Keep the name in a single line */
+    overflow: hidden; /* Prevent overflow */
+    text-overflow: ellipsis; /* Add ellipsis when text overflows */
+}
+
+/* Paragraph styling */
+.restaurantSuggestion p {
+    font-size: 1em; /* Standard font size for body text */
+    color: #666; /* Lighter text color for description */
+    line-height: 1.4; /* Improve readability with more line height */
+}
+
+/* Optional: Add a media query for responsive adjustments */
+@media (max-width: 768px) {
+    .restaurantSuggestionHeader {
+        white-space: normal; /* Allow wrapping on small screens */
+    }
 }
 
 .sectionContainer__{
