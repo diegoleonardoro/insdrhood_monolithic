@@ -127,6 +127,9 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
         </div>
       )}
 
+
+
+      {nhoodSuggestions && nhoodSuggestions.length > 0 && (
       <div className='sectionDiv'>
         <h1 className="neighborhoodDataHeader">Where to go</h1>
         <nav className="navigation">
@@ -146,7 +149,7 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
           </div>
         )}
       </div>
-
+      )}
 
 
 
