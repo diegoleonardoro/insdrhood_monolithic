@@ -1,9 +1,18 @@
 .__mainContainer{
-  width:80%;
-  margin:auto;
-  top:50px;
+  width: 85%;
+  margin: auto;
   position: relative;
   min-height: 100vh;
+}
+
+.sectionDiv{
+  border-bottom: 1px solid #13131329;
+  margin-bottom: 40px; /* Increased margin */
+  padding-bottom: 30px; /* Increased padding */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  background-color: #f9f9f9; /* Light background for differentiation */
+  border-radius: 8px; /* Rounded corners for aesthetics */
+  margin:15px;
 }
 
 .sectionContainer{
@@ -11,6 +20,13 @@
   margin-bottom: 20px;
   padding-bottom: 23px;
 
+}
+.sectionTitle{
+  font-family: Koulen, sans-serif; /* Ensure consistent font usage */
+  font-size: 1.5em; /* Larger font size for visibility */
+  color: #333; /* Darker color for emphasis */
+  padding: 20px 0; /* Padding for visual separation */
+  text-align: center; /* Centered title for emphasis */
 }
 
 .restaurantSuggestions {
