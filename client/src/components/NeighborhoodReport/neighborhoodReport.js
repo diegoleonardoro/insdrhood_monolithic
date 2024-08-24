@@ -21,6 +21,11 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
   const [userIds, setUserIds] = useState([]);
   const [displayCount, setDisplayCount] = useState(4);
   const [activeSection, setActiveSection] = useState('Restaurants');
+  const [visibleSuggestions, setVisibleSuggestions] = useState(3); // State to control visible suggestions
+
+  const handleToggleVisibility = () => {
+    setVisibleSuggestions(prev => (prev === 3 ? nhoodSuggestions[activeSection].length : 3));
+  };
 
 
   const navigate = useNavigate();
@@ -89,21 +94,20 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
     return `${capitalizedSentence}.`;
   }
 
-  // if ((!nhoodData || nhoodData.length === 0) && Object.keys(nhoodsNarrative).length === 0) {
-  //   return null
-  // }
+
   const formatSuggestions = (suggestions) => {
     return suggestions.map(suggestion => {
       const [name, description] = suggestion.split(':');
       return { name: name?.trim(), description: description?.trim() };
     });
   };
+
   return (
     <div className="__mainContainer">
 
       {Object.keys(nhoodsNarrative).length > 0 && (
         <div className='sectionDiv'>
-          
+
           {Object.entries(nhoodsNarrative).slice(0, displayCount).map(([key, value], index) => (
             <div className="sectionContainer" key={index}>
               <h2 className="neighborhoodDataSubHeader">{key}:</h2>
@@ -127,32 +131,33 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
         </div>
       )}
 
-
-
-      {nhoodSuggestions && nhoodSuggestions.length > 0 && (
-      <div className='sectionDiv'>
-        <h1 className="neighborhoodDataHeader">Where to go</h1>
-        <nav className="navigation">
-          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Restaurants'); }}>Restaurants</a>
-          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Museums'); }}>Museums</a>
-          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Public Spaces'); }}>Public Spaces</a>
-          <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Night Life'); }}>Night Life</a>
-        </nav>
-        {nhoodSuggestions && nhoodSuggestions[activeSection] && (
-          <div className="restaurantSuggestions">
-            {formatSuggestions(nhoodSuggestions[activeSection]).map((suggestion, index) => (
-              <div key={index} className="restaurantSuggestion">
-                <h5 className="restaurantSuggestionHeader">{suggestion.name}</h5>
-                <p>{suggestion.description}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {Object.keys(nhoodSuggestions).length > 0 && (
+        <div className='sectionDiv'>
+          <h1 className="neighborhoodDataHeader">Where to go</h1>
+          <nav className="navigation">
+            <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Restaurants'); }}>Restaurants</a>
+            <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Museums'); }}>Museums</a>
+            <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Public Spaces'); }}>Public Spaces</a>
+            <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Night Life'); }}>Night Life</a>
+          </nav>
+          {nhoodSuggestions && nhoodSuggestions[activeSection] && (
+            <div className="restaurantSuggestions">
+              {formatSuggestions(nhoodSuggestions[activeSection]).slice(0, visibleSuggestions).map((suggestion, index) => (
+                <div key={index} className="restaurantSuggestion">
+                  <h5 className="restaurantSuggestionHeader">{suggestion.name}</h5>
+                  <p>{suggestion.description}</p>
+                </div>
+              ))}
+              {nhoodSuggestions[activeSection].length > 3 && (
+                <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                  onClick={handleToggleVisibility}>
+                  {visibleSuggestions > 3 ? 'Show Less' : 'Show More'}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       )}
-
-
-
 
       {nhoodData && nhoodData.length > 0 && (
         <div className='sectionDiv'>
@@ -223,13 +228,7 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
         </div>
       )}
 
-
-
     </div>
-
-
-
-
 
   );
 
