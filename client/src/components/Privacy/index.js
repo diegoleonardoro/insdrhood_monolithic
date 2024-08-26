@@ -1,13 +1,13 @@
 const PrivacyNotice = () => {
   return (
-    <div style={{ textAlign: "start", width: "70%", position: "relative", left: "40%", transform: "translate(-50%, 0)", margin: "100px", lineHeight: "30px" }}>
+    <div style={{ textAlign: "start", width: "90%", position: "relative", margin: "20px", lineHeight: "30px" }}>
 
       <h1>Privacy Notice for Insiderhood.com</h1>
       <div>
         <div style={{ margin: "20px" }}>
-          <h3>Effective Date: January 19th, 2024</h3>
+          <h3>Effective Date: January 1st, 2024</h3>
 
-          Welcome to Insiderhood.com. Your privacy is of utmost importance to us. This Privacy Notice explains how we collect, use, and protect your personal information when you interact with our website, specifically when you complete the questionnaire found at insiderhood.com/questionnaire.
+         This Privacy Notice explains how we collect, use, and protect your personal information when you interact with our website, specifically when you complete the questionnaire found at insiderhood.com/questionnaire.
         </div>
         <hr></hr>
 
@@ -15,7 +15,7 @@ const PrivacyNotice = () => {
           <h3> 1. Collection of Information</h3>
           <span style={{}}>Registration Information:</span>  when you register on our site, we collect your email address. This is used to create your unique user profile.
           <br></br>
-          <span>Questionnaire Responses: </span> when you respond to our questionnaire, we collect and store your responses. Once you register with your email, your responses are associated with your registered profile. These resposnes will be public.
+          <span>Questionnaire Responses: </span> when you respond to our questionnaire, we collect and store your responses. Once you register with your email, your responses are associated with your registered profile. These responses will be public.
         </div>
         <hr></hr>
 
@@ -75,6 +75,10 @@ const PrivacyNotice = () => {
 
           We may update this privacy notice from time to time. We will notify you about significant changes by sending a notice to the primary email address specified in your account or by placing a prominent notice on our site.
 
+        </div>
+
+        <div>
+          Email info@insiderhood.com for any questions.
         </div>
         {/* <hr></hr> */}
 

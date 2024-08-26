@@ -161,9 +161,9 @@ function Header() {
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/chat">AI Tour Guide Chat</a>
                         </li> 
-                        <li style={{ marginLeft: "20px" }} className="nav-item">
+                        {/* <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/311complaints">311 Calls</a>
-                        </li>
+                        </li> */}
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/privacy">Privacy</a>
                         </li>
