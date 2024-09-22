@@ -69,7 +69,6 @@ function Header() {
       }
     });
 
-  // bg="dark" data-bs-theme="dark"
   return (
     <>
       {!showHeader ? (
@@ -82,7 +81,8 @@ function Header() {
               <Navbar.Brand className="navBrand" as={Link} to="/home">
                 <img src="https://insiderhood.s3.amazonaws.com/assets/Insdrhood.png" alt="Logo" className="d-inline-block align-text-top" />
               </Navbar.Brand>
-              <div className='menu-container'>
+              
+              {/* <div className='menu-container'>
                 <ul className="navbar-nav">
                   <li className="nav-item">
                     <a className="nav-link" href="/questionnaire">Questionnaire</a>
@@ -90,9 +90,9 @@ function Header() {
                   <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/shop">Shop</a>
                   </li>
-                  {/* <li style={{ marginLeft: "20px" }} className="nav-item">
+                   <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/311complaints">311 Calls</a>
-                  </li> */}
+                  </li> 
                   <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/neighborhoodsearch">Neighborhoods</a>
                   </li> 
@@ -119,7 +119,9 @@ function Header() {
 
                   <CartIcon />
                 </ul>
-              </div>
+              </div> */}
+
+              
             </Container>
           </Navbar>
 
@@ -144,7 +146,8 @@ function Header() {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <div className='menu-container'>
+
+                    {/* <div className='menu-container'>
 
                       <CartIcon/>
                       <ul className="navbar-nav">
@@ -161,9 +164,9 @@ function Header() {
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/chat">AI Tour Guide Chat</a>
                         </li> 
-                        {/* <li style={{ marginLeft: "20px" }} className="nav-item">
+                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/311complaints">311 Calls</a>
-                        </li> */}
+                        </li> 
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/privacy">Privacy</a>
                         </li>
@@ -183,7 +186,10 @@ function Header() {
                           </li>
                         )}
                       </ul>
-                    </div>
+                    </div> */}
+
+
+
                   </Nav>
                 </Offcanvas.Body>
               </Navbar.Offcanvas>

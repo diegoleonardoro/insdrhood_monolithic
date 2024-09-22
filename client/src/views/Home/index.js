@@ -2,8 +2,7 @@ import React, { useState, useEffect, startTransition, useRef } from 'react';
 import './home.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Card from "react-bootstrap/Card";
-import Button from 'react-bootstrap/Button';
+
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
 import LazyImage from '../../components/LazyImage/LazyImage';
@@ -11,9 +10,12 @@ import blogsData from '../../initialDataLoad/blogs.json';
 import neighborhoodsData_ from '../../initialDataLoad/neighborhoods.json';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { Row, Col, Container, Form } from 'react-bootstrap';
+import { Row, Col, Container, Form, Card, Button } from 'react-bootstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Footer from "../../components/Footer/footer"
+import neighborhoods from '../../views/neighborhoods';
+// import { LazyLoadImage } from 'react-lazy-load-image-component';
+// import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function Home() {
 
@@ -38,6 +40,15 @@ function Home() {
   const [loadingNhood, setLoadingNhood] = useState(false);
   const [hoverStates, setHoverStates] = useState([]);
   const [isTapAllowed, setIsTapAllowed] = useState(true);
+  const [allNeighborhoods, setAllNeighborhoods] = useState([]);
+  const [neighborhoodSearchTerm, setNeighborhoodSearchTerm] = useState('');
+  const [selectedBoroughs, setSelectedBoroughs] = useState({
+    "Manhattan": false,
+    "Brooklyn": false,
+    "Queens": false,
+    "The Bronx": false,
+    "Staten Island": false
+  });
 
   const handleTouchTap = () => {
     // if (isTapAllowed) {
@@ -48,16 +59,16 @@ function Home() {
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
 
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
-      webPageRoute: '/home',
-      
-    })
-      .then(response => {
-        console.log('vistig notification');
-      })
-      .catch(error => {
-        console.error('Error sending chat info:', error);
-      });
+    // axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
+    //   webPageRoute: '/home',
+
+    // })
+    //   .then(response => {
+    //     console.log('vistig notification');
+    //   })
+    //   .catch(error => {
+    //     console.error('Error sending chat info:', error);
+    //   });
 
     // Extract the token from the URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -137,11 +148,7 @@ function Home() {
     setSearchTerm(event.target.value);
     // setCurrentPage(1);
   };
-  // Handle change in borough selection
-  const handleBoroughChange = (event) => {
-    setSelectedBorough(event.target.value);
-    // setCurrentPage(1); // Reset to first page on borough change
-  };
+
 
   const NeighborhoodCards = filteredNeighborhoods.map((neighborhood, index) => {
     const key = neighborhood._id ? `${neighborhood._id}-${index}` : index;
@@ -174,6 +181,7 @@ function Home() {
       </Col>
     );
   })
+
   const blogCards = blogs.map((blog) => {
 
     return (
@@ -222,9 +230,9 @@ function Home() {
   }, [currentPage]);
 
   const fetchMoreNeighborhoods = async (page) => {
-    
+
     if (neighborhoodsData[page]) {
-      return; 
+      return;
     }
 
     setLoadingNhood(true)
@@ -274,25 +282,128 @@ function Home() {
     setCurrentPage(value);
     fetchMoreNeighborhoods(value);
   };
-  return (
 
-    <div style={{ width: '100%', margin: 'auto auto auto auto' }}>
+  useEffect(() => {
+    // Set the neighborhoods data
+    setAllNeighborhoods(neighborhoods);
+  }, []);
+
+  const handleNeighborhoodSearch = (event) => {
+    setNeighborhoodSearchTerm(event.target.value);
+  };
+
+  const handleBoroughChange = (event) => {
+    setSelectedBoroughs(prevState => ({
+      ...prevState,
+      [event.target.name]: event.target.checked
+    }));
+  };
+
+  const filteredAllNeighborhoods = allNeighborhoods.filter(neighborhood => {
+    const searchWords = neighborhoodSearchTerm.toLowerCase().split(' ');
+    const neighborhoodWords = neighborhood.neighborhood.toLowerCase().split(' ');
+
+    const matchesSearch = searchWords.every(searchWord =>
+      neighborhoodWords.some(neighborhoodWord =>
+        neighborhoodWord.startsWith(searchWord)
+      )
+    );
+
+    const matchesBorough = Object.values(selectedBoroughs).every(v => v === false) ||
+      selectedBoroughs[neighborhood.borough];
+
+    return matchesSearch && matchesBorough;
+  });
+
+
+  // all neighborhoods cards
+  const AllNeighborhoodCards = filteredAllNeighborhoods.map((neighborhood, index) => (
+    <Col key={index}>
+      <Card className="h-100 cardNhood" style={{
+        backgroundImage: neighborhood.imageUrl ? `url(${neighborhood.imageUrl})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}>
+        <div className="card-content">
+          <div className="card-header-container">
+            <Card.Header as="h5">
+              {neighborhood.neighborhood}
+            </Card.Header>
+           
+          </div>
+
+          <Card.Body className='card-body-all'>
+            <Card.Text className="neighborhoodDescr">
+              {neighborhood.borough}
+            </Card.Text>
+
+            <Button
+              variant="warning"
+              className="nhoodButton"
+              onClick={() => {
+                // You can add navigation or other functionality here later
+                handleNavigation(`/neighborhoodsearch/${neighborhood.neighborhood}`);
+              }}
+            >
+              View
+            </Button>
+
+
+          </Card.Body>
+        </div>
+      </Card>
+    </Col>
+  ));
+
+  return (
+    <div className="home-container">
 
       <div className="banner">
+
         <div className="main-banner">
-          <img src="https://insiderhood.s3.amazonaws.com/assets/img11.png" className="img-responsive banner-img" />
+          <img src="https://insiderhood.s3.amazonaws.com/assets/5c0dc8ad4d09c2a06ffa23c83e6ae2ddbd89508e-2160x1677.jpg" className="img-responsive banner-img" alt="Banner" />
         </div>
         <div className="contain">
-          <h2 className="contain-txt">A platform offering insights to deepen your understanding of New York City's neighborhoods.</h2>
+          <h1 style={{color: "white"}}>(Beta)</h1>
+          <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
+
+          <div>
+            <div className='benefits-container-wrapper'>
+              <div className='benefits-container'>
+                <p className='benefits-txt'>Insider Hood is a guide to the best of NYC. Discover hidden gems, insider tips, and local insights from real New Yorkers.</p>
+                <ul className='benefits-list'>
+                  <li data-emoji="🗺️">Access recommendations from locals in each neighborhood.</li>
+                  <li data-emoji="📗">Receive neighborhood guides that explore the history and architecture of each place.</li>
+                  <li data-emoji="📍">Get tailored itineraries that accommodate your needs.</li>
+                  <li data-emoji="🤖">AI Chat that will give you tips and ideas on how to best explore the city.</li>
+                </ul>
+              </div>
+
+              <div className='benefits-container'>
+                <form className='email-form'>
+                  <input
+                    type="email"
+                    placeholder="Type your email..."
+                    className='email-input'
+                  />
+
+                  <button type="submit" className='submit-button'>
+                    Join the waitlist →
+                  </button>
+                
+                </form>
+              </div>
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
-      {/**  width: '100%', overflowX: "hidden", display: "flex", position: 'relative', */}
-      <div style={{ marginBottom: "100px" }}>
-        {/** className="mainBlogsContainer" */}
-
-        <div >
-
+      {/** articles container: */}
+      {/* <div style={{ marginBottom: "100px", marginTop: "100px" }}>
+        <div>
           {!blogsLoading ? (
             <>
               <Row className='articlesContainer' ref={blogContainerRef} >
@@ -302,19 +413,60 @@ function Home() {
             </>
           )
             : (<div className="skeletonBlogs" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              {/* Mimic the structure of your blog card with skeleton loaders */}
-              <SkeletonLoader width="90%" height="200px" /> {/* For the image */}
-              <SkeletonLoader width="80%" height="20px" />  {/* For the title */}
-              <SkeletonLoader width="70%" height="20px" />  {/* For the button or small text */}
+          
+              <SkeletonLoader width="90%" height="200px" /> 
+              <SkeletonLoader width="80%" height="20px" />  
+              <SkeletonLoader width="70%" height="20px" />  
             </div>)}
 
         </div>
-      </div>
+      </div> */}
+
+
+
+
+
+
+
+
+
+
+      {/** neighborhoods container: */}
       <div className='nhoodsMainContainer'>
 
         <div className='nhoodsSecondContainer'>
-          <h1 className='residentsHeader'>Discover Neighborhoods from Residents' Perspectives...</h1>
+          <h1 className='residentsHeader'>All NYC Neighborhoods</h1>
 
+          <Form.Control
+            type="text"
+            placeholder="Search neighborhoods..."
+            value={neighborhoodSearchTerm}
+            onChange={handleNeighborhoodSearch}
+            className="mb-3"
+          />
+
+          <div className="borough-filter-container">
+            {Object.keys(selectedBoroughs).map((borough) => (
+              <Form.Check
+                key={borough}
+                inline
+                label={borough}
+                name={borough}
+                type="checkbox"
+                id={`borough-${borough}`}
+                checked={selectedBoroughs[borough]}
+                onChange={handleBoroughChange}
+              />
+            ))}
+          </div>
+
+          <Container>
+            <Row xs={1} md={3} className="g-4">
+              {AllNeighborhoodCards}
+            </Row>
+          </Container>
+
+          <h1 className='residentsHeader'>Discover Neighborhoods from Residents' Perspectives...</h1>
           <Row>
             <Col>
               <Form.Control
@@ -335,7 +487,6 @@ function Home() {
               </Form.Select>
             </Col>
           </Row>
-
           <div className='neighborhoodsMainContainer'>
 
             {!loadingNhood ? (
@@ -343,18 +494,17 @@ function Home() {
                 <Container>
                   <Row xs={1} md={3} style={{ marginTop: "0px" }} className="g-4">
 
-                      {NeighborhoodCards}             
-                
+                    {NeighborhoodCards}
+
                   </Row>
                 </Container>
-
               </>
 
             ) : (<div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-              {/* Repeat the SkeletonLoader or create multiple for simulating several cards */}
+
               {[...Array(4)].map((_, index) => (
-                <div key={index} style={{ margin: '10px', width: 'calc(50% - 20px)' }}> {/* Adjust based on your card width */}
-                  <SkeletonLoader width="100%" height="150px" /> {/* For the image or header */}
+                <div key={index} style={{ margin: '10px', width: 'calc(50% - 20px)' }}>
+                  <SkeletonLoader width="100%" height="150px" />
                   <SkeletonLoader width="90%" height="20px" />
                   <SkeletonLoader width="80%" height="20px" />
                   <SkeletonLoader width="70%" height="20px" />
@@ -362,23 +512,28 @@ function Home() {
               ))}
             </div>)}
           </div >
+
         </div>
 
-        <Stack alignItems='center' sx={{
+        {/* <Stack alignItems='center' sx={{
           '& .MuiPaginationItem-root': {
             color: 'white',
             marginTop: '50px'
           },
         }} spacing={2}>
           <Pagination count={10} shape="rounded" page={currentPage} onChange={handlePageChange} />
-        </Stack>
+        </Stack> */}
 
       </div>
-      <Footer/>
+
+
+
+
+
+
+      <Footer />
     </div>
   );
-
-
 }
 
 export default Home;

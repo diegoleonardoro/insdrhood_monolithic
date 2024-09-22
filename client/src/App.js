@@ -57,7 +57,7 @@ function App() {
     <Router>
       <NavigationHistoryProvider>
         <div className="App">
-          <div>
+          <div style={{position:"absolute", top:0, left:0, right:0, bottom:0}}> 
             {showEmailRegisterPopup && <EmailRegisterWindow setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
             {showPasswordForm && < PasswordSetPopup setShowPasswordForm={setShowPasswordForm}>
             </PasswordSetPopup >}
@@ -109,7 +109,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyNotice />}></Route>
             <Route path='/shop' element={<Shop />}></Route>
             <Route path='/product/:id' element={<SingleProduct />}></Route>
-            <Route path='/tshirtcustomizer' element={<TShirtCustomizer logoUrl={{ dark: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorker.png', white: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png' }} />}></Route>
+            {/* <Route path='/tshirtcustomizer' element={<TShirtCustomizer logoUrl={{ dark: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorker.png', white: 'https://insiderhood.s3.amazonaws.com/tshirts/logos/thenewyorkerwhite.png' }} />}></Route> */}
             <Route path='/cart' element={<CartPage />}></Route>
             <Route path='/checkout' element={<Checkout />}></Route>
             <Route path='/canceled' element={<Canceled />}></Route>
@@ -119,11 +119,11 @@ function App() {
             <Route path='/newsletter' element={<NewsLetterLanding />}></Route>
             <Route path='/newsletterreferral' element={<NewsLetterReferral />}></Route>
             <Route path='/newsletterpreferences' element={<NewsLetterPreferences />}></Route>
-            <Route path='/311complaints' element={<Complaints311 />}></Route>
-            <Route path='/dashboard' element={<Dashboard />}></Route>
-            <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route>
+            {/* <Route path='/311complaints' element={<Complaints311 />}></Route> */}
+            {/* <Route path='/dashboard' element={<Dashboard />}></Route> */}
+            {/* <Route path='/DOBApprovedPermits' element={<DOBApprovedPermits />}></Route> */}
             <Route path='/NeighborhoodReport' element={<NeighborhoodReport />}></Route>
-            <Route path='/neighborhoodsearch' element={<SearchBar />}></Route>
+            <Route path='/neighborhoodsearch/:neighborhood' element={<SearchBar />}></Route>
             <Route path='/FormResponsesCount' element={<FormResponsesCount />}></Route>
             <Route path='/chat' element={<Chat />}></Route>
 

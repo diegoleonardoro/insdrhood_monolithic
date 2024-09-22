@@ -31,8 +31,9 @@ li a:hover{
 }
 
 .main_header{
-  border-bottom: 1px solid #474746;
+  /* border-bottom: 1px solid #474746; */
   padding: 20px;
+  z-index: 10;
 }
 
 

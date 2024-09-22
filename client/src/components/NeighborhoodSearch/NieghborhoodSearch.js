@@ -5,12 +5,18 @@ import axios from "axios";
 import { TextField, Box, createTheme, ThemeProvider } from '@mui/material';
 import NeighborhoodReport from "../NeighborhoodReport/neighborhoodReport";
 import Spinner from 'react-bootstrap/Spinner';
+import { useParams } from 'react-router-dom';
+
 
 
 const SearchBar = () => {
 
+
+  const { neighborhood } = useParams();
+  const capitalizedNeighborhood = neighborhood ? neighborhood.charAt(0).toUpperCase() + neighborhood.slice(1) : '';
+  const [nhood, setNhood] = useState(capitalizedNeighborhood || '');
+
   const [input, setInput] = useState('');
-  const [nhood, setNhood] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const suggestionRefs = useRef([]);
@@ -36,22 +42,38 @@ const SearchBar = () => {
     setActiveIndex(-1);
   };
 
-  const makeRequest = async (nhood) => {
-    setWaitingForData(true)
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/${nhood}`);
-    setNhoodData(response.data.userInputs);
-    if (response.data && response.data.neighborhood_summariesCollections && response.data.neighborhood_summariesCollections.response) {
-      setNhoodDescriptions(response.data.neighborhood_summariesCollections.response);
-      setNhoodSuggestions(response.data.neighbohood_suggestions_collections.categories);
-    } else {
-      setNhoodDescriptions({});  // Optionally reset to an empty object if data is not available
+  const makeRequest = async (nhood_) => {
+    console.log('makeRequest called with:', nhood_);
+    setWaitingForData(true);
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/${nhood_}`);
+      console.log('API response:', response.data);
+      
+      setNhoodData(response.data.userInputs || []);
+      
+      if (response.data && response.data.neighborhood_summariesCollections && response.data.neighborhood_summariesCollections.response) {
+        setNhoodDescriptions(response.data.neighborhood_summariesCollections.response);
+      } else {
+        console.warn("neighborhood_summariesCollections not found or invalid in response data");
+        setNhoodDescriptions({});
+      }
+
+      if (response.data && response.data.neighbohood_suggestions_collections && response.data.neighbohood_suggestions_collections.categories) {
+        setNhoodSuggestions(response.data.neighbohood_suggestions_collections.categories);
+      } else {
+        console.warn("neighbohood_suggestions_collections not found or invalid in response data");
+        setNhoodSuggestions({});
+      }
+    } catch (error) {
+      console.error('Error in makeRequest:', error);
+    } finally {
+      setWaitingForData(false);
     }
-    setWaitingForData(false);
   }
 
   const handleSuggestionClick = async (nhood) => {
     setInput(nhood);
-    setNhood(nhood); // Move this here to ensure it updates immediately with the correct value
+    setNhood(nhood); 
     setSuggestions([]);
     setActiveIndex(-1);
     await makeRequest(nhood);
@@ -67,8 +89,6 @@ const SearchBar = () => {
     }
   };
 
-  console.log("nhoodSuggestions", nhoodSuggestions)
-
   useEffect(() => {
 
     // axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
@@ -81,6 +101,8 @@ const SearchBar = () => {
     //     console.error('Error sending chat info:', error);
     //   });
 
+ 
+
     if (activeIndex >= 0 && activeIndex < suggestions.length) {
       suggestionRefs.current[activeIndex].current?.scrollIntoView({
         behavior: 'smooth',
@@ -88,6 +110,18 @@ const SearchBar = () => {
       });
     }
   }, [activeIndex]);
+
+  useEffect(() => {
+    if (nhood) {
+      makeRequest(nhood);
+    }
+  }, [nhood]);
+
+  useEffect(() => {
+    if (neighborhood && neighborhood !== nhood) {
+      setNhood(neighborhood);
+    }
+  }, [neighborhood]);
 
 
   if (waitingForData) {
@@ -99,7 +133,9 @@ const SearchBar = () => {
 
   return (
     <div className="neighborhoodSearchContainer">
-      <ThemeProvider theme={theme}>
+
+    {/** Search bar: */}
+      {/* <ThemeProvider theme={theme}>
         <Box
           sx={{
             width: 500,
@@ -141,11 +177,12 @@ const SearchBar = () => {
             </div>
           )}
         </Box>
-      </ThemeProvider>
+      </ThemeProvider> */}
 
       <NeighborhoodReport nhoodData={nhoodData} nhoodsNarrative={nhoodDescriptions} neighborhood={nhood} nhoodSuggestions={nhoodSuggestions}></NeighborhoodReport>
     </div>
   );
+  
 };
 
 

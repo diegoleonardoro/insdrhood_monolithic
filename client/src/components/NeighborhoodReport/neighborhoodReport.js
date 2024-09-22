@@ -12,6 +12,8 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
     agencies_and_complaints: []
   });
 
+  neighborhood = neighborhood ? neighborhood.charAt(0).toUpperCase() + neighborhood.slice(1) : '';
+
   const [nhoodDescriptions, setNhoodDescriptions] = useState([]);
   const [mostUniqueThings, setMostUniqueThings] = useState([]);
   const [pplShouldVisitIfTheyWant, setPplShouldVisitIfTheyWant] = useState([]);
@@ -104,6 +106,8 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
 
   return (
     <div className="__mainContainer">
+
+      <h1>{neighborhood}</h1>
 
       {Object.keys(nhoodsNarrative).length > 0 && (
         <div className='sectionDiv'>

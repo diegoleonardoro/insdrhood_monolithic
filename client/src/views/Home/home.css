@@ -1,6 +1,4 @@
-
-
-/* SkeletonLoader */
+/* SkeletonLoader lelel */
 
 @keyframes shimmer {
   0% {
@@ -8,6 +6,16 @@
   }
   100% {
     background-position: 468px 0;
+  }
+}
+
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5%);
   }
 }
 
@@ -21,61 +29,138 @@
 }
 
 .main-banner {
-    padding: 35px;
+    position: relative;
+    overflow: hidden;
+    height: 100vh; /* Full viewport height */
+}
+
+@keyframes zoomBounce {
+  0%, 100% {
+    transform: scale(1.2) translate(0, 0);
+  }
+  25% {
+    transform: scale(1.2) translate(-5%, -5%);
+  }
+  50% {
+    transform: scale(1.2) translate(5%, 5%);
+  }
+  75% {
+    transform: scale(1.2) translate(5%, -5%);
+  }
 }
 
 .main-banner img.img-responsive.banner-img {
-    border-radius: 20px;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: zoomBounce 60s infinite ease-in-out;
+    transform-origin: center center;
 }
 
-h2.contain-txt {
-    width: 930px;
+.contain {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    /* width: 90%; */
+    max-width: 1200px;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
     background: rgba(122, 52, 58, 0.80);
-    border-bottom-left-radius: 28px;
+    border-radius: 28px;
     backdrop-filter: blur(5px);
     padding: 29px 26px;
-    font-size: 49px;
-    font-family: Koulen;
-    font-weight: 400;
-    line-height: 42px;
+}
+
+h1.contain-txt {
+    /* width: 100%; */
+    font-size: 3vw; /* Responsive font size */
+    font-family: "Anton", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    text-align: left;
+    line-height: 1.2;
     word-wrap: break-word;
     color: #fff;
 }
 
-.contain {
-    margin-top: -219px;
-    padding-left: 35px;
+.benefits-txt{
+  text-align: left;
+  font-family: "Anton", sans-serif;
+  color: #fff;
+  font-weight: 550;
+
 }
 
-
-.skeleton-loader {
-  width: 100%;
-  height: 20px;
-  background-color: #ddd;
-  border-radius: 4px;
-  margin: 10px 0;
-  overflow: hidden;
-  position: relative;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-  background-size: 1000px 104px;
-  animation: shimmer 1.5s linear infinite;
+.benefits-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+  text-align: left;
 }
 
-.skeleton-loader__shimmer {
-  transform: skewX(-20deg);
-  width: 50%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.2);
+.benefits-list li {
+  font-family: "Anton", sans-serif;
+  color: #fff;
+  font-weight: 550;
+  margin-bottom: 5px;
+  padding-left: 30px; /* Make space for the emoji */
+  position: relative; /* For positioning the emoji */
 }
 
-.articlesContainer{
-  width:80%;
-  margin:auto;
-  
-  /* width:100%;
-  transition: transform 1s ease;  */
+.benefits-list li::before {
+  content: attr(data-emoji);
+  position: absolute;
+  left: 0;
+  font-size: 20px; /* Adjust size as needed */
+}
+
+/* Large screens */
+@media only screen and (min-width: 1200px) {
+    h2.contain-txt {
+        font-size: 49px;
+        padding: 40px 30px;
+    }
+}
+
+/* Medium screens */
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+    h2.contain-txt {
+        font-size: 3.5vw;
+        padding: 25px 20px;
+    }
+}
+
+/* Small screens */
+@media only screen and (max-width: 767px) {
+    .main-banner {
+        height: 70vh; /* Reduced height for mobile */
+    }
+
+    .contain {
+        width: 95%;
+        padding: 15px;
+    }
+
+    h2.contain-txt {
+        font-size: 5vw;
+        padding: 20px 15px;
+        border-radius: 14px;
+    }
+}
+
+/* Extra small screens */
+@media only screen and (max-width: 480px) {
+    .main-banner {
+        height: 50vh;
+    }
+
+    h2.contain-txt {
+        font-size: 6vw;
+        padding: 15px 10px;
+    }
 }
 
 .blogArrows{
@@ -186,7 +271,7 @@ h2.contain-txt {
 }
 
 .nhoodsMainContainer{
-  margin-top: 110px;
+  /* margin-top: 110px; */
   background-color: #DEA001;
   padding-top: 60px;
   padding-bottom: 40px;
@@ -208,14 +293,45 @@ h2.contain-txt {
   padding: 25px;
   margin-top: 20px;
   border-radius: 0px;
+  height: 300px !important; /* Increased height */
+  transition: height 0.3s ease; /* Smooth transition for height changes */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .cardNhood {
+    height: 280px;
+  }
+}
+
+@media (max-width: 992px) {
+  .cardNhood {
+    height: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardNhood {
+    height: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .cardNhood {
+    height: 220px;
+  }
 }
 
 .neighborhoodDescr{
-  color: black;
+  color: white;
   /* font-size: 18px; */
   font-family: Inter;
-  font-weight: 400;
+  font-weight: 900;
   word-wrap: break-word;
+  display: inline;
+  padding:5px;
+  border-radius: 10px;
+  width:max-content;  
 }
 
 .nhoodAuthor__{
@@ -231,14 +347,15 @@ h2.contain-txt {
   background: #ECECEC;
   border-radius: 8px;
   border: 1px #333332 solid;
-  padding: 10px;
+  /* padding: 10px; */
   text-align: center;
   color: black;
-  font-size: 22px;
+  /* font-size: 22px; */
   font-family: Koulen;
-  font-weight: 400;
-  word-wrap: break-word;
+  /* font-weight: 400;
+  word-wrap: break-word; */
   text-decoration: unset;
+  width:max-content;
 }
 .nhoodsTable{
  border-collapse: collapse;
@@ -548,3 +665,149 @@ h2.contain-txt {
 @media (max-width:450px){
  
 }
+
+.benefits-container-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.benefits-container {
+  flex: 1;
+}
+
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 300px;
+}
+
+.email-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.submit-button {
+  padding: 10px;
+  background-color: #ff4742;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #e63e39;
+}
+
+@media (max-width: 768px) {
+  .benefits-container-wrapper {
+    flex-direction: column;
+  }
+
+  .email-form {
+    max-width: 100%;
+  }
+}
+
+.borough-filter-container {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: rgba(222, 160, 1, 0.1);
+  border-radius: 8px;
+}
+
+.borough-filter-container .form-check {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 10px;
+}
+
+.borough-filter-container .form-check-input {
+  margin-right: 5px;
+}
+
+.borough-filter-container .form-check-label {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+}
+
+.borough-filter-container .form-check-input:checked + .form-check-label {
+  font-weight: bold;
+  /* color: #DEA001; */
+}
+
+@media (max-width: 768px) {
+  .borough-filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .borough-filter-container .form-check {
+    flex-basis: 45%;
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .borough-filter-container .form-check {
+    flex-basis: 100%;
+  }
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.card-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 10px; */
+  /* background-color: rgba(0, 0, 0, 0.6); */
+}
+
+.cardNhood .card-header {
+  /* flex: 1; */
+  margin-bottom: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.cardNhood .nhoodButton {
+  /* margin-left: 10px; */
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.cardNhood .card-body-all {
+   margin-top: auto;
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  justify-content: flex-end; /* Align children to the bottom */
+  height: auto; /* Allow the height to adjust to content */
+  min-height: 0
+ 
+}
+
+.cardNhood .neighborhoodDescr {
+  margin-bottom: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
