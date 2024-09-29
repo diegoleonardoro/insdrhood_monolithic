@@ -51,7 +51,7 @@
 
 .main-banner img.img-responsive.banner-img {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     object-fit: cover;
     animation: zoomBounce 60s infinite ease-in-out;
     transform-origin: center center;
@@ -63,19 +63,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-    /* width: 90%; */
+    width: 90%;
     max-width: 1200px;
     text-align: center;
     padding: 20px;
-    margin: 0;
     background: rgba(122, 52, 58, 0.80);
     border-radius: 28px;
     backdrop-filter: blur(5px);
-    padding: 29px 26px;
 }
 
 h1.contain-txt {
-    /* width: 100%; */
     font-size: 3vw; /* Responsive font size */
     font-family: "Anton", sans-serif;
     font-weight: 600;
@@ -119,47 +116,65 @@ h1.contain-txt {
 
 /* Large screens */
 @media only screen and (min-width: 1200px) {
-    h2.contain-txt {
-        font-size: 49px;
+    .contain {
         padding: 40px 30px;
+    }
+    h1.contain-txt {
+        font-size: 36px;
     }
 }
 
 /* Medium screens */
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-    h2.contain-txt {
+    .contain {
+        padding: 30px 25px;
+    }
+    h1.contain-txt {
         font-size: 3.5vw;
-        padding: 25px 20px;
     }
 }
 
 /* Small screens */
 @media only screen and (max-width: 767px) {
     .main-banner {
-        height: 70vh; /* Reduced height for mobile */
+        height: auto;
+        /* min-height: 100vh; */
     }
-
     .contain {
         width: 95%;
-        padding: 15px;
-    }
-
-    h2.contain-txt {
-        font-size: 5vw;
         padding: 20px 15px;
-        border-radius: 14px;
+        top: 0;
+        left: 0;
+        transform: none;
+        position: relative;
+        margin: 20px auto;
+    }
+    h1.contain-txt {
+        font-size: 24px; /* Fixed size instead of vw */
+        text-align: center;
+    }
+    .benefits-txt, .benefits-list li {
+        font-size: 16px;
+    }
+    .email-input, .submit-button {
+        width: 100%;
     }
 }
 
 /* Extra small screens */
 @media only screen and (max-width: 480px) {
     .main-banner {
-        height: 50vh;
+        /* min-height: 100vh; */
     }
-
-    h2.contain-txt {
-        font-size: 6vw;
+    .contain {
         padding: 15px 10px;
+        margin: 10px auto;
+    }
+    h1.contain-txt {
+        font-size: 20px;
+    }
+    .benefits-txt, .benefits-list li {
+        font-size: 14px;
     }
 }
 
@@ -555,11 +570,11 @@ h1.contain-txt {
 @media only screen and (max-width:875px) {
 
   .banner{
-    margin:10px;
+    /* margin:10px; */
   }
 
   .main-banner {
-    padding:0px;
+    /* padding:0px; */
   }
 
   .articlesContainer{
@@ -580,8 +595,10 @@ h1.contain-txt {
 
   .contain {
     /* padding-right: 11px; */
-    margin-top: -21px;
-    padding-left: 0px;
+    /* margin-top: -150px; */
+    position: absolute;
+    top:20%;
+    padding:30px;
   }
 
   .container p {
@@ -749,12 +766,12 @@ h1.contain-txt {
   .borough-filter-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .borough-filter-container .form-check {
-    flex-basis: 45%;
-    margin-right: 5px;
+    flex-basis: 50%;
+    margin-right: 0;
   }
 }
 
@@ -811,3 +828,24 @@ h1.contain-txt {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+/* Ensure the content doesn't overflow */
+.benefits-container-wrapper {
+    flex-direction: column;
+}
+
+.email-form {
+    max-width: 100%;
+    width: 100%;
+}
+
+/* Adjust checkbox layout */
+.borough-filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.borough-filter-container .form-check {
+    flex-basis: 50%;
+    margin-right: 0;
+}
