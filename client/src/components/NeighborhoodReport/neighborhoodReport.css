@@ -5,14 +5,84 @@
   min-height: 100vh;
 }
 
+.imageHeader {
+  width: 100vw;
+  height: 70vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-left: calc(-50vw + 50%);
+
+  /* New styles for visual appeal */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.imageHeader:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* .imageHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+  z-index: 1;
+} */
+
+/* 1. Radial gradient overlay */
+/* .imageHeader::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+  z-index: 1;
+} */
+/* 
+.imageHeader::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+  z-index: 1;
+} */
+.imageHeader::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, 
+    rgba(76, 175, 80, 0.3) 0%, 
+    rgba(33, 150, 243, 0.3) 50%, 
+    rgba(156, 39, 176, 0.3) 100%
+  );
+  z-index: 1;
+}
+
+
+
+.imageHeaderText {
+  font-size: 4rem;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  font-family: 'Koulen', sans-serif;
+  text-align: center;
+  padding: 0 20px;
+}
+
 .sectionDiv{
-  border-bottom: 1px solid #13131329;
-  margin-bottom: 40px; /* Increased margin */
-  padding-bottom: 30px; /* Increased padding */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-  background-color: #f9f9f9; /* Light background for differentiation */
-  border-radius: 8px; /* Rounded corners for aesthetics */
-  margin:15px;
+  /* border-bottom: 1px solid #13131329;
+  margin-bottom: 40px;
+  padding-bottom: 30px; 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+  background-color: #f9f9f9; 
+  border-radius: 8px;  */
+  /* margin:15px; */
 }
 
 .sectionContainer{
@@ -22,11 +92,17 @@
 
 }
 .sectionTitle{
-  font-family: Koulen, sans-serif; /* Ensure consistent font usage */
-  font-size: 1.5em; /* Larger font size for visibility */
-  color: #333; /* Darker color for emphasis */
-  padding: 20px 0; /* Padding for visual separation */
-  text-align: center; /* Centered title for emphasis */
+  font-family: Koulen, sans-serif;
+  font-size: 1.5em; 
+  color: #333; 
+  /* padding: 20px 0;  */
+  text-align: start; 
+}
+
+.evenText{
+  background-color: #ffd771;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .restaurantSuggestions {
@@ -148,4 +224,25 @@
      flex-basis: 100%;
   }
   
+}
+
+/* Add responsive adjustments */
+@media only screen and (max-width: 768px) {
+  .imageHeader {
+    height: 40vh;
+  }
+
+  .imageHeaderText {
+    font-size: 3rem;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .imageHeader {
+    height: 30vh;
+  }
+
+  .imageHeaderText {
+    font-size: 2rem;
+  }
 }

@@ -47,16 +47,21 @@ const SearchBar = () => {
     setWaitingForData(true);
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/neighborhoodData/${nhood_}`);
-      console.log('API response:', response.data);
+     
       
       setNhoodData(response.data.userInputs || []);
-      
-      if (response.data && response.data.neighborhood_summariesCollections && response.data.neighborhood_summariesCollections.response) {
-        setNhoodDescriptions(response.data.neighborhood_summariesCollections.response);
-      } else {
-        console.warn("neighborhood_summariesCollections not found or invalid in response data");
-        setNhoodDescriptions({});
-      }
+      setNhoodDescriptions(response.data.neighborhood_summariesCollections);
+
+      console.log("response.data.neighborhood_summariesCollections", response.data.neighborhood_summariesCollections);
+
+      // if (response.data && response.data.neighborhood_summariesCollections && response.data.neighborhood_summariesCollections.response) {
+      //   console.log("response.data.neighborhood_summariesCollections.response", response.data.neighborhood_summariesCollections.response);
+
+      //   setNhoodDescriptions(response.data.neighborhood_summariesCollections.response);
+      // } else {
+      //   console.warn("neighborhood_summariesCollections not found or invalid in response data");
+      //   setNhoodDescriptions({});
+      // }
 
       if (response.data && response.data.neighbohood_suggestions_collections && response.data.neighbohood_suggestions_collections.categories) {
         setNhoodSuggestions(response.data.neighbohood_suggestions_collections.categories);
@@ -64,6 +69,8 @@ const SearchBar = () => {
         console.warn("neighbohood_suggestions_collections not found or invalid in response data");
         setNhoodSuggestions({});
       }
+
+
     } catch (error) {
       console.error('Error in makeRequest:', error);
     } finally {
@@ -180,6 +187,7 @@ const SearchBar = () => {
       </ThemeProvider> */}
 
       <NeighborhoodReport nhoodData={nhoodData} nhoodsNarrative={nhoodDescriptions} neighborhood={nhood} nhoodSuggestions={nhoodSuggestions}></NeighborhoodReport>
+
     </div>
   );
   

@@ -134,7 +134,6 @@ function Home() {
     });
   };
 
-
   // Filter neighborhoodsData based on searchTerm and selectedBorough
   const filteredNeighborhoods = (neighborhoodsData[currentPage] || []).filter((neighborhood) => {
     return (
@@ -148,7 +147,6 @@ function Home() {
     setSearchTerm(event.target.value);
     // setCurrentPage(1);
   };
-
 
   const NeighborhoodCards = filteredNeighborhoods.map((neighborhood, index) => {
     const key = neighborhood._id ? `${neighborhood._id}-${index}` : index;
@@ -211,7 +209,6 @@ function Home() {
     );
 
   });
-
 
   const fetchMoreBlogs = async () => {
 
@@ -277,7 +274,6 @@ function Home() {
     return <div className="skeleton-loader" style={style}></div>;
   }
 
-
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
     fetchMoreNeighborhoods(value);
@@ -315,7 +311,6 @@ function Home() {
     return matchesSearch && matchesBorough;
   });
 
-
   // all neighborhoods cards
   const AllNeighborhoodCards = filteredAllNeighborhoods.map((neighborhood, index) => (
     <Col key={index}>
@@ -329,7 +324,6 @@ function Home() {
             <Card.Header as="h5">
               {neighborhood.neighborhood}
             </Card.Header>
-           
           </div>
 
           <Card.Body className='card-body-all'>

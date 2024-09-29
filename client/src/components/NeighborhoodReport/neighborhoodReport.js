@@ -5,6 +5,8 @@ import "./neighborhoodReport.css"
 
 const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSuggestions }) => {
 
+  console.log("nhoodsNarrative", nhoodsNarrative);
+
   const [data, setData] = useState({
     common_complaints: null,
     complaints_by_frequency: [],
@@ -13,6 +15,7 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
   });
 
   neighborhood = neighborhood ? neighborhood.charAt(0).toUpperCase() + neighborhood.slice(1) : '';
+  console.log("neighborhood", neighborhood);
 
   const [nhoodDescriptions, setNhoodDescriptions] = useState([]);
   const [mostUniqueThings, setMostUniqueThings] = useState([]);
@@ -23,12 +26,12 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
   const [userIds, setUserIds] = useState([]);
   const [displayCount, setDisplayCount] = useState(4);
   const [activeSection, setActiveSection] = useState('Restaurants');
-  const [visibleSuggestions, setVisibleSuggestions] = useState(3); // State to control visible suggestions
+  const [visibleSuggestions, setVisibleSuggestions] = useState(3); 
+  const [neighborhoodName, setNeighborhoodName] = useState(neighborhood);
 
   const handleToggleVisibility = () => {
-    setVisibleSuggestions(prev => (prev === 3 ? nhoodSuggestions[activeSection].length : 3));
+    setVisibleSuggestions(prev => (prev === 3 ? nhoodsNarrative.information[activeSection].length : 3));
   };
-
 
   const navigate = useNavigate();
 
@@ -40,17 +43,6 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
 
   useEffect(() => {
     if (!nhoodData) return; // Check if nhoodData is an empty list
-
-
-    // axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
-    //   webPageRoute: '/NeighborhoodReport',
-    // })
-    //   .then(response => {
-    //     console.log('vistig notification');
-    //   })
-    //   .catch(error => {
-    //     console.error('Error sending chat info:', error);
-    //   });
 
     const fetchData = async () => {
 
@@ -78,6 +70,7 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
       setUserIds(userIds);
     };
 
+    setNeighborhoodName(neighborhood);
     fetchData();
   }, [nhoodData]); // Added nhoodData as a dependency to re-run effect when it changes
 
@@ -96,7 +89,6 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
     return `${capitalizedSentence}.`;
   }
 
-
   const formatSuggestions = (suggestions) => {
     return suggestions.map(suggestion => {
       const [name, description] = suggestion.split(':');
@@ -106,36 +98,28 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
 
   return (
     <div className="__mainContainer">
-
-      <h1>{neighborhood}</h1>
-
-      {Object.keys(nhoodsNarrative).length > 0 && (
-        <div className='sectionDiv'>
-
-          {Object.entries(nhoodsNarrative).slice(0, displayCount).map(([key, value], index) => (
-            <div className="sectionContainer" key={index}>
-              <h2 className="neighborhoodDataSubHeader">{key}:</h2>
-              <p>{value}</p>
-            </div>
-          ))}
-
-          {Object.keys(nhoodsNarrative).length > displayCount && (
-            <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
-              onClick={() => setDisplayCount(Object.keys(nhoodsNarrative).length)}>
-              Show More
-            </span>
-          )}
-          {displayCount > 4 && (
-            <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline', marginLeft: '10px' }}
-              onClick={() => setDisplayCount(4)}>
-              Show Less
-            </span>
-          )}
-
+      {nhoodsNarrative.imageUrl && (
+        <div className="imageHeader" style={{ backgroundImage: `url(${nhoodsNarrative.imageUrl})` }}>
+          <h1 className="imageHeaderText">{neighborhoodName}</h1>
         </div>
       )}
 
-      {Object.keys(nhoodSuggestions).length > 0 && (
+      {nhoodsNarrative.information && Object.keys(nhoodsNarrative.information).length > 0 && (
+        <>
+          {['Neighborhood Introduction', 'History', 'Location', 'Interesting Facts', 'Demographics'].map((section, index) => (
+            nhoodsNarrative.information[section] && (
+              <div key={index} className="sectionDiv">
+                <h2 className="sectionTitle">{section}</h2>
+                <p className={`sectionText ${index % 2 != 0 ? 'evenText' : ''}`}>
+                  {nhoodsNarrative.information[section]}
+                </p>
+              </div>
+            )
+          ))}
+        </>
+      )}
+
+      {nhoodsNarrative.information && Object.keys(nhoodsNarrative.information).length > 0 ? (
         <div className='sectionDiv'>
           <h1 className="neighborhoodDataHeader">Where to go</h1>
           <nav className="navigation">
@@ -143,16 +127,17 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
             <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Museums'); }}>Museums</a>
             <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Public Spaces'); }}>Public Spaces</a>
             <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Night Life'); }}>Night Life</a>
+            <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Attractions'); }}>Attractions</a>
           </nav>
-          {nhoodSuggestions && nhoodSuggestions[activeSection] && (
+          {nhoodsNarrative.information[activeSection] && (
             <div className="restaurantSuggestions">
-              {formatSuggestions(nhoodSuggestions[activeSection]).slice(0, visibleSuggestions).map((suggestion, index) => (
+              {Object.entries(nhoodsNarrative.information[activeSection]).slice(0, visibleSuggestions).map(([name, description], index) => (
                 <div key={index} className="restaurantSuggestion">
-                  <h5 className="restaurantSuggestionHeader">{suggestion.name}</h5>
-                  <p>{suggestion.description}</p>
+                  <h5 className="restaurantSuggestionHeader">{name}</h5>
+                  <p>{description}</p>
                 </div>
               ))}
-              {nhoodSuggestions[activeSection].length > 3 && (
+              {Object.keys(nhoodsNarrative.information[activeSection]).length > 3 && (
                 <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
                   onClick={handleToggleVisibility}>
                   {visibleSuggestions > 3 ? 'Show Less' : 'Show More'}
@@ -161,6 +146,34 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
             </div>
           )}
         </div>
+      ) : (
+        Object.keys(nhoodSuggestions).length > 0 && (
+          <div className='sectionDiv'>
+            <h1 className="neighborhoodDataHeader">Where to go</h1>
+            <nav className="navigation">
+              <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Restaurants'); }}>Restaurants</a>
+              <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Museums'); }}>Museums</a>
+              <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Public Spaces'); }}>Public Spaces</a>
+              <a href="#" className="navLink" onClick={(e) => { e.preventDefault(); setActiveSection('Night Life'); }}>Night Life</a>
+            </nav>
+            {nhoodSuggestions[activeSection] && (
+              <div className="restaurantSuggestions">
+                {formatSuggestions(nhoodSuggestions[activeSection]).slice(0, visibleSuggestions).map((suggestion, index) => (
+                  <div key={index} className="restaurantSuggestion">
+                    <h5 className="restaurantSuggestionHeader">{suggestion.name}</h5>
+                    <p>{suggestion.description}</p>
+                  </div>
+                ))}
+                {nhoodSuggestions[activeSection].length > 3 && (
+                  <span style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                    onClick={handleToggleVisibility}>
+                    {visibleSuggestions > 3 ? 'Show Less' : 'Show More'}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        )
       )}
 
       {nhoodData && nhoodData.length > 0 && (
@@ -236,11 +249,8 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
 
   );
 
-
 }
 export default NeighborhoodReport
-
-
 
 {
       /* <h1>Neighborhood Complaints Report for Williamsburg HHHHHHHHHHHHHHHHH </h1>
@@ -296,3 +306,5 @@ export default NeighborhoodReport
   ))}  
 */
 }
+
+
