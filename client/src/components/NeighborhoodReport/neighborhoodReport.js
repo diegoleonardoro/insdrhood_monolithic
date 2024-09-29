@@ -121,7 +121,9 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
         </>
       )}
 
-      {nhoodsNarrative.information && Object.keys(nhoodsNarrative.information).length > 0 ? (
+      {/* Where to go: */}
+
+      {/* {nhoodsNarrative.information && Object.keys(nhoodsNarrative.information).length > 0 ? (
         <div className='sectionDiv'>
           <h1 className="neighborhoodDataHeader">Where to go</h1>
           <nav className="navigation">
@@ -176,7 +178,7 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
             )}
           </div>
         )
-      )}
+      )} */}
 
       {nhoodData && nhoodData.length > 0 && (
         <div className='sectionDiv'>
