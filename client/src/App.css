@@ -7,6 +7,7 @@
 @media only screen and (max-width: 999px) {
   .App {
     font-size: 20px; /* Smaller font size for small screens */
+    width: 100%;
   }
 }
 

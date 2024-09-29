@@ -436,6 +436,7 @@ function Home() {
             placeholder="Search neighborhoods..."
             value={neighborhoodSearchTerm}
             onChange={handleNeighborhoodSearch}
+            style={{ margin:"20px" , width:"90%"}}
             className="mb-3"
           />
 

@@ -599,6 +599,8 @@ h1.contain-txt {
     position: absolute;
     top:20%;
     padding:30px;
+    left:50%;
+    transform: translate(-50%,0);
   }
 
   .container p {
