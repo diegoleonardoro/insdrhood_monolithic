@@ -98,7 +98,7 @@ function App() {
 
           <Suspense fallback={<div>Loading...</div>}></Suspense>
           <Routes>
-            <Route path="/" element={<FormComponent />} />
+            <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/registeremail" element={<EmailRegister />} />
