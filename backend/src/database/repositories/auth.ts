@@ -286,15 +286,9 @@ export class AuthRepository {
       // emailToken: [emailToken],
       createdAt: new Date()
     };
-
     await usersCollection.insertOne(newUser);
-
     // Send verification email
-  
-
     return { message: 'Email saved successfully' };
   }
-
-  
 
 }

@@ -32,6 +32,7 @@ import NeighborhoodReport from "./components/NeighborhoodReport/neighborhoodRepo
 import SearchBar from "./components/NeighborhoodSearch/NieghborhoodSearch";
 import FormResponsesCount from "./components/FormResponsesCount/FormResponsesCount"
 import Chat from "./components/Chat/Chat"
+import EmailFooter from './components/EmailFooter/EmailFooter';
 
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
@@ -58,6 +59,7 @@ function App() {
       <NavigationHistoryProvider>
         <div className="App">
           <div style={{position:"absolute", top:0, left:0, right:0, bottom:0}}> 
+            
             {showEmailRegisterPopup && <EmailRegisterWindow setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
             {showPasswordForm && < PasswordSetPopup setShowPasswordForm={setShowPasswordForm}>
             </PasswordSetPopup >}
@@ -130,6 +132,10 @@ function App() {
 
           </Routes>
           <Suspense />
+
+          <EmailRegister/>
+
+          <EmailFooter />
 
           {/* <Footer/> */}
         </div>
