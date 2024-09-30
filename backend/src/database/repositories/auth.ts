@@ -264,6 +264,37 @@ export class AuthRepository {
     return { userJwt, userInfo: userInfoForJwt };
   }
 
+  async saveEmail(email: string): Promise<{ message: string }> {
+    const db = await this.db;
+    const usersCollection = db.collection(this.collectionName);
+
+    if (!email) {
+      throw new BadRequestError('Email is required');
+    }
+
+    const existingUser = await usersCollection.findOne({ email });
+
+    if (existingUser) {
+      throw new BadRequestError('Email already exists');
+    }
+
+    const emailToken = crypto.randomBytes(64).toString('hex');
+
+    const newUser = {
+      email,
+      isVerified: false,
+      // emailToken: [emailToken],
+      createdAt: new Date()
+    };
+
+    await usersCollection.insertOne(newUser);
+
+    // Send verification email
+  
+
+    return { message: 'Email saved successfully' };
+  }
+
   
 
 }

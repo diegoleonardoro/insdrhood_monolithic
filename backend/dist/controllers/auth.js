@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
+exports.saveUserEmail = exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
 const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
@@ -217,4 +217,17 @@ const neighborhoodResponsesCount = async (req, res) => {
     res.status(200).send(nhoodResponsesCount);
 };
 exports.neighborhoodResponsesCount = neighborhoodResponsesCount;
+const saveUserEmail = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const authRepository = new auth_1.AuthRepository();
+        const result = await authRepository.saveEmail(email);
+        res.status(201).json(result);
+    }
+    catch (error) {
+        console.error('Failed to save email:', error);
+        res.status(500).json({ message: 'Failed to save email' });
+    }
+};
+exports.saveUserEmail = saveUserEmail;
 //# sourceMappingURL=auth.js.map

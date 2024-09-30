@@ -201,9 +201,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
 
 
 
-
-
-
 /**
  * @description gets a specific neighborhood 
  * @route GET/api/neighborhoods
@@ -245,3 +242,21 @@ export const neighborhoodResponsesCount = async (req: Request, res:Response)=>{
   const nhoodResponsesCount = await neighborhoodRepository.neighborhoodResponsesCount()
   res.status(200).send(nhoodResponsesCount);
 }
+
+
+
+export const saveUserEmail = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  try {
+    const authRepository = new AuthRepository();
+    const result = await authRepository.saveEmail(email);
+    res.status(201).json(result);
+  } catch (error) {
+    
+    console.error('Failed to save email:', error);
+    res.status(500).json({ message: 'Failed to save email' });
+  }
+
+  
+};

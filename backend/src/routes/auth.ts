@@ -17,7 +17,8 @@ import {
   uploadBlogFiles, 
   newsLetterSignUp,
   getSingleNeighborhoodData,
-  neighborhoodResponsesCount
+  neighborhoodResponsesCount,
+  saveUserEmail
 } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
@@ -47,6 +48,7 @@ router.get("/currentuser", authenticationValidator, asyncHandler(currentuser));
 router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
 router.put("/updateuserdata/:id", authenticationValidator, asyncHandler(updateUserData));
 router.post("/newsletter/signup", asyncHandler(newsLetterSignUp));
+router.post("/emailregistration", asyncHandler(saveUserEmail));
 
 
 /**

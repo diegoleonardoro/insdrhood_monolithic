@@ -173,6 +173,27 @@ class AuthRepository {
         }
         return { userJwt, userInfo: userInfoForJwt };
     }
+    async saveEmail(email) {
+        const db = await this.db;
+        const usersCollection = db.collection(this.collectionName);
+        if (!email) {
+            throw new bad_request_error_1.BadRequestError('Email is required');
+        }
+        const existingUser = await usersCollection.findOne({ email });
+        if (existingUser) {
+            throw new bad_request_error_1.BadRequestError('Email already exists');
+        }
+        const emailToken = crypto_1.default.randomBytes(64).toString('hex');
+        const newUser = {
+            email,
+            isVerified: false,
+            // emailToken: [emailToken],
+            createdAt: new Date()
+        };
+        await usersCollection.insertOne(newUser);
+        // Send verification email
+        return { message: 'Email saved successfully' };
+    }
 }
 exports.AuthRepository = AuthRepository;
 //# sourceMappingURL=auth.js.map
