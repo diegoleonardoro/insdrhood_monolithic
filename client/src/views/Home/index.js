@@ -449,7 +449,6 @@ function Home() {
             ))}
           </div>
 
-
           <Form.Control
             type="text"
             placeholder="Search neighborhoods..."
