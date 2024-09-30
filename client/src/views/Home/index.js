@@ -358,7 +358,7 @@ function Home() {
           <img src="https://insiderhood.s3.amazonaws.com/assets/5c0dc8ad4d09c2a06ffa23c83e6ae2ddbd89508e-2160x1677.jpg" className="img-responsive banner-img" alt="Banner" />
         </div>
         <div className="contain">
-          <h1 style={{color: "white"}}>(Beta)</h1>
+          <h1 style={{ color: "white" }}>(Beta)</h1>
           <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
 
           <div>
@@ -384,7 +384,9 @@ function Home() {
                   <button type="submit" className='submit-button'>
                     Join the waitlist →
                   </button>
-                
+
+
+
                 </form>
               </div>
             </div>
@@ -431,14 +433,6 @@ function Home() {
         <div className='nhoodsSecondContainer'>
           <h1 className='residentsHeader'>All NYC Neighborhoods</h1>
 
-          <Form.Control
-            type="text"
-            placeholder="Search neighborhoods..."
-            value={neighborhoodSearchTerm}
-            onChange={handleNeighborhoodSearch}
-            style={{ margin:"20px" , width:"90%"}}
-            className="mb-3"
-          />
 
           <div className="borough-filter-container">
             {Object.keys(selectedBoroughs).map((borough) => (
@@ -454,6 +448,16 @@ function Home() {
               />
             ))}
           </div>
+
+
+          <Form.Control
+            type="text"
+            placeholder="Search neighborhoods..."
+            value={neighborhoodSearchTerm}
+            onChange={handleNeighborhoodSearch}
+            style={{ margin: "20px", width: "90%" }}
+            className="mb-3"
+          />
 
           <Container>
             <Row xs={1} md={3} className="g-4">
