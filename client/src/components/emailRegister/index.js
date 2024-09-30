@@ -20,7 +20,6 @@ const EmailRegister = ()=>{
     email: ""
   });
 
-
   const onSubmit = async (event) => {
     event.preventDefault();
 

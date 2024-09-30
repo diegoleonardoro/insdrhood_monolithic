@@ -219,15 +219,9 @@ const neighborhoodResponsesCount = async (req, res) => {
 exports.neighborhoodResponsesCount = neighborhoodResponsesCount;
 const saveUserEmail = async (req, res) => {
     const { email } = req.body;
-    try {
-        const authRepository = new auth_1.AuthRepository();
-        const result = await authRepository.saveEmail(email);
-        res.status(201).json(result);
-    }
-    catch (error) {
-        console.error('Failed to save email:', error);
-        res.status(500).json({ message: 'Failed to save email' });
-    }
+    const authRepository = new auth_1.AuthRepository();
+    const result = await authRepository.saveEmail(email);
+    res.status(201).json(result);
 };
 exports.saveUserEmail = saveUserEmail;
 //# sourceMappingURL=auth.js.map

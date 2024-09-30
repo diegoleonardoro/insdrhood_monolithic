@@ -49,11 +49,18 @@ function Home() {
     "The Bronx": false,
     "Staten Island": false
   });
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
 
   const handleTouchTap = () => {
     // if (isTapAllowed) {
     // fetchMoreBlogs();
     // }
+  };
+
+  const validateEmail = (email) => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
   };
 
   // initial static load of neighborhoods and blogs. 
@@ -341,13 +348,35 @@ function Home() {
             >
               View
             </Button>
-
-
           </Card.Body>
         </div>
       </Card>
     </Col>
   ));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    try {
+
+      //`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
+     
+
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/emailregistration`, { email });
+      console.log('Email registration successful:', response.data);
+      // You can add a success message here
+      setEmail('');
+    } catch (error) {
+      console.error('Email registration failed:', error);
+      setError(error.response.data.errors[0].message);
+    }
+  };
 
   return (
     <div className="home-container">
@@ -374,19 +403,21 @@ function Home() {
               </div>
 
               <div className='benefits-container'>
-                <form className='email-form'>
+                <form className='email-form' onSubmit={handleSubmit}>
                   <input
                     type="email"
                     placeholder="Type your email..."
                     className='email-input'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
 
                   <button type="submit" className='submit-button'>
                     Join the waitlist →
                   </button>
 
-
-
+                  {error && <p style={{ color: "white" }} className="error-message">{error}</p>}
                 </form>
               </div>
             </div>
@@ -532,6 +563,7 @@ function Home() {
       <Footer />
     </div>
   );
+
 }
 
 export default Home;
