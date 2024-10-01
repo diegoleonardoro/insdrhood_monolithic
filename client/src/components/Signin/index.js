@@ -22,10 +22,12 @@ const Signin = () => {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signin`,
         { email, password });
       await setCurrentUserDirectly(response.data);
-      navigate(`/neighborhood/${response.data.neighborhoodId[0]}`);
+      navigate(`/`);
       return;
     } catch (error) {
-      setErrors(error.response.data.errors[0].message);
+      if (error.response.data.errors[0].message) {
+        setErrors(error.response.data.errors[0].message);
+      }
     }
   }
 

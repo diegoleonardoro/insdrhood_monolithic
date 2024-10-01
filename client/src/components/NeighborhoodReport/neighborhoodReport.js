@@ -106,9 +106,16 @@ const NeighborhoodReport = ({ nhoodData, nhoodsNarrative, neighborhood, nhoodSug
 
       {nhoodsNarrative.information && Object.keys(nhoodsNarrative.information).length > 0 && (
         <>
-          {['Neighborhood Introduction', 'History', 'Location', 'Interesting Facts', 'Demographics'].map((section, index) => (
+          {['Neighborhood Introduction', 'History', 'Location', 'Interesting Facts', 'Demographics'].map((section, index, array) => (
             nhoodsNarrative.information[section] && (
-              <div key={index} className="sectionDiv" style={index === 0 ? { marginTop: '40px' } : {}}>
+              <div 
+                key={index} 
+                className="sectionDiv" 
+                style={{
+                  ...(index === 0 ? { marginTop: '40px' } : {}),
+                  ...(index === array.length - 2 ? { marginBottom: '280px' } : {})
+                }}
+              >
                 {section !== 'Neighborhood Introduction' && (
                   <h2 className="sectionTitle">{section}</h2>
                 )}

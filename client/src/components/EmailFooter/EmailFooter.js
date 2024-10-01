@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import './emailFooter.css';
 import axios from "axios";
+import { useUserContext } from '../../contexts/UserContext';
 
 const EmailFooter = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const { currentuser_ } = useUserContext();
+
+  // If currentuser_ is defined, don't render the component
+  if (currentuser_) {
+    return null;
+  }
 
   const validateEmail = (email) => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

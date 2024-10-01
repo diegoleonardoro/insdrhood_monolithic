@@ -11,6 +11,7 @@ const authenticationValidator = async (req, res, next) => {
     if (!req.session?.jwt) {
         return next();
     }
+    console.log("HEHEHEHEHEHEH");
     try {
         const payload = jsonwebtoken_1.default.verify(req.session.jwt, process.env.JWT_KEY);
         const authRepo = new auth_1.AuthRepository();

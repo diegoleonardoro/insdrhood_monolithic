@@ -63,6 +63,8 @@ function Home() {
     return re.test(String(email).toLowerCase());
   };
 
+  console.log("currentuser_ 99999999-->>>", currentuser_)
+
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
 

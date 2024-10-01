@@ -21,6 +21,8 @@ export const UserProvider = ({ children }) => { // This is a component that allo
 
   }, []);
 
+  console.log("currentuser_", currentuser_)
+
   // Fetch user on mount
   React.useEffect(() => {//  React's Effect Hook is used here to perform the updateCurrentUser operation when the component mounts.
     updateCurrentUser_();

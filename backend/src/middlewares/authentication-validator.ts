@@ -34,6 +34,8 @@ export const authenticationValidator = async (
     return next();
   }
 
+  console.log("HEHEHEHEHEHEH")
+
   try {
     const payload = jwt.verify(
       req.session.jwt,

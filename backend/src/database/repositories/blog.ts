@@ -74,15 +74,11 @@ export class BlogRepository {
       //   nextCursor = blogs[blogs.length - 1]._id.toString();
       // } 
 
-      console.log("blogss", blogs);
-      
       const result = { blogs };//nextCursor
       // Cache the result in Redis
 
       // await this.redisClient.setEx(cacheKey, 86400, JSON.stringify(blogs));  // Expiry time is set to 3600 seconds (1 hour)
       // console.log("SERVING UNCACHED DATA ", result)
-
-      console.log("blogsss", blogs)
 
       return blogs;
       

@@ -62,6 +62,7 @@ export const login = async (req: Request, res: Response) => {
  * @access public 
  */
 export const currentuser = async (req: Request, res: Response) => {
+  console.log('req.currentUser--->>>>>>>>>>>>>>>>>', req.currentUser)
   res.send(req.currentUser || null);
 }
 

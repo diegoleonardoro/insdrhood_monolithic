@@ -82,9 +82,9 @@ function Header() {
                 <img src="https://insiderhood.s3.amazonaws.com/assets/Insdrhood.png" alt="Logo" className="d-inline-block align-text-top" />
               </Navbar.Brand>
               
-              {/* <div className='menu-container'>
+              <div className='menu-container'>
                 <ul className="navbar-nav">
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <a className="nav-link" href="/questionnaire">Questionnaire</a>
                   </li>
                   <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -101,15 +101,15 @@ function Header() {
                   </li> 
                   <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/privacy">Privacy</a>
-                  </li> 
+                  </li>  */}
                   {!currentuser_ ? (
                     <>
                       <li style={{ marginLeft: "20px" }} className="nav-item">
                         <a className="nav-link" href="/signin">Sign In</a>
                       </li>
-                      <li style={{ marginLeft: "20px" }} className="nav-item create">
+                      {/* <li style={{ marginLeft: "20px" }} className="nav-item create">
                         <a className="nav-link" href="/signup">Create a account</a>
-                      </li>
+                      </li> */}
                     </>
                   ) : (
                     <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -117,9 +117,9 @@ function Header() {
                     </li>
                   )}
 
-                  <CartIcon />
+                  {/* <CartIcon /> */}
                 </ul>
-              </div> */}
+              </div>
 
               
             </Container>
@@ -147,12 +147,12 @@ function Header() {
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
 
-                    {/* <div className='menu-container'>
+                    <div className='menu-container'>
 
                       <CartIcon/>
                       <ul className="navbar-nav">
 
-                        <li style={{ marginLeft: "20px", marginTop:"20px" }}  className="nav-item">
+                        {/* <li style={{ marginLeft: "20px", marginTop:"20px" }}  className="nav-item">
                           <a className="nav-link" href="/questionnaire">Questionnaire</a>
                         </li>
                         <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -169,16 +169,16 @@ function Header() {
                         </li> 
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/privacy">Privacy</a>
-                        </li>
+                        </li> */}
 
                         {!currentuser_ ? (
                           <>
                             <li style={{ marginLeft: "20px" }} className="nav-item">
                               <a className="nav-link" href="/signin">Sign In</a>
                             </li>
-                            <li style={{ marginLeft: "20px" }} className="nav-item create">
+                            {/* <li style={{ marginLeft: "20px" }} className="nav-item create">
                               <a className="nav-link" href="/signup">Create a account</a>
-                            </li>
+                            </li> */}
                           </>
                         ) : (
                           <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -186,7 +186,7 @@ function Header() {
                           </li>
                         )}
                       </ul>
-                    </div> */}
+                    </div>
 
 
 
