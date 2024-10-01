@@ -389,12 +389,13 @@ function Home() {
           <img src="https://insiderhood.s3.amazonaws.com/assets/5c0dc8ad4d09c2a06ffa23c83e6ae2ddbd89508e-2160x1677.jpg" className="img-responsive banner-img" alt="Banner" />
         </div>
         <div className="contain">
-          <h1 style={{ color: "white" }}>(Beta)</h1>
-          <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
+         
 
           <div>
             <div className='benefits-container-wrapper'>
               <div className='benefits-container'>
+                <h1 style={{ color: "white" }}>(Beta)</h1>
+                <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
                 <p className='benefits-txt'>Insider Hood is a guide to the best of NYC. Discover hidden gems, insider tips, and local insights from real New Yorkers.</p>
                 <ul className='benefits-list'>
                   <li data-emoji="🗺️">Access recommendations from locals in each neighborhood.</li>
@@ -405,7 +406,7 @@ function Home() {
               </div>
 
               <div className='benefits-container'>
-                <form className='email-form' onSubmit={handleSubmit}>
+                <form className='email-form__' onSubmit={handleSubmit}>
                   <input
                     type="email"
                     placeholder="Type your email..."
