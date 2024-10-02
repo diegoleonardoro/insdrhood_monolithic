@@ -55,6 +55,7 @@ function Home() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupEmail, setPopupEmail] = useState('');
 
   const handleTouchTap = () => {
     // if (isTapAllowed) {
@@ -362,15 +363,13 @@ function Home() {
     e.preventDefault();
     setError('');
 
-    if (!currentuser_) {
-      setIsPopupOpen(true);
-      return;
-    }
-
     if (!validateEmail(email)) {
       setError('Please enter a valid email address');
       return;
     }
+
+    setPopupEmail(email);
+    setIsPopupOpen(true);
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/emailregistration`, { email });
@@ -384,6 +383,7 @@ function Home() {
 
   const closePopup = () => {
     setIsPopupOpen(false);
+    setPopupEmail('');
   };
 
   return (
@@ -572,7 +572,7 @@ function Home() {
       <Footer />
       <EmailFooter />
 
-      <PrePayPopUp isOpen={isPopupOpen} onClose={closePopup} />
+      <PrePayPopUp isOpen={isPopupOpen} onClose={closePopup} email={popupEmail} />
     </div>
   );
 

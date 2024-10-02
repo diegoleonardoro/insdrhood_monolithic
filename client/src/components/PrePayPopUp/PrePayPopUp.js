@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import './PrePayPopUp.css';
 
 
-const PrePayPopUp = ({ isOpen, onClose }) => {
+const PrePayPopUp = ({ isOpen, onClose, email }) => {
   const popupRef = useRef(null);
 
   useEffect(() => {
@@ -26,13 +26,10 @@ const PrePayPopUp = ({ isOpen, onClose }) => {
         <button className="close-button" onClick={onClose}>×</button>
         <div className="popup-content">
           <div className="left-column">
-            <div className="rating-section">
-              <div className="stars">⭐⭐⭐⭐⭐</div>
-              <p>Customer rating 9.0 | 6,711 reviews</p>
-            </div>
+           
             <div className="benefits-section">
               <h3>✅ Get unlimited members-only access.</h3>
-              <p>and research the best places to live, travel and work remotely to find yours</p>
+              
               <ul className='popup-benefits-list'>
                 <li className="popup-benefit-item" data-emoji="🗺️">Get recommendations from locals in each neighborhood.</li>
                 <li className="popup-benefit-item" data-emoji="📗">Access digital guides to the history and architecture of each place.</li>
@@ -47,7 +44,7 @@ const PrePayPopUp = ({ isOpen, onClose }) => {
             </div>
             <div className="signup-form">
               <p>35,222 members + 435 people joined this month</p>
-              <input type="email" placeholder="Type your email..." />
+              <input type="email" placeholder="Type your email..." value={email} readOnly />
               <select>
                 <option value="">Select your gender</option>
                 {/* Add gender options */}
