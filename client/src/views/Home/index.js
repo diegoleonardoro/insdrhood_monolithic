@@ -2,6 +2,8 @@ import React, { useState, useEffect, startTransition, useRef } from 'react';
 import './home.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PrePayPopUp from '../../components/PrePayPopUp/PrePayPopUp';
+import EmailFooter from '../../components/EmailFooter/EmailFooter';
 
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
@@ -14,6 +16,7 @@ import { Row, Col, Container, Form, Card, Button } from 'react-bootstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Footer from "../../components/Footer/footer"
 import neighborhoods from '../../views/neighborhoods';
+
 // import { LazyLoadImage } from 'react-lazy-load-image-component';
 // import 'react-lazy-load-image-component/src/effects/blur.css';
 
@@ -51,6 +54,7 @@ function Home() {
   });
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleTouchTap = () => {
     // if (isTapAllowed) {
@@ -62,8 +66,6 @@ function Home() {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
-
-  console.log("currentuser_ 99999999-->>>", currentuser_)
 
   // initial static load of neighborhoods and blogs. 
   useEffect(() => {
@@ -360,24 +362,28 @@ function Home() {
     e.preventDefault();
     setError('');
 
+    if (!currentuser_) {
+      setIsPopupOpen(true);
+      return;
+    }
+
     if (!validateEmail(email)) {
       setError('Please enter a valid email address');
       return;
     }
 
     try {
-
-      //`${process.env.REACT_APP_BACKEND_URL}/api/signup`, formData,
-     
-
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/emailregistration`, { email });
       console.log('Email registration successful:', response.data);
-      // You can add a success message here
       setEmail('');
     } catch (error) {
       console.error('Email registration failed:', error);
       setError(error.response.data.errors[0].message);
     }
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
   };
 
   return (
@@ -564,6 +570,9 @@ function Home() {
 
 
       <Footer />
+      <EmailFooter />
+
+      <PrePayPopUp isOpen={isPopupOpen} onClose={closePopup} />
     </div>
   );
 

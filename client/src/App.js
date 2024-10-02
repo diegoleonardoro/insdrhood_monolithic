@@ -135,7 +135,7 @@ function App() {
 
           {/* <EmailRegister/> */}
 
-          <EmailFooter />
+          {/* <EmailFooter /> */}
 
           {/* <Footer/> */}
         </div>
