@@ -28,19 +28,19 @@ steps:
     id: 'deploy-client'
 
   # Build and push the Python backend service
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', './NYC_data_backend']
-    id: 'build-open-data-backend'
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['build', '-t', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', './NYC_data_backend']
+  #   id: 'build-open-data-backend'
 
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data']
-    id: 'push-open-data-backend'
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['push', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data']
+  #   id: 'push-open-data-backend'
   
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args: ['run', 'deploy', 'open-data-backend', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', '--region', 'us-central1',  
-    '--vpc-connector', 'nycopendata', '--allow-unauthenticated']
-    id: 'deploy-python-backend'
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: gcloud
+  #   args: ['run', 'deploy', 'open-data-backend', '--image', 'us-central1-docker.pkg.dev/insider-hoods321/open-data-backend/nyc-open-data', '--region', 'us-central1',  
+  #   '--vpc-connector', 'nycopendata', '--allow-unauthenticated']
+  #   id: 'deploy-python-backend'
 
 
   #'--set-env-vars', 'REDIS_HOST=10.230.226.147,REDIS_PORT=6379,BASE_URL=https://insiderhood.com, ENVIRONMENT=production',
