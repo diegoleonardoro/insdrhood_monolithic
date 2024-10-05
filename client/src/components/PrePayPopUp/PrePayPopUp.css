@@ -21,6 +21,7 @@
   padding: 20px;
   position: relative;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding:80px
 }
 
 .close-button {
@@ -118,8 +119,9 @@ input, select, .go-nomad-button {
   right: 0;
   bottom: 0;
   background-size: cover;
-  background-position: center;
-  animation: zoomEffect 60s ease-in-out infinite; /* Increased from 20s to 30s */
+  background-position: center bottom;
+   transform: scale(2.3);
+  /* animation: zoomEffect 60s ease-in-out infinite;  */
 }
 
 @keyframes zoomEffect {

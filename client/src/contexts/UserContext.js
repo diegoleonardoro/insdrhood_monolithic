@@ -14,7 +14,10 @@ export const UserProvider = ({ children }) => { // This is a component that allo
 
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/currentuser`, { withCredentials: true });
+      
       setCurrentUser_(response.data);
+
+      console.log("currentuser_", response.data)
     } catch (error) {
       console.error('Failed to fetch current user:', error);
     }

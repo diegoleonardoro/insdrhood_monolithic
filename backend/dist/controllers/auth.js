@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveUserEmail = exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
+exports.updatePassword = exports.saveUserEmail = exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.getUserByIdAndToken = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
 const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
@@ -42,7 +42,7 @@ const login = async (req, res) => {
     req.session = {
         jwt: userJwt,
     };
-    res.status(200).send(userInfo); //existingUser
+    res.status(200).send(userInfo);
 };
 exports.login = login;
 /**
@@ -81,10 +81,10 @@ const updateUserData = async (req, res) => {
     };
     if (updates.emailToken && updates.email !== '' && updates.email) {
         (0, emailVerification_1.sendVerificationMail)({
-            name: userInfo.name,
             email: userInfo.email,
             emailToken: updates.emailToken,
-            baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+            baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
+            userId: id // Add the userId here
         });
     }
     res.status(200).send(userInfo);
@@ -105,6 +105,31 @@ const verifyemail = async (req, res) => {
     res.status(200).send(userInfo);
 };
 exports.verifyemail = verifyemail;
+/**
+ * @description gets user by ID and returns a JWT token
+ * @route GET /api/user/:id
+ * @access public
+ */
+const getUserByIdAndToken = async (req, res) => {
+    const { id } = req.params;
+    const authRepository = new auth_1.AuthRepository();
+    try {
+        const result = await authRepository.getUserByIdAndGenerateToken(id);
+        if (!result) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+        const { userJwt, userInfo } = result;
+        req.session = {
+            jwt: userJwt,
+        };
+        res.status(200).send(userInfo);
+    }
+    catch (error) {
+        console.error('Error fetching user by ID:', error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};
+exports.getUserByIdAndToken = getUserByIdAndToken;
 /**
  * @description makes request to aws S3 to get signed url
  * @route GET /api/neighborhood/imageupload/:neighborhood/:randomUUID
@@ -225,4 +250,26 @@ const saveUserEmail = async (req, res) => {
     res.status(201).json(result);
 };
 exports.saveUserEmail = saveUserEmail;
+/**
+ * @description updates user's password
+ * @route PUT /api/user/:id/password
+ * @access private
+ */
+const updatePassword = async (req, res) => {
+    const { id } = req.params;
+    const { newPassword } = req.body;
+    if (!newPassword) {
+        return res.status(400).send({ message: 'New password is required' });
+    }
+    const authRepository = new auth_1.AuthRepository();
+    try {
+        const updatedUserInfo = await authRepository.updatePassword(id, newPassword);
+        res.status(200).send({});
+    }
+    catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};
+exports.updatePassword = updatePassword;
 //# sourceMappingURL=auth.js.map

@@ -4,6 +4,11 @@ import { stripeAPI } from "../services/stripe";
 import { PaymentsRepository } from "../database/repositories/payments";
 import { OrdersRepository } from "../database/repositories/orders";
 import { ObjectId } from 'mongodb'
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import { connectToDatabase } from '../database/index';
+import { sendVerificationMail } from '../services/emailVerification';
 
 
 const paymentsRepository = new PaymentsRepository(process.env.STRIPE_SECRET_KEY!, process.env.BASE_URL!);
@@ -24,27 +29,93 @@ type OrderInformation = {
  * @access public
 */
 export const createCheckoutSession = async (req: Request, res: Response) => {
-
-  const { line_items, customer_email } = req.body;
-
-  if (!line_items || !customer_email) {
-    return res.status(400).json({ error: 'missing required session parameters' });
-  }
+  const { customer_email, price_id } = req.body;
   try {
-    const result = await paymentsRepository.createCheckoutSession(line_items, customer_email);
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: price_id,
+          quantity: 1,
+        },
+      ],
+      customer_email: customer_email,
+      success_url: `${process.env.BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.BASE_URL}/canceled`,
+      metadata: {
+        customer_email: customer_email,
+      },
+    });
 
-    // Check if the result has a sessionId
-    if ('sessionId' in result) {
-      res.status(200).json({ sessionId: result.sessionId });
-    } else {
-      // If we don't have a sessionId, return the error
-      res.status(400).json({ error: result.error });
-    }
+    // Only send the sessionId
+    res.json({ sessionId: session.id });
   } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: 'an error occurred, unable to create session' });
+    console.error('Error creating subscription:', error);
+    res.status(500).json({ error: 'Failed to create subscription' });
   }
 }
+
+
+/**
+ * @description confirms the success of the checkout
+ * @route GET /api/payments/handle-checkout-success
+ * @access public
+*/
+
+export const handleCheckoutSuccess = async (req: Request, res: Response) => {
+  const sessionId = req.query.session_id as string;
+  const db = await connectToDatabase();
+  const usersCollection = db.collection('users');
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status === 'paid') {
+
+   
+      const token = jwt.sign(
+        {
+          email: session.metadata.customer_email,
+          isSubscribed: true
+        },
+        process.env.JWT_KEY!,
+        { expiresIn: '30d' }
+      );
+
+      req.session = {
+        jwt: token,
+      };
+
+      const emailToken = crypto.randomBytes(64).toString("hex");
+
+      // find the user with the email and update the emailToken
+      const user = await usersCollection.findOne({ email: session.metadata.customer_email });
+      if (user) {
+        await usersCollection.updateOne({ email: session.metadata.customer_email }, { $set: { emailToken } });
+
+        sendVerificationMail({
+          email: session.metadata.customer_email,
+          emailToken: [emailToken],
+          baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
+          userId: user._id.toString() // Add the user ID here
+        });
+      }
+
+      // 
+      res.status(200).json({ success: true })
+    } else {
+      res.status(400).json({ error: 'Payment was not successful' });
+    }
+  } catch (error) {
+    console.error('Error handling successful checkout:', error);
+    res.status(500).json({ error: 'Failed to process successful checkout' });
+  }
+}
+
+
+
+
 
 
 /**

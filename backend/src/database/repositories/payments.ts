@@ -1,6 +1,8 @@
 import Stripe from 'stripe';
 import { connectToDatabase } from '../index';
 import { BadRequestError } from '../../errors/bad-request-error';
+import { ObjectId, Db } from 'mongodb';
+
 
 export class PaymentsRepository {
 
@@ -8,9 +10,11 @@ export class PaymentsRepository {
   private domainUrl: string;
 
 
+
   constructor(stripeSecretKey: string, baseUrl: string) {
     this.stripeAPI = new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
     this.domainUrl = baseUrl.split(' ')[0]; // Assuming the splitting logic is still relevant.
+    
   }
 
   public async createCheckoutSession(lineItems: Stripe.Checkout.SessionCreateParams.LineItem[], customerEmail: string): Promise<{ sessionId: string } | { error: string }> {

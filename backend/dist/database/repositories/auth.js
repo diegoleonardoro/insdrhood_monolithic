@@ -162,13 +162,12 @@ class AuthRepository {
             // Include other necessary fields
         };
         const userJwt = jsonwebtoken_1.default.sign(userInfoForJwt, process.env.JWT_KEY);
-        console.log("newUser.name", newUser.name);
         if (newUser.email) {
             (0, emailVerification_1.sendVerificationMail)({
-                name: newUser.name,
                 email: newUser.email,
                 emailToken: [emailToken],
-                baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+                baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
+                userId: userId.toString() // Add the userId here
             });
         }
         return { userJwt, userInfo: userInfoForJwt };
@@ -193,6 +192,63 @@ class AuthRepository {
         await usersCollection.insertOne(newUser);
         // Send verification email
         return { message: 'Email saved successfully' };
+    }
+    async getUserByIdAndGenerateToken(id) {
+        const db = await this.db;
+        const usersCollection = db.collection(this.collectionName);
+        // Check if the id is a valid ObjectId
+        if (!mongodb_1.ObjectId.isValid(id)) {
+            console.error(`Invalid ObjectId: ${id}`);
+            return null;
+        }
+        try {
+            // Update the user's isVerified status to true
+            const updatedUser = await usersCollection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: { isVerified: true } }, { returnDocument: 'after' });
+            console.log('updatedUser--->>>>>>>>>>>>>>>>>', updatedUser);
+            if (!updatedUser) {
+                console.error(`User not found for id: ${id}`);
+                return null;
+            }
+            const userInfo = {
+                id: updatedUser._id.toString(),
+                email: updatedUser.email,
+                name: updatedUser.name,
+                isVerified: updatedUser.isVerified,
+                passwordSet: updatedUser.passwordSet,
+            };
+            const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
+            return { userJwt, userInfo };
+        }
+        catch (error) {
+            console.error(`Error in getUserByIdAndGenerateToken: ${error}`);
+            return null;
+        }
+    }
+    async updatePassword(id, newPassword) {
+        const db = await this.db;
+        const usersCollection = db.collection(this.collectionName);
+        const hashedPassword = await password_1.Password.toHash(newPassword);
+        const updatedUser = await usersCollection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, {
+            $set: {
+                password: hashedPassword,
+                passwordSet: true
+            }
+        }, { returnDocument: 'after' });
+        if (!updatedUser) {
+            throw new Error('User not found');
+        }
+        const userInfo = {
+            id: updatedUser._id.toString(),
+            email: updatedUser.email,
+            name: updatedUser.name,
+            image: updatedUser.image,
+            isVerified: updatedUser.isVerified,
+            neighborhoodId: updatedUser.neighborhoodId,
+            userImagesId: updatedUser.userImagesId,
+            passwordSet: updatedUser.passwordSet,
+            formsResponded: updatedUser.formsResponded
+        };
+        return userInfo;
     }
 }
 exports.AuthRepository = AuthRepository;

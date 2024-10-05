@@ -1,10 +1,8 @@
-
 import * as nodemailer from 'nodemailer';
 import mjml from 'mjml';
 import { google } from "googleapis";
 const OAuth2 = google.auth.OAuth2;
 import { ObjectId } from 'mongodb';
-
 
 type SendEmailOptions = {
   from: string;
@@ -30,54 +28,55 @@ const sendEmail = async (emailOptions: SendEmailOptions) => {
 
   let transporter;
 
-  if (isProduction) {
-    transporter = nodemailer.createTransport({
-      host: process.env.host,
-      port: 465,
-      secure: true,
-      auth: {
-        type: 'OAuth2',
-        user: process.env.NODEMAILER_AUTH_USER,
-        serviceClient: process.env.client_id,
-        privateKey: process.env.private_key?.replace(/\\n/g, '\n'),
-        accessUrl: 'https://oauth2.googleapis.com/token'
-      }
-    });
-    try {
-      await transporter?.verify();
-      const emailinfo = await transporter?.sendMail(emailOptions);
-      console.log("emailinfo", emailinfo);
-    } catch (error) {
-      console.log("erratas", error)
+  // if (isProduction) {
+  transporter = nodemailer.createTransport({
+    host: process.env.host,
+    port: 465,
+    secure: true,
+    auth: {
+      type: 'OAuth2',
+      user: process.env.NODEMAILER_AUTH_USER,
+      serviceClient: process.env.client_id,
+      privateKey: process.env.private_key?.replace(/\\n/g, '\n'),
+      accessUrl: 'https://oauth2.googleapis.com/token'
     }
-
-  } else {
-
-    transporter = nodemailer.createTransport({
-      host: 'smtp-mail.outlook.com', // Example host for development
-      port: 587,
-      secure: false, // Use TLS
-      auth: {
-        user: process.env.Email,
-        pass: process.env.NODEMAILER_AUTH_PASS,
-      }
-    });
-
-    try {
-
-      await transporter?.sendMail(emailOptions);
-
-    } catch (error) {
-      console.log("erratas", error)
-    }
+  });
+  try {
+    await transporter?.verify();
+    const emailinfo = await transporter?.sendMail(emailOptions);
+    console.log("emailinfo", emailinfo);
+  } catch (error) {
+    console.log("erratas", error)
   }
+
+  // } else {
+
+  //   transporter = nodemailer.createTransport({
+  //     host: 'smtp-mail.outlook.com', // Example host for development
+  //     port: 587,
+  //     secure: false, // Use TLS
+  //     auth: {
+  //       user: process.env.Email,
+  //       pass: process.env.NODEMAILER_AUTH_PASS,
+  //     }
+  //   });
+
+  //   try {
+
+  //     await transporter?.sendMail(emailOptions);
+
+  //   } catch (error) {
+  //     console.log("erratas", error)
+  //   }
+  // }
 };
 
+
 interface User {
-  name: string;
   email: string;
   emailToken: string[];
-  baseUrlForEmailVerification: string
+  baseUrlForEmailVerification: string;
+  userId: string; // Add userId to the interface
 };
 
 export const sendVerificationMail = (user: User) => {
@@ -111,9 +110,12 @@ export const sendVerificationMail = (user: User) => {
       <mj-section background-color="#ffffff" padding="50px 30px">
         <mj-column>
           <mj-image src="https://insiderhood.s3.amazonaws.com/blog/70ad7596-d4aa-494f-ae01-38a7a18f1b75/74c92db8-a989-45fe-880d-01fac4e99e17" alt="Insider Hood" width="400px"></mj-image>
-          <mj-text css-class="title" padding-top="20px">Welcome to Insider Hood, ${user.name}!</mj-text>
-          <mj-text css-class="content">Our aim is to provide thoughtful content about New York City. We strive to highlight historic places, delving into their architecture and history.</mj-text>
-          <mj-text css-class="footer-text" padding-top="20px">If you have any questions, feel free to reply to this email.</mj-text>
+         
+          <mj-text css-class="content">Thank you for subscribing to Insider Hood. Please click the button below to verify your email and set up a password</mj-text>
+         
+          <mj-button href="${user.baseUrlForEmailVerification}/set-password/${user.userId}" background-color="#5FA91D" color="white">
+            Verify Email
+          </mj-button>
         </mj-column>
       </mj-section>
     </mj-body>
@@ -133,6 +135,8 @@ export const sendVerificationMail = (user: User) => {
   sendEmail(mailOptions);
 
 }
+
+
 
 interface Email {
   email: string;

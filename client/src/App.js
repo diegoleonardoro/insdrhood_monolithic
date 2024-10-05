@@ -33,12 +33,14 @@ import SearchBar from "./components/NeighborhoodSearch/NieghborhoodSearch";
 import FormResponsesCount from "./components/FormResponsesCount/FormResponsesCount"
 import Chat from "./components/Chat/Chat"
 import EmailFooter from './components/EmailFooter/EmailFooter';
-
+import CheckoutSuccess from './components/CheckOutLanding/CheckoutLanding';
+import PasswordSetUp from './components/PasswordSetUp/PasswordSetUp';
 const BlogEditor = React.lazy(() => import("./components/BlogEditor/BlogEditor"));
 const Blog = React.lazy(() => import("./components/Blog/Blog"));
 const FormComponent = React.lazy(() => import("./components/Forms/1"));
 const Shop = React.lazy(() => import("./components/Shop/shop"));
 const NeighborhoodProfile = React.lazy(() => import("./components/Neighborhood"));
+
 
 
 function App() {
@@ -60,11 +62,11 @@ function App() {
         <div className="App">
           <div style={{position:"absolute", top:0, left:0, right:0, bottom:0}}> 
             
-            {showEmailRegisterPopup && <EmailRegisterWindow setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
+            {/* {showEmailRegisterPopup && <EmailRegisterWindow setShowEmailRegisterPopup={setShowEmailRegisterPopup} />}
             {showPasswordForm && < PasswordSetPopup setShowPasswordForm={setShowPasswordForm}>
-            </PasswordSetPopup >}
+            </PasswordSetPopup >} */}
             <HeaderMemo />
-            {currentuser_ && (
+            {/* {currentuser_ && (
               currentuser_.isVerified === false ? (
                 <div style={{ position: "fixed", zIndex: "99999999999", bottom: "0px" }}>
                   {currentuser_.email !== null ? (
@@ -95,7 +97,7 @@ function App() {
                   </Button>
                 </div>
               ) : null
-            )}
+            )} */}
           </div>
 
           <Suspense fallback={<div>Loading...</div>}></Suspense>
@@ -115,7 +117,7 @@ function App() {
             <Route path='/cart' element={<CartPage />}></Route>
             <Route path='/checkout' element={<Checkout />}></Route>
             <Route path='/canceled' element={<Canceled />}></Route>
-            <Route path='/success' element={<Success />}></Route>
+            {/* <Route path='/success' element={<Success />}></Route> */}
             <Route path='/post' element={<BlogEditor />}></Route>
             <Route path='/post/:id' element={<Blog />}></Route>
             <Route path='/newsletter' element={<NewsLetterLanding />}></Route>
@@ -128,8 +130,9 @@ function App() {
             <Route path='/neighborhoodsearch/:neighborhood' element={<SearchBar />}></Route>
             <Route path='/FormResponsesCount' element={<FormResponsesCount />}></Route>
             <Route path='/chat' element={<Chat />}></Route>
-
-
+            <Route path='/success' element={<CheckoutSuccess />}></Route>
+            <Route path="/set-password/:userId" element={<PasswordSetUp />} />
+            
           </Routes>
           <Suspense />
 

@@ -18,6 +18,9 @@ const path_1 = __importDefault(require("path"));
 const neighborhoods_1 = require("./database/repositories/neighborhoods");
 const blog_2 = require("./database/repositories/blog");
 const chat_1 = require("./routes/chat");
+const index_1 = require("./database/index");
+const mongodb_1 = require("mongodb");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const dotenvPath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 const envPath = path_1.default.resolve(__dirname, '..', dotenvPath);
 dotenv_1.default.config({ path: envPath });
@@ -27,6 +30,65 @@ const blogRepo = new blog_2.BlogRepository();
 blogRepo.createIndexes();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
+// Move this webhook route before any middleware
+app.post('/insiderhood/webhook', express_1.default.raw({ type: 'application/json' }), async (req, res) => {
+    console.log('Received webhook request');
+    const sig = req.headers['stripe-signature'];
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+        console.log('Webhook verified');
+    }
+    catch (err) {
+        console.error('Webhook signature verification failed:', err);
+        return res.status(400).send(`Webhook Error: ${err}`);
+    }
+    // Handle the event
+    switch (event.type) {
+        case 'customer.subscription.created':
+            const subscription = event.data.object;
+            const customerId = subscription.customer;
+            try {
+                const customer = await stripe.customers.retrieve(customerId);
+                const userEmail = customer.email;
+                const subscriptionId = customer.id;
+                const name = customer.name;
+                const db = await (0, index_1.connectToDatabase)();
+                const usersCollection = db.collection('users');
+                const filter = { email: userEmail };
+                const update = {
+                    $set: {
+                        name: name,
+                        subscriptionId: subscriptionId,
+                        subscriptionStatus: subscription.status,
+                        updatedAt: new Date()
+                    },
+                    $setOnInsert: {
+                        createdAt: new Date()
+                    }
+                };
+                const options = { upsert: true, returnDocument: mongodb_1.ReturnDocument.AFTER };
+                // update the user document:
+                await usersCollection.findOneAndUpdate(filter, update, options);
+            }
+            catch (error) {
+                console.error('Error handling subscription creation:', error);
+            }
+            break;
+        case 'customer.subscription.updated':
+            console.log('Subscription updated:', event.data.object);
+            // Handle subscription update
+            break;
+        case 'customer.subscription.deleted':
+            console.log('Subscription deleted:', event.data.object);
+            // Handle subscription deletion
+            break;
+        // ... handle other events
+        default:
+            console.log(`Unhandled event type ${event.type}`);
+    }
+    res.json({ received: true });
+});
 app.use((0, cors_1.default)({
     origin: process.env.BASE_URL?.split(" "), // React client's URL
     credentials: true,

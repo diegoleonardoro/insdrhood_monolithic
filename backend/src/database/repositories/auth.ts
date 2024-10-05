@@ -44,8 +44,6 @@ interface UserSignupInfo {
   userImagesId?: string;
 }
 
-
-
 export class AuthRepository {
 
   static verifyUser(emailtoken: string) {
@@ -68,6 +66,7 @@ export class AuthRepository {
     const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     return user;
   }
+  
   async getUser(email: string): Promise<any> {
     const db = await this.db;
     const usersCollection = db.collection(this.collectionName);
@@ -179,13 +178,10 @@ export class AuthRepository {
     if (!existingUser) {
       throw new BadRequestError("Invalid credentials");
     }
-
     const passwordMatch = await Password.compare(existingUser.password, password);
-
     if (!passwordMatch) {
       throw new BadRequestError("Incorrect password");
     }
-
     const userInfo = {
       id: existingUser._id.toString(),
       email: existingUser.email,
@@ -250,14 +246,12 @@ export class AuthRepository {
     const userJwt = jwt.sign(userInfoForJwt, process.env.JWT_KEY!);
 
 
-    console.log("newUser.name", newUser.name)
-
     if (newUser.email) {
       sendVerificationMail({
-        name: newUser.name,
         email: newUser.email,
         emailToken: [emailToken],
-        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+        baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
+        userId: userId.toString() // Add the userId here
       });
     }
 
@@ -291,4 +285,83 @@ export class AuthRepository {
     return { message: 'Email saved successfully' };
   }
 
+  async getUserByIdAndGenerateToken(id: string): Promise<{ userJwt: string, userInfo: UserInfo } | null> {
+    const db = await this.db;
+    const usersCollection = db.collection(this.collectionName);
+
+    // Check if the id is a valid ObjectId
+    if (!ObjectId.isValid(id)) {
+      console.error(`Invalid ObjectId: ${id}`);
+      return null;
+    }
+
+    try {
+      // Update the user's isVerified status to true
+      const updatedUser = await usersCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { isVerified: true } },
+        { returnDocument: 'after' }
+      );
+
+      console.log('updatedUser--->>>>>>>>>>>>>>>>>', updatedUser)
+
+      if (!updatedUser) {
+        console.error(`User not found for id: ${id}`);
+        return null;
+      }
+
+      const userInfo: UserInfo = {
+        id: updatedUser._id.toString(),
+        email: updatedUser.email,
+        name: updatedUser.name,
+        isVerified: updatedUser.isVerified,
+        passwordSet: updatedUser.passwordSet,
+      };
+
+      const userJwt = jwt.sign(userInfo, process.env.JWT_KEY!);
+
+      return { userJwt, userInfo };
+    } catch (error) {
+      console.error(`Error in getUserByIdAndGenerateToken: ${error}`);
+      return null;
+    }
+  }
+
+  async updatePassword(id: string, newPassword: string): Promise<UserInfo> {
+    const db = await this.db;
+    const usersCollection = db.collection(this.collectionName);
+
+    const hashedPassword = await Password.toHash(newPassword);
+
+    const updatedUser = await usersCollection.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { 
+        $set: { 
+          password: hashedPassword,
+          passwordSet: true
+        } 
+      },
+      { returnDocument: 'after' }
+    );
+
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+
+    const userInfo: UserInfo = {
+      id: updatedUser._id.toString(),
+      email: updatedUser.email,
+      name: updatedUser.name,
+      image: updatedUser.image,
+      isVerified: updatedUser.isVerified,
+      neighborhoodId: updatedUser.neighborhoodId,
+      userImagesId: updatedUser.userImagesId,
+      passwordSet: updatedUser.passwordSet,
+      formsResponded: updatedUser.formsResponded
+    };
+
+    return userInfo;
+  }
+
+  
 }

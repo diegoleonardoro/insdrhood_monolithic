@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f0f0f0;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.message {
+  font-size: 1.5rem;
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.subMessage {
+  font-size: 1.2rem;
+  color: #666;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .message {
+    font-size: 1.2rem;
+  }
+
+  .subMessage {
+    font-size: 1rem;
+  }
+}

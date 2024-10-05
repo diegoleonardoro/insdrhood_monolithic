@@ -30,11 +30,13 @@ export const authenticationValidator = async (
   next: NextFunction
 ) => {
 
+  
+
   if (!req.session?.jwt) {
     return next();
   }
 
-  console.log("HEHEHEHEHEHEH")
+  console.log('req.session.jwttttt===>>>>', req.session.jwt);
 
   try {
     const payload = jwt.verify(
@@ -42,9 +44,10 @@ export const authenticationValidator = async (
       process.env.JWT_KEY!
     ) as UserPayload;
 
-
+  
     const authRepo = new AuthRepository();
-    const existingUser = await authRepo.getUserById(payload.id)
+    // here get use by email instead of id
+    const existingUser = await authRepo.getUser(payload.email)
 
     const equal = compareKeyValuePairs(payload, existingUser)
 

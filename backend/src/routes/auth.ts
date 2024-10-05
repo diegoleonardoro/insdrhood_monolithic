@@ -18,7 +18,9 @@ import {
   newsLetterSignUp,
   getSingleNeighborhoodData,
   neighborhoodResponsesCount,
-  saveUserEmail
+  saveUserEmail, 
+  getUserByIdAndToken,
+  updatePassword
 } from "../controllers/auth";
 
 function asyncHandler(fn: Function) {
@@ -49,7 +51,8 @@ router.get("/emailVerification/:emailtoken", asyncHandler(verifyemail));
 router.put("/updateuserdata/:id", authenticationValidator, asyncHandler(updateUserData));
 router.post("/newsletter/signup", asyncHandler(newsLetterSignUp));
 router.post("/emailregistration", asyncHandler(saveUserEmail));
-
+router.get("/verifyUser/:id", asyncHandler(getUserByIdAndToken));
+router.put('/updatepassword/:id', asyncHandler(updatePassword));
 
 /**
  * NEIGHBORHOOD DATA ROUTES:

@@ -10,4 +10,5 @@ const router = express_1.default.Router();
 exports.payments = router;
 router.post('/create-checkout-session', payments_1.createCheckoutSession);
 router.post('/webhook', payments_1.stripeWebhooks);
+router.get('/handle-checkout-success', payments_1.handleCheckoutSuccess);
 //# sourceMappingURL=payments.js.map

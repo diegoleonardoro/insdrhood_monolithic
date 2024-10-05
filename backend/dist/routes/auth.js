@@ -32,6 +32,8 @@ router.get("/emailVerification/:emailtoken", asyncHandler(auth_1.verifyemail));
 router.put("/updateuserdata/:id", authentication_validator_1.authenticationValidator, asyncHandler(auth_1.updateUserData));
 router.post("/newsletter/signup", asyncHandler(auth_1.newsLetterSignUp));
 router.post("/emailregistration", asyncHandler(auth_1.saveUserEmail));
+router.get("/verifyUser/:id", asyncHandler(auth_1.getUserByIdAndToken));
+router.put('/updatepassword/:id', asyncHandler(auth_1.updatePassword));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */

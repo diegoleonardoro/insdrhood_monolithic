@@ -4,6 +4,7 @@ import { NeighborhoodRepository } from "../database/repositories/neighborhoods";
 import { AuthRepository } from "../database/repositories/auth";
 import { NewsletterRepository } from "../database/repositories/newsletter";
 import { ObjectId } from 'mongodb';
+import { identitytoolkit } from "googleapis/build/src/apis/identitytoolkit";
 
 
 
@@ -53,7 +54,7 @@ export const login = async (req: Request, res: Response) => {
   req.session = {
     jwt: userJwt,
   };
-  res.status(200).send(userInfo);//existingUser
+  res.status(200).send(userInfo);
 }
 
 /**
@@ -94,14 +95,17 @@ export const updateUserData = async (req: Request, res: Response) => {
 
   if (updates.emailToken && updates.email !== '' && updates.email) {
     sendVerificationMail({
-      name: userInfo.name,
       email: userInfo.email,
       emailToken: updates.emailToken,
-      baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : ''
+      baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
+      userId: id // Add the userId here
     });
   }
   res.status(200).send(userInfo);
 }
+
+
+
 
 
 /**
@@ -117,6 +121,36 @@ export const verifyemail = async (req: Request, res: Response) => {
     jwt: userJwt,
   };
   res.status(200).send(userInfo);
+}
+
+/**
+ * @description gets user by ID and returns a JWT token
+ * @route GET /api/user/:id
+ * @access public
+ */
+export const getUserByIdAndToken = async (req: Request, res: Response) => {
+
+  const { id } = req.params;
+  const authRepository = new AuthRepository();
+
+  try {
+    const result = await authRepository.getUserByIdAndGenerateToken(id);
+
+    if (!result) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    const { userJwt, userInfo } = result;
+
+    req.session = {
+      jwt: userJwt,
+    };
+
+    res.status(200).send(userInfo);
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
 }
 
 /**
@@ -176,9 +210,6 @@ export const updateNeighborhoodData = async (req: Request, res: Response) => {
 }
 
 
-
-
-
 /**
  * @description gets all neighbohoods data submitted from the form 
  * @route GET/api/neighborhoods
@@ -198,9 +229,6 @@ export const getAllNeighborhoods = async (req: Request, res: Response) => {
   }
 
 }
-
-
-
 
 /**
  * @description gets a specific neighborhood 
@@ -253,3 +281,27 @@ export const saveUserEmail = async (req: Request, res: Response) => {
     res.status(201).json(result);
 
 };
+
+/**
+ * @description updates user's password
+ * @route PUT /api/user/:id/password
+ * @access private
+ */
+export const updatePassword = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).send({ message: 'New password is required' });
+  }
+
+  const authRepository = new AuthRepository();
+
+  try {
+    const updatedUserInfo = await authRepository.updatePassword(id, newPassword);
+    res.status(200).send({});
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+}

@@ -4,7 +4,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PrePayPopUp from '../../components/PrePayPopUp/PrePayPopUp';
 import EmailFooter from '../../components/EmailFooter/EmailFooter';
-
 import CardBody from 'react-bootstrap/esm/CardBody';
 import { useUserContext } from '../../contexts/UserContext';
 import LazyImage from '../../components/LazyImage/LazyImage';
@@ -399,38 +398,45 @@ function Home() {
 
           <div>
             <div className='benefits-container-wrapper'>
-              <div className='benefits-container'>
-                <h1 style={{ color: "white" }}>(Beta)</h1>
-                <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
-                <p className='benefits-txt'>Insider Hood is a guide to the best of NYC. Discover hidden gems, insider tips, and local insights from real New Yorkers.</p>
-                <ul className='benefits-list'>
-                  <li data-emoji="🗺️">Access recommendations from locals in each neighborhood.</li>
-                  <li data-emoji="📗">Receive neighborhood guides that explore the history and architecture of each place.</li>
-                  <li data-emoji="📍">Get tailored itineraries that accommodate your needs.</li>
-                  <li data-emoji="🤖">AI Chat that will give you tips and ideas on how to best explore the city.</li>
-                </ul>
-              </div>
+              {currentuser_ ? (
+                <div className='benefits-container'>
+                  <h1 style={{ color: "white" }}>You are now subscribed</h1>
+                </div>
+              ) : (
+                <>
+                  <div className='benefits-container'>
+                    <h1 style={{ color: "white" }}>(Beta)</h1>
+                    <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
+                    <p className='benefits-txt'>Insider Hood is a guide to the best of NYC. Discover hidden gems, insider tips, and local insights from real New Yorkers.</p>
+                    <ul className='benefits-list'>
+                      <li data-emoji="🗺️">Access recommendations from locals in each neighborhood.</li>
+                      <li data-emoji="📗">Receive neighborhood guides that explore the history and architecture of each place.</li>
+                      <li data-emoji="📍">Get tailored itineraries that accommodate your needs.</li>
+                      <li data-emoji="🤖">AI Chat that will give you tips and ideas on how to best explore the city.</li>
+                    </ul>
+                  </div>
 
-              <div className='benefits-container'>
-                <form className='email-form__' onSubmit={handleSubmit}>
-                  <input
-                    type="email"
-                    placeholder="Type your email..."
-                    className='email-input'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                  <div className='benefits-container'>
+                    <form className='email-form__' onSubmit={handleSubmit}>
+                      <input
+                        type="email"
+                        placeholder="Type your email..."
+                        className='email-input'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
 
-                  <button type="submit" className='submit-button'>
-                    Join the waitlist →
-                  </button>
+                      <button type="submit" className='submit-button'>
+                        Join the waitlist →
+                      </button>
 
-                  {error && <p style={{ color: "white" }} className="error-message">{error}</p>}
-                </form>
-              </div>
+                      {error && <p style={{ color: "white" }} className="error-message">{error}</p>}
+                    </form>
+                  </div>
+                </>
+              )}
             </div>
-
           </div>
 
         </div>
@@ -572,7 +578,7 @@ function Home() {
       <Footer />
       <EmailFooter />
 
-      <PrePayPopUp isOpen={isPopupOpen} onClose={closePopup} email={popupEmail} />
+      <PrePayPopUp isOpen={isPopupOpen} onClose={closePopup} initialEmail={email} />
     </div>
   );
 
