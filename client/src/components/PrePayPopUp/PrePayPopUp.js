@@ -23,7 +23,7 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
       `${process.env.REACT_APP_BACKEND_URL}/api/payments/create-checkout-session`,
       {
         customer_email: email,
-        price_id: 'price_1Q5Y85Cjli54jhBvaD9lDL10' 
+        price_id: process.env.REACT_APP_STRIPE_PRICE_ID
       },
       { withCredentials: true }
     );
