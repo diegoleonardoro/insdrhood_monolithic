@@ -19,6 +19,8 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
   const handleSubscription = async (e) => {
     e.preventDefault();
 
+    console.log('price id', process.env.REACT_APP_STRIPE_PRICE_ID);
+
     const response = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/api/payments/create-checkout-session`,
       {

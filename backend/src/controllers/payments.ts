@@ -30,6 +30,9 @@ type OrderInformation = {
 */
 export const createCheckoutSession = async (req: Request, res: Response) => {
   const { customer_email, price_id } = req.body;
+
+  console.log('price id', price_id);
+  console.log('customer email', customer_email);
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
