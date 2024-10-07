@@ -21,8 +21,8 @@ const paymentsRepository = new payments_1.PaymentsRepository(process.env.STRIPE_
 */
 const createCheckoutSession = async (req, res) => {
     const { customer_email, price_id } = req.body;
-    console.log('price id', price_id);
-    console.log('customer email', customer_email);
+    console.log('price id from create-checkout-session', price_id);
+    console.log('customer email from create-checkout-session', customer_email);
     try {
         const session = await stripe.checkout.sessions.create({
             mode: 'subscription',

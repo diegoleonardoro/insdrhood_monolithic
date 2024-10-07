@@ -23,7 +23,6 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
   const handleSubscription = async (e) => {
     e.preventDefault();
 
-    console.log('REACT_APP_BACKEND_URL', process.env.REACT_APP_BACKEND_URL);
 
     const response = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/api/payments/create-checkout-session`,
@@ -33,6 +32,8 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
       },
       { withCredentials: true }
     );
+
+    console.log('response->', response);
 
     const { sessionId } = response.data;
 
