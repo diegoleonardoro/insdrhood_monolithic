@@ -24,15 +24,6 @@ type OrderInformation = {
 };
 
 
-// Helper function to validate URL
-function isValidUrl(string: string) {
-  try {
-    new URL(string);
-    return true;
-  } catch (_) {
-    return false;
-  }
-}
 /**
  * @description creates checkout session
  * @route POST /api/payments/create-checkout-session
@@ -40,13 +31,21 @@ function isValidUrl(string: string) {
 */
 export const createCheckoutSession = async (req: Request, res: Response) => {
   const { customer_email, price_id } = req.body;
+  const baseUrl = (process.env.BASE_URL || '').split(' ')
+    .find(url => {
+      try {
+        new URL(url);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    });
 
-
-  // Ensure BASE_URL is set and is a valid URL
-  if (!process.env.BASE_URL || !isValidUrl(process.env.BASE_URL)) {
+  if (!baseUrl) {
     console.error('Invalid BASE_URL --->>>>>:', process.env.BASE_URL);
     return res.status(500).json({ error: 'Invalid BASE_URL configuration' });
   }
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -58,8 +57,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         },
       ],
       customer_email: customer_email,
-      success_url: `${process.env.BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/canceled`,
+      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/canceled`,
       metadata: {
         customer_email: customer_email,
       },
@@ -71,6 +70,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     console.error('Error creating subscription:', error);
     res.status(500).json({ error: 'Failed to create subscription' });
   }
+
+
 }
 
 

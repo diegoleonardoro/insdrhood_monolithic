@@ -14,16 +14,6 @@ const crypto_1 = __importDefault(require("crypto"));
 const index_1 = require("../database/index");
 const emailVerification_1 = require("../services/emailVerification");
 const paymentsRepository = new payments_1.PaymentsRepository(process.env.STRIPE_SECRET_KEY, process.env.BASE_URL);
-// Helper function to validate URL
-function isValidUrl(string) {
-    try {
-        new URL(string);
-        return true;
-    }
-    catch (_) {
-        return false;
-    }
-}
 /**
  * @description creates checkout session
  * @route POST /api/payments/create-checkout-session
@@ -31,8 +21,17 @@ function isValidUrl(string) {
 */
 const createCheckoutSession = async (req, res) => {
     const { customer_email, price_id } = req.body;
-    // Ensure BASE_URL is set and is a valid URL
-    if (!process.env.BASE_URL || !isValidUrl(process.env.BASE_URL)) {
+    const baseUrl = (process.env.BASE_URL || '').split(' ')
+        .find(url => {
+        try {
+            new URL(url);
+            return true;
+        }
+        catch (_) {
+            return false;
+        }
+    });
+    if (!baseUrl) {
         console.error('Invalid BASE_URL --->>>>>:', process.env.BASE_URL);
         return res.status(500).json({ error: 'Invalid BASE_URL configuration' });
     }
@@ -47,8 +46,8 @@ const createCheckoutSession = async (req, res) => {
                 },
             ],
             customer_email: customer_email,
-            success_url: `${process.env.BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.BASE_URL}/canceled`,
+            success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${baseUrl}/canceled`,
             metadata: {
                 customer_email: customer_email,
             },
