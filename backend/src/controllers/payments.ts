@@ -23,6 +23,16 @@ type OrderInformation = {
   orderId?: ObjectId; // Make orderId optional
 };
 
+
+// Helper function to validate URL
+function isValidUrl(string: string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
 /**
  * @description creates checkout session
  * @route POST /api/payments/create-checkout-session
@@ -31,8 +41,12 @@ type OrderInformation = {
 export const createCheckoutSession = async (req: Request, res: Response) => {
   const { customer_email, price_id } = req.body;
 
-  console.log('price id from create-checkout-session', price_id);
-  console.log('customer email from create-checkout-session', customer_email);
+
+  // Ensure BASE_URL is set and is a valid URL
+  if (!process.env.BASE_URL || !isValidUrl(process.env.BASE_URL)) {
+    console.error('Invalid BASE_URL --->>>>>:', process.env.BASE_URL);
+    return res.status(500).json({ error: 'Invalid BASE_URL configuration' });
+  }
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -51,8 +65,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       },
     });
 
-    // Only send the sessionId
     res.json({ sessionId: session.id });
+
   } catch (error) {
     console.error('Error creating subscription:', error);
     res.status(500).json({ error: 'Failed to create subscription' });
