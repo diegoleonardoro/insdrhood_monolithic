@@ -33,8 +33,6 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
       { withCredentials: true }
     );
 
-    console.log('response->', response);
-
     const { sessionId } = response.data;
 
     const { error } = await stripe.redirectToCheckout({ sessionId });
@@ -71,6 +69,14 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
               
               <p>By becoming a member, you will be supporting this project and will get access to some eventual virtual guides.</p>
 
+              <p>If you become a member, this website commits with you to:</p>
+              <ul>
+                <li>Every week, you will receive a new digital guide of a NYC neighborhood. Highlighting the history, the architecture, the food, the people and more.</li>
+               <li>This website will continioulsy feed a library of NYC photographs</li>
+              </ul>
+
+              <p>You will be redirected to Stripe to complete the payment.</p>
+
               {/* <ul className='popup-benefits-list'>
                 <li className="popup-benefit-item" data-emoji="🗺️">Get recommendations from locals in each neighborhood.</li> 
                 <li className="popup-benefit-item" data-emoji="📗">Access and download digial guides.</li>
@@ -78,8 +84,6 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
                  <li className="popup-benefit-item" data-emoji="📍 📷">Get tailored itineraries that accommodate your needs.</li>
                 <li className="popup-benefit-item" data-emoji="🤖">AI Chat that will give you tips and ideas on how to best explore the city.</li> 
               </ul> */}
-
-              
             </div>
           </div>
           <div className="right-column">

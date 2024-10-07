@@ -102,10 +102,8 @@ const sendVerificationMail = (user) => {
     <mj-body background-color="#f7f7f7">
       <mj-section background-color="#ffffff" padding="50px 30px">
         <mj-column>
-          <mj-image src="https://insiderhood.s3.amazonaws.com/blog/70ad7596-d4aa-494f-ae01-38a7a18f1b75/74c92db8-a989-45fe-880d-01fac4e99e17" alt="Insider Hood" width="400px"></mj-image>
-         
-          <mj-text css-class="content">Thank you for subscribing to Insider Hood. Please click the button below to verify your email and set up a password</mj-text>
-         
+          <mj-text css-class="content">Thank you for subscribing to Insider Hood. This website will do its best to provide you with the best guides and content.</mj-text>
+          <mj-text css-class="content">Please click the button below to verify your email and set up a password</mj-text>
           <mj-button href="${user.baseUrlForEmailVerification}/set-password/${user.userId}" background-color="#5FA91D" color="white">
             Verify Email
           </mj-button>

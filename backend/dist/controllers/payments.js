@@ -32,7 +32,6 @@ const createCheckoutSession = async (req, res) => {
         }
     });
     if (!baseUrl) {
-        console.error('Invalid BASE_URL --->>>>>:', process.env.BASE_URL);
         return res.status(500).json({ error: 'Invalid BASE_URL configuration' });
     }
     try {
