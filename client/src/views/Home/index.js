@@ -72,7 +72,6 @@ function Home() {
 
     // axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat/sendChatInfo`, {
     //   webPageRoute: '/home',
-
     // })
     //   .then(response => {
     //     console.log('vistig notification');
@@ -367,16 +366,15 @@ function Home() {
       return;
     }
 
-    setPopupEmail(email);
-    setIsPopupOpen(true);
-
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/emailregistration`, { email });
       console.log('Email registration successful:', response.data);
+      setPopupEmail(email);
+      setIsPopupOpen(true);
       setEmail('');
     } catch (error) {
       console.error('Email registration failed:', error);
-      setError(error.response.data.errors[0].message);
+      setError(`${error.response.data.errors[0].message}. A verification email has been sent. ` );
     }
   };
 

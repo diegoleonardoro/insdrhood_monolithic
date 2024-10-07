@@ -24,6 +24,7 @@ import TShirtCustomizer from './components/TshirtCustomizer/tshirtCustomizer';
 import NewsLetterLanding from './components/Newsletter/newsletter';
 import NewsLetterReferral from './components/Newsletter/newsLetterReferal';
 import NewsLetterPreferences from './components/NewsletterPreferences/newsLetterPreferences';
+import ResetPassword from './components/ResetPassword/ResetPassword';
 import Complaints311 from './components/311Complaints/311complaints';
 import Dashboard from './components/Dashboard/Dashboard';
 import DOBApprovedPermits from './components/DOB_ApprovedPermits/DobApprovedPermits'
@@ -132,6 +133,7 @@ function App() {
             <Route path='/chat' element={<Chat />}></Route>
             <Route path='/success' element={<CheckoutSuccess />}></Route>
             <Route path="/set-password/:userId" element={<PasswordSetUp />} />
+            <Route path="/resetpassword/:userId" element={<ResetPassword />} />
             
           </Routes>
           <Suspense />

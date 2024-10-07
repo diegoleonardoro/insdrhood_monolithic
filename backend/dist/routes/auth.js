@@ -34,6 +34,7 @@ router.post("/newsletter/signup", asyncHandler(auth_1.newsLetterSignUp));
 router.post("/emailregistration", asyncHandler(auth_1.saveUserEmail));
 router.get("/verifyUser/:id", asyncHandler(auth_1.getUserByIdAndToken));
 router.put('/updatepassword/:id', asyncHandler(auth_1.updatePassword));
+router.post('/passwordreset/:userId', asyncHandler(auth_1.resetPassword));
 /**
  * NEIGHBORHOOD DATA ROUTES:
 */

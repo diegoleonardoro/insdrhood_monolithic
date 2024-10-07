@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.saveUserEmail = exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.getUserByIdAndToken = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
+exports.resetPassword = exports.updatePassword = exports.saveUserEmail = exports.neighborhoodResponsesCount = exports.getNeighborhood = exports.getSingleNeighborhoodData = exports.getAllNeighborhoods = exports.updateNeighborhoodData = exports.saveNeighborhoodData = exports.uploadBlogFiles = exports.uploadFile = exports.getUserByIdAndToken = exports.verifyemail = exports.updateUserData = exports.signout = exports.currentuser = exports.login = exports.newsLetterSignUp = exports.signup = void 0;
 const emailVerification_1 = require("../services/emailVerification");
 const neighborhoods_1 = require("../database/repositories/neighborhoods");
 const auth_1 = require("../database/repositories/auth");
@@ -243,6 +243,11 @@ const neighborhoodResponsesCount = async (req, res) => {
     res.status(200).send(nhoodResponsesCount);
 };
 exports.neighborhoodResponsesCount = neighborhoodResponsesCount;
+/**
+ * @description saves user's email
+ * @route /api/emailregistration
+ * @access public
+ */
 const saveUserEmail = async (req, res) => {
     const { email } = req.body;
     const authRepository = new auth_1.AuthRepository();
@@ -272,4 +277,25 @@ const updatePassword = async (req, res) => {
     }
 };
 exports.updatePassword = updatePassword;
+/**
+ * @description updates user's password
+ * @route POST /api/passwordreset/:id
+ * @access public
+ */
+const resetPassword = async (req, res) => {
+    const { userId } = req.params;
+    const { password } = req.body;
+    try {
+        const authRepo = new auth_1.AuthRepository();
+        const { userJwt, userInfo } = await authRepo.resetPassword(userId, password);
+        req.session = {
+            jwt: userJwt,
+        };
+        res.status(200).send(userInfo);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'An error occurred while resetting the password' });
+    }
+};
+exports.resetPassword = resetPassword;
 //# sourceMappingURL=auth.js.map

@@ -104,10 +104,6 @@ export const updateUserData = async (req: Request, res: Response) => {
   res.status(200).send(userInfo);
 }
 
-
-
-
-
 /**
  * @description confirms user's email
  * @route GET /api/emailVerification/:emailtoken
@@ -266,19 +262,22 @@ export const getNeighborhood = async (req: Request, res: Response) => {
  * @route /api/neighborhood/:neighborhoodid
  * @access public 
  */
-export const neighborhoodResponsesCount = async (req: Request, res:Response)=>{
+export const neighborhoodResponsesCount = async (req: Request, res: Response) => {
   const neighborhoodRepository = new NeighborhoodRepository();
   const nhoodResponsesCount = await neighborhoodRepository.neighborhoodResponsesCount()
   res.status(200).send(nhoodResponsesCount);
 }
 
-
-
+/**
+ * @description saves user's email
+ * @route /api/emailregistration
+ * @access public 
+ */
 export const saveUserEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
-    const authRepository = new AuthRepository();
-    const result = await authRepository.saveEmail(email);
-    res.status(201).json(result);
+  const authRepository = new AuthRepository();
+  const result = await authRepository.saveEmail(email);
+  res.status(201).json(result);
 
 };
 
@@ -304,4 +303,32 @@ export const updatePassword = async (req: Request, res: Response) => {
     console.error('Error updating password:', error);
     res.status(500).send({ message: 'Internal server error' });
   }
+}
+
+
+/**
+ * @description updates user's password
+ * @route POST /api/passwordreset/:id
+ * @access public
+ */
+export const resetPassword = async (req: Request, res: Response) => {
+
+  const { userId } = req.params;
+  const { password } = req.body;
+
+  try {
+
+    const authRepo = new AuthRepository();
+    const { userJwt, userInfo } = await authRepo.resetPassword(userId, password);
+    
+    req.session = {
+      jwt: userJwt,
+    };
+    
+    res.status(200).send(userInfo);
+
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while resetting the password' });
+  }
+
 }

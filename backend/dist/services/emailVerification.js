@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendOrderConfirmationEmail = exports.sendNewsLetterEmail = exports.sendVerificationMail = void 0;
+exports.resetPassword = exports.sendOrderConfirmationEmail = exports.sendNewsLetterEmail = exports.sendVerificationMail = void 0;
 const nodemailer = __importStar(require("nodemailer"));
 const mjml_1 = __importDefault(require("mjml"));
 const googleapis_1 = require("googleapis");
@@ -227,4 +227,57 @@ const sendOrderConfirmationEmail = (emailInfo) => {
     sendEmail(mailOptions);
 };
 exports.sendOrderConfirmationEmail = sendOrderConfirmationEmail;
+const resetPassword = (user) => {
+    const mjmlContent = `
+  <mjml>
+    <mj-head>
+      <mj-title>Reset Your Insider Hood Password</mj-title>
+      <mj-attributes>
+        <mj-all font-family="Roboto, Arial, sans-serif" />
+        <mj-text font-size="16px" line-height="24px" />
+      </mj-attributes>
+      <mj-style inline="inline">
+        .title {
+          font-size: 24px;
+          font-weight: bold;
+          color: #4A4A4A;
+        }
+        .content {
+          font-size: 16px;
+          color: #4A4A4A;
+          line-height: 24px;
+        }
+        .footer-text {
+          font-size: 14px;
+          color: #4A4A4A;
+        }
+      </mj-style>
+    </mj-head>
+    <mj-body background-color="#f7f7f7">
+      <mj-section background-color="#ffffff" padding="50px 30px">
+        <mj-column>
+          <mj-text css-class="title">Reset Your Password</mj-text>
+          <mj-text css-class="content">We received a request to reset your password for your Insider Hood account. If you didn't make this request, you can ignore this email.</mj-text>
+          <mj-text css-class="content">To reset your password, please click the button below:</mj-text>
+          <mj-button href="${user.baseUrlForEmailVerification}/resetpassword/${user.userId}" background-color="#5FA91D" color="white">
+            Reset Password
+          </mj-button>
+          <mj-text css-class="footer-text">If the button doesn't work, you can copy and paste this link into your browser: ${user.baseUrlForEmailVerification}/resetpassword/${user.userId}</mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-body>
+  </mjml>
+  `;
+    // Compile MJML to HTML
+    const { html } = (0, mjml_1.default)(mjmlContent);
+    const mailOptions = {
+        from: `Insider Hood <${process.env.Email}>`,
+        to: user.email,
+        subject: 'Reset Your Insider Hood Password',
+        html: html,
+        text: "Reset your Insider Hood password by clicking the link in this email."
+    };
+    sendEmail(mailOptions);
+};
+exports.resetPassword = resetPassword;
 //# sourceMappingURL=emailVerification.js.map

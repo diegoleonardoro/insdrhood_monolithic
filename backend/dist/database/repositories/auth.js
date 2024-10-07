@@ -179,10 +179,17 @@ class AuthRepository {
             throw new bad_request_error_1.BadRequestError('Email is required');
         }
         const existingUser = await usersCollection.findOne({ email });
+        const emailToken = crypto_1.default.randomBytes(64).toString('hex');
         if (existingUser) {
+            // send email asking users to reset their password
+            (0, emailVerification_1.resetPassword)({
+                email,
+                baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
+                userId: existingUser._id.toString(),
+                emailToken: []
+            });
             throw new bad_request_error_1.BadRequestError('Email already exists');
         }
-        const emailToken = crypto_1.default.randomBytes(64).toString('hex');
         const newUser = {
             email,
             isVerified: false,
@@ -190,7 +197,6 @@ class AuthRepository {
             createdAt: new Date()
         };
         await usersCollection.insertOne(newUser);
-        // Send verification email
         return { message: 'Email saved successfully' };
     }
     async getUserByIdAndGenerateToken(id) {
@@ -204,7 +210,6 @@ class AuthRepository {
         try {
             // Update the user's isVerified status to true
             const updatedUser = await usersCollection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $set: { isVerified: true } }, { returnDocument: 'after' });
-            console.log('updatedUser--->>>>>>>>>>>>>>>>>', updatedUser);
             if (!updatedUser) {
                 console.error(`User not found for id: ${id}`);
                 return null;
@@ -249,6 +254,37 @@ class AuthRepository {
             formsResponded: updatedUser.formsResponded
         };
         return userInfo;
+    }
+    async resetPassword(userId, newPassword) {
+        const db = await this.db;
+        const usersCollection = db.collection(this.collectionName);
+        // Check if the userId is a valid ObjectId
+        if (!mongodb_1.ObjectId.isValid(userId)) {
+            throw new bad_request_error_1.BadRequestError('Invalid user ID');
+        }
+        const hashedPassword = await password_1.Password.toHash(newPassword);
+        const updatedUser = await usersCollection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, {
+            $set: {
+                password: hashedPassword,
+                passwordSet: true
+            }
+        }, { returnDocument: 'after' });
+        if (!updatedUser) {
+            throw new bad_request_error_1.BadRequestError('User not found');
+        }
+        const userInfo = {
+            id: updatedUser._id.toString(),
+            email: updatedUser.email,
+            name: updatedUser.name,
+            image: updatedUser.image,
+            isVerified: updatedUser.isVerified,
+            neighborhoodId: updatedUser.neighborhoodId,
+            userImagesId: updatedUser.userImagesId,
+            passwordSet: updatedUser.passwordSet,
+            formsResponded: updatedUser.formsResponded
+        };
+        const userJwt = jsonwebtoken_1.default.sign(userInfo, process.env.JWT_KEY);
+        return { userJwt, userInfo };
     }
 }
 exports.AuthRepository = AuthRepository;
