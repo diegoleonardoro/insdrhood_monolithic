@@ -3,6 +3,10 @@ import './PrePayPopUp.css';
 import axios from 'axios';
 import { useStripe } from '@stripe/react-stripe-js';
 
+console.log('All environment variables:', process.env);
+console.log('REACT_APP_STRIPE_PRICE_ID:', process.env.REACT_APP_STRIPE_PRICE_ID);
+
+
 const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
   const [email, setEmail] = useState('');
   const popupRef = useRef(null);
@@ -19,7 +23,7 @@ const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {
   const handleSubscription = async (e) => {
     e.preventDefault();
 
-    console.log('price id', process.env.REACT_APP_STRIPE_PRICE_ID);
+    console.log('REACT_APP_BACKEND_URL', process.env.REACT_APP_BACKEND_URL);
 
     const response = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/api/payments/create-checkout-session`,
