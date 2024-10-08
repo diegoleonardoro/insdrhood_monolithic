@@ -14,7 +14,6 @@
   }
 }
 
-
 @keyframes bounce {
   0%, 100% {
     transform: translateX(0);
@@ -68,11 +67,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-    width: 90%;
-    max-width: 1200px;
+    /* width: 90%; */
+    /* max-width: 1200px; */
     text-align: center;
-    padding: 20px;
-    background: rgba(122, 52, 58, 0.80);
+    /* padding: 20px; */
+    background: rgba(122, 52, 58 /20%);
     border-radius: 28px;
     backdrop-filter: blur(5px);
 }
@@ -205,7 +204,7 @@ h1.contain-txt {
 
 .residentsHeader{
   text-align: center;
-  color: white;
+  color: #DEA001;
   /* font-size: 48px; */
   font-family: Koulen;
   font-weight: 400;
@@ -292,7 +291,7 @@ h1.contain-txt {
 
 .nhoodsMainContainer{
   /* margin-top: 110px; */
-  background-color: #DEA001;
+  background-color: #ffecbc;
   padding-top: 60px;
   padding-bottom: 40px;
 }
@@ -653,7 +652,7 @@ h1.contain-txt {
 
 .benefits-container {
   /* flex: 1; */
-  width: 50%;
+  /* width: 50%; */
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);
@@ -718,7 +717,7 @@ h1.contain-txt {
 .borough-filter-container .form-check-label {
   font-family: "Inter", sans-serif;
   font-size: 14px;
-  color: white;
+  /* color: white; */
   cursor: pointer;
 }
 
@@ -806,7 +805,7 @@ h1.contain-txt {
 /* Adjust checkbox layout */
 .borough-filter-container {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     justify-content: flex-start;
 }
 
@@ -818,7 +817,7 @@ h1.contain-txt {
 @media screen and (max-width: 768px) {
 
   .benefits-container {
-    width: 80%;
+    /* width: 80%; */
   }
   
   .nhoodsTable, .nhoodsTable thead, .nhoodsTable tbody, .nhoodsTable th, .nhoodsTable td, .nhoodsTable tr {

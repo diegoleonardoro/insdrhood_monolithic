@@ -389,7 +389,7 @@ function Home() {
       <div className="banner">
 
         <div className="main-banner">
-          <img src="https://insiderhood.s3.amazonaws.com/assets/5c0dc8ad4d09c2a06ffa23c83e6ae2ddbd89508e-2160x1677.jpg" className="img-responsive banner-img" alt="Banner" />
+          <img src="https://d1ys1weio2yffs.cloudfront.net/assets/borooklyn.jpg" className="img-responsive banner-img" alt="Banner" />
         </div>
         <div className="contain">
          
