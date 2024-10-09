@@ -1,4 +1,4 @@
-import React, { useState, useEffect, startTransition, useRef, useCallback } from 'react';
+import React, { useState, useEffect, startTransition, useRef } from 'react';
 import './home.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -55,9 +55,6 @@ function Home() {
   const [error, setError] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupEmail, setPopupEmail] = useState('');
-  const [visibleNeighborhoods, setVisibleNeighborhoods] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const BATCH_SIZE = 30; // Number of items to load at once
 
   const handleTouchTap = () => {
     // if (isTapAllowed) {
@@ -324,36 +321,8 @@ function Home() {
     return matchesSearch && matchesBorough;
   });
 
-  const loadMoreItems = useCallback(() => {
-    const nextBatch = filteredAllNeighborhoods.slice(currentIndex, currentIndex + BATCH_SIZE);
-    setVisibleNeighborhoods(prev => [...prev, ...nextBatch]);
-    setCurrentIndex(prevIndex => prevIndex + BATCH_SIZE);
-  }, [filteredAllNeighborhoods, currentIndex]);
-
-  useEffect(() => {
-    // Reset visible neighborhoods and current index when filters change
-    setVisibleNeighborhoods([]);
-    setCurrentIndex(0);
-  }, [neighborhoodSearchTerm, selectedBoroughs]);
-
-  useEffect(() => {
-    // Load initial batch
-    loadMoreItems();
-  }, [loadMoreItems]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 500) {
-        loadMoreItems();
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadMoreItems]);
-
   // all neighborhoods cards
-  const AllNeighborhoodCards = visibleNeighborhoods.map((neighborhood, index) => (
+  const AllNeighborhoodCards = filteredAllNeighborhoods.map((neighborhood, index) => (
     <Col key={index}>
       <Card className="h-100 cardNhood" style={{
         backgroundImage: neighborhood.imageUrl ? `url(${neighborhood.imageUrl})` : 'none',
@@ -524,40 +493,7 @@ function Home() {
 
           <Container>
             <Row xs={1} md={3} className="g-4">
-              {visibleNeighborhoods.map((neighborhood, index) => (
-                <Col key={index}>
-                  <Card className="h-100 cardNhood" style={{
-                    backgroundImage: neighborhood.imageUrl ? `url(${neighborhood.imageUrl})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                  }}>
-                    <div className="card-content">
-                      <div className="card-header-container">
-                        <Card.Header as="h5">
-                          {neighborhood.neighborhood}
-                        </Card.Header>
-                      </div>
-
-                      <Card.Body className='card-body-all'>
-                        <Card.Text className="neighborhoodDescr">
-                          {neighborhood.borough}
-                        </Card.Text>
-
-                        <Button
-                          variant="warning"
-                          className="nhoodButton"
-                          onClick={() => {
-                            // You can add navigation or other functionality here later
-                            handleNavigation(`/neighborhoodsearch/${neighborhood.neighborhood}`);
-                          }}
-                        >
-                          View
-                        </Button>
-                      </Card.Body>
-                    </div>
-                  </Card>
-                </Col>
-              ))}
+              {AllNeighborhoodCards}
             </Row>
           </Container>
 
@@ -620,6 +556,7 @@ function Home() {
         </Stack> */}
 
       </div>
+
 
 
       <Footer />
