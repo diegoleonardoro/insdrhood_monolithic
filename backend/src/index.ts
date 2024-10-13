@@ -16,7 +16,7 @@ import {chat} from "./routes/chat"
 import { connectToDatabase } from "./database/index"
 import { ReturnDocument } from 'mongodb';
 import jwt from "jsonwebtoken";
-import { sendVerificationMail } from "./services/emailVerification";
+import { sendPdfDownloadEmail } from "./services/emailVerification";
 
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -61,9 +61,18 @@ app.post('/insiderhood/webhook', express.raw({ type: 'application/json' }), asyn
     case 'checkout.session.completed':
       const session = event.data.object;
       const userEmail = session.customer_details.email;
+      console.log('User email:', userEmail);
+      console.log('Checkout completed:', session);
 
-
-      
+      try {
+        // Assuming the PDF file name is stored in the session metadata
+        const pdfFileName = session.metadata?.pdfFileName || 'https://insiderhood.s3.amazonaws.com/brochures/WestVillageSelfGuidedTour.pdf';
+        
+        await sendPdfDownloadEmail(userEmail, pdfFileName);
+        console.log('PDF download email sent successfully');
+      } catch (error) {
+        console.error('Error sending PDF download email:', error);
+      }
       break;
     case 'payment_intent.succeeded':
       const paymentIntent = event.data.object;

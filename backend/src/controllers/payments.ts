@@ -30,6 +30,7 @@ type OrderInformation = {
  * @access public
 */
 export const createCheckoutSession = async (req: Request, res: Response) => {
+  
   const { customer_email, price_id } = req.body;
   const baseUrl = (process.env.BASE_URL || '').split(' ')
     .find(url => {
@@ -117,7 +118,7 @@ export const handleCheckoutSuccess = async (req: Request, res: Response) => {
           baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
           userId: user._id.toString() // Add the user ID here
         });
-        
+
       }
 
       // 
