@@ -73,3 +73,47 @@
   background-color: #cccccc;
   cursor: not-allowed;
 }
+
+.preview-sticky-form {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.preview-email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.preview-email-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.preview-submit-button {
+  padding: 10px;
+  background-color: #ff4742;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.preview-submit-button:hover {
+  background-color: #e63e39;
+}
+
+@media (max-width: 768px) {
+  .preview-email-form {
+    max-width: 100%;
+  }
+}

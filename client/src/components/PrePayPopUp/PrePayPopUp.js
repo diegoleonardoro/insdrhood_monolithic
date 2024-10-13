@@ -3,8 +3,7 @@ import './PrePayPopUp.css';
 import axios from 'axios';
 import { useStripe } from '@stripe/react-stripe-js';
 
-console.log('All environment variables:', process.env);
-console.log('REACT_APP_STRIPE_PRICE_ID:', process.env.REACT_APP_STRIPE_PRICE_ID);
+
 
 
 const PrePayPopUp = ({ isOpen, onClose, initialEmail }) => {

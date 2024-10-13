@@ -16,6 +16,7 @@ import {chat} from "./routes/chat"
 import { connectToDatabase } from "./database/index"
 import { ReturnDocument } from 'mongodb';
 import jwt from "jsonwebtoken";
+import { sendVerificationMail } from "./services/emailVerification";
 
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -56,6 +57,34 @@ app.post('/insiderhood/webhook', express.raw({ type: 'application/json' }), asyn
 
   // Handle the event
   switch (event.type) {
+
+    case 'checkout.session.completed':
+      const session = event.data.object;
+      const userEmail = session.customer_details.email;
+
+
+      
+      break;
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object;
+      // Handle successful payment
+      console.log('Payment succeeded:', paymentIntent);
+
+
+
+
+
+
+
+
+      break;
+    case 'payment_intent.payment_failed':
+      const failedPaymentIntent = event.data.object;
+      // Handle failed payment
+      console.log('Payment failed:', failedPaymentIntent);
+      break;
+
+
     case 'customer.subscription.created':
      
       const subscription = event.data.object;
@@ -83,6 +112,7 @@ app.post('/insiderhood/webhook', express.raw({ type: 'application/json' }), asyn
         const options = { upsert: true, returnDocument: ReturnDocument.AFTER };
         // update the user document:
         await usersCollection.findOneAndUpdate(filter, update, options);
+
       } catch (error) {
         console.error('Error handling subscription creation:', error);
       }

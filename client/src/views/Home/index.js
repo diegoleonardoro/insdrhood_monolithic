@@ -436,7 +436,7 @@ function Home() {
                     </ul>
                   </div>
 
-                  <div className='benefits-container'>
+                  {/* <div className='benefits-container'>
                     <form className='email-form__' onSubmit={handleSubmit}>
                       <input
                         type="email"
@@ -453,7 +453,7 @@ function Home() {
 
                       {error && <p style={{ color: "white" }} className="error-message">{error}</p>}
                     </form>
-                  </div>
+                  </div> */}
                 </>
               )}
             </div>

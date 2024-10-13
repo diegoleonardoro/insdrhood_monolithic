@@ -26,11 +26,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.sendOrderConfirmationEmail = exports.sendNewsLetterEmail = exports.sendVerificationMail = void 0;
+exports.sendPdfDownloadEmail = exports.resetPassword = exports.sendOrderConfirmationEmail = exports.sendNewsLetterEmail = exports.sendVerificationMail = void 0;
 const nodemailer = __importStar(require("nodemailer"));
 const mjml_1 = __importDefault(require("mjml"));
 const googleapis_1 = require("googleapis");
 const OAuth2 = googleapis_1.google.auth.OAuth2;
+const aws_sdk_1 = require("aws-sdk");
 const sendEmail = async (emailOptions) => {
     const isProduction = process.env.NODE_ENV === "production";
     let transporter;
@@ -280,4 +281,68 @@ const resetPassword = (user) => {
     sendEmail(mailOptions);
 };
 exports.resetPassword = resetPassword;
+const sendPdfDownloadEmail = async (user, pdfUrl) => {
+    const s3 = new aws_sdk_1.S3({
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+        region: 'us-east-1'
+    });
+    const mjmlContent = `
+  <mjml>
+    <mj-head>
+      <mj-title>Your PDF is Ready for Download</mj-title>
+      <mj-attributes>
+        <mj-all font-family="Roboto, Arial, sans-serif" />
+        <mj-text font-size="16px" line-height="24px" />
+      </mj-attributes>
+      <mj-style inline="inline">
+        .title { font-size: 24px; font-weight: bold; color: #4A4A4A; }
+        .content { font-size: 16px; color: #4A4A4A; line-height: 24px; }
+      </mj-style>
+    </mj-head>
+    <mj-body background-color="#f7f7f7">
+      <mj-section background-color="#ffffff" padding="50px 30px">
+        <mj-column>
+          <mj-text css-class="title">Your PDF is Ready!</mj-text>
+          <mj-text css-class="content">Hello ${user.email},</mj-text>
+          <mj-text css-class="content">Your PDF is now available for download. You can access it by clicking the button below:</mj-text>
+          <mj-button href="${pdfUrl}" background-color="#5FA91D" color="white">
+            Download PDF
+          </mj-button>
+          <mj-text css-class="content">If you have any issues accessing the PDF, please don't hesitate to contact us.</mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-body>
+  </mjml>
+  `;
+    const { html } = (0, mjml_1.default)(mjmlContent);
+    try {
+        // Get the PDF file from S3
+        const s3Params = {
+            Bucket: 'insiderhood' || '',
+            Key: 'https://insiderhood.s3.amazonaws.com/brochures/WestVillageSelfGuidedTour.pdf'
+        };
+        const s3Object = await s3.getObject(s3Params).promise();
+        const mailOptions = {
+            from: `Insider Hood <${process.env.Email}>`,
+            to: user.email,
+            subject: 'Your PDF is Ready for Download',
+            html: html,
+            text: "Your PDF is ready for download. Please check the email for the download link.",
+            attachments: [
+                {
+                    filename: 'YourPDF.pdf',
+                    content: s3Object.Body,
+                    contentType: 'application/pdf'
+                }
+            ]
+        };
+        await sendEmail(mailOptions);
+        console.log('PDF download email sent successfully');
+    }
+    catch (error) {
+        console.error('Error sending PDF download email:', error);
+    }
+};
+exports.sendPdfDownloadEmail = sendPdfDownloadEmail;
 //# sourceMappingURL=emailVerification.js.map

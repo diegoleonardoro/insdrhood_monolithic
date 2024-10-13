@@ -47,7 +47,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
+      mode: 'payment',
       payment_method_types: ['card'],
       line_items: [
         {
@@ -66,8 +66,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     res.json({ sessionId: session.id });
 
   } catch (error) {
-    console.error('Error creating subscription:', error);
-    res.status(500).json({ error: 'Failed to create subscription' });
+    console.error('Error creating payment:', error);
+    res.status(500).json({ error: 'Failed to create payment' });
   }
 
 
@@ -117,6 +117,7 @@ export const handleCheckoutSuccess = async (req: Request, res: Response) => {
           baseUrlForEmailVerification: process.env.BASE_URL ? process.env.BASE_URL.split(" ")[0] : '',
           userId: user._id.toString() // Add the user ID here
         });
+        
       }
 
       // 

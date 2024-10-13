@@ -36,7 +36,7 @@ const createCheckoutSession = async (req, res) => {
     }
     try {
         const session = await stripe.checkout.sessions.create({
-            mode: 'subscription',
+            mode: 'payment',
             payment_method_types: ['card'],
             line_items: [
                 {
@@ -54,8 +54,8 @@ const createCheckoutSession = async (req, res) => {
         res.json({ sessionId: session.id });
     }
     catch (error) {
-        console.error('Error creating subscription:', error);
-        res.status(500).json({ error: 'Failed to create subscription' });
+        console.error('Error creating payment:', error);
+        res.status(500).json({ error: 'Failed to create payment' });
     }
 };
 exports.createCheckoutSession = createCheckoutSession;

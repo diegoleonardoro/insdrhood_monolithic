@@ -45,6 +45,20 @@ app.post('/insiderhood/webhook', express_1.default.raw({ type: 'application/json
     }
     // Handle the event
     switch (event.type) {
+        case 'checkout.session.completed':
+            const session = event.data.object;
+            const userEmail = session.customer_details.email;
+            break;
+        case 'payment_intent.succeeded':
+            const paymentIntent = event.data.object;
+            // Handle successful payment
+            console.log('Payment succeeded:', paymentIntent);
+            break;
+        case 'payment_intent.payment_failed':
+            const failedPaymentIntent = event.data.object;
+            // Handle failed payment
+            console.log('Payment failed:', failedPaymentIntent);
+            break;
         case 'customer.subscription.created':
             const subscription = event.data.object;
             const customerId = subscription.customer;
