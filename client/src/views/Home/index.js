@@ -15,6 +15,7 @@ import { Row, Col, Container, Form, Card, Button } from 'react-bootstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Footer from "../../components/Footer/footer"
 import neighborhoods from '../../views/neighborhoods';
+import ContentPreviewPopup from '../../components/ContentPreviewPopup/ContentPreviewPopup';
 
 // import { LazyLoadImage } from 'react-lazy-load-image-component';
 // import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -56,12 +57,22 @@ function Home() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupEmail, setPopupEmail] = useState('');
 
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   const handleTouchTap = () => {
     // if (isTapAllowed) {
     // fetchMoreBlogs();
     // }
   };
 
+
+  const previewImages = [
+    'https://d1ys1weio2yffs.cloudfront.net/brochures/WestVillage/1.jpg',
+    'https://d1ys1weio2yffs.cloudfront.net/brochures/WestVillage/2.jpg',
+    'https://d1ys1weio2yffs.cloudfront.net/brochures/WestVillage/3.jpg',
+    'https://d1ys1weio2yffs.cloudfront.net/brochures/WestVillage/4.jpg'
+  ];
   const validateEmail = (email) => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
@@ -383,6 +394,12 @@ function Home() {
     setPopupEmail('');
   };
 
+
+
+  const handlePreviewPopup = () => {
+    setIsPreviewOpen(true);
+  };
+
   return (
     <div className="home-container">
 
@@ -402,14 +419,20 @@ function Home() {
               ) : (
                 <>
                   <div className='benefits-container'>
-                    <h1 style={{ color: "white" }}>(Beta)</h1>
+                    
                     <h1 className="contain-txt">Explore NYC beyond the obvious </h1>
                     <p className='benefits-txt'>Insider Hood is a guide to the best of NYC. Discover hidden gems, insider tips, and local insights from real New Yorkers.</p>
                     <ul className='benefits-list'>
-                      <li data-emoji="🗺️">Access recommendations from locals in each neighborhood.</li>
-                      <li data-emoji="📗">Receive neighborhood guides that explore the history and architecture of each place.</li>
-                      <li data-emoji="📍">Get tailored itineraries that accommodate your needs.</li>
-                      <li data-emoji="🤖">AI Chat that will give you tips and ideas on how to best explore the city.</li>
+                        <li data-emoji="🗺️">Get access to self-guided tour guides that reveal the architectural and cultural essence of NYC neighborhoods.</li>
+                        <div className="image-gallery">
+                          <img 
+                            src="https://d1ys1weio2yffs.cloudfront.net/brochures/WestVillage/1.jpg" 
+                            alt="Tour 1" 
+                            onClick={handlePreviewPopup}
+                            style={{ cursor: 'pointer' }}
+                          />
+                      
+                        </div>
                     </ul>
                   </div>
 
@@ -563,6 +586,12 @@ function Home() {
       {/* <EmailFooter /> */}
 
       <PrePayPopUp isOpen={isPopupOpen} onClose={closePopup} initialEmail={email} />
+    
+      <ContentPreviewPopup 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        previewImages={previewImages}
+      />
     </div>
   );
 

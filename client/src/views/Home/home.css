@@ -3,6 +3,28 @@
   overflow-x: hidden;
 }
 
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.image-gallery img {
+    width: calc(25% - 10px);
+    max-width: 150px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .image-gallery img {
+        width: calc(50% - 10px);
+    }
+}
+
 /* SkeletonLoader lelel */
 
 @keyframes shimmer {
@@ -652,7 +674,7 @@ h1.contain-txt {
 
 .benefits-container {
   /* flex: 1; */
-  /* width: 50%; */
+  width: 60%;
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);
@@ -690,6 +712,10 @@ h1.contain-txt {
 @media (max-width: 768px) {
   .benefits-container-wrapper {
     flex-direction: column;
+  }
+
+  .benefits-container{
+    width: 90%;
   }
 
   .email-form__ {
