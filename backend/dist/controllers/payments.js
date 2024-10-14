@@ -21,6 +21,11 @@ const paymentsRepository = new payments_1.PaymentsRepository(process.env.STRIPE_
 */
 const createCheckoutSession = async (req, res) => {
     const { customer_email, price_id } = req.body;
+    console.log('Received request:', { customer_email, price_id });
+    if (!customer_email || !price_id) {
+        console.error('Missing required fields:', { customer_email, price_id });
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
     const baseUrl = (process.env.BASE_URL || '').split(' ')
         .find(url => {
         try {
@@ -32,9 +37,11 @@ const createCheckoutSession = async (req, res) => {
         }
     });
     if (!baseUrl) {
+        console.error('Invalid BASE_URL configuration');
         return res.status(500).json({ error: 'Invalid BASE_URL configuration' });
     }
     try {
+        console.log('Creating Stripe checkout session...');
         const session = await stripe.checkout.sessions.create({
             mode: 'payment',
             payment_method_types: ['card'],
@@ -51,11 +58,17 @@ const createCheckoutSession = async (req, res) => {
                 customer_email: customer_email,
             },
         });
+        console.log('Checkout session created successfully:', session.id);
         res.json({ sessionId: session.id });
     }
     catch (error) {
         console.error('Error creating payment:', error);
-        res.status(500).json({ error: 'Failed to create payment' });
+        if (error instanceof Error) {
+            res.status(500).json({ error: `Failed to create payment: ${error.message}` });
+        }
+        else {
+            res.status(500).json({ error: 'Failed to create payment: Unknown error' });
+        }
     }
 };
 exports.createCheckoutSession = createCheckoutSession;
