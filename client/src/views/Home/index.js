@@ -46,7 +46,7 @@ function Home() {
   const [allNeighborhoods, setAllNeighborhoods] = useState([]);
   const [neighborhoodSearchTerm, setNeighborhoodSearchTerm] = useState('');
   const [selectedBoroughs, setSelectedBoroughs] = useState({
-    "Manhattan": false,
+    "Manhattan": true, // Set Manhattan to true initially
     "Brooklyn": false,
     "Queens": false,
     "The Bronx": false,
@@ -301,8 +301,8 @@ function Home() {
   };
 
   useEffect(() => {
-    // Set the neighborhoods data
-    setAllNeighborhoods(neighborhoods);
+    // Set the neighborhoods data and filter for Manhattan initially
+    setAllNeighborhoods(neighborhoods.filter(n => n.borough === "Manhattan"));
   }, []);
 
   const handleNeighborhoodSearch = (event) => {
@@ -310,10 +310,24 @@ function Home() {
   };
 
   const handleBoroughChange = (event) => {
-    setSelectedBoroughs(prevState => ({
-      ...prevState,
-      [event.target.name]: event.target.checked
-    }));
+    const { name, checked } = event.target;
+    setSelectedBoroughs(prevState => {
+      const newState = {
+        ...prevState,
+        [name]: checked
+      };
+      
+      // If all boroughs are unchecked, show all neighborhoods
+      if (Object.values(newState).every(v => !v)) {
+        setAllNeighborhoods(neighborhoods);
+      } else {
+        // Filter neighborhoods based on selected boroughs
+        const filteredNeighborhoods = neighborhoods.filter(n => newState[n.borough]);
+        setAllNeighborhoods(filteredNeighborhoods);
+      }
+      
+      return newState;
+    });
   };
 
   const filteredAllNeighborhoods = allNeighborhoods.filter(neighborhood => {
@@ -356,8 +370,8 @@ function Home() {
               variant="warning"
               className="nhoodButton"
               onClick={() => {
-                // You can add navigation or other functionality here later
-                handleNavigation(`/neighborhoodsearch/${neighborhood.neighborhood}`);
+                // Open in a new window/tab
+                window.open(`/neighborhoodsearch/${neighborhood.neighborhood}`, '_blank', 'noopener,noreferrer');
               }}
             >
               View
@@ -483,7 +497,6 @@ function Home() {
 
         </div>
       </div> */}
-
 
       {/** neighborhoods container: */}
       <div className='nhoodsMainContainer'>

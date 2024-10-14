@@ -30,7 +30,6 @@ function Header() {
   }, [location]);
 
   const handleSignOut = async () => {
-
     try {
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/signout`);
       // I DO NOT THIK I NEED THIS:
@@ -102,20 +101,22 @@ function Header() {
                   <li style={{ marginLeft: "20px" }} className="nav-item">
                     <a className="nav-link" href="/privacy">Privacy</a>
                   </li>  */}
-                  {!currentuser_ ? (
+
+                  {/* {!currentuser_ ? (
                     <>
                       <li style={{ marginLeft: "20px" }} className="nav-item">
                         <a className="nav-link" href="/signin">Sign In</a>
                       </li>
-                      {/* <li style={{ marginLeft: "20px" }} className="nav-item create">
+                       <li style={{ marginLeft: "20px" }} className="nav-item create">
                         <a className="nav-link" href="/signup">Create a account</a>
-                      </li> */}
+                      </li> 
                     </>
                   ) : (
                     <li style={{ marginLeft: "20px" }} className="nav-item">
                       <a className="nav-link" style={{ cursor: 'pointer' }} onClick={handleSignOut}>Sign Out</a>
                     </li>
-                  )}
+                  )} */}
+
 
                   {/* <CartIcon /> */}
                 </ul>
@@ -126,6 +127,8 @@ function Header() {
           </Navbar>
 
           {/** nav bar for mobile screens */}
+          
+          {/* 
           <Navbar className="main_header navbar-mobile" key='False' expand='False' >
             <Container className="container_" fluid>
 
@@ -152,7 +155,7 @@ function Header() {
                       <CartIcon/>
                       <ul className="navbar-nav">
 
-                        {/* <li style={{ marginLeft: "20px", marginTop:"20px" }}  className="nav-item">
+                         <li style={{ marginLeft: "20px", marginTop:"20px" }}  className="nav-item">
                           <a className="nav-link" href="/questionnaire">Questionnaire</a>
                         </li>
                         <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -169,16 +172,16 @@ function Header() {
                         </li> 
                         <li style={{ marginLeft: "20px" }} className="nav-item">
                           <a className="nav-link" href="/privacy">Privacy</a>
-                        </li> */}
+                        </li> 
 
                         {!currentuser_ ? (
                           <>
                             <li style={{ marginLeft: "20px" }} className="nav-item">
                               <a className="nav-link" href="/signin">Sign In</a>
                             </li>
-                            {/* <li style={{ marginLeft: "20px" }} className="nav-item create">
+                            <li style={{ marginLeft: "20px" }} className="nav-item create">
                               <a className="nav-link" href="/signup">Create a account</a>
-                            </li> */}
+                            </li> 
                           </>
                         ) : (
                           <li style={{ marginLeft: "20px" }} className="nav-item">
@@ -188,13 +191,11 @@ function Header() {
                       </ul>
                     </div>
 
-
-
                   </Nav>
                 </Offcanvas.Body>
               </Navbar.Offcanvas>
             </Container>
-          </Navbar>
+          </Navbar> */}
         </>
       ) : null}
     </>

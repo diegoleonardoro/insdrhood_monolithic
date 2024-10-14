@@ -12,8 +12,8 @@
 }
 
 .image-gallery img {
-    width: calc(25% - 10px);
-    max-width: 150px;
+    width: 70%;
+    /* max-width: 150px; */
     height: auto;
     object-fit: cover;
     border-radius: 8px;
@@ -21,7 +21,7 @@
 
 @media (max-width: 768px) {
     .image-gallery img {
-        width: calc(50% - 10px);
+        width: 90%;
     }
 }
 
@@ -726,7 +726,7 @@ h1.contain-txt {
 .borough-filter-container {
   margin-bottom: 20px;
   padding: 15px;
-  background-color: rgba(222, 160, 1, 0.1);
+  /* background-color: rgba(222, 160, 1, 0.1); */
   border-radius: 8px;
 }
 
