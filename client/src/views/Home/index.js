@@ -428,7 +428,8 @@ function Home() {
             <div className='benefits-container-wrapper'>
               {currentuser_ ? (
                 <div className='benefits-container'>
-                  <h1 style={{ color: "white" }}>You are now subscribed</h1>
+                  <h1 style={{ color: "white" }}>Thank you for your purchase. </h1>
+                  <p>An email with your guide has been sent to your inbox.</p>
                 </div>
               ) : (
                 <>
