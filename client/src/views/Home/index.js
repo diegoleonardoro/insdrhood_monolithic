@@ -26,7 +26,7 @@ function Home() {
   // const [neighborhoodsData, setNeighborhoodsData] = useState([]); 
   const [blogs, setBlogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedBorough, setSelectedBorough] = useState('All');
+  const [selectedBorough, setSelectedBorough] = useState("Manhattan");
   const [neighborhoodsData, setNeighborhoodsData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(19);
@@ -45,13 +45,6 @@ function Home() {
   const [isTapAllowed, setIsTapAllowed] = useState(true);
   const [allNeighborhoods, setAllNeighborhoods] = useState([]);
   const [neighborhoodSearchTerm, setNeighborhoodSearchTerm] = useState('');
-  const [selectedBoroughs, setSelectedBoroughs] = useState({
-    "Manhattan": true, // Set Manhattan to true initially
-    "Brooklyn": false,
-    "Queens": false,
-    "The Bronx": false,
-    "Staten Island": false
-  });
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -311,23 +304,16 @@ function Home() {
 
   const handleBoroughChange = (event) => {
     const { name, checked } = event.target;
-    setSelectedBoroughs(prevState => {
-      const newState = {
-        ...prevState,
-        [name]: checked
-      };
-      
-      // If all boroughs are unchecked, show all neighborhoods
-      if (Object.values(newState).every(v => !v)) {
-        setAllNeighborhoods(neighborhoods);
-      } else {
-        // Filter neighborhoods based on selected boroughs
-        const filteredNeighborhoods = neighborhoods.filter(n => newState[n.borough]);
-        setAllNeighborhoods(filteredNeighborhoods);
-      }
-      
-      return newState;
-    });
+    if (checked) {
+      setSelectedBorough(name);
+      // Filter neighborhoods based on selected borough
+      const filteredNeighborhoods = neighborhoods.filter(n => n.borough === name);
+      setAllNeighborhoods(filteredNeighborhoods);
+    } else {
+      // If unchecked, show all neighborhoods
+      setSelectedBorough("");
+      setAllNeighborhoods(neighborhoods);
+    }
   };
 
   const filteredAllNeighborhoods = allNeighborhoods.filter(neighborhood => {
@@ -340,8 +326,7 @@ function Home() {
       )
     );
 
-    const matchesBorough = Object.values(selectedBoroughs).every(v => v === false) ||
-      selectedBoroughs[neighborhood.borough];
+    const matchesBorough = selectedBorough === "" || neighborhood.borough === selectedBorough;
 
     return matchesSearch && matchesBorough;
   });
@@ -505,15 +490,15 @@ function Home() {
         <div className='nhoodsSecondContainer'>
           <h1 className='residentsHeader'>All NYC Neighborhoods</h1>
           <div className="borough-filter-container">
-            {Object.keys(selectedBoroughs).map((borough) => (
+            {["Manhattan", "Brooklyn", "Queens", "The Bronx", "Staten Island"].map((borough) => (
               <Form.Check
                 key={borough}
                 inline
                 label={borough}
                 name={borough}
-                type="checkbox"
+                type="radio"
                 id={`borough-${borough}`}
-                checked={selectedBoroughs[borough]}
+                checked={selectedBorough === borough}
                 onChange={handleBoroughChange}
               />
             ))}
