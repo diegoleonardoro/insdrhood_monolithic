@@ -69,9 +69,7 @@ const NeighborhoodSchema = new mongoose_1.default.Schema({
         },
     },
 });
-// tell mongoose that we want to track the version of all these different documents using the field version:
-// residentSchema.set("versionKey", "version");
-// residentSchema.plugin(updateIfCurrentPlugin);
+;
 NeighborhoodSchema.statics.build = (attrs) => {
     return new Neighborhood(attrs);
 };
